@@ -2,6 +2,8 @@
 
 Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed to provide a completely independent alternative to the official Epic Games servers. It supports most core systems of the game, from account management to matchmaking, social features, and even Discord integrations.
 
+Latest version: 1.0.0
+
 ## 🎉 Main Features
 
 - ✅ **Secure login and authentication system**
