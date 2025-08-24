@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Neodyme</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .register-container {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 173, 239, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-section i {
+            font-size: 3rem;
+            color: #00adee;
+            margin-bottom: 1rem;
+        }
+
+        .logo-section h1 {
+            font-size: 2rem;
+            background: linear-gradient(45deg, #00adee, #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-section p {
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            padding-left: 3rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #00adee;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 173, 239, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #00adee;
+        }
+
+        .input-validation {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .validation-error {
+            color: #ff6b6b;
+        }
+
+        .validation-success {
+            color: #81c784;
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+        }
+
+        .strength-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-weak { background: #ff6b6b; width: 25%; }
+        .strength-fair { background: #ffa726; width: 50%; }
+        .strength-good { background: #66bb6a; width: 75%; }
+        .strength-strong { background: #4caf50; width: 100%; }
+
+        .strength-text {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #00adee;
+            margin-top: 0.2rem;
+        }
+
+        .checkbox-container label {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .checkbox-container a {
+            color: #00adee;
+            text-decoration: none;
+        }
+
+        .checkbox-container a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00adee, #0099cc);
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(45deg, #0099cc, #007aa3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 173, 239, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #ff6b6b;
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: #81c784;
+        }
+
+        .sign-in-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sign-in-link a {
+            color: #00adee;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .sign-in-link a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: #00adee;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .back-link {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 1rem;
+                display: block;
+            }
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-shape {
+            position: absolute;
+            background: linear-gradient(45deg, rgba(0, 173, 239, 0.1), rgba(142, 68, 173, 0.1));
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .floating-shape:nth-child(1) { width: 60px; height: 60px; left: 10%; top: 20%; animation-delay: 0s; }
+        .floating-shape:nth-child(2) { width: 80px; height: 80px; right: 10%; top: 60%; animation-delay: 5s; }
+        .floating-shape:nth-child(3) { width: 40px; height: 40px; left: 60%; top: 10%; animation-delay: 10s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-50px) rotate(180deg); opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+    </div>
+
+    <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+
+    <div class="register-container">
+        <div class="logo-section">
+            <i class="fas fa-user-plus"></i>
+            <h1>Create Account</h1>
+            <p>Join the Neodyme community</p>
+        </div>
+
+        <div class="alert alert-error" id="error-alert">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="error-message"></span>
+        </div>
+
+        <div class="alert alert-success" id="success-alert">
+            <i class="fas fa-check-circle"></i>
+            <span id="success-message"></span>
+        </div>
+
+        <form id="register-form">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-container">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-control" 
+                        placeholder="Enter your email address"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+                <div class="input-validation" id="email-validation"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-container">
+                    <i class="fas fa-user input-icon"></i>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        class="form-control" 
+                        placeholder="Choose a username (3-20 characters)"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+                <div class="input-validation" id="username-validation"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-container">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-control" 
+                        placeholder="Create a strong password"
+                        required
+                        autocomplete="new-password"
+                    >
+                    <i class="fas fa-eye password-toggle" id="password-toggle"></i>
+                </div>
+                <div class="password-strength" id="password-strength" style="display: none;">
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strength-fill"></div>
+                    </div>
+                    <div class="strength-text" id="strength-text"></div>
+                </div>
+                <div class="input-validation" id="password-validation"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <div class="input-container">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input 
+                        type="password" 
+                        id="confirm-password" 
+                        name="confirmPassword" 
+                        class="form-control" 
+                        placeholder="Confirm your password"
+                        required
+                        autocomplete="new-password"
+                    >
+                    <i class="fas fa-eye password-toggle" id="confirm-password-toggle"></i>
+                </div>
+                <div class="input-validation" id="confirm-password-validation"></div>
+            </div>
+
+            <div class="checkbox-container">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">
+                    I agree to the <a href="#terms" target="_blank">Terms of Service</a> 
+                    and <a href="#privacy" target="_blank">Privacy Policy</a>
+                </label>
+            </div>
+
+            <div class="checkbox-container">
+                <input type="checkbox" id="newsletter" name="newsletter">
+                <label for="newsletter">
+                    I would like to receive updates and news about Neodyme
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="register-btn">
+                <span id="register-text">Create Account</span>
+                <div class="loading" id="register-loading" style="display: none;"></div>
+            </button>
+        </form>
+
+        <button class="btn btn-secondary" onclick="window.location.href='login.html'">
+            <i class="fas fa-sign-in-alt"></i>
+            Already have an account? Sign In
+        </button>
+
+        <div class="sign-in-link">
+            <p>Already have an account? <a href="login.html">Sign in here</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Password toggle functionality
+        function setupPasswordToggle(passwordId, toggleId) {
+            document.getElementById(toggleId).addEventListener('click', function() {
+                const passwordField = document.getElementById(passwordId);
+                const toggleIcon = this;
+                
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordField.type = 'password';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                }
+            });
+        }
+
+        setupPasswordToggle('password', 'password-toggle');
+        setupPasswordToggle('confirm-password', 'confirm-password-toggle');
+
+        // Validation functions
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function validateUsername(username) {
+            const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+            return usernameRegex.test(username);
+        }
+
+        function checkPasswordStrength(password) {
+            let score = 0;
+            let feedback = [];
+
+            if (password.length >= 8) score++;
+            else feedback.push('At least 8 characters');
+
+            if (/[a-z]/.test(password)) score++;
+            else feedback.push('Lowercase letter');
+
+            if (/[A-Z]/.test(password)) score++;
+            else feedback.push('Uppercase letter');
+
+            if (/[0-9]/.test(password)) score++;
+            else feedback.push('Number');
+
+            if (/[^a-zA-Z0-9]/.test(password)) score++;
+            else feedback.push('Special character');
+
+            const strength = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'][score];
+            const classes = ['', 'strength-weak', 'strength-fair', 'strength-good', 'strength-strong'];
+            
+            return { score, strength, feedback, className: classes[score] };
+        }
+
+        function showError(message) {
+            const errorAlert = document.getElementById('error-alert');
+            const errorMessage = document.getElementById('error-message');
+            const successAlert = document.getElementById('success-alert');
+            
+            errorMessage.textContent = message;
+            errorAlert.style.display = 'block';
+            successAlert.style.display = 'none';
+            
+            setTimeout(() => {
+                errorAlert.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successAlert = document.getElementById('success-alert');
+            const successMessage = document.getElementById('success-message');
+            const errorAlert = document.getElementById('error-alert');
+            
+            successMessage.textContent = message;
+            successAlert.style.display = 'block';
+            errorAlert.style.display = 'none';
+            
+            setTimeout(() => {
+                successAlert.style.display = 'none';
+            }, 3000);
+        }
+
+        function showFieldValidation(fieldId, message, isSuccess = false) {
+            const validation = document.getElementById(fieldId + '-validation');
+            const field = document.getElementById(fieldId);
+            
+            if (message) {
+                validation.textContent = message;
+                validation.style.display = 'block';
+                validation.className = isSuccess ? 'input-validation validation-success' : 'input-validation validation-error';
+                field.style.borderColor = isSuccess ? '#81c784' : '#ff6b6b';
+            } else {
+                validation.style.display = 'none';
+                field.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            }
+        }
+
+        function setLoading(isLoading) {
+            const registerBtn = document.getElementById('register-btn');
+            const registerText = document.getElementById('register-text');
+            const registerLoading = document.getElementById('register-loading');
+            
+            if (isLoading) {
+                registerBtn.disabled = true;
+                registerText.style.display = 'none';
+                registerLoading.style.display = 'inline-block';
+            } else {
+                registerBtn.disabled = false;
+                registerText.style.display = 'inline';
+                registerLoading.style.display = 'none';
+            }
+        }
+
+        // Password strength indicator
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthContainer = document.getElementById('password-strength');
+            const strengthFill = document.getElementById('strength-fill');
+            const strengthText = document.getElementById('strength-text');
+            
+            if (password.length > 0) {
+                strengthContainer.style.display = 'block';
+                const result = checkPasswordStrength(password);
+                
+                strengthFill.className = `strength-fill ${result.className}`;
+                strengthText.textContent = `Password strength: ${result.strength}`;
+                
+                if (result.feedback.length > 0) {
+                    strengthText.textContent += ` (Missing: ${result.feedback.join(', ')})`;
+                }
+            } else {
+                strengthContainer.style.display = 'none';
+            }
+        });
+
+        // Real-time validation
+        document.getElementById('email').addEventListener('blur', async function() {
+            const email = this.value.trim();
+            if (email) {
+                if (!validateEmail(email)) {
+                    showFieldValidation('email', 'Please enter a valid email address');
+                } else {
+                    // Check if email is already taken
+                    try {
+                        const response = await fetch('/api/auth/check-email', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ email })
+                        });
+                        
+                        const data = await response.json();
+                        if (data.exists) {
+                            showFieldValidation('email', 'This email is already registered');
+                        } else {
+                            showFieldValidation('email', 'Email is available', true);
+                        }
+                    } catch (error) {
+                        showFieldValidation('email', '');
+                    }
+                }
+            }
+        });
+
+        document.getElementById('username').addEventListener('blur', async function() {
+            const username = this.value.trim();
+            if (username) {
+                if (!validateUsername(username)) {
+                    showFieldValidation('username', 'Username must be 3-20 characters (letters, numbers, underscore only)');
+                } else {
+                    // Check if username is already taken
+                    try {
+                        const response = await fetch('/api/auth/check-username', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ username })
+                        });
+                        
+                        const data = await response.json();
+                        if (data.exists) {
+                            showFieldValidation('username', 'This username is already taken');
+                        } else {
+                            showFieldValidation('username', 'Username is available', true);
+                        }
+                    } catch (error) {
+                        showFieldValidation('username', '');
+                    }
+                }
+            }
+        });
+
+        document.getElementById('password').addEventListener('blur', function() {
+            const password = this.value;
+            if (password) {
+                const result = checkPasswordStrength(password);
+                if (result.score < 3) {
+                    showFieldValidation('password', 'Password is too weak. Please create a stronger password.');
+                } else {
+                    showFieldValidation('password', '');
+                }
+            }
+        });
+
+        document.getElementById('confirm-password').addEventListener('blur', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            
+            if (confirmPassword) {
+                if (password !== confirmPassword) {
+                    showFieldValidation('confirm-password', 'Passwords do not match');
+                } else {
+                    showFieldValidation('confirm-password', 'Passwords match', true);
+                }
+            }
+        });
+
+        // Clear validation on input
+        ['email', 'username', 'password', 'confirm-password'].forEach(fieldId => {
+            document.getElementById(fieldId).addEventListener('input', function() {
+                if (this.style.borderColor === 'rgb(255, 107, 107)') {
+                    showFieldValidation(fieldId, '');
+                }
+            });
+        });
+
+        // Form submission
+        document.getElementById('register-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const terms = document.getElementById('terms').checked;
+            const newsletter = document.getElementById('newsletter').checked;
+            
+            // Clear previous validation messages
+            ['email', 'username', 'password', 'confirm-password'].forEach(fieldId => {
+                showFieldValidation(fieldId, '');
+            });
+            
+            // Validate form
+            let isValid = true;
+            
+            if (!email) {
+                showFieldValidation('email', 'Email is required');
+                isValid = false;
+            } else if (!validateEmail(email)) {
+                showFieldValidation('email', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            if (!username) {
+                showFieldValidation('username', 'Username is required');
+                isValid = false;
+            } else if (!validateUsername(username)) {
+                showFieldValidation('username', 'Username must be 3-20 characters (letters, numbers, underscore only)');
+                isValid = false;
+            }
+            
+            if (!password) {
+                showFieldValidation('password', 'Password is required');
+                isValid = false;
+            } else {
+                const passwordStrength = checkPasswordStrength(password);
+                if (passwordStrength.score < 3) {
+                    showFieldValidation('password', 'Password is too weak. Please create a stronger password.');
+                    isValid = false;
+                }
+            }
+            
+            if (!confirmPassword) {
+                showFieldValidation('confirm-password', 'Please confirm your password');
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                showFieldValidation('confirm-password', 'Passwords do not match');
+                isValid = false;
+            }
+            
+            if (!terms) {
+                showError('Please accept the Terms of Service and Privacy Policy');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                return;
+            }
+            
+            setLoading(true);
+            
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        username: username,
+                        password: password,
+                        newsletter: newsletter
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showSuccess('Account created successfully! Please check your email to verify your account.');
+                    
+                    // Reset form
+                    document.getElementById('register-form').reset();
+                    document.getElementById('password-strength').style.display = 'none';
+                    
+                    // Redirect to login after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = 'login.html?registered=true';
+                    }, 3000);
+                } else {
+                    throw new Error(data.message || 'Registration failed');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showError(error.message || 'An error occurred during registration. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Check if user is already logged in
+        window.addEventListener('load', function() {
+            const token = localStorage.getItem('neodyme_token') || sessionStorage.getItem('neodyme_token');
+            if (token) {
+                // Verify token is still valid
+                fetch('/api/auth/verify', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = 'dashboard.html';
+                    }
+                })
+                .catch(() => {
+                    // Token invalid, clear it
+                    localStorage.removeItem('neodyme_token');
+                    localStorage.removeItem('neodyme_user');
+                    sessionStorage.removeItem('neodyme_token');
+                    sessionStorage.removeItem('neodyme_user');
+                });
+            }
+        });
+
+        // Handle Enter key navigation
+        document.getElementById('email').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('username').focus();
+            }
+        });
+
+        document.getElementById('username').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('password').focus();
+            }
+        });
+
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('confirm-password').focus();
+            }
+        });
+
+        document.getElementById('confirm-password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('terms').focus();
+            }
+        });
+    </script>
+</body>
+</html>

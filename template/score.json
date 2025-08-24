@@ -1,0 +1,129 @@
+{
+    "weekly": {
+        "solo": {
+            "wins": 0,
+            "top_2": 0,
+            "top_3": 0,
+            "top_5": 0,
+            "top_10": 0,
+            "top_25": 0,
+            "kills": 0,
+            "games_played": 0
+        },
+        "duo": {
+            "wins": 0,
+            "top_2": 0,
+            "top_3": 0,
+            "top_5": 0,
+            "top_10": 0,
+            "top_25": 0,
+            "kills": 0,
+            "games_played": 0
+        },
+        "section": {
+            "wins": 0,
+            "top_2": 0,
+            "top_3": 0,
+            "top_5": 0,
+            "top_10": 0,
+            "top_25": 0,
+            "kills": 0,
+            "games_played": 0
+        },
+        "temporary_mode": {
+            "wins": 0,
+            "top_2": 0,
+            "top_3": 0,
+            "top_5": 0,
+            "top_10": 0,
+            "top_25": 0,
+            "kills": 0,
+            "games_played": 0
+        }
+    },
+    "monthly": {
+        "solo": {
+            "wins": 0,
+            "top_2": 0,
+            "top_3": 0,
+            "top_5": 0,
+            "top_10": 0,
+            "top_25": 0,
+            "kills": 0,
+            "games_played": 0
+        },
+        "duo": {
+            "wins": 0,
+            "top_2": 0,
+            "top_3": 0,
+            "top_5": 0,
+            "top_10": 0,
+            "top_25": 0,
+            "kills": 0,
+            "games_played": 0
+        },
+        "section": {
+            "wins": 0,
+            "top_2": 0,
+            "top_3": 0,
+            "top_5": 0,
+            "top_10": 0,
+            "top_25": 0,
+            "kills": 0,
+            "games_played": 0
+        },
+        "temporary_mode": {
+            "wins": 0,
+            "top_2": 0,
+            "top_3": 0,
+            "top_5": 0,
+            "top_10": 0,
+            "top_25": 0,
+            "kills": 0,
+            "games_played": 0
+        }
+    },
+    "alltime": {
+        "solo": {
+            "wins": 0,
+            "top_2": 0,
+            "top_3": 0,
+            "top_5": 0,
+            "top_10": 0,
+            "top_25": 0,
+            "kills": 0,
+            "games_played": 0
+        },
+        "duo": {
+            "wins": 0,
+            "top_2": 0,
+            "top_3": 0,
+            "top_5": 0,
+            "top_10": 0,
+            "top_25": 0,
+            "kills": 0,
+            "games_played": 0
+        },
+        "section": {
+            "wins": 0,
+            "top_2": 0,
+            "top_3": 0,
+            "top_5": 0,
+            "top_10": 0,
+            "top_25": 0,
+            "kills": 0,
+            "games_played": 0
+        },
+        "temporary_mode": {
+            "wins": 0,
+            "top_2": 0,
+            "top_3": 0,
+            "top_5": 0,
+            "top_10": 0,
+            "top_25": 0,
+            "kills": 0,
+            "games_played": 0
+        },
+        "account_level": 0
+    }
+}

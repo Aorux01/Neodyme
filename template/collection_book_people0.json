@@ -1,0 +1,17 @@
+{
+  "_id": "Neodyme",
+  "created": "0001-01-01T00:00:00.000Z",
+  "updated": "0001-01-01T00:00:00.000Z",
+  "rvn": 1,
+  "wipeNumber": 1,
+  "accountId": "Neodyme",
+  "profileId": "collection_book_people0",
+  "version": "no_version",
+  "items": {},
+  "stats": {
+    "attributes": {
+      "inventory_limit_bonus": 0
+    }
+  },
+  "commandRevision": 0
+}

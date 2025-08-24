@@ -1,0 +1,67 @@
+{
+    "contentType": "collection",
+    "contentId": "Neodyme-motd-v",
+    "tcId": "634e8e85-e2fc-4c68-bb10-93604cf6605f",
+    "contentItems": [
+      {
+        "contentType": "content-item",
+        "contentId": "46874c56-0973-4cbe-ac98-b580c5b36df5",
+        "tcId": "61fb3dd8-f23d-45cc-9058-058ab223ba5c",
+        "contentFields": {
+          "body": {
+            "ar": "استمتع بتجربة لعب استثنائية في Neodyme !",
+            "en": "Have a phenomenal gaming experience in Neodyme !",
+            "de": "Wünsche allen ein wunderbares Spielerlebnis in Neodyme !",
+            "es": "¡Que disfrutes de tu experiencia de videojuegos en Neodyme !",
+            "es-419": "¡Ten una experiencia de juego espectacular en Neodyme !",
+            "fr": "Un bon jeu à toutes et à tous sur Neodyme  !",
+            "it": "Ti auguriamo un'esperienza di gioco fenomenale su Neodyme !",
+            "ja": "Neodyme で驚きの体験をしよう！",
+            "ko": "Neodyme 에서 환상적인 경험을 해보세요!",
+            "pl": "Życzymy fenomenalnej gry w Neodyme !",
+            "pt-BR": "Tenha uma experiência de jogo fenomenal no Neodyme !",
+            "ru": "Желаю невероятно приятной игры в Neodyme !",
+            "tr": "Muhteşem bir oyun deneyimi yaşamanı dileriz! Neodyme "
+          },
+          "entryType": "Website",
+          "image": [
+            {
+              "width": 1920,
+              "height": 1080,
+              "url": "https://fortnite-public-service-prod11.ol.epicgames.com/images/fortnite-public-service-prod11/motd.png"
+            }
+          ],
+          "tabTitleOverride": "Neodyme",
+          "tileImage": [
+            {
+              "width": 1024,
+              "height": 512,
+              "url": "https://fortnite-public-service-prod11.ol.epicgames.com/images/fortnite-public-service-prod11/motd-s.png"
+            }
+          ],
+          "title": {
+            "ar": "مرحبًا بك في Neodyme !",
+            "en": "Welcome to Neodyme !",
+            "de": "Willkommen bei Neodyme !",
+            "es": "¡Bienvenidos a Neodyme !",
+            "es-419": "¡Bienvenidos a Neodyme !",
+            "fr": "Bienvenue sur Neodyme  !",
+            "it": "Benvenuto in Neodyme !",
+            "ja": "Neodyme へようこそ！",
+            "ko": "Neodyme 에 오신 것을 환영합니다!",
+            "pl": "Witaj w Neodymeze !",
+            "pt-BR": "Bem-vindo ao Neodyme !",
+            "ru": "Добро пожаловать в Neodyme !",
+            "tr": "LavinServer'a Hoş Geldiniz!"
+          },
+          "videoAutoplay": false,
+          "videoLoop": false,
+          "videoMute": false,
+          "videoStreamingEnabled": false,
+          "websiteButtonText": "Discord",
+          "websiteURL": "https://discord.gg/"
+        },
+        "contentSchemaName": "MotdWebsiteNewsWithVideo"
+      }
+    ]
+}
