@@ -1,0 +1,81 @@
+{
+  "enabled": true,
+  "webhooks": {
+    "serverStatus": {
+      "enabled": true,
+      "url": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN",
+      "username": "Neodyme Server",
+      "avatar": "https://cdn.discordapp.com/attachments/123456789/server-icon.png"
+    },
+    "playerActivity": {
+      "enabled": true,
+      "url": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN",
+      "username": "Neodyme Players",
+      "avatar": "https://cdn.discordapp.com/attachments/123456789/player-icon.png"
+    },
+    "moderation": {
+      "enabled": true,
+      "url": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN",
+      "username": "Neodyme Moderation",
+      "avatar": "https://cdn.discordapp.com/attachments/123456789/mod-icon.png"
+    },
+    "statistics": {
+      "enabled": true,
+      "url": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN",
+      "username": "Neodyme Statistics",
+      "avatar": "https://cdn.discordapp.com/attachments/123456789/stats-icon.png"
+    },
+    "alerts": {
+      "enabled": false,
+      "url": "",
+      "username": "Neodyme Alerts",
+      "avatar": "https://cdn.discordapp.com/attachments/123456789/alert-icon.png"
+    },
+    "security": {
+      "enabled": false,
+      "url": "",
+      "username": "Neodyme Security",
+      "avatar": "https://cdn.discordapp.com/attachments/123456789/security-icon.png"
+    },
+    "plugins": {
+      "enabled": false,
+      "url": "",
+      "username": "Neodyme Plugins",
+      "avatar": "https://cdn.discordapp.com/attachments/123456789/plugin-icon.png"
+    }
+  },
+  "settings": {
+    "rateLimitEnabled": true,
+    "maxWebhooksPerMinute": 10,
+    "retryFailedWebhooks": true,
+    "maxRetries": 3,
+    "retryDelay": 5000
+  },
+  "schedule": {
+    "dailyStats": {
+      "enabled": true,
+      "time": "09:00",
+      "timezone": "UTC"
+    },
+    "weeklyReport": {
+      "enabled": true,
+      "day": "monday",
+      "time": "10:00",
+      "timezone": "UTC"
+    }
+  },
+  "filters": {
+    "playerActivity": {
+      "excludeIPs": ["127.0.0.1", "::1"],
+      "minSessionDuration": 60
+    },
+    "moderation": {
+      "logAllActions": true,
+      "includeAutoBans": true
+    },
+    "alerts": {
+      "minSeverity": "warning",
+      "excludeTypes": ["deprecated_warning"]
+    }
+  }
+}

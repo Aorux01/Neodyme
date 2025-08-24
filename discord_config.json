@@ -1,0 +1,88 @@
+{
+  "enabled": true,
+  "token": "YOUR_DISCORD_BOT_TOKEN_HERE",
+  "clientId": "YOUR_DISCORD_CLIENT_ID_HERE",
+  "guildId": "YOUR_DISCORD_SERVER_ID_HERE",
+  
+  "channels": {
+    "general": "GENERAL_CHANNEL_ID",
+    "admin": "ADMIN_CHANNEL_ID", 
+    "logs": "LOGS_CHANNEL_ID",
+    "status": "STATUS_CHANNEL_ID"
+  },
+  
+  "adminRoles": [
+    "Owner",
+    "Admin", 
+    "Moderator",
+    "Staff"
+  ],
+  
+  "adminUsers": [
+    "YOUR_DISCORD_USER_ID_HERE"
+  ],
+  
+  "features": {
+    "playerRegistration": true,
+    "autoStatusUpdates": true,
+    "playerStatistics": true,
+    "adminCommands": true,
+    "moderation": true,
+    "broadcasts": true,
+    "maintenanceMode": true,
+    "exchangeCodes": true,
+    "profileManagement": true
+  },
+  
+  "statusUpdate": {
+    "enabled": true,
+    "intervalMinutes": 5,
+    "showPlayerCount": true,
+    "activityType": "WATCHING"
+  },
+  
+  "playerStatistics": {
+    "enabled": true,
+    "intervalHours": 1,
+    "showDaily": true,
+    "showWeekly": true,
+    "showMonthly": false
+  },
+  
+  "moderation": {
+    "logActions": true,
+    "requireReason": false,
+    "autoKickBanned": true,
+    "dmOnBan": true,
+    "dmOnUnban": true
+  },
+  
+  "exchangeCodes": {
+    "enabled": true,
+    "expirationMinutes": 5,
+    "maxPerUser": 3,
+    "cooldownMinutes": 2
+  },
+  
+  "webhooks": {
+    "serverStatus": {
+      "enabled": false,
+      "url": "YOUR_WEBHOOK_URL_HERE",
+      "username": "Neodyme Server",
+      "avatar": "https://neodyme.com/neodyme-icon.png"
+    },
+    "playerActions": {
+      "enabled": false,
+      "url": "YOUR_WEBHOOK_URL_HERE",
+      "events": ["registration", "ban", "unban", "login"]
+    }
+  },
+  
+  "embeds": {
+    "primaryColor": "0x00adee",
+    "successColor": "0x00ff00",
+    "errorColor": "0xff0000",
+    "warningColor": "0xffa500",
+    "infoColor": "0x0099ff"
+  }
+}
