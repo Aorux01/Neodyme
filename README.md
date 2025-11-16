@@ -2,42 +2,53 @@
 
 > ⚠️ **Note:** This backend is not affiliated with or endorsed by Epic Games, nor is it ready for production.
 
-Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed to provide a completely independent alternative to the official Epic Games servers. It supports most core systems of the game, from account management to matchmaking, social features, and even Discord integrations.
+Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed to provide a completely independent alternative to the official Epic Games servers. It supports most core systems of the game, from account management to matchmaking, social features, XMPP, shop, website and more.
 
 ### ⚠️ Still under development, may contain bugs ⚠️
 
-**Latest version: 1.0.0**
+**Latest version: 1.1.0**
 
-**Latest API version: 1.0**
+**Latest API version: 1.1**
 
 ## 🎉 Main Features
 
 - ✅ **Secure login and authentication system**
-- ✅ **Full Two-Factor Authentication (2FA) support**
 - ✅ **Multi-account support**
 - ✅ **Web interface**
 - ✅ **Fully implemented MCP (profile service)**
-- ✅ **Complete friends system: friend requests, acceptance, removal**
-- ✅ **Token system and full XMPP support (chat, presence, private parties)**
+- ✅ **Complete friends system:** friend requests, acceptance, removal
+- ✅ **Token system and full XMPP support** (chat, presence, private parties)
 - ✅ **Working matchmaking system**
-- ✅ **Complete store/economy backend (V-Bucks, cosmetics)**
+- ✅ **Complete store/economy backend** (V-Bucks, cosmetics)
+- ✅ **Cloudstorage system**
+- ✅ **Customizable configuration** via `server.properties` and the `config/` directory
+- ✅ **Automatic dependency installation**
 - ✅ **Customizable events and tournament system**
 - ✅ **Self-hosted backend with no proprietary dependencies**
 - ✅ **Detailed logs and monitoring**
-- ✅ **Discord bots & webhook support (announcements, player status, admin commands)**
-- ✅ **Custom command system (Console Server and Discord)**
-- ✅ **Plugin system to easily extend and customize the backend**
-- ✅ **Dynamic event system (similar to LTM rotations)**
+- ✅ **Custom command system** (Console Server, see the documentation)
+- ✅ **Plugin system** to easily extend and customize the backend
 
 ## 🚧 To-Do List
 
-### 📌 Major Upcoming Features:
-- [ ] 📂 Advanced configuration management via the web interface
-- [ ] 🧹 More admin tools and moderation commands (ban, mute, kick via Discord/Console Server)
-- [ ] 🎮 Games server
+### 📌 Major Upcoming Features
+- [ ] ✨ Create **economics endpoints** (EXP, V-Bucks)
+- [ ] ☁️ Full **party system**
+- [ ] 📂 Finish and expand the website (leaderboards, 2FA setup, player stats, etc.)
+- [ ] ⚙️ Complete configuration implementation and management
+- [ ] 🧰 Create a full **Admin Panel** (moderation tools, real-time view, SAC, tokens, moderation, stats server, etc.)
+- [ ] 🧾 Add more commands (SAC, moderation, server control, etc.)
+- [ ] 💾 Implement all remaining storage systems (**SQLite, MongoDB, MySQL, PostgreSQL**)
+- [ ] 🔐 Finish **2FA setup**
+- [ ] 📡 Integrate **Vivox voice chat**
+- [ ] 📘 Complete the **public API**
 
 ### 📌 Secondary Features:
-- [ ] 🏆 Leaderboard system
+- [ ] 🎮 Add **Creative mode system**
+- [ ] 🎯 Add **Game Modes manager** (available modes rotation, queues, etc.)
+- [ ] 📡 Integrate **Vivox voice chat**
+- [ ] 🏁 Implement **queue system** for matchmaking / waitingroom
+- [ ] 🏆 Implement **leaderboard system**
 
 ## 📁 Installation
 
@@ -52,7 +63,6 @@ Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed t
 - **Express** for the web interface
 - **JWT-based authentication**
 - Modular **Plugin system** for easy expansion
-- **Discord bot & webhook integration**
 
 ## 📜 Additional Information
 
