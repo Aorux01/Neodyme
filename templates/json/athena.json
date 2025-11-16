@@ -1,0 +1,310 @@
+{
+  "_id": "Neodyme",
+  "created": "0001-01-01T00:00:00.000Z",
+  "updated": "0001-01-01T00:00:00.000Z",
+  "rvn": 8,
+  "wipeNumber": 1,
+  "accountId": "Neodyme",
+  "profileId": "athena",
+  "version": "no_version",
+  "items": {
+    "llama-loadout": {
+      "templateId": "CosmeticLocker:cosmeticlocker_athena",
+      "attributes": {
+        "locker_slots_data": {
+          "slots": {
+            "MusicPack": {
+              "items": [
+                "AthenaMusicPack:MusicPack_119_CH1_DefaultMusic"
+              ]
+            },
+            "Character": {
+              "items": [
+                ""
+              ],
+              "activeVariants": [
+                null
+              ]
+            },
+            "Backpack": {
+              "items": [
+                ""
+              ],
+              "activeVariants": [
+                null
+              ]
+            },
+            "SkyDiveContrail": {
+              "items": [
+                ""
+              ],
+              "activeVariants": [
+                null
+              ]
+            },
+            "Dance": {
+              "items": [
+                "AthenaDance:eid_dancemoves",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ]
+            },
+            "LoadingScreen": {
+              "items": [
+                ""
+              ]
+            },
+            "Pickaxe": {
+              "items": [
+                "AthenaPickaxe:DefaultPickaxe"
+              ],
+              "activeVariants": [
+                null
+              ]
+            },
+            "Glider": {
+              "items": [
+                "AthenaGlider:DefaultGlider"
+              ],
+              "activeVariants": [
+                null
+              ]
+            },
+            "ItemWrap": {
+              "items": [
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "activeVariants": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            }
+          }
+        },
+        "use_count": 0,
+        "banner_icon_template": "StandardBanner1",
+        "banner_color_template": "DefaultColor1",
+        "locker_name": "Neodyme",
+        "item_seen": false,
+        "favorite": false
+      },
+      "quantity": 1
+    },
+    "AthenaCharacter:cid_001_athena_commando_f_default": {
+        "templateId": "AthenaCharacter:cid_001_athena_commando_f_default",
+        "attributes": {
+            "max_level_bonus": 0,
+            "level": 1,
+            "item_seen": true,
+            "xp": 0,
+            "variants": [],
+            "favorite": false
+        },
+        "quantity": 1
+    },
+    "AthenaCharacter:cid_002_athena_commando_f_default": {
+        "templateId": "AthenaCharacter:cid_002_athena_commando_f_default",
+        "attributes": {
+            "max_level_bonus": 0,
+            "level": 1,
+            "item_seen": true,
+            "xp": 0,
+            "variants": [],
+            "favorite": false
+        },
+        "quantity": 1
+    },
+    "AthenaCharacter:cid_003_athena_commando_f_default": {
+        "templateId": "AthenaCharacter:cid_003_athena_commando_f_default",
+        "attributes": {
+            "max_level_bonus": 0,
+            "level": 1,
+            "item_seen": true,
+            "xp": 0,
+            "variants": [],
+            "favorite": false
+        },
+        "quantity": 1
+    },
+    "AthenaCharacter:cid_004_athena_commando_f_default": {
+        "templateId": "AthenaCharacter:cid_004_athena_commando_f_default",
+        "attributes": {
+            "max_level_bonus": 0,
+            "level": 1,
+            "item_seen": true,
+            "xp": 0,
+            "variants": [],
+            "favorite": false
+        },
+        "quantity": 1
+    },
+    "AthenaCharacter:cid_005_athena_commando_m_default": {
+        "templateId": "AthenaCharacter:cid_005_athena_commando_m_default",
+        "attributes": {
+            "max_level_bonus": 0,
+            "level": 1,
+            "item_seen": true,
+            "xp": 0,
+            "variants": [],
+            "favorite": false
+        },
+        "quantity": 1
+    },
+    "AthenaCharacter:cid_006_athena_commando_m_default": {
+        "templateId": "AthenaCharacter:cid_006_athena_commando_m_default",
+        "attributes": {
+            "max_level_bonus": 0,
+            "level": 1,
+            "item_seen": true,
+            "xp": 0,
+            "variants": [],
+            "favorite": false
+        },
+        "quantity": 1
+    },
+    "AthenaCharacter:cid_007_athena_commando_m_default": {
+        "templateId": "AthenaCharacter:cid_007_athena_commando_m_default",
+        "attributes": {
+            "max_level_bonus": 0,
+            "level": 1,
+            "item_seen": true,
+            "xp": 0,
+            "variants": [],
+            "favorite": false
+        },
+        "quantity": 1
+    },
+    "AthenaCharacter:cid_008_athena_commando_m_default": {
+        "templateId": "AthenaCharacter:cid_008_athena_commando_m_default",
+        "attributes": {
+            "max_level_bonus": 0,
+            "level": 1,
+            "item_seen": true,
+            "xp": 0,
+            "variants": [],
+            "favorite": false
+        },
+        "quantity": 1
+    },
+    "AthenaPickaxe:DefaultPickaxe": {
+        "templateId": "AthenaPickaxe:DefaultPickaxe",
+        "attributes": {
+            "max_level_bonus": 0,
+            "level": 1,
+            "item_seen": true,
+            "xp": 0,
+            "variants": [],
+            "favorite": false
+        },
+        "quantity": 1
+    },
+    "AthenaGlider:DefaultGlider": {
+        "templateId": "AthenaGlider:DefaultGlider",
+        "attributes": {
+            "max_level_bonus": 0,
+            "level": 1,
+            "item_seen": true,
+            "xp": 0,
+            "variants": [],
+            "favorite": false
+        },
+        "quantity": 1
+    },
+    "AthenaDance:eid_dancemoves": {
+        "templateId": "AthenaDance:eid_dancemoves",
+        "attributes": {
+            "max_level_bonus": 0,
+            "level": 1,
+            "item_seen": true,
+            "xp": 0,
+            "variants": [],
+            "favorite": false
+        },
+        "quantity": 1
+    }
+  },
+  "stats": {
+    "attributes": {
+      "past_seasons": [],
+      "season_match_boost": 0,
+      "loadouts": [
+        "llama-loadout"
+      ],
+      "favorite_victorypose": "",
+      "mfa_reward_claimed": true,
+      "quest_manager": {
+        "dailyLoginInterval": "2024-10-25T10:11:52.145Z",
+        "dailyQuestRerolls": 1
+      },
+      "book_level": 1,
+      "season_num": 3,
+      "favorite_consumableemote": "",
+      "banner_color": "DefaultColor1",
+      "favorite_callingcard": "",
+      "favorite_character": "",
+      "favorite_spray": [],
+      "book_xp": 0,
+      "battlestars": 0,
+      "battlestars_season_total": 0,
+      "style_points": 0,
+      "alien_style_points": 0,
+      "party_assist_quest": "",
+      "pinned_quest": "",
+      "purchased_bp_offers": [],
+      "favorite_loadingscreen": "",
+      "book_purchased": false,
+      "lifetime_wins": 0,
+      "favorite_hat": "",
+      "level": 1,
+      "favorite_battlebus": "",
+      "favorite_mapmarker": "",
+      "favorite_vehicledeco": "",
+      "accountLevel": 1,
+      "favorite_backpack": "",
+      "favorite_dance": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "inventory_limit_bonus": 0,
+      "last_applied_loadout": "",
+      "favorite_skydivecontrail": "",
+      "favorite_pickaxe": "AthenaPickaxe:DefaultPickaxe",
+      "favorite_glider": "AthenaGlider:DefaultGlider",
+      "daily_rewards": {},
+      "xp": 0,
+      "season_friend_match_boost": 0,
+      "active_loadout_index": 0,
+      "favorite_musicpack": "",
+      "banner_icon": "StandardBanner1",
+      "favorite_itemwraps": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    }
+  },
+  "commandRevision": 7
+}
