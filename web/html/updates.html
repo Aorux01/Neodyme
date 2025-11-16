@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Updates - Neodyme</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .updates-container {
+            max-width: 1200px;
+            margin: 100px auto 0;
+            padding: 0 24px 60px;
+        }
+
+        .updates-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .updates-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(45deg, #ffffff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .updates-subtitle {
+            color: #b0b0b0;
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .updates-timeline {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .update-card {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: border-color 0.2s ease;
+        }
+
+        .update-card:hover {
+            border-color: #8b5cf6;
+        }
+
+        .update-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .update-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .update-date {
+            color: #8b5cf6;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .update-badge {
+            background: #8b5cf6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+
+        .update-content {
+            color: #b0b0b0;
+            line-height: 1.6;
+        }
+
+        .update-features {
+            margin-top: 16px;
+            padding-left: 20px;
+        }
+
+        .update-features li {
+            margin-bottom: 8px;
+            color: #b0b0b0;
+        }
+
+        @media (max-width: 768px) {
+            .updates-container {
+                margin-top: 80px;
+                padding: 0 16px 40px;
+            }
+
+            .updates-title {
+                font-size: 36px;
+            }
+
+            .update-card {
+                padding: 24px;
+            }
+
+            .update-header {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../index.html" class="neodyme-logo">N</a>
+            
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="#" class="active">UPDATES</a></li>
+                    <li><a href="shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme/wiki" target="_blank">DOCS</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <a href="login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="updates-container">
+        <div class="updates-header">
+            <h1 class="updates-title">Latest Updates</h1>
+            <p class="updates-subtitle">Stay informed about the latest changes and improvements</p>
+        </div>
+
+        <div class="updates-timeline">
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.1.0</h3>
+                        <div class="update-date">November XX, 2025</div>
+                    </div>
+                    <span class="update-badge">RELEASE</span>
+                </div>
+                <div class="update-content">
+                    <p>Major update with performance improvements and new features.</p>
+                    <ul class="update-features">
+                        <li>Improved matchmaking system</li>
+                        <li>Added support for custom game modes</li>
+                        <li>Enhanced server stability</li>
+                        <li>Updated API endpoints</li>
+                        <li>Updated Website</li>
+                        <li>Added multi system storage foundation</li>
+                        <li>Added auto shop rotation</li>
+                        <li>Performance improvements</li>
+                        <li>Added backup system</li>
+                        <li>Updated CloudStorage</li>
+                        <li>Updated configuration system</li>
+                        <li>Added documentation</li>
+                        <li>Added commands</li>
+                        <li>Fix Friend system bugs</li>
+                        <li>Fix Party system bugs</li>
+                        <li>Fix XMPP system bugs</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.0.0</h3>
+                        <div class="update-date">August 24, 2025</div>
+                    </div>
+                    <span class="update-badge">RELEASE</span>
+                </div>
+                <div class="update-content">
+                    <p>May still contain bugs!! This is the first official release of Noedyme and fixes will be released later.</p>
+                    <ul class="update-features">
+                        <li>Support for Fortnite seasons 1-32</li>
+                        <li>Configuration management</li>
+                        <li>Detailed logging</li>
+                        <li>Matchmaking system foundation</li>
+                        <li>Comprehensive error handling</li>
+                        <li>Multi-account support</li>
+                        <li>Web dashboard with simple UI</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
+</body>
+</html>
