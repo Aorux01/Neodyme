@@ -40,7 +40,6 @@ Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed t
 - [ ] 🧾 Add more commands (SAC, moderation, server control, etc.)
 - [ ] 💾 Implement all remaining storage systems (**SQLite, MongoDB, MySQL, PostgreSQL**)
 - [ ] 🔐 Finish **2FA setup**
-- [ ] 📡 Integrate **Vivox voice chat**
 - [ ] 📘 Complete the **public API**
 
 ### 📌 Secondary Features:
