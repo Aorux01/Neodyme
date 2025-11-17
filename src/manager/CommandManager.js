@@ -57,9 +57,6 @@ class CommandManager {
             //    await DiscordManager.onServerShutdown();
             //}
 
-            LoggerService.log('info', 'Stopping Token service...')
-            await TokenService.shutdown();
-
             if (ConfigManager.get('plugins')) {
                 LoggerService.log('info', 'Unloading plugins...');
                 await PluginManager.unloadAll();
