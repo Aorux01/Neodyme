@@ -13,6 +13,7 @@ const GameServerManager = require('./src/manager/GameServerManager');
 const MatchmakerManager = require('./src/manager/MatchmakerManager');
 const ShopManager = require('./src/manager/ShopManager');
 const BackupManager = require('./src/manager/BackupManager');
+const EXPService = require('./src/service/api/EXPService');
 
 const NEODYME_ASCII = `
 ${colors.cyan('███╗   ██╗███████╗ ██████╗ ██████╗ ██╗   ██╗███╗   ███╗███████╗')}
@@ -88,7 +89,8 @@ class Server {
             // Generate Cloudstorage
             LoggerService.log('info', 'Generate Cloudstorage file(s)...');
             await CloudStorageManager.generateDefaultEngine();
-            
+
+            await EXPService.loadConfig();
     
             LoggerService.log('success', 'Server initialized successfully!');
             console.log(colors.gray('─'.repeat(65)));
