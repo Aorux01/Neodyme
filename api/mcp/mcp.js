@@ -5656,6 +5656,8 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/PurchaseCatalogEntr
     MCPMiddleware.attachProfileInfo,
     async (req, res) => {
         try {
+            await EXPService.loadConfig();
+
             const accountId = req.params.accountId;
             const profileId = req.query.profileId || 'profile0';
             const queryRevision = req.query.rvn || -1;
@@ -5668,9 +5670,9 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/PurchaseCatalogEntr
                 return res.status(err.statusCode).json(err.toJSON());
             }
 
-            const campaign = await DatabaseManager.getProfile(accountId, 'campaign');
-            const athena = await DatabaseManager.getProfile(accountId, 'athena');
-            const commonCore = await DatabaseManager.getProfile(accountId, 'common_core');
+            let campaign = await DatabaseManager.getProfile(accountId, 'campaign');
+            let athena = await DatabaseManager.getProfile(accountId, 'athena');
+            let commonCore = await DatabaseManager.getProfile(accountId, 'common_core');
 
             const changes = [];
             const multiUpdate = [];
@@ -6138,6 +6140,12 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/PurchaseCatalogEntr
                                         if (!athena.stats) athena.stats = {};
                                         if (!athena.stats.attributes) athena.stats.attributes = {};
                                         athena.stats.attributes.book_level = seasonData[seasonName].battlePassTier;
+
+                                        const xpResult = EXPService.addXpForTiersPurchased(athena, purchaseQuantity || 1);
+                                        athena = xpResult.profile;
+                                    
+                                        const xpChanges = EXPService.createStatModifiedChanges(xpResult.beforeChanges, xpResult.afterChanges);
+                                        multiUpdate[0].profileChanges.push(...xpChanges);
 
                                         for (let i = startingTier; i < endingTier; i++) {
                                             const freeTier = battlePass.freeRewards[i] || {};
@@ -7360,6 +7368,12 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/PurchaseCatalogEntr
                                         if (!athena.stats) athena.stats = {};
                                         if (!athena.stats.attributes) athena.stats.attributes = {};
                                         athena.stats.attributes.book_level = seasonData[seasonName].battlePassTier;
+
+                                        const xpResult = EXPService.addXpForTiersPurchased(athena, purchaseQuantity || 1);
+                                        athena = xpResult.profile;
+                                    
+                                        const xpChanges = EXPService.createStatModifiedChanges(xpResult.beforeChanges, xpResult.afterChanges);
+                                        multiUpdate[0].profileChanges.push(...xpChanges);
 
                                         for (let i = startingTier; i < endingTier; i++) {
                                             const freeTier = battlePass.freeRewards[i] || {};
@@ -9467,5 +9481,6 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/*",
         }
     }
 );
+
 
 module.exports = router;
