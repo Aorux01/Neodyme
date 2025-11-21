@@ -6,7 +6,7 @@ Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed t
 
 ### ⚠️ Still under development, may contain bugs ⚠️
 
-**Latest version: 1.1.1**
+**Latest version: 1.1.2**
 
 **Latest API version: 1.1**
 
@@ -28,11 +28,11 @@ Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed t
 - ✅ **Detailed logs and monitoring**
 - ✅ **Custom command system** (Console Server, see the documentation)
 - ✅ **Plugin system** to easily extend and customize the backend
+- ✅ **Economics endpoints** (EXP, V-Bucks)
 
 ## 🚧 To-Do List
 
 ### 📌 Major Upcoming Features
-- [ ] ✨ Create **economics endpoints** (EXP, V-Bucks)
 - [ ] ☁️ Full **party system**
 - [ ] 📂 Finish and expand the website (leaderboards, 2FA setup, player stats, etc.)
 - [ ] ⚙️ Complete configuration implementation and management
