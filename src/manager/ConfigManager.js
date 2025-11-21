@@ -39,7 +39,7 @@ class ConfigManager {
             LoggerService.log('error', `Failed to load configuration: ${error.message}`);
             this.config = {
                 port: 3551,
-                version: '1.1.1',
+                version: '1.1.2',
                 apiVersion: 'v1.1',
                 customVersion: true,
                 fnVersion: 3.60,
