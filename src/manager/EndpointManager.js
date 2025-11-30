@@ -105,15 +105,13 @@ class EndpointManager {
 }
     
             this.app.use('/favicon.ico', (req, res) => {
-                const faviconPath = path.join(__dirname, 'public', 'images', 'neodyme-public-service', 'favicon.ico');
+                const faviconPath = path.join(__dirname, '..', '..', 'public', 'images', 'neodyme-public-service', 'favicon.ico');
                 if (fs.existsSync(faviconPath)) {
                     res.sendFile(faviconPath);
                 } else {
                     res.status(204).end();
                 }
             });
-    
-            this.app.use('/static', express.static(path.join(__dirname, 'static-content')));
     
             if (ConfigManager.get('webInterface') !== false) {
                 const webDir = path.join(__dirname, '..', '..', 'web');
