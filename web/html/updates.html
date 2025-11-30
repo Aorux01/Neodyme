@@ -76,6 +76,12 @@
         }
 
         .update-hotfixes-date {
+            color: #52d307;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .update-security-date {
             color: #ff3737;
             font-size: 14px;
             font-weight: 500;
@@ -92,6 +98,16 @@
         }
 
         .update-hotfixes-badge {
+            background: #52d307;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+
+        .update-security-badge {
             background: #ff3737;
             color: white;
             padding: 4px 12px;
@@ -169,17 +185,40 @@
             <div class="update-card">
                 <div class="update-header">
                     <div>
+                        <h3 class="update-title">Version 1.1.3 - Security Update</h3>
+                        <div class="update-security-date">November 26, 2025</div>
+                    </div>
+                    <span class="update-security-badge">SECURITY</span>
+                </div>
+                <div class="update-content">
+                    <p>Major security update with Redis integration and enhanced protection systems.</p>
+                    <ul class="update-features">
+                        <li><strong>Rate Limiting System:</strong> Protection against brute force attacks (10 attempts, 10-minute block)</li>
+                        <li><strong>Input Validation:</strong> Comprehensive validation and sanitization of all user inputs</li>
+                        <li><strong>Path Security:</strong> Protection against path traversal and file system attacks</li>
+                        <li><strong>Redis Integration:</strong> Token storage migrated to Redis for better scalability</li>
+                        <li><strong>Async Token Management:</strong> All token operations now use async/await pattern</li>
+                        <li><strong>Enhanced Security:</strong> UUID validation, HTML escaping, and strict character whitelisting</li>
+                        <li><strong>Security Logging:</strong> Suspicious activity tracking and detailed security logs</li>
+                        <li><strong>Performance:</strong> Improved token lookup and automatic expiration handling</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
                         <h3 class="update-title">Version 1.1.2</h3>
-                        <div class="update-hotfixes-date">November 21, 2025</div>
+                        <div class="update-hotfixes-date">November 21, 2024</div>
                     </div>
                     <span class="update-hotfixes-badge">HOTFIXES</span>
                 </div>
                 <div class="update-content">
-                    <p>Fix update.</p>
+                    <p>Bug fixes and stability improvements.</p>
                     <ul class="update-features">
-                        <li>Fix EXP errors</li>
-                        <li>Fix tournaments page errors</li>
-                        <li>Fix images bugs</li>
+                        <li><strong>EXP System:</strong> Fixed experience point calculation errors</li>
+                        <li><strong>Tournaments:</strong> Fixed tournaments page display issues</li>
+                        <li><strong>Images:</strong> Resolved image loading and rendering bugs</li>
                     </ul>
                 </div>
             </div>
@@ -188,18 +227,18 @@
                 <div class="update-header">
                     <div>
                         <h3 class="update-title">Version 1.1.1</h3>
-                        <div class="update-hotfixes-date">November 18, 2025</div>
+                        <div class="update-hotfixes-date">November 18, 2024</div>
                     </div>
                     <span class="update-hotfixes-badge">HOTFIXES</span>
                 </div>
                 <div class="update-content">
                     <p>Fix update and new feature.</p>
                     <ul class="update-features">
-                        <li>Add role system</li>
-                        <li>Fix site bugs</li>
-                        <li>Fix the dependency installation</li>
-                        <li>Fix the saving of customer settings (CloudStorage)</li>
-                        <li>Fix commands bugs</li>
+                        <li><strong>Role System:</strong> Added role system for user management</li>
+                        <li><strong>Site Improvements:</strong> Fixed various website bugs and UI issues</li>
+                        <li><strong>Dependency Management:</strong> Fixed dependency installation process</li>
+                        <li><strong>CloudStorage:</strong> Fixed customer settings saving functionality</li>
+                        <li><strong>Commands:</strong> Fixed command execution bugs</li>
                     </ul>
                 </div>
             </div>
@@ -208,29 +247,27 @@
                 <div class="update-header">
                     <div>
                         <h3 class="update-title">Version 1.1.0</h3>
-                        <div class="update-release-date">November 16, 2025</div>
+                        <div class="update-release-date">November 16, 2024</div>
                     </div>
                     <span class="update-release-badge">RELEASE</span>
                 </div>
                 <div class="update-content">
                     <p>Major update with performance improvements and new features.</p>
                     <ul class="update-features">
-                        <li>Improved matchmaking system</li>
-                        <li>Added support for custom game modes</li>
-                        <li>Enhanced server stability</li>
-                        <li>Updated API endpoints</li>
-                        <li>Updated Website</li>
-                        <li>Added multi system storage foundation</li>
-                        <li>Added auto shop rotation</li>
-                        <li>Performance improvements</li>
-                        <li>Added backup system</li>
-                        <li>Updated CloudStorage</li>
-                        <li>Updated configuration system</li>
-                        <li>Added documentation</li>
-                        <li>Added commands</li>
-                        <li>Fix Friend system bugs</li>
-                        <li>Fix Party system bugs</li>
-                        <li>Fix XMPP system bugs</li>
+                        <li><strong>Matchmaking:</strong> Improved matchmaking system with better player pairing</li>
+                        <li><strong>Game Modes:</strong> Added support for custom game modes</li>
+                        <li><strong>Server Stability:</strong> Enhanced server stability and crash prevention</li>
+                        <li><strong>API Updates:</strong> Updated and optimized API endpoints</li>
+                        <li><strong>Website:</strong> Complete website redesign with modern UI</li>
+                        <li><strong>Storage System:</strong> Multi-system storage foundation implementation</li>
+                        <li><strong>Shop Rotation:</strong> Automatic shop rotation system</li>
+                        <li><strong>Performance:</strong> General performance improvements across the board</li>
+                        <li><strong>Backup System:</strong> Automated backup system for data protection</li>
+                        <li><strong>CloudStorage:</strong> Enhanced CloudStorage functionality</li>
+                        <li><strong>Configuration:</strong> Improved configuration management system</li>
+                        <li><strong>Documentation:</strong> Comprehensive documentation added</li>
+                        <li><strong>Commands:</strong> New command system implementation</li>
+                        <li><strong>Bug Fixes:</strong> Fixed Friend system, Party system, and XMPP bugs</li>
                     </ul>
                 </div>
             </div>
@@ -238,21 +275,21 @@
             <div class="update-card">
                 <div class="update-header">
                     <div>
-                        <h3 class="update-title">Version 1.0.0</h3>
-                        <div class="update-release-date">August 24, 2025</div>
+                        <h3 class="update-title">Version 1.0.0 - Initial Release</h3>
+                        <div class="update-release-date">August 24, 2024</div>
                     </div>
                     <span class="update-release-badge">RELEASE</span>
                 </div>
                 <div class="update-content">
-                    <p>May still contain bugs!! This is the first official release of Noedyme and fixes will be released later.</p>
+                    <p>First official release of Neodyme. May contain bugs - fixes will be released in future updates.</p>
                     <ul class="update-features">
-                        <li>Support for Fortnite seasons 1-32</li>
-                        <li>Configuration management</li>
-                        <li>Detailed logging</li>
-                        <li>Matchmaking system foundation</li>
-                        <li>Comprehensive error handling</li>
-                        <li>Multi-account support</li>
-                        <li>Web dashboard with simple UI</li>
+                        <li><strong>Season Support:</strong> Full support for Fortnite seasons 1-32</li>
+                        <li><strong>Configuration:</strong> Comprehensive configuration management system</li>
+                        <li><strong>Logging:</strong> Detailed logging and monitoring capabilities</li>
+                        <li><strong>Matchmaking:</strong> Foundation for matchmaking system</li>
+                        <li><strong>Error Handling:</strong> Robust error handling throughout the application</li>
+                        <li><strong>Multi-Account:</strong> Support for multiple user accounts</li>
+                        <li><strong>Web Dashboard:</strong> Simple and intuitive web-based dashboard</li>
                     </ul>
                 </div>
             </div>
