@@ -102,7 +102,7 @@ class EndpointManager {
                         }
                     }
                 }));
-}
+            }
     
             this.app.use('/favicon.ico', (req, res) => {
                 const faviconPath = path.join(__dirname, '..', '..', 'public', 'images', 'neodyme-public-service', 'favicon.ico');
