@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const PartyManager = require('../../src/manager/PartyManager');
 const LoggerService = require('../../src/service/logger/LoggerService');
+const { Errors, sendError } = require('../../src/service/error/Errors');
 
 router.get("/party/api/v1/Fortnite/user/*", async (req, res) => {
     try {
@@ -49,13 +50,13 @@ router.post("/party/api/v1/Fortnite/parties/:partyId/members/:accountId/join", a
         const party = PartyManager.joinParty(partyId, accountId, meta, connectionMeta);
 
         if (!party) {
-            return res.status(404).json({ error: "Party not found or full" });
+            return sendError(res, Errors.Party.partyNotFound(partyId));
         }
 
         res.json(party);
     } catch (error) {
         LoggerService.log('error', `Join party error: ${error.message}`);
-        res.status(500).json({ error: "Internal server error" });
+        sendError(res, Errors.Internal.serverError());
     }
 });
 
