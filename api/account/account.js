@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const DatabaseManager = require('../../src/manager/DatabaseManager');
-const { Errors } = require('../../src/service/error/Errors');
+const { Errors, sendError } = require('../../src/service/error/Errors');
 const LoggerService = require('../../src/service/logger/LoggerService');
 const { verifyToken, verifyClient } = require('../../src/middleware/authMiddleware');
 const FunctionsService = require('../../src/service/api/FunctionsService');
@@ -82,7 +82,7 @@ router.get('/account/api/public/account/:accountId', verifyClient, async (req, r
             return res.status(error.statusCode).json(error.toJSON());
         }
         LoggerService.log('error', `Failed to get account: ${error.message}`);
-        res.status(500).json({ error: 'Failed to retrieve account' });
+        sendError(res, Errors.Internal.serverError());
     }
 });
 
