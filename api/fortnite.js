@@ -178,10 +178,6 @@ router.get('/fortnite/api/stats/accountId/:accountId/bulk/window/alltime', async
     });
 });
 
-router.post('/fortnite/api/feedback/*', async (req, res) => {
-    res.status(200).end();
-});
-
 router.post('/fortnite/api/statsv2/query', async (req, res) => {
     res.json([]);
 });
