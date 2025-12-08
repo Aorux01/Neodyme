@@ -9,6 +9,8 @@ const cookieParser = require('cookie-parser');
 const LoggerService = require('../service/logger/LoggerService');
 const ConfigManager = require('./ConfigManager');
 const {ApiError, sendError, Errors} = require('../service/error/Errors');
+const RateLimitManager = require('./RateLimitManager');
+const { globalRateLimit } = require('../middleware/rateLimitMiddleware');
 
 class EndpointManager {
     static app = null;
@@ -16,6 +18,7 @@ class EndpointManager {
 
     static async start() {
         this.app = express();
+        await this.initializeRateLimiting();
         this.setupMiddleware();
         await this.loadEndpoints();
         this.setupErrorHandling();
@@ -25,14 +28,31 @@ class EndpointManager {
         return this.app;
     }
 
+    static async initializeRateLimiting() {
+        try {
+            await RateLimitManager.initialize();
+        } catch (error) {
+            LoggerService.log('error', `Failed to initialize rate limiting: ${error.message}`);
+        }
+    }
+
     static setupMiddleware() {
         try {
-            this.app.use(helmet({
-                crossOriginEmbedderPolicy: false,
-                contentSecurityPolicy: false
-            }));
-    
-            if (ConfigManager.get('corsEnable')) {
+            // Trust proxy if enabled (important for rate limiting behind reverse proxy)
+            if (ConfigManager.get('trustProxy', true)) {
+                this.app.set('trust proxy', true);
+            }
+
+            // Helmet security headers
+            if (ConfigManager.get('helmetEnable', true)) {
+                this.app.use(helmet({
+                    crossOriginEmbedderPolicy: false,
+                    contentSecurityPolicy: false
+                }));
+            }
+
+            // CORS
+            if (ConfigManager.get('corsEnable', true)) {
                 this.app.use(cors({
                     origin: true,
                     credentials: true,
@@ -40,28 +60,37 @@ class EndpointManager {
                     allowedHeaders: ['Content-Type', 'Authorization', 'X-Epic-Correlation-ID', 'X-Requested-With']
                 }));
             }
-    
-            if (ConfigManager.get('compressionEnable')) {
+
+            // Compression
+            if (ConfigManager.get('compressionEnable', true)) {
                 this.app.use(compression());
             }
 
-            const limit_raw = ConfigManager.get('LimitBodySize');
+            // Body size limit
+            const limit_raw = ConfigManager.get('limitBodySize', '50mb');
             this.app.use('/fortnite/api/cloudstorage/user/*/*', express.raw({
                 limit: limit_raw,
                 type: '*/*'
             }));
-    
-            this.app.use(express.json());
-            this.app.use(express.urlencoded({ extended: true }));
+
+            this.app.use(express.json({ limit: limit_raw }));
+            this.app.use(express.urlencoded({ extended: true, limit: limit_raw }));
             this.app.use('/images', express.static(path.join(__dirname, '../../public/images')));
             this.app.use(cookieParser());
-    
+
+            // Request tracking
             this.app.use((req, res, next) => {
                 req.requestId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
                 req.startTime = performance.now();
                 this.requestCount++;
                 next();
             });
+
+            // Global rate limiter - Applied to all requests
+            if (ConfigManager.get('rateLimiting', true)) {
+                this.app.use(globalRateLimit());
+                LoggerService.log('info', 'Global rate limiting enabled');
+            }
     
             if (ConfigManager.get('debug')) {
                 this.app.use((req, res, next) => {
@@ -224,3 +253,4 @@ class EndpointManager {
 }
 
 module.exports = EndpointManager;
+
