@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const rateLimit = require('express-rate-limit');
 const DatabaseManager = require('../../src/manager/DatabaseManager');
 const TokenService = require('../../src/service/token/TokenWebService');
 const ConfigManager = require('../../src/manager/ConfigManager');
@@ -9,21 +8,7 @@ const FunctionsService = require('../../src/service/api/FunctionsService');
 const LoggerService = require("../../src/service/logger/LoggerService");
 const ShopManager = require('../../src/manager/ShopManager');
 const bcrypt = require('bcrypt');
-
-// TODO: in server.properties
-const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 5,
-    message: { message: 'Too many authentication attempts, please try again later' },
-    standardHeaders: true,
-    legacyHeaders: false,
-});
-
-const registerLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000,
-    max: 3,
-    message: { message: 'Too many registration attempts' }
-});
+const { authRateLimit, expensiveRateLimit } = require('../../src/middleware/rateLimitMiddleware');
 
 const verifyToken = async (req, res, next) => {
     try {
@@ -68,7 +53,7 @@ const verifyToken = async (req, res, next) => {
     }
 };
 
-router.post('*auth/register', registerLimiter, async (req, res) => {
+router.post('*auth/register', authRateLimit(), async (req, res) => {
     try {
         const { email, username, password } = req.body;
         
@@ -121,7 +106,7 @@ router.post('*auth/register', registerLimiter, async (req, res) => {
     }
 });
 
-router.post('*auth/login', authLimiter, async (req, res) => {
+router.post('*auth/login', authRateLimit(), async (req, res) => {
     try {
         const { email, password } = req.body;
         
@@ -188,7 +173,7 @@ router.get('*user/vbucks', verifyToken, async (req, res) => {
     }
 });
 
-router.post('*purchase/vbucks', verifyToken, async (req, res) => {
+router.post('*purchase/vbucks', expensiveRateLimit(), verifyToken, async (req, res) => {
     try {
         const { packageAmount, price, paymentMethod } = req.body;
         const accountId = req.user.accountId;
@@ -231,7 +216,7 @@ router.post('*purchase/vbucks', verifyToken, async (req, res) => {
     }
 });
 
-router.post('*purchase/item', verifyToken, async (req, res) => {
+router.post('*purchase/item', expensiveRateLimit(), verifyToken, async (req, res) => {
     try {
         const { itemKey } = req.body;
         const accountId = req.user.accountId;
@@ -277,7 +262,7 @@ router.post('*purchase/item', verifyToken, async (req, res) => {
     }
 });
 
-router.post('*purchase/refund', verifyToken, async (req, res) => {
+router.post('*purchase/refund', expensiveRateLimit(), verifyToken, async (req, res) => {
     try {
         const { purchaseId } = req.body;
         const accountId = req.user.accountId;
@@ -605,7 +590,7 @@ router.get('/*shop/items', async (req, res) => {
     }
 });
 
-router.post('/*shop/rotate', async (req, res) => {
+router.post('/*shop/rotate', expensiveRateLimit(), async (req, res) => {
     try {
         const authHeader = req.headers.authorization;
         
