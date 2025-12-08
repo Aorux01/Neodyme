@@ -2,14 +2,13 @@ const { Errors, sendError } = require('../service/error/Errors');
 
 async function validateProfileId(req, res, next) {
     if (!req.query.profileId && req.originalUrl.toLowerCase().startsWith("/fortnite/api/game/v2/profile/")) {
-        return res.status(404).json({
-            error: "Profile not defined."
-        });
+        return sendError(res, Errors.MCP.profileNotFound('undefined'));
     }
     next();
 }
 
 async function validateAccountOwnership(req, res, next) {
+    // TODO: Implement ownership validation logic
     next();
 }
 
