@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const DatabaseManager = require('../../src/manager/DatabaseManager');
 const LoggerService = require('../../src/service/logger/LoggerService');
-const { Errors } = require('../../src/service/error/Errors');
+const { Errors, sendError } = require('../../src/service/error/Errors');
 const { verifyToken } = require('../../src/middleware/authMiddleware');
 const FriendsService = require('../../src/service/api/FriendsService');
 
@@ -98,7 +98,7 @@ router.post('/friends/api/public/friends/:accountId/:friendId', verifyToken, asy
             return res.status(error.statusCode).json(error.toJSON());
         }
         LoggerService.log('error', `Failed to send friend request: ${error.message}`);
-        res.status(500).json({ error: 'Failed to send friend request' });
+        sendError(res, Errors.Internal.serverError());
     }
 });
 
@@ -164,7 +164,7 @@ router.post('/friends/api/v1/:accountId/friends/:friendId', verifyToken, async (
             return res.status(error.statusCode).json(error.toJSON());
         }
         LoggerService.log('error', `Failed to send friend request: ${error.message}`);
-        res.status(500).json({ error: 'Failed to send friend request' });
+        sendError(res, Errors.Internal.serverError());
     }
 });
 
@@ -193,7 +193,7 @@ router.post('/friends/api/v1/:accountId/friends/:friendId/accept', verifyToken, 
             return res.status(error.statusCode).json(error.toJSON());
         }
         LoggerService.log('error', `Failed to accept friend request: ${error.message}`);
-        res.status(500).json({ error: 'Failed to accept friend request' });
+        sendError(res, Errors.Internal.serverError());
     }
 });
 
@@ -222,7 +222,7 @@ router.delete('/friends/api/v1/:accountId/friends/:friendId', verifyToken, async
             return res.status(error.statusCode).json(error.toJSON());
         }
         LoggerService.log('error', `Failed to remove friend: ${error.message}`);
-        res.status(500).json({ error: 'Failed to remove friend' });
+        sendError(res, Errors.Internal.serverError());
     }
 });
 
