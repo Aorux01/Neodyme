@@ -14,6 +14,7 @@ const MatchmakerManager = require('./src/manager/MatchmakerManager');
 const ShopManager = require('./src/manager/ShopManager');
 const BackupManager = require('./src/manager/BackupManager');
 const EXPService = require('./src/service/api/EXPService');
+const TokenWebService = require('./src/service/token/TokenWebService');
 
 const NEODYME_ASCII = `
 ${colors.cyan('███╗   ██╗███████╗ ██████╗ ██████╗ ██╗   ██╗███╗   ███╗███████╗')}
@@ -53,7 +54,11 @@ class Server {
             // Load database
             LoggerService.log('info', 'Initializing database...');
             await DatabaseManager.initialize();
-    
+
+            // Initialize TokenWebService for web authentication
+            LoggerService.log('info', 'Initializing Web Token Service...');
+            TokenWebService.initialize();
+
             // Load plugins
             if (ConfigManager.get('plugins')) {
                 LoggerService.log('info', 'Loading plugin(s)...');
