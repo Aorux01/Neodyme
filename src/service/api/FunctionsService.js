@@ -1,4 +1,5 @@
 const ConfigManager = require("../../manager/ConfigManager");
+const validator = require('validator');
 
 async function sleep(ms) {
     await new Promise((resolve, reject) => {
@@ -88,12 +89,12 @@ function getContentPages(req) {
                 contentpages.lobby.backgroundimage = "";
                 contentpages.lobby.stage = "default";
                 break;
-            
+
             case 10:
                 backgrounds[0].stage = "seasonx";
                 backgrounds[1].stage = "seasonx";
                 break;
-            
+
             case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19:
                 break;
 
@@ -112,7 +113,7 @@ function getContentPages(req) {
             case 23:
                 backgrounds[0].backgroundimage = "https://cdn2.unrealengine.com/t-bp23-lobby-2048x1024-2048x1024-26f2c1b27f63.png";
                 break;
-            
+
             case 24:
                 backgrounds[0].backgroundimage = "https://cdn2.unrealengine.com/t-ch4s2-bp-lobby-4096x2048-edde08d15f7e.jpg";
                 break;
@@ -205,7 +206,7 @@ function MakeSurvivorAttributes(templateId) {
         var randomNumber = Math.floor(Math.random() * SurvivorData.bonuses.length);
         SurvivorAttributes.set_bonus = SurvivorData.bonuses[randomNumber];
     }
-    
+
     if (!SurvivorAttributes.hasOwnProperty("personality")) {
         var randomNumber = Math.floor(Math.random() * SurvivorData.personalities.length);
         SurvivorAttributes.personality = SurvivorData.personalities[randomNumber];
@@ -226,20 +227,86 @@ function MakeSurvivorAttributes(templateId) {
 }
 
 function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    if (!email || typeof email !== 'string') return false;
+
+    if (email.length < 5 || email.length > 254) return false;
+
+    return validator.isEmail(email, {
+        allow_display_name: false,
+        require_display_name: false,
+        allow_utf8_local_part: false,
+        require_tld: true,
+        ignore_max_length: false
+    });
 }
 
 function isValidUsername(username) {
-    if (!username || username.length < 3 || username.length > 20) {
-        return false;
-    }
+    if (!username || typeof username !== 'string') return false;
+
+    if (username.length < 3 || username.length > 20) return false;
+
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
-    return usernameRegex.test(username);
+    if (!usernameRegex.test(username)) return false;
+
+    if (!/^[a-zA-Z]/.test(username)) return false;
+
+    if (username.includes('__')) return false;
+
+    return true;
 }
 
 function isValidPassword(password) {
-    return password && password.length >= 6;
+    const errors = [];
+
+    if (!password || typeof password !== 'string') {
+        return { valid: false, errors: ['Password is required'] };
+    }
+
+    // Minimum length of 8 characters
+    if (password.length < 8) {
+        errors.push('Password must be at least 8 characters long');
+    }
+
+    // Maximum length to prevent DoS
+    if (password.length > 128) {
+        errors.push('Password must be no more than 128 characters');
+    }
+
+    // At least one uppercase letter
+    if (!/[A-Z]/.test(password)) {
+        errors.push('Password must contain at least one uppercase letter');
+    }
+
+    // At least one lowercase letter
+    if (!/[a-z]/.test(password)) {
+        errors.push('Password must contain at least one lowercase letter');
+    }
+
+    // At least one number
+    if (!/[0-9]/.test(password)) {
+        errors.push('Password must contain at least one number');
+    }
+
+    // At least one special character
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+        errors.push('Password must contain at least one special character (!@#$%^&*()_+-=[]{};\':"|,.<>/?)');
+    }
+
+    return {
+        valid: errors.length === 0,
+        errors: errors
+    };
+}
+
+function isValidPasswordSimple(password) {
+    const result = isValidPassword(password);
+    return result.valid;
+}
+
+function getPasswordValidationError(password) {
+    const result = isValidPassword(password);
+    if (result.valid) return null;
+    return result.errors.join('. ');
 }
 
 function generateRandomString(length = 16) {
@@ -256,6 +323,56 @@ function getDisplayNameWithRole(account) {
     return prefix ? `${prefix} ${account.displayName}` : account.displayName;
 }
 
+function sanitizeInput(input) {
+    if (!input || typeof input !== 'string') return '';
+
+    // Trim whitespace
+    let sanitized = input.trim();
+
+    // Escape HTML entities
+    sanitized = validator.escape(sanitized);
+
+    return sanitized;
+}
+
+function validateAuthInput(input) {
+    const errors = [];
+    const sanitized = {};
+
+    if (input.email) {
+        const email = input.email.trim().toLowerCase();
+        if (!isValidEmail(email)) {
+            errors.push('Invalid email format');
+        } else {
+            sanitized.email = email;
+        }
+    }
+
+    if (input.username) {
+        const username = input.username.trim();
+        if (!isValidUsername(username)) {
+            errors.push('Username must be 3-20 characters, start with a letter, and contain only letters, numbers, and underscores');
+        } else {
+            sanitized.username = username;
+        }
+    }
+
+    if (input.password) {
+        const passwordResult = isValidPassword(input.password);
+        if (!passwordResult.valid) {
+            errors.push(...passwordResult.errors);
+        } else {
+            sanitized.password = input.password; // Don't sanitize passwords, they need special chars
+        }
+    }
+
+    return {
+        valid: errors.length === 0,
+        errors: errors,
+        sanitized: sanitized
+    };
+}
+
 module.exports = {
     sleep,
     getTheater,
@@ -264,7 +381,11 @@ module.exports = {
     isValidEmail,
     isValidUsername,
     isValidPassword,
+    isValidPasswordSimple,
+    getPasswordValidationError,
     generateRandomString,
     MakeID,
-    getDisplayNameWithRole
+    getDisplayNameWithRole,
+    sanitizeInput,
+    validateAuthInput
 }
