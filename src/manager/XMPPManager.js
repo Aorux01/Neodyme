@@ -209,8 +209,8 @@ class XMPPManager {
         const tokenData = TokenService.verifyToken(token);
         if (!tokenData || tokenData.sub !== accountId) {
             LoggerService.log('warn', `XMPP auth failed: invalid token for ${accountId}`);
-            // this.closeConnection(ws);
-            // return null;
+            this.closeConnection(ws);
+            return null;
         }
 
         ws.send(
