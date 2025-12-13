@@ -185,7 +185,31 @@
             <div class="update-card">
                 <div class="update-header">
                     <div>
-                        <h3 class="update-title">Version 1.1.3 - Rate Limiting & Security</h3>
+                        <h3 class="update-title">Version 1.1.4 - Security Hardening</h3>
+                        <div class="update-security-date">December 13, 2025</div>
+                    </div>
+                    <span class="update-security-badge">SECURITY</span>
+                </div>
+                <div class="update-content">
+                    <p>Major security audit fixes addressing 10 critical vulnerabilities identified in the security assessment.</p>
+                    <ul class="update-features">
+                        <li><strong>Token Persistence:</strong> Tokens now persist to Tokens.json file instead of in-memory storage - survives server restarts</li>
+                        <li><strong>Input Validation:</strong> Added comprehensive input validation for all authentication endpoints with length limits</li>
+                        <li><strong>Password Requirements:</strong> Enforced strong password policy (8+ chars, uppercase, lowercase, number, special char) with visual strength indicator</li>
+                        <li><strong>Email Normalization:</strong> All emails are now normalized to lowercase to prevent duplicate accounts</li>
+                        <li><strong>Account Lockout:</strong> Added account lockout after 5 failed login attempts with exponential backoff</li>
+                        <li><strong>Race Condition Protection:</strong> Implemented file locking and atomic write operations for all JSON database operations</li>
+                        <li><strong>Shop Images:</strong> Shop now displays item images from fortnite-api.com and shows "Already Owned" badge</li>
+                        <li><strong>Token Commands:</strong> New /tokens, /health, /ready, /unlock commands for token and server management</li>
+                        <li><strong>Website:</strong> Updated the Neodyme website</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.1.4 - Rate Limiting & Security</h3>
                         <div class="update-security-date">December 08, 2025</div>
                     </div>
                     <span class="update-security-badge">SECURITY</span>
