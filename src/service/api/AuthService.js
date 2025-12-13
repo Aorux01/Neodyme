@@ -11,16 +11,8 @@ class AuthService {
             throw Errors.Authentication.OAuth.invalidBody();
         }
 
-        const account = await DatabaseManager.getAccountByEmail(username) || 
+        const account = await DatabaseManager.getAccountByEmail(username) ||
                         await DatabaseManager.getAccountByDisplayName(username);
-        
-        if (!account) {
-            const email = username
-            const displayName = username.split('@')[0];
-            await DatabaseManager.createAccount(email, password, displayName)
-            const account = await DatabaseManager.getAccountByEmail(username) || 
-                        await DatabaseManager.getAccountByDisplayName(username);
-        }
 
         const passwordMatch = await bcrypt.compare(password, account.password);
         if (!passwordMatch) {
