@@ -386,26 +386,53 @@ class ShopManager {
             dailyItems.forEach((item, index) => {
                 shopConfig[`daily${index + 1}`] = {
                     itemGrants: this.formatItemGrants(item),
-                    price: this.calculatePrice(item)
+                    price: this.calculatePrice(item),
+                    meta: {
+                        name: item.name || 'Unknown',
+                        description: item.description || '',
+                        rarity: item.rarity?.displayValue || 'Unknown',
+                        type: item.type?.displayValue || 'Unknown',
+                        image: item.images?.smallIcon || item.images?.icon || null
+                    }
                 };
             });
 
             featuredItems.forEach((item, index) => {
                 shopConfig[`featured${index + 1}`] = {
                     itemGrants: this.formatItemGrants(item),
-                    price: this.calculatePrice(item)
+                    price: this.calculatePrice(item),
+                    meta: {
+                        name: item.name || 'Unknown',
+                        description: item.description || '',
+                        rarity: item.rarity?.displayValue || 'Unknown',
+                        type: item.type?.displayValue || 'Unknown',
+                        image: item.images?.smallIcon || item.images?.icon || null
+                    }
                 };
             });
 
             await fs.writeFile(this.shopDataPath, JSON.stringify(shopConfig, null, 2), 'utf-8');
 
+            // Build shop state with image URLs for each item
             const now = new Date();
             const nextRotation = this.calculateNextRotationTime(now);
-            
-            await fs.writeFile(this.shopStatePath, JSON.stringify({
+
+            const shopState = {
                 lastRotation: now.toISOString(),
                 nextRotation: nextRotation.toISOString()
-            }, null, 2), 'utf-8');
+            };
+
+            // Add image URLs for daily items
+            dailyItems.forEach((item, index) => {
+                shopState[`daily${index + 1}`] = item.images?.smallIcon || item.images?.icon || null;
+            });
+
+            // Add image URLs for featured items
+            featuredItems.forEach((item, index) => {
+                shopState[`featured${index + 1}`] = item.images?.smallIcon || item.images?.icon || null;
+            });
+
+            await fs.writeFile(this.shopStatePath, JSON.stringify(shopState, null, 2), 'utf-8');
 
             LoggerService.log('success', 'Shop rotated successfully');
 
