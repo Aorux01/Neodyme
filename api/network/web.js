@@ -56,21 +56,47 @@ const verifyToken = async (req, res, next) => {
 router.post('*auth/register', authRateLimit(), async (req, res) => {
     try {
         const { email, username, password } = req.body;
-        
+
         if (!email || !username || !password) {
-            return sendError(res, Errors.Basic.badRequest());
+            return res.status(400).json({
+                success: false,
+                error: 'Missing required fields',
+                message: 'Email, username, and password are required'
+            });
+        }
+
+        // Length limits to prevent DoS
+        if (email.length > 254 || username.length > 20 || password.length > 128) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid input length',
+                message: 'Input exceeds maximum allowed length'
+            });
         }
 
         if (!FunctionsService.isValidEmail(email)) {
-            return sendError(res, Errors.Basic.badRequest());
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid email',
+                message: 'Please provide a valid email address'
+            });
         }
 
         if (!FunctionsService.isValidUsername(username)) {
-            return sendError(res, Errors.Basic.badRequest());
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid username',
+                message: 'Username must be 3-20 characters, start with a letter, and contain only letters, numbers, and underscores'
+            });
         }
 
-        if (!FunctionsService.isValidPassword(password)) {
-            return sendError(res, Errors.Basic.badRequest());
+        const passwordValidation = FunctionsService.isValidPassword(password);
+        if (!passwordValidation.valid) {
+            return res.status(400).json({
+                success: false,
+                error: 'Weak password',
+                message: passwordValidation.errors.join('. ')
+            });
         }
 
         const newAccount = await DatabaseManager.createAccount(email, password, username);
@@ -81,8 +107,6 @@ router.post('*auth/register', authRateLimit(), async (req, res) => {
         }
 
         const tokens = TokenService.generateTokenPair(newAccount.accountId, 'fortnite', username);
-
-        //LoggerService.log('success', `Account created successfully: ${username} (${newAccount.accountId})`);
 
         res.status(201).json({
             success: true,
@@ -97,11 +121,15 @@ router.post('*auth/register', authRateLimit(), async (req, res) => {
 
     } catch (error) {
         LoggerService.log('error', `Registration error: ${error}`);
-        
+
         if (error.message && error.message.includes('already exists')) {
-            return sendError(res, Errors.Basic.badRequest());
+            return res.status(400).json({
+                success: false,
+                error: 'Account exists',
+                message: error.message
+            });
         }
-        
+
         sendError(res, Errors.Internal.serverError());
     }
 });
@@ -109,9 +137,15 @@ router.post('*auth/register', authRateLimit(), async (req, res) => {
 router.post('*auth/login', authRateLimit(), async (req, res) => {
     try {
         const { email, password } = req.body;
-        
+
+        // Input validation
         if (!email || !password) {
             return sendError(res, Errors.Authentication.OAuth.invalidAccountCredentials());
+        }
+
+        // Length limits to prevent DoS
+        if (email.length > 254 || password.length > 128) {
+            return sendError(res, Errors.Basic.badRequest());
         }
 
         let account = await DatabaseManager.getAccountByEmail(email);
@@ -124,11 +158,38 @@ router.post('*auth/login', authRateLimit(), async (req, res) => {
             return sendError(res, Errors.Authentication.OAuth.invalidAccountCredentials());
         }
 
+        // Check if account is locked due to failed attempts
+        const lockStatus = await DatabaseManager.isAccountLocked(account.accountId);
+        if (lockStatus.locked) {
+            const remainingMinutes = Math.ceil(lockStatus.remainingMs / 60000);
+            return res.status(429).json({
+                success: false,
+                error: 'Account temporarily locked',
+                message: `Too many failed login attempts. Try again in ${remainingMinutes} minute(s).`,
+                lockedUntil: lockStatus.lockedUntil
+            });
+        }
+
         const passwordMatch = await bcrypt.compare(password, account.password);
 
         if (!passwordMatch) {
+            // Record failed attempt
+            const attemptResult = await DatabaseManager.recordFailedLoginAttempt(account.accountId);
+
+            if (attemptResult && attemptResult.locked) {
+                return res.status(429).json({
+                    success: false,
+                    error: 'Account locked',
+                    message: 'Too many failed login attempts. Account has been temporarily locked.',
+                    lockedUntil: attemptResult.lockedUntil
+                });
+            }
+
             return sendError(res, Errors.Authentication.OAuth.invalidAccountCredentials());
         }
+
+        // Reset failed attempts on successful login
+        await DatabaseManager.resetFailedAttempts(account.accountId);
 
         const banInfo = DatabaseManager.getBanInfo(account.accountId);
         if (banInfo && banInfo.banned) {
