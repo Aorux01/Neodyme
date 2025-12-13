@@ -24,6 +24,18 @@ class DatabaseManager {
         LoggerService.log('success', `Database initialized with type: ${this.getDatabaseType()}`);
     }
 
+    static async isAccountLocked(accountId) {
+        return this.getDatabaseInstance().isAccountLocked(accountId);
+    }
+
+    static async recordFailedLoginAttempt(accountId) {
+        return this.getDatabaseInstance().recordFailedLoginAttempt(accountId);
+    }
+
+    static async resetFailedAttempts(accountId) {
+        return this.getDatabaseInstance().resetFailedAttempts(accountId);
+    }
+
     static async getAccount(accountId) {
         return this.getDatabaseInstance().getAccount(accountId);
     }
