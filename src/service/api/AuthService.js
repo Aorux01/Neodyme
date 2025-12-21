@@ -6,27 +6,61 @@ const LoggerService = require('../logger/LoggerService');
 const FunctionsService = require('./FunctionsService');
 
 class AuthService {
+    static DUMMY_HASH = '$2b$10$XQqKvV3qP5h.M3lWJvZqZuN5z3LqK1VZ6Sv8qPHvF7JK8WYL6wVZO';
+
     static async authenticateWithPassword(username, password, clientId, deviceId, ip) {
-        if (!username || !password) {
-            throw Errors.Authentication.OAuth.invalidBody();
-        }
+        try {
+            if (!username || !password) {
+                throw Errors.Authentication.OAuth.invalidBody();
+            }
 
-        const account = await DatabaseManager.getAccountByEmail(username) ||
-                        await DatabaseManager.getAccountByDisplayName(username);
+            if (typeof username !== 'string' || typeof password !== 'string') {
+                throw Errors.Authentication.OAuth.invalidBody();
+            }
 
-        const passwordMatch = await bcrypt.compare(password, account.password);
-        if (!passwordMatch) {
+            if (password.length > 72) {
+                throw Errors.Authentication.OAuth.invalidBody();
+            }
+
+            if (username.length > 320) {
+                throw Errors.Authentication.OAuth.invalidBody();
+            }
+
+            const account = await DatabaseManager.getAccountByEmail(username) ||
+                            await DatabaseManager.getAccountByDisplayName(username);
+
+            if (!account) {
+                await bcrypt.compare(password, this.DUMMY_HASH);
+                throw Errors.Authentication.OAuth.invalidAccountCredentials();
+            }
+
+            if (!account.password) {
+                await bcrypt.compare(password, this.DUMMY_HASH);
+                throw Errors.Authentication.OAuth.invalidAccountCredentials();
+            }
+
+            const passwordMatch = await bcrypt.compare(password, account.password);
+            if (!passwordMatch) {
+                await DatabaseManager.recordFailedLoginAttempt(account.accountId);
+                throw Errors.Authentication.OAuth.invalidAccountCredentials();
+            }
+
+            await this.checkBanStatus(account.accountId);
+            await DatabaseManager.resetFailedAttempts(account.accountId);
+            await DatabaseManager.updateLastLogin(account.accountId);
+
+            const tokens = this.generateTokens(account, clientId, deviceId, 'password');
+
+            LoggerService.log('success', `User authenticated: ${account.displayName} (${account.accountId})`);
+
+            return this.buildTokenResponse(tokens, account, clientId, deviceId);
+        } catch (error) {
+            if (error.errorCode) {
+                throw error;
+            }
+            LoggerService.log('error', `Authentication error: ${error.message}`);
             throw Errors.Authentication.OAuth.invalidAccountCredentials();
         }
-
-        await this.checkBanStatus(account.accountId);
-        await DatabaseManager.updateLastLogin(account.accountId);
-
-        const tokens = this.generateTokens(account, clientId, deviceId, 'password');
-
-        LoggerService.log('success', `User authenticated: ${account.displayName} (${account.accountId})`);
-
-        return this.buildTokenResponse(tokens, account, clientId, deviceId);
     }
 
     static async refreshAccessToken(refreshToken, clientId, deviceId, ip) {
@@ -198,3 +232,4 @@ class AuthService {
 }
 
 module.exports = AuthService;
+
