@@ -99,7 +99,7 @@ router.get('/account/api/epicdomains/ssodomains', async (req, res) => {
     ]);
 });
 
-router.post('/fortnite/api/game/v2/tryPlayOnPlatform/account/*', verifyToken, async (req, res) => {
+router.post('/fortnite/api/game/v2/tryPlayOnPlatform/account/*', async (req, res) => {
     res.setHeader('Content-Type', 'text/plain');
     res.send(true);
 });
