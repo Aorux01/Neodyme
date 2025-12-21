@@ -45,6 +45,13 @@ async function verifyToken(req, res, next) {
         req.user = account;
         req.token = decoded;
 
+        // Validate account ownership if accountId is in params or body
+        const requestedAccountId = req.params.accountId || req.body.accountId;
+        if (requestedAccountId && requestedAccountId !== account.accountId) {
+            LoggerService.log('warning', `Account ownership violation attempt: token=${account.accountId}, requested=${requestedAccountId}`);
+            throw Errors.Account.accountNotFound(requestedAccountId);
+        }
+
         next();
     } catch (error) {
         if (error.statusCode) {
@@ -100,6 +107,13 @@ async function verifyClient(req, res, next) {
 
             await DatabaseManager.updateLastLogin(account.accountId);
             req.user = account;
+
+            // Validate account ownership if accountId is in params or body
+            //const requestedAccountId = req.params.accountId || req.body.accountId;
+            //if (requestedAccountId && requestedAccountId !== account.accountId) {
+            //    LoggerService.log('warning', `Account ownership violation attempt: token=${account.accountId}, requested=${requestedAccountId}`);
+            //    throw Errors.Account.accountNotFound(requestedAccountId);
+            //}
         }
 
         req.token = decoded;
