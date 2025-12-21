@@ -26,7 +26,7 @@ class MatchmakerManager {
             }
  
             const payload = parts[2];
-            const secret = ConfigManager.get('jwtSecret') || 'your-secret-key';
+            const secret = ConfigManager.key('jwtSecret');
  
             let decodedPayload;
             try {
@@ -208,7 +208,7 @@ class MatchmakerManager {
         if (!clientData || ws.readyState !== ws.OPEN) return;
  
         const { ticket, accountId } = clientData;
-        const secret = ConfigManager.get('jwtSecret') || 'your-secret-key';
+        const secret = ConfigManager.key('jwtSecret');
  
         const serverPayload = jwt.sign(
             {
