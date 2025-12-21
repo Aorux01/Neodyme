@@ -309,7 +309,7 @@ class MatchmakerService {
     }
  
     static signPayload(payload) {
-        const secret = ConfigManager.get('jwtSecret') || 'your-secret-key';
+        const secret = ConfigManager.key('jwtSecret');
         return jwt.sign(payload, secret, { expiresIn: '10m' });
     }
 }
