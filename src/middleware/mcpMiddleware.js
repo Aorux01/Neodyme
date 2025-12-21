@@ -1,4 +1,5 @@
 const { Errors, sendError } = require('../service/error/Errors');
+const { verifyToken } = require('./authMiddleware');
 
 async function validateProfileId(req, res, next) {
     if (!req.query.profileId && req.originalUrl.toLowerCase().startsWith("/fortnite/api/game/v2/profile/")) {
@@ -8,8 +9,7 @@ async function validateProfileId(req, res, next) {
 }
 
 async function validateAccountOwnership(req, res, next) {
-    // TODO: Implement ownership validation logic
-    next();
+    await verifyToken(req, res, next);
 }
 
 async function attachProfileInfo(req, res, next) {
