@@ -15,17 +15,14 @@ class TokenService {
     static pendingWrites = [];
 
     static initialize() {
-        // Load JWT secret from config
-        this.JWT_SECRET = ConfigManager.get('jwtSecret');
+        this.JWT_SECRET = ConfigManager.key('jwtSecret');
         if (!this.JWT_SECRET) {
-            LoggerService.log('error', 'JWT secret not configured! Please set jwtSecret in server.properties');
-            this.JWT_SECRET = 'default-insecure-secret-change-this';
+            LoggerService.log('error', 'JWT secret not configured! Please set jwtSecret in .env');
         }
 
         this.loadTokensFromFile();
         LoggerService.log('info', 'TokenService initialized with persistent storage');
 
-        // Start cleanup interval
         setInterval(() => {
             this.cleanupExpiredTokens();
         }, 3600000); // Every hour
@@ -33,7 +30,7 @@ class TokenService {
 
     static getJwtSecret() {
         if (!this.JWT_SECRET) {
-            this.JWT_SECRET = ConfigManager.get('jwtSecret') || 'default-insecure-secret-change-this';
+            this.JWT_SECRET = ConfigManager.key('jwtSecret');
         }
         return this.JWT_SECRET;
     }
