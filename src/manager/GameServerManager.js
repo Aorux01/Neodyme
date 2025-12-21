@@ -20,7 +20,7 @@ class GameServerManager {
     }
     
     static registerServer(serverId, serverData, secret) {
-        const expectedSecret = ConfigManager.get('gameServerSecret');
+        const expectedSecret = ConfigManager.key('gameServerSecret');
         
         if (secret !== expectedSecret) {
             throw new Error('Invalid gameserver secret');
