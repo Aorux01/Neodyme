@@ -6,7 +6,8 @@ const colors = {
     yellow: '\x1b[33m',
     blue: '\x1b[34m',
     magenta: '\x1b[35m',
-    gray: '\x1b[90m'
+    gray: '\x1b[90m',
+    white: '\x1b[37m'
 };
 
 // Helper functions
@@ -17,7 +18,8 @@ const colorsLevel = {
     yellow: (text) => `${colors.yellow}${text}${colors.reset}`,
     blue: (text) => `${colors.blue}${text}${colors.reset}`,
     magenta: (text) => `${colors.magenta}${text}${colors.reset}`,
-    gray: (text) => `${colors.gray}${text}${colors.reset}`
+    gray: (text) => `${colors.gray}${text}${colors.reset}`,
+    white: (text) => `${colors.white}${text}${colors.reset}`
 };
 
 module.exports = colorsLevel;
