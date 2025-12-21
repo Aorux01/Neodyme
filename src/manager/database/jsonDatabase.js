@@ -9,11 +9,9 @@ class JsonDatabase {
     static clientsFile = path.join(this.dataPath, 'clients.json');
     static playersPath = path.join(this.dataPath, 'players');
 
-    // File locks for race condition prevention
     static fileLocks = new Map();
     static lockTimeout = 5000;
 
-    // Account lockout settings
     static MAX_FAILED_ATTEMPTS = 5;
     static LOCKOUT_DURATION_MS = 15 * 60 * 1000;
     static LOCKOUT_MULTIPLIER = 2;
@@ -55,7 +53,6 @@ class JsonDatabase {
             fs.writeFileSync(tempPath, content, 'utf8');
             fs.renameSync(tempPath, filePath);
         } catch (error) {
-            // Clean up temp file if it exists
             if (fs.existsSync(tempPath)) {
                 try { fs.unlinkSync(tempPath); } catch (e) {}
             }
@@ -63,11 +60,6 @@ class JsonDatabase {
         }
     }
 
-    /**
-     * Safe file read with lock
-     * @param {string} filePath - Path to the file
-     * @returns {Promise<string>}
-     */
     static async safeReadFile(filePath) {
         await this.acquireLock(filePath);
         try {
@@ -77,11 +69,6 @@ class JsonDatabase {
         }
     }
 
-    /**
-     * Safe file write with lock
-     * @param {string} filePath - Path to the file
-     * @param {string} content - Content to write
-     */
     static async safeWriteFile(filePath, content) {
         await this.acquireLock(filePath);
         try {
@@ -91,11 +78,6 @@ class JsonDatabase {
         }
     }
 
-    /**
-     * Normalize email to lowercase for consistent storage
-     * @param {string} email - The email to normalize
-     * @returns {string} - Normalized email
-     */
     static normalizeEmail(email) {
         if (!email || typeof email !== 'string') return '';
         return email.trim().toLowerCase();
@@ -1047,12 +1029,6 @@ class JsonDatabase {
         return true;
     }
 
-    /**
-     * Check if user owns a specific item
-     * @param {string} accountId - Account ID
-     * @param {string} templateId - Item template ID
-     * @returns {Promise<boolean>}
-     */
     static async userOwnsItem(accountId, templateId) {
         const athenaPath = path.join(this.playersPath, accountId, 'athena.json');
         if (!fs.existsSync(athenaPath)) {
