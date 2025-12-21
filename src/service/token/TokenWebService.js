@@ -86,7 +86,7 @@ class TokenService {
     }
 
     static getJwtSecret() {
-        return ConfigManager.get('jwtSecret');
+        return ConfigManager.key('jwtSecret');
     }
 
     static generateClientToken(clientId) {
