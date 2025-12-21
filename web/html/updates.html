@@ -185,13 +185,33 @@
             <div class="update-card">
                 <div class="update-header">
                     <div>
+                        <h3 class="update-title">Version 1.1.5 - Security</h3>
+                        <div class="update-security-date">December 21, 2025</div>
+                    </div>
+                    <span class="update-security-badge">SECURITY</span>
+                </div>
+                <div class="update-content">
+                    <p>Major security improvements and critical fixes.</p>
+                    <ul class="update-features">
+                        <li><strong>Automated Secret Management:</strong> JWT and Game Server secrets auto-generated on first startup</li>
+                        <li><strong>Secure Secret Storage:</strong> All secrets moved from server.properties to .env file</li>
+                        <li><strong>Enhanced Authentication:</strong> Fixed critical NULL pointer crash and added timing attack protection</li>
+                        <li><strong>Input Validation:</strong> Comprehensive type checking and length limits</li>
+                        <li><strong>Token Validation:</strong> Enhanced security with automatic account ownership validation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
                         <h3 class="update-title">Version 1.1.4 - Security Hardening</h3>
                         <div class="update-security-date">December 13, 2025</div>
                     </div>
                     <span class="update-security-badge">SECURITY</span>
                 </div>
                 <div class="update-content">
-                    <p>Major security audit fixes addressing 10 critical vulnerabilities.</p>
+                    <p>Major security fixes addressing 10 critical vulnerabilities.</p>
                     <ul class="update-features">
                         <li><strong>Token Persistence:</strong> Tokens now persist to Tokens.json file instead of in-memory storage - survives server restarts</li>
                         <li><strong>Input Validation:</strong> Added comprehensive input validation for all authentication endpoints with length limits</li>
@@ -209,7 +229,7 @@
             <div class="update-card">
                 <div class="update-header">
                     <div>
-                        <h3 class="update-title">Version 1.1.4 - Rate Limiting & Security</h3>
+                        <h3 class="update-title">Version 1.1.3 - Rate Limiting & Security</h3>
                         <div class="update-security-date">December 08, 2025</div>
                     </div>
                     <span class="update-security-badge">SECURITY</span>
