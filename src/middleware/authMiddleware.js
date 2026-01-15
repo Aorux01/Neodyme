@@ -6,14 +6,15 @@ const LoggerService = require('../service/logger/LoggerService');
 async function verifyToken(req, res, next) {
     try {
         const authHeader = req.headers['authorization'];
-        
+
         if (!authHeader || !authHeader.toLowerCase().startsWith('bearer eg1~')) {
             throw Errors.Authentication.invalidHeader();
         }
 
         const token = authHeader.substring(7);
 
-        if (!TokenService.isValidAccessToken(token)) {
+        const isValid = await TokenService.isValidAccessToken(token);
+        if (!isValid) {
             throw Errors.Authentication.invalidToken(token);
         }
 
@@ -24,7 +25,7 @@ async function verifyToken(req, res, next) {
 
         const account = await DatabaseManager.getAccount(decoded.sub);
         if (!account) {
-            TokenService.removeToken(token);
+            await TokenService.removeToken(token);
             throw Errors.Account.accountNotFound(decoded.sub);
         }
 
@@ -45,10 +46,9 @@ async function verifyToken(req, res, next) {
         req.user = account;
         req.token = decoded;
 
-        // Validate account ownership if accountId is in params or body
         const requestedAccountId = req.params.accountId || req.body.accountId;
         if (requestedAccountId && requestedAccountId !== account.accountId) {
-            LoggerService.log('warning', `Account ownership violation attempt: token=${account.accountId}, requested=${requestedAccountId}`);
+            LoggerService.log('warning', `Account ownership violation: token=${account.accountId}, requested=${requestedAccountId}`);
             throw Errors.Account.accountNotFound(requestedAccountId);
         }
 
@@ -57,7 +57,7 @@ async function verifyToken(req, res, next) {
         if (error.statusCode) {
             return res.status(error.statusCode).json(error.toJSON());
         }
-        
+
         LoggerService.log('error', `Token verification failed: ${error.message}`);
         const err = Errors.Authentication.authenticationFailed('token');
         return res.status(err.statusCode).json(err.toJSON());
@@ -67,15 +67,15 @@ async function verifyToken(req, res, next) {
 async function verifyClient(req, res, next) {
     try {
         const authHeader = req.headers['authorization'];
-        
+
         if (!authHeader || !authHeader.toLowerCase().startsWith('bearer eg1~')) {
             throw Errors.Authentication.invalidHeader();
         }
 
         const token = authHeader.substring(7);
 
-        const isAccessToken = TokenService.isValidAccessToken(token);
-        const isClientToken = TokenService.isValidClientToken(token);
+        const isAccessToken = await TokenService.isValidAccessToken(token);
+        const isClientToken = await TokenService.isValidClientToken(token);
 
         if (!isAccessToken && !isClientToken) {
             throw Errors.Authentication.invalidToken(token);
@@ -89,7 +89,7 @@ async function verifyClient(req, res, next) {
         if (isAccessToken) {
             const account = await DatabaseManager.getAccount(decoded.sub);
             if (!account) {
-                TokenService.removeToken(token);
+                await TokenService.removeToken(token);
                 throw Errors.Account.accountNotFound(decoded.sub);
             }
 
@@ -107,13 +107,6 @@ async function verifyClient(req, res, next) {
 
             await DatabaseManager.updateLastLogin(account.accountId);
             req.user = account;
-
-            // Validate account ownership if accountId is in params or body
-            //const requestedAccountId = req.params.accountId || req.body.accountId;
-            //if (requestedAccountId && requestedAccountId !== account.accountId) {
-            //    LoggerService.log('warning', `Account ownership violation attempt: token=${account.accountId}, requested=${requestedAccountId}`);
-            //    throw Errors.Account.accountNotFound(requestedAccountId);
-            //}
         }
 
         req.token = decoded;
@@ -124,7 +117,7 @@ async function verifyClient(req, res, next) {
         if (error.statusCode) {
             return res.status(error.statusCode).json(error.toJSON());
         }
-        
+
         LoggerService.log('error', `Client verification failed: ${error.message}`);
         const err = Errors.Authentication.authenticationFailed('client');
         return res.status(err.statusCode).json(err.toJSON());
