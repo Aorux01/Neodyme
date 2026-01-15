@@ -185,6 +185,29 @@
             <div class="update-card">
                 <div class="update-header">
                     <div>
+                        <h3 class="update-title">Version 1.1.6 - Security Hardening</h3>
+                        <div class="update-security-date">January 15, 2026</div>
+                    </div>
+                    <span class="update-security-badge">SECURITY</span>
+                </div>
+                <div class="update-content">
+                    <p>Critical security improvements and Redis support.</p>
+                    <ul class="update-features">
+                        <li><strong>Token Hashing:</strong> Tokens are now stored as SHA-256 hashes - raw tokens never persisted</li>
+                        <li><strong>JWT Secret Rotation:</strong> Automatic monthly rotation with 256-bit secrets</li>
+                        <li><strong>HttpOnly Cookies:</strong> Authentication tokens moved from localStorage to secure HttpOnly cookies with SameSite=Strict</li>
+                        <li><strong>CSRF Protection:</strong> Added CSRF middleware with token validation for all forms</li>
+                        <li><strong>Account Enumeration Fix:</strong> /check-email and /check-username now return uniform responses</li>
+                        <li><strong>Redis Support:</strong> Optional Redis storage for tokens and cache (configurable in server.properties)</li>
+                        <li><strong>Async File Operations:</strong> Converted synchronous file reads to async for better performance</li>
+                        <li><strong>Site:</strong> Website functionality improvements</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
                         <h3 class="update-title">Version 1.1.5 - Security</h3>
                         <div class="update-security-date">December 21, 2025</div>
                     </div>
