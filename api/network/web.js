@@ -9,35 +9,57 @@ const LoggerService = require("../../src/service/logger/LoggerService");
 const ShopManager = require('../../src/manager/ShopManager');
 const bcrypt = require('bcrypt');
 const { authRateLimit, expensiveRateLimit } = require('../../src/middleware/rateLimitMiddleware');
+const { csrfProtection, generateCsrfToken } = require('../../src/middleware/csrfMiddleware');
+
+const COOKIE_OPTIONS = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/'
+};
+
+const setAuthCookies = (res, token, remember = false) => {
+    const maxAge = remember ? 30 * 24 * 60 * 60 * 1000 : 8 * 60 * 60 * 1000;
+    res.cookie('neodyme_auth', token, { ...COOKIE_OPTIONS, maxAge });
+};
+
+const clearAuthCookies = (res) => {
+    res.clearCookie('neodyme_auth', COOKIE_OPTIONS);
+};
 
 const verifyToken = async (req, res, next) => {
     try {
+        let token = null;
+
         const authHeader = req.headers.authorization;
-        
-        if (!authHeader) {
+        if (authHeader) {
+            token = TokenService.extractTokenFromHeader(authHeader);
+        }
+
+        if (!token && req.cookies?.neodyme_auth) {
+            token = req.cookies.neodyme_auth;
+        }
+
+        if (!token) {
             return sendError(res, Errors.Authentication.invalidHeader());
         }
 
-        const token = TokenService.extractTokenFromHeader(authHeader);
-        
-        if (!token) {
-            return sendError(res, Errors.Authentication.invalidToken('malformed'));
-        }
-
         const verification = TokenService.verifyToken(token);
-        
+
         if (!verification.valid) {
+            clearAuthCookies(res);
             return sendError(res, Errors.Authentication.invalidToken(verification.error));
         }
 
         const accountId = verification.payload.accountId || verification.payload.account_id;
-        
+
         if (!accountId) {
             return sendError(res, Errors.Authentication.invalidToken('missing account id'));
         }
 
         const account = await DatabaseManager.getAccount(accountId);
         if (!account) {
+            clearAuthCookies(res);
             return sendError(res, Errors.Authentication.invalidToken('account not found'));
         }
 
@@ -108,10 +130,11 @@ router.post('*auth/register', authRateLimit(), async (req, res) => {
 
         const tokens = TokenService.generateTokenPair(newAccount.accountId, 'fortnite', username);
 
+        setAuthCookies(res, tokens.access_token, false);
+
         res.status(201).json({
             success: true,
             message: 'Account created',
-            token: tokens.access_token,
             user: {
                 accountId: newAccount.accountId,
                 displayName: newAccount.displayName,
@@ -136,7 +159,7 @@ router.post('*auth/register', authRateLimit(), async (req, res) => {
 
 router.post('*auth/login', authRateLimit(), async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, remember } = req.body;
 
         // Input validation
         if (!email || !password) {
@@ -200,10 +223,11 @@ router.post('*auth/login', authRateLimit(), async (req, res) => {
 
         const tokens = TokenService.generateTokenPair(account.accountId, 'fortnite', account.displayName);
 
+        setAuthCookies(res, tokens.access_token, remember === true);
+
         res.json({
             success: true,
             message: 'Login successful',
-            token: tokens.access_token,
             user: {
                 accountId: account.accountId,
                 displayName: account.displayName,
@@ -370,35 +394,15 @@ router.get('*user/purchases', verifyToken, async (req, res) => {
 });
 
 router.post('*auth/check-email', async (req, res) => {
-    try {
-        const { email } = req.body;
-        
-        if (!email) {
-            return res.json({ exists: false });
-        }
-
-        const account = await DatabaseManager.getAccountByEmail(email);
-        res.json({ exists: !!account });
-    } catch (error) {
-        LoggerService.log('warn', `Check email error: ${error}`);
-        res.json({ exists: false });
-    }
+    const delay = 100 + Math.random() * 100;
+    await new Promise(resolve => setTimeout(resolve, delay));
+    res.json({ valid: true, message: 'Validation completed' });
 });
 
 router.post('*auth/check-username', async (req, res) => {
-    try {
-        const { username } = req.body;
-        
-        if (!username) {
-            return res.json({ exists: false });
-        }
-
-        const account = await DatabaseManager.getAccountByDisplayName(username);
-        res.json({ exists: !!account });
-    } catch (error) {
-        LoggerService.log('error', `Check username error: ${error}`);
-        res.json({ exists: false });
-    }
+    const delay = 100 + Math.random() * 100;
+    await new Promise(resolve => setTimeout(resolve, delay));
+    res.json({ valid: true, message: 'Validation completed' });
 });
 
 router.get('*auth/verify', verifyToken, async (req, res) => {
@@ -440,40 +444,48 @@ router.get('*auth/profile', verifyToken, async (req, res) => {
 router.put('*auth/profile', verifyToken, async (req, res) => {
     try {
         const { displayName, email } = req.body;
-        
+        const updates = {};
+
         if (displayName && displayName !== req.user.displayName) {
             if (!FunctionsService.isValidUsername(displayName)) {
-                return sendError(res, Errors.Basic.badRequest());
+                return res.status(400).json({ success: false, message: 'Invalid display name format' });
             }
-            
-            try {
-                const existingAccount = await DatabaseManager.getAccountByDisplayName(displayName);
-                if (existingAccount && existingAccount.accountId !== req.user.accountId) {
-                    return sendError(res, Errors.Basic.badRequest());
-                }
-            } catch (error) {}
+            updates.displayName = displayName;
         }
 
         if (email && email !== req.user.email) {
             if (!FunctionsService.isValidEmail(email)) {
-                return sendError(res, Errors.Basic.badRequest());
+                return res.status(400).json({ success: false, message: 'Invalid email format' });
             }
-            
-            try {
-                const existingAccount = await DatabaseManager.getAccountByEmail(email);
-                if (existingAccount && existingAccount.accountId !== req.user.accountId) {
-                    return sendError(res, Errors.Basic.badRequest());
-                }
-            } catch (error) {}
+            updates.email = email;
         }
 
-        res.json({
-            success: true,
-            message: 'Profile updated successfully'
-        });
+        if (Object.keys(updates).length > 0) {
+            const updatedAccount = await DatabaseManager.updateAccount(req.user.accountId, updates);
+            if (!updatedAccount) {
+                return res.status(400).json({ success: false, message: 'Failed to update profile' });
+            }
+
+            LoggerService.log('info', `Profile updated for: ${req.user.accountId}`);
+
+            res.json({
+                success: true,
+                message: 'Profile updated successfully',
+                user: {
+                    accountId: updatedAccount.accountId,
+                    displayName: updatedAccount.displayName,
+                    email: updatedAccount.email
+                }
+            });
+        } else {
+            res.json({ success: true, message: 'No changes to update' });
+        }
 
     } catch (error) {
         LoggerService.log('error', `Update profile error: ${error}`);
+        if (error.message && error.message.includes('already exists')) {
+            return res.status(400).json({ success: false, message: error.message });
+        }
         sendError(res, Errors.Internal.serverError());
     }
 });
@@ -481,13 +493,20 @@ router.put('*auth/profile', verifyToken, async (req, res) => {
 router.put('*auth/change-password', verifyToken, async (req, res) => {
     try {
         const { currentPassword, newPassword } = req.body;
-        
+
         if (!currentPassword || !newPassword) {
-            return sendError(res, Errors.Basic.badRequest());
+            return res.status(400).json({ success: false, message: 'Current and new password are required' });
         }
 
-        if (!FunctionsService.isValidPassword(newPassword)) {
-            return sendError(res, Errors.Basic.badRequest());
+        const passwordValidation = FunctionsService.isValidPassword(newPassword);
+        if (!passwordValidation.valid) {
+            return res.status(400).json({ success: false, message: passwordValidation.errors.join('. ') });
+        }
+
+        const result = await DatabaseManager.updatePassword(req.user.accountId, currentPassword, newPassword);
+
+        if (!result.success) {
+            return res.status(400).json({ success: false, message: result.message || 'Failed to change password' });
         }
 
         LoggerService.log('info', `Password changed for: ${req.user.displayName} (${req.user.accountId})`);
@@ -504,10 +523,15 @@ router.put('*auth/change-password', verifyToken, async (req, res) => {
 });
 
 router.post('*auth/logout', (req, res) => {
+    clearAuthCookies(res);
     res.json({
         success: true,
         message: 'Logged out successfully'
     });
+});
+
+router.get('*auth/csrf-token', (req, res) => {
+    generateCsrfToken(req, res);
 });
 
 router.get('*web/status', async (req, res) => {
@@ -531,24 +555,188 @@ router.get('*web/status', async (req, res) => {
 router.get('*users/search', verifyToken, async (req, res) => {
     try {
         const { q, limit = 10 } = req.query;
-        
+
         if (!q || q.length < 2) {
-            return sendError(res, Errors.Basic.badRequest());
+            return res.status(400).json({ success: false, message: 'Search query must be at least 2 characters' });
         }
 
-        const limitedResults = [];
+        const users = await DatabaseManager.searchUsers(q, parseInt(limit));
 
         res.json({
             success: true,
-            users: limitedResults.map(account => ({
-                accountId: account.accountId,
-                displayName: account.displayName,
-                email: `${account.displayName}@neodyme.local`
-            }))
+            users: users.filter(u => u.accountId !== req.user.accountId)
         });
 
     } catch (error) {
         LoggerService.log('error', `Search users error: ${error}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.get('*user/settings', verifyToken, async (req, res) => {
+    try {
+        const settings = await DatabaseManager.getUserSettings(req.user.accountId);
+        res.json({ success: true, settings });
+    } catch (error) {
+        LoggerService.log('error', `Get settings error: ${error}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.put('*user/settings', verifyToken, async (req, res) => {
+    try {
+        const { language, region, privacy } = req.body;
+
+        const currentSettings = await DatabaseManager.getUserSettings(req.user.accountId);
+        const newSettings = {
+            language: language || currentSettings.language,
+            region: region || currentSettings.region,
+            privacy: privacy ? { ...currentSettings.privacy, ...privacy } : currentSettings.privacy
+        };
+
+        await DatabaseManager.saveUserSettings(req.user.accountId, newSettings);
+
+        res.json({ success: true, message: 'Settings saved successfully', settings: newSettings });
+    } catch (error) {
+        LoggerService.log('error', `Save settings error: ${error}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.get('*user/friends', verifyToken, async (req, res) => {
+    try {
+        const friendsData = await DatabaseManager.getFriends(req.user.accountId);
+
+        const friendsWithDetails = await Promise.all(
+            friendsData.friends.map(async (friend) => {
+                const account = await DatabaseManager.getAccount(friend.accountId);
+                return {
+                    accountId: friend.accountId,
+                    displayName: account?.displayName || 'Unknown',
+                    status: 'offline',
+                    created: friend.created
+                };
+            })
+        );
+
+        const incomingWithDetails = await Promise.all(
+            friendsData.incoming.map(async (accountId) => {
+                const account = await DatabaseManager.getAccount(accountId);
+                return {
+                    accountId,
+                    displayName: account?.displayName || 'Unknown'
+                };
+            })
+        );
+
+        const outgoingWithDetails = await Promise.all(
+            friendsData.outgoing.map(async (accountId) => {
+                const account = await DatabaseManager.getAccount(accountId);
+                return {
+                    accountId,
+                    displayName: account?.displayName || 'Unknown'
+                };
+            })
+        );
+
+        res.json({
+            success: true,
+            friends: friendsWithDetails,
+            incoming: incomingWithDetails,
+            outgoing: outgoingWithDetails,
+            blocklist: friendsData.blocklist
+        });
+    } catch (error) {
+        LoggerService.log('error', `Get friends error: ${error}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.post('*user/friends/add', verifyToken, async (req, res) => {
+    try {
+        const { accountId } = req.body;
+
+        if (!accountId) {
+            return res.status(400).json({ success: false, message: 'Account ID is required' });
+        }
+
+        if (accountId === req.user.accountId) {
+            return res.status(400).json({ success: false, message: 'Cannot add yourself as a friend' });
+        }
+
+        const targetAccount = await DatabaseManager.getAccount(accountId);
+        if (!targetAccount) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const result = await DatabaseManager.sendFriendRequest(req.user.accountId, accountId);
+
+        if (!result.success) {
+            return res.status(400).json({ success: false, message: 'Friend request already sent or already friends' });
+        }
+
+        res.json({ success: true, message: 'Friend request sent' });
+    } catch (error) {
+        LoggerService.log('error', `Add friend error: ${error}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.post('*user/friends/accept', verifyToken, async (req, res) => {
+    try {
+        const { accountId } = req.body;
+
+        if (!accountId) {
+            return res.status(400).json({ success: false, message: 'Account ID is required' });
+        }
+
+        const result = await DatabaseManager.acceptFriendRequest(req.user.accountId, accountId);
+
+        if (!result.success) {
+            return res.status(400).json({ success: false, message: 'No pending request from this user' });
+        }
+
+        res.json({ success: true, message: 'Friend request accepted' });
+    } catch (error) {
+        LoggerService.log('error', `Accept friend error: ${error}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.post('*user/friends/reject', verifyToken, async (req, res) => {
+    try {
+        const { accountId } = req.body;
+
+        if (!accountId) {
+            return res.status(400).json({ success: false, message: 'Account ID is required' });
+        }
+
+        const result = await DatabaseManager.rejectOrRemoveFriend(req.user.accountId, accountId);
+
+        if (!result.success) {
+            return res.status(400).json({ success: false, message: 'Failed to reject request' });
+        }
+
+        res.json({ success: true, message: 'Friend request rejected' });
+    } catch (error) {
+        LoggerService.log('error', `Reject friend error: ${error}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.delete('*user/friends/:accountId', verifyToken, async (req, res) => {
+    try {
+        const { accountId } = req.params;
+
+        const result = await DatabaseManager.rejectOrRemoveFriend(req.user.accountId, accountId);
+
+        if (!result.success) {
+            return res.status(400).json({ success: false, message: 'Failed to remove friend' });
+        }
+
+        res.json({ success: true, message: 'Friend removed' });
+    } catch (error) {
+        LoggerService.log('error', `Remove friend error: ${error}`);
         sendError(res, Errors.Internal.serverError());
     }
 });
