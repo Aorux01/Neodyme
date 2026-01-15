@@ -475,6 +475,38 @@ class DatabaseManager {
         }
         return null;
     }
+
+    static async updateAccount(accountId, updates) {
+        return await this.getDatabaseInstance().updateAccount(accountId, updates);
+    }
+
+    static async updatePassword(accountId, currentPassword, newPassword) {
+        return await this.getDatabaseInstance().updatePassword(accountId, currentPassword, newPassword);
+    }
+
+    static async getUserSettings(accountId) {
+        const db = this.getDatabaseInstance();
+        if (db.getUserSettings) {
+            return await db.getUserSettings(accountId);
+        }
+        return { language: 'en', region: 'EU', privacy: {} };
+    }
+
+    static async saveUserSettings(accountId, settings) {
+        const db = this.getDatabaseInstance();
+        if (db.saveUserSettings) {
+            return await db.saveUserSettings(accountId, settings);
+        }
+        return false;
+    }
+
+    static async searchUsers(query, limit = 10) {
+        const db = this.getDatabaseInstance();
+        if (db.searchUsers) {
+            return await db.searchUsers(query, limit);
+        }
+        return [];
+    }
 }
 
 module.exports = DatabaseManager;
