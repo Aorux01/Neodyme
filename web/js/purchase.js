@@ -2,16 +2,12 @@ let selectedPackage = null;
 let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', async function() {
-    // Check authentication but don't redirect
-    // Allow users to see packages before logging in
     try {
         currentUser = await checkAuth();
-        console.log('Current user:', currentUser); // Debug log
-        
+
         if (currentUser) {
             await loadVbucksBalance();
         } else {
-            // Show 0 V-Bucks if not logged in
             document.getElementById('current-vbucks').textContent = '0';
         }
     } catch (error) {
@@ -22,13 +18,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 async function loadVbucksBalance() {
     try {
-        const token = localStorage.getItem('neodyme_token') || sessionStorage.getItem('neodyme_token');
         const response = await fetch('/api/user/vbucks', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            credentials: 'include'
         });
-        
+
         if (response.ok) {
             const data = await response.json();
             document.getElementById('current-vbucks').textContent = data.balance.toLocaleString();
@@ -52,22 +45,16 @@ function getBonusAmount(amount) {
 }
 
 function selectPackage(amount, price) {
-    console.log('selectPackage called, currentUser:', currentUser); // Debug log
-    
-    // Check if user is logged in before allowing package selection
     if (!currentUser) {
-        console.log('No user detected, showing alert'); // Debug log
         showAlert('Please sign in to purchase V-Bucks', 'error');
         setTimeout(() => {
-            // Redirect to login with return URL
             window.location.href = 'login.html?redirect=purchase.html';
         }, 2000);
         return;
     }
 
-    console.log('User authenticated, proceeding with package selection'); // Debug log
     selectedPackage = { amount, price };
-    
+
     const bonus = getBonusAmount(amount);
     const totalAmount = amount + bonus;
 
@@ -79,7 +66,7 @@ function selectPackage(amount, price) {
 
     document.getElementById('payment-section').style.display = 'block';
 
-    document.getElementById('payment-section').scrollIntoView({ 
+    document.getElementById('payment-section').scrollIntoView({
         behavior: 'smooth',
         block: 'start'
     });
@@ -100,48 +87,45 @@ async function confirmPurchase() {
     if (!currentUser) {
         showAlert('Please sign in to complete your purchase', 'error');
         setTimeout(() => {
-            // Redirect to login with return URL
             window.location.href = 'login.html?redirect=purchase.html';
         }, 2000);
         return;
     }
-    
+
     const confirmBtn = document.getElementById('confirm-purchase-btn');
     const originalText = confirmBtn.innerHTML;
 
     try {
         confirmBtn.disabled = true;
         confirmBtn.innerHTML = '<div class="loading-spinner"></div> Processing...';
-        
-        const token = localStorage.getItem('neodyme_token') || sessionStorage.getItem('neodyme_token');
+
         const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
-        
+
         const response = await fetch('/api/purchase/vbucks', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify({
                 packageAmount: selectedPackage.amount,
                 price: selectedPackage.price,
                 paymentMethod: paymentMethod
             })
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
             const totalAmount = selectedPackage.amount + getBonusAmount(selectedPackage.amount);
-            
-            //document.getElementById('success-amount').textContent = totalAmount.toLocaleString();
-            //showModal('success-modal');
-            
+
+            showAlert(`Successfully purchased ${totalAmount.toLocaleString()} V-Bucks!`, 'success');
+
             document.getElementById('payment-section').style.display = 'none';
             selectedPackage = null;
-            
+
             await loadVbucksBalance();
-            
+
         } else {
             throw new Error(data.message || 'Purchase failed');
         }
@@ -170,13 +154,13 @@ function goToShop() {
 function showAlert(message, type = 'info') {
     const alert = document.getElementById('alert');
     const alertMessage = document.getElementById('alert-message');
-    
+
     if (!alert || !alertMessage) return;
-    
+
     alert.className = `alert alert-${type}`;
     alertMessage.textContent = message;
     alert.style.display = 'flex';
-    
+
     if (type === 'success' || type === 'info') {
         setTimeout(() => {
             alert.style.display = 'none';
