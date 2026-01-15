@@ -34,7 +34,7 @@ router.post('/account/api/oauth/token', async (req, res) => {
                 break;
 
             case 'client_credentials':
-                response = AuthService.createClientToken(clientId, ip);
+                response = await AuthService.createClientToken(clientId, ip);
                 break;
 
             default:
@@ -59,7 +59,7 @@ router.delete('/account/api/oauth/sessions/kill/:token', async (req, res) => {
         if (!token.startsWith('eg1~')) {
             token = `eg1~${token}`;
         }
-        AuthService.killToken(token);
+        await AuthService.killToken(token);
         res.status(204).send();
     } catch (error) {
         LoggerService.log('error', `Failed to kill token: ${error.message}`);
@@ -78,7 +78,7 @@ router.delete('/account/api/oauth/sessions/kill', async (req, res) => {
             if (killType === 'OTHERS_ACCOUNT_CLIENT_SERVICE') {
                 await AuthService.killOtherTokens(token);
             } else {
-                AuthService.killToken(token);
+                await AuthService.killToken(token);
             }
         }
         res.status(204).send();
@@ -91,13 +91,13 @@ router.delete('/account/api/oauth/sessions/kill', async (req, res) => {
 router.get('/account/api/oauth/verify', async (req, res) => {
     try {
         const authHeader = req.headers['authorization'];
-        
+
         if (!authHeader || !authHeader.toLowerCase().startsWith('bearer eg1~')) {
             throw Errors.Authentication.invalidHeader();
         }
 
         const token = authHeader.substring(7);
-        const response = AuthService.verifyToken(token);
+        const response = await AuthService.verifyToken(token);
 
         res.json(response);
     } catch (error) {
