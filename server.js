@@ -14,6 +14,7 @@ const MatchmakerManager = require('./src/manager/MatchmakerManager');
 const ShopManager = require('./src/manager/ShopManager');
 const BackupManager = require('./src/manager/BackupManager');
 const EXPService = require('./src/service/api/EXPService');
+const TokenService = require('./src/service/token/TokenService');
 const TokenWebService = require('./src/service/token/TokenWebService');
 
 const NEODYME_ASCII = `
@@ -54,6 +55,10 @@ class Server {
             // Load database
             LoggerService.log('info', 'Initializing database...');
             await DatabaseManager.initialize();
+
+            // Initialize TokenService (supports Redis if enabled)
+            LoggerService.log('info', 'Initializing Token Service...');
+            await TokenService.initialize();
 
             // Initialize TokenWebService for web authentication
             LoggerService.log('info', 'Initializing Web Token Service...');
@@ -111,6 +116,7 @@ class Server {
                 LoggerService.log('info', `Server started in ${colors.cyan(Date.now() - this.startTime)} ms`);
                 LoggerService.log('info', `Debug mode: ${ConfigManager.get('debug') ? colors.green('ON') : colors.red('OFF')}`);
                 LoggerService.log('info', `Database type: ${colors.cyan(ConfigManager.get('databaseType'))}`);
+                LoggerService.log('info', `Token storage: ${colors.cyan(ConfigManager.get('redisEnabled') ? 'Redis' : 'JSON')}`);
                 console.log(colors.gray('─'.repeat(65)));
                 LoggerService.log('info', 'Type "/help" for available commands');
             });
