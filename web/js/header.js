@@ -1,14 +1,11 @@
-// header.js - Handles dynamic header updates based on authentication state
-
 async function updateHeaderAuth() {
     try {
         const user = await checkAuth();
         const headerActions = document.querySelector('.header-actions');
-        
+
         if (!headerActions) return;
 
         if (user) {
-            // User is authenticated - show user menu
             headerActions.innerHTML = `
                 <div class="user-menu">
                     <div class="user-info" onclick="toggleUserDropdown()">
@@ -46,10 +43,8 @@ async function updateHeaderAuth() {
                 </div>
             `;
 
-            // Add CSS if not already added
             addHeaderStyles();
         } else {
-            // User is not authenticated - show login/register buttons
             headerActions.innerHTML = `
                 <a href="login.html" class="btn btn-secondary">SIGN IN</a>
                 <a href="register.html" class="btn btn-primary">CREATE ACCOUNT</a>
@@ -69,32 +64,21 @@ function toggleUserDropdown() {
 
 async function handleLogout(event) {
     event.preventDefault();
-    
+
     try {
-        const token = localStorage.getItem('neodyme_token') || sessionStorage.getItem('neodyme_token');
-        
-        if (token) {
-            await fetch('/api/auth/logout', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-        }
+        await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
     } catch (error) {
         console.error('Logout error:', error);
     } finally {
-        localStorage.removeItem('neodyme_token');
-        localStorage.removeItem('neodyme_user');
-        sessionStorage.removeItem('neodyme_token');
         sessionStorage.removeItem('neodyme_user');
-        
         window.location.href = '../index.html';
     }
 }
 
 function addHeaderStyles() {
-    // Check if styles are already added
     if (document.getElementById('header-auth-styles')) return;
 
     const style = document.createElement('style');
@@ -285,17 +269,15 @@ function addHeaderStyles() {
     document.head.appendChild(style);
 }
 
-// Close dropdown when clicking outside
 document.addEventListener('click', function(event) {
     const userMenu = document.querySelector('.user-menu');
     const dropdown = document.getElementById('user-dropdown');
-    
+
     if (dropdown && !userMenu?.contains(event.target)) {
         dropdown.classList.remove('show');
     }
 });
 
-// Initialize header on page load
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', updateHeaderAuth);
 } else {
