@@ -49,7 +49,7 @@ class AuthService {
             await DatabaseManager.resetFailedAttempts(account.accountId);
             await DatabaseManager.updateLastLogin(account.accountId);
 
-            const tokens = this.generateTokens(account, clientId, deviceId, 'password');
+            const tokens = await this.generateTokens(account, clientId, deviceId, 'password');
 
             LoggerService.log('success', `User authenticated: ${account.displayName} (${account.accountId})`);
 
@@ -68,7 +68,8 @@ class AuthService {
             throw Errors.Authentication.OAuth.invalidBody();
         }
 
-        if (!TokenService.isValidRefreshToken(refreshToken)) {
+        const isValid = await TokenService.isValidRefreshToken(refreshToken);
+        if (!isValid) {
             throw Errors.Authentication.OAuth.invalidRefresh();
         }
 
@@ -84,17 +85,17 @@ class AuthService {
 
         await this.checkBanStatus(account.accountId);
 
-        TokenService.removeToken(refreshToken);
+        await TokenService.removeToken(refreshToken);
 
-        const tokens = this.generateTokens(account, clientId, deviceId, 'refresh_token');
+        const tokens = await this.generateTokens(account, clientId, deviceId, 'refresh_token');
 
         LoggerService.log('info', `Token refreshed: ${account.displayName} (${account.accountId})`);
 
         return this.buildTokenResponse(tokens, account, clientId, deviceId);
     }
 
-    static createClientToken(clientId, ip) {
-        const clientToken = TokenService.createClientToken(
+    static async createClientToken(clientId, ip) {
+        const clientToken = await TokenService.createClientToken(
             clientId,
             'client_credentials',
             ip,
@@ -133,8 +134,8 @@ class AuthService {
         throw Errors.Account.disabledAccount();
     }
 
-    static generateTokens(account, clientId, deviceId, grantType) {
-        const accessToken = TokenService.createAccessToken(
+    static async generateTokens(account, clientId, deviceId, grantType) {
+        const accessToken = await TokenService.createAccessToken(
             account.accountId,
             account.displayName,
             clientId,
@@ -143,7 +144,7 @@ class AuthService {
             8
         );
 
-        const refreshToken = TokenService.createRefreshToken(
+        const refreshToken = await TokenService.createRefreshToken(
             account.accountId,
             clientId,
             grantType,
@@ -177,15 +178,15 @@ class AuthService {
         };
     }
 
-    static verifyToken(token) {
+    static async verifyToken(token) {
         const decoded = TokenService.verifyToken(token);
 
         if (!decoded) {
             throw Errors.Authentication.invalidToken(token);
         }
 
-        const isAccessToken = TokenService.isValidAccessToken(token);
-        const isClientToken = TokenService.isValidClientToken(token);
+        const isAccessToken = await TokenService.isValidAccessToken(token);
+        const isClientToken = await TokenService.isValidClientToken(token);
 
         if (!isAccessToken && !isClientToken) {
             throw Errors.Authentication.invalidToken(token);
@@ -213,8 +214,8 @@ class AuthService {
         return response;
     }
 
-    static killToken(token) {
-        TokenService.removeToken(token);
+    static async killToken(token) {
+        await TokenService.removeToken(token);
         LoggerService.log('info', `Token killed: ${token.substring(0, 20)}...`);
     }
 
@@ -226,10 +227,9 @@ class AuthService {
         }
 
         const accountId = decoded.sub;
-        TokenService.removeOtherTokensForAccount(accountId, currentToken);
+        await TokenService.removeOtherTokensForAccount(accountId, currentToken);
         LoggerService.log('info', `Other tokens killed for account: ${accountId}`);
     }
 }
 
 module.exports = AuthService;
-
