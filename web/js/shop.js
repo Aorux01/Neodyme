@@ -61,16 +61,12 @@ async function loadUserOwnedItems() {
     }
 
     try {
-        const token = localStorage.getItem('neodyme_token') || sessionStorage.getItem('neodyme_token');
         const response = await fetch('/api/user/purchases', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            credentials: 'include'
         });
 
         if (response.ok) {
             const data = await response.json();
-            // Extract all owned item template IDs from purchase history
             userOwnedItems = [];
             if (data.purchases && Array.isArray(data.purchases)) {
                 data.purchases.forEach(purchase => {
@@ -113,7 +109,6 @@ async function loadShopData() {
         if (data.success) {
             shopData = data;
 
-            // Also fetch shop state for images
             try {
                 const stateResponse = await fetch('/api/shop/status');
                 if (stateResponse.ok) {
@@ -127,7 +122,6 @@ async function loadShopData() {
             displayShopItems(shopData.shop);
             updateShopInfo(shopData.metadata);
 
-            // Hide alert after successful load
             setTimeout(() => {
                 document.getElementById('alert').style.display = 'none';
             }, 2000);
@@ -227,7 +221,6 @@ function createItemCard(item) {
 }
 
 function getItemName(item) {
-    // First check if meta data is available (from updated ShopManager)
     if (item.meta && item.meta.name && item.meta.name !== 'Unknown') {
         return item.meta.name;
     }
@@ -237,7 +230,6 @@ function getItemName(item) {
         const parts = grant.split(':');
         const name = parts.length > 1 ? parts.pop() : grant;
 
-        // Clean up the name
         return name
             .replace(/_/g, ' ')
             .replace(/([A-Z])/g, ' $1')
@@ -257,7 +249,6 @@ function getItemName(item) {
 }
 
 function getItemType(item) {
-    // First check if meta data is available
     if (item.meta && item.meta.type && item.meta.type !== 'Unknown') {
         return item.meta.type;
     }
@@ -277,7 +268,6 @@ function getItemType(item) {
 }
 
 function getItemRarity(item) {
-    // First check if meta data is available
     if (item.meta && item.meta.rarity && item.meta.rarity !== 'Unknown') {
         return item.meta.rarity;
     }
@@ -297,7 +287,6 @@ function getItemRarity(item) {
         }
     }
 
-    // Default rarity based on price
     const price = item.price || 0;
     if (price >= 2000) return 'Legendary';
     if (price >= 1500) return 'Epic';
@@ -307,12 +296,10 @@ function getItemRarity(item) {
 }
 
 function getItemImage(item) {
-    // First check if meta data is available (from shop.json)
     if (item.meta && item.meta.image) {
         return item.meta.image;
     }
 
-    // Then check shop_state.json for image URL
     if (shopState && item.key) {
         const stateImage = shopState[item.key];
         if (stateImage && typeof stateImage === 'string' && stateImage.startsWith('http')) {
@@ -331,11 +318,8 @@ async function loadVbucksBalance() {
             return;
         }
 
-        const token = localStorage.getItem('neodyme_token') || sessionStorage.getItem('neodyme_token');
         const response = await fetch('/api/user/vbucks', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            credentials: 'include'
         });
 
         if (response.ok) {
@@ -374,7 +358,6 @@ function updateShopInfo(metadata) {
 function updateRefreshTimer() {
     const timerElement = document.getElementById('shop-refresh-timer');
     if (timerElement) {
-        // Calculate time until next daily reset (00:00 UTC)
         const now = new Date();
         const tomorrow = new Date(now);
         tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
@@ -408,7 +391,6 @@ function formatDate(dateString) {
 }
 
 async function purchaseItem(itemKey) {
-    // Check if user is authenticated
     if (!currentUser) {
         showAlert('Please sign in to purchase items.', 'error');
         setTimeout(() => {
@@ -424,7 +406,6 @@ async function purchaseItem(itemKey) {
         return;
     }
 
-    // Check if already owned
     if (isItemOwned(item)) {
         showAlert('You already own this item!', 'error');
         return;
@@ -440,13 +421,12 @@ async function purchaseItem(itemKey) {
     showAlert(`Purchasing ${itemName}...`, 'info');
 
     try {
-        const token = localStorage.getItem('neodyme_token') || sessionStorage.getItem('neodyme_token');
         const response = await fetch('/api/purchase/item', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify({ itemKey })
         });
 
@@ -456,10 +436,8 @@ async function purchaseItem(itemKey) {
             showAlert(`Successfully purchased ${itemName}!`, 'success');
             await loadVbucksBalance();
             await loadUserOwnedItems();
-            // Refresh shop display to update owned status
             displayShopItems(shopData.shop);
         } else {
-            // Check for "already owned" error
             if (data.message && (data.message.includes('already own') || data.message.includes('already owned'))) {
                 showAlert('You already own this item!', 'error');
                 await loadUserOwnedItems();
@@ -522,13 +500,11 @@ function closeModal(modalId) {
     }
 }
 
-// Cleanup on page unload
 window.addEventListener('beforeunload', () => {
     if (refreshTimerId) clearInterval(refreshTimerId);
     if (autoRefreshIntervalId) clearInterval(autoRefreshIntervalId);
 });
 
-// Add CSS for owned items
 const ownedItemStyles = document.createElement('style');
 ownedItemStyles.textContent = `
     .shop-item.owned {
