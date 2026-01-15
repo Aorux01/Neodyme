@@ -1,4 +1,5 @@
 const fs = require('fs');
+const fsPromises = require('fs').promises;
 const path = require('path');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
@@ -63,7 +64,7 @@ class JsonDatabase {
     static async safeReadFile(filePath) {
         await this.acquireLock(filePath);
         try {
-            return fs.readFileSync(filePath, 'utf8');
+            return await fsPromises.readFile(filePath, 'utf8');
         } finally {
             this.releaseLock(filePath);
         }
@@ -72,9 +73,20 @@ class JsonDatabase {
     static async safeWriteFile(filePath, content) {
         await this.acquireLock(filePath);
         try {
-            this.atomicWriteFile(filePath, content);
+            await this.atomicWriteFileAsync(filePath, content);
         } finally {
             this.releaseLock(filePath);
+        }
+    }
+
+    static async atomicWriteFileAsync(filePath, content) {
+        const tempPath = filePath + '.tmp.' + Date.now();
+        try {
+            await fsPromises.writeFile(tempPath, content, 'utf8');
+            await fsPromises.rename(tempPath, filePath);
+        } catch (error) {
+            try { await fsPromises.unlink(tempPath); } catch (e) {}
+            throw error;
         }
     }
 
@@ -1008,6 +1020,86 @@ class JsonDatabase {
 
         const data = await this.safeReadFile(seasonPath);
         return JSON.parse(data);
+    }
+
+    static async updateAccount(accountId, updates) {
+        const clients = await this.getClients();
+        const account = clients.find(c => c.accountId === accountId);
+        if (!account) return false;
+
+        if (updates.displayName && updates.displayName !== account.displayName) {
+            const existing = clients.find(c =>
+                c.displayName.toLowerCase() === updates.displayName.toLowerCase() &&
+                c.accountId !== accountId
+            );
+            if (existing) throw new Error('Display name already exists');
+            account.displayName = updates.displayName;
+        }
+
+        if (updates.email && updates.email !== account.email) {
+            const normalizedEmail = this.normalizeEmail(updates.email);
+            const existing = clients.find(c =>
+                this.normalizeEmail(c.email) === normalizedEmail &&
+                c.accountId !== accountId
+            );
+            if (existing) throw new Error('Email already exists');
+            account.email = normalizedEmail;
+        }
+
+        await this.saveClients(clients);
+        return account;
+    }
+
+    static async updatePassword(accountId, currentPassword, newPassword) {
+        const clients = await this.getClients();
+        const account = clients.find(c => c.accountId === accountId);
+        if (!account) return { success: false, message: 'Account not found' };
+
+        const match = await bcrypt.compare(currentPassword, account.password);
+        if (!match) return { success: false, message: 'Current password is incorrect' };
+
+        account.password = await bcrypt.hash(newPassword, 10);
+        await this.saveClients(clients);
+        return { success: true };
+    }
+
+    static async getUserSettings(accountId) {
+        const settingsPath = path.join(this.playersPath, accountId, 'settings.json');
+        if (!fs.existsSync(settingsPath)) {
+            return {
+                language: 'en',
+                region: 'EU',
+                privacy: {
+                    showOnline: true,
+                    allowFriendRequests: true,
+                    joinInProgress: true
+                }
+            };
+        }
+        const data = await this.safeReadFile(settingsPath);
+        return JSON.parse(data);
+    }
+
+    static async saveUserSettings(accountId, settings) {
+        const playerPath = path.join(this.playersPath, accountId);
+        if (!fs.existsSync(playerPath)) {
+            fs.mkdirSync(playerPath, { recursive: true });
+        }
+        const settingsPath = path.join(playerPath, 'settings.json');
+        await this.safeWriteFile(settingsPath, JSON.stringify(settings, null, 2));
+        return true;
+    }
+
+    static async searchUsers(query, limit = 10) {
+        const clients = await this.getClients();
+        const searchLower = query.toLowerCase();
+        return clients
+            .filter(c => c.displayName && c.displayName.toLowerCase().includes(searchLower))
+            .slice(0, limit)
+            .map(c => ({
+                accountId: c.accountId,
+                displayName: c.displayName
+            }));
     }
 
     static async getAthenaProfile(accountId, profileId) {
