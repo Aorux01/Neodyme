@@ -49,11 +49,6 @@ class RateLimitManager {
             standardHeaders: true,
             legacyHeaders: false,
             trustProxy: trustProxy,
-            skip: (req) => {
-                // Skip rate limiting for certain paths
-                const skipPaths = ['/favicon.ico', '/images'];
-                return skipPaths.some(path => req.path.startsWith(path));
-            },
             handler: (req, res) => {
                 const clientIp = this.getClientIp(req);
                 LoggerService.log('warn', `Global rate limit exceeded for IP: ${clientIp} on ${req.method} ${req.path}`);
