@@ -173,47 +173,22 @@ class CommandManager {
         });
 
         this.register('/plugins', async (args) => {
-            const subCommand = args[0];
+            const subCommand = args[0]?.toLowerCase();
             const pluginName = args[1];
-        
+
             switch(subCommand) {
-                case 'help':
-                    LoggerService.log('info', 'Plugin command usage:');
-                    LoggerService.log('info', ' /plugins list - Lists all loaded plugins');
-                    LoggerService.log('info', ' /plugins load <pluginName|all> - Loads a plugin or all plugins');
-                    LoggerService.log('info', ' /plugins unload <pluginName|all> - Unloads a plugin or all plugins');
-                    LoggerService.log('info', ' /plugins reload <pluginName|all> - Reloads a plugin or all plugins');
-                    break;
                 case 'list':
                     const plugins = PluginManager.getPlugins();
                     if (plugins.length === 0) {
-                        LoggerService.log('info', 'No plugin loaded.');
+                        LoggerService.log('info', 'No plugins loaded.');
                     } else {
                         LoggerService.log('info', `Loaded plugins (${plugins.length}):`);
                         plugins.forEach(plugin => {
-                            LoggerService.log('info', ` - ${plugin.name} v${plugin.version || '1.0.0'}`);
+                            LoggerService.log('info', `  - ${colors.cyan(plugin.name)} v${plugin.version || '1.0.0'}`);
                         });
                     }
                     break;
-        
-                case 'reload':
-                    if (args[1] === 'all') {
-                        LoggerService.log('info', 'Reloading all plugins...');
-                        await PluginManager.reload();
-                        LoggerService.log('success', 'All plugins reloaded successfully');
-                    } else if (pluginName) {
-                        LoggerService.log('info', `Reloading plugin: ${pluginName}...`);
-                        const success = await PluginManager.reloadPlugin(pluginName);
-                        if (success) {
-                            LoggerService.log('success', `Plugin '${pluginName}' reloaded successfully`);
-                        } else {
-                            LoggerService.log('error', `Failed to reload plugin '${pluginName}'`);
-                        }
-                    } else {
-                        LoggerService.log('warn', 'Usage: /plugins reload <pluginName|all>');
-                    }
-                    break;
-        
+
                 case 'load':
                     if (args[1] === 'all') {
                         LoggerService.log('info', 'Loading all plugins...');
@@ -221,17 +196,17 @@ class CommandManager {
                         LoggerService.log('success', 'All plugins loaded successfully');
                     } else if (pluginName) {
                         LoggerService.log('info', `Loading plugin: ${pluginName}...`);
-                        const success = await PluginManager.loadPlugin(pluginName);
-                        if (success) {
+                        const loadSuccess = await PluginManager.loadPlugin(pluginName);
+                        if (loadSuccess) {
                             LoggerService.log('success', `Plugin '${pluginName}' loaded successfully`);
                         } else {
                             LoggerService.log('error', `Failed to load plugin '${pluginName}'`);
                         }
                     } else {
-                        LoggerService.log('warn', 'Usage: /plugins load <pluginName|all>');
+                        LoggerService.log('info', `Usage: ${colors.cyan('/plugins load <pluginName|all>')}`);
                     }
                     break;
-        
+
                 case 'unload':
                     if (args[1] === 'all') {
                         LoggerService.log('info', 'Unloading all plugins...');
@@ -239,40 +214,142 @@ class CommandManager {
                         LoggerService.log('success', 'All plugins unloaded successfully');
                     } else if (pluginName) {
                         LoggerService.log('info', `Unloading plugin: ${pluginName}...`);
-                        const success = await PluginManager.unloadPlugin(pluginName);
-                        if (success) {
+                        const unloadSuccess = await PluginManager.unloadPlugin(pluginName);
+                        if (unloadSuccess) {
                             LoggerService.log('success', `Plugin '${pluginName}' unloaded successfully`);
                         } else {
                             LoggerService.log('error', `Failed to unload plugin '${pluginName}'`);
                         }
                     } else {
-                        LoggerService.log('warn', 'Usage: /plugins unload <pluginName|all>');
+                        LoggerService.log('info', `Usage: ${colors.cyan('/plugins unload <pluginName|all>')}`);
                     }
                     break;
-        
+
+                case 'reload':
+                    if (args[1] === 'all') {
+                        LoggerService.log('info', 'Reloading all plugins...');
+                        await PluginManager.reload();
+                        LoggerService.log('success', 'All plugins reloaded successfully');
+                    } else if (pluginName) {
+                        LoggerService.log('info', `Reloading plugin: ${pluginName}...`);
+                        const reloadSuccess = await PluginManager.reloadPlugin(pluginName);
+                        if (reloadSuccess) {
+                            LoggerService.log('success', `Plugin '${pluginName}' reloaded successfully`);
+                        } else {
+                            LoggerService.log('error', `Failed to reload plugin '${pluginName}'`);
+                        }
+                    } else {
+                        LoggerService.log('info', `Usage: ${colors.cyan('/plugins reload <pluginName|all>')}`);
+                    }
+                    break;
+
                 default:
-                    LoggerService.log('warn', 'Usage: /plugins <list|load|unload|reload> [pluginName|all]');
+                    LoggerService.log('info', `Usage: ${colors.cyan('/plugins <list|load|unload|reload>')}`);
+                    LoggerService.log('info', 'Subcommands:');
+                    LoggerService.log('info', `  ${colors.cyan('list')}   - List all loaded plugins`);
+                    LoggerService.log('info', `  ${colors.cyan('load')}   - Load a plugin (usage: /plugins load <pluginName|all>)`);
+                    LoggerService.log('info', `  ${colors.cyan('unload')} - Unload a plugin (usage: /plugins unload <pluginName|all>)`);
+                    LoggerService.log('info', `  ${colors.cyan('reload')} - Reload a plugin (usage: /plugins reload <pluginName|all>)`);
                     break;
             }
         });
 
-        this.register('/createaccount', async (args) => {
-            if (args.length < 3) {
-                LoggerService.log('warn', 'Usage: /createaccount <email> <password> <displayName>');
-                return;
-            }
-        
-            const [email, password, ...displayNameParts] = args;
-            const displayName = displayNameParts.join(' ');
-        
-            try {
-                const account = await DatabaseManager.createAccount(email, password, displayName);
-                LoggerService.log('success', `Account created successfully!`);
-                LoggerService.log('info', `  Email: ${account.email}`);
-                LoggerService.log('info', `  Display Name: ${account.displayName}`);
-                LoggerService.log('info', `  Account ID: ${account.accountId}`);
-            } catch (error) {
-                LoggerService.log('error', `Failed to create account: ${error.message}`);
+        this.register('/account', async (args) => {
+            const subCommand = args[0]?.toLowerCase();
+
+            switch (subCommand) {
+                case 'create':
+                    if (args.length < 4) {
+                        LoggerService.log('info', `Usage: ${colors.cyan('/account create <email> <password> <displayName>')}`);
+                        return;
+                    }
+
+                    try {
+                        const [, email, password, ...displayNameParts] = args;
+                        const displayName = displayNameParts.join(' ');
+
+                        const account = await DatabaseManager.createAccount(email, password, displayName);
+                        LoggerService.log('success', `Account created successfully!`);
+                        LoggerService.log('info', `  Email: ${colors.cyan(account.email)}`);
+                        LoggerService.log('info', `  Display Name: ${colors.cyan(account.displayName)}`);
+                        LoggerService.log('info', `  Account ID: ${colors.cyan(account.accountId)}`);
+                    } catch (error) {
+                        LoggerService.log('error', `Failed to create account: ${error.message}`);
+                    }
+                    break;
+
+                case 'info':
+                    if (args.length < 2) {
+                        LoggerService.log('info', `Usage: ${colors.cyan('/account info <username>')}`);
+                        return;
+                    }
+
+                    try {
+                        const username = args[1];
+                        const account = await DatabaseManager.getAccountByDisplayName(username);
+
+                        if (!account) {
+                            LoggerService.log('error', `Player "${username}" not found`);
+                            return;
+                        }
+
+                        const vbucks = await DatabaseManager.getVbucksBalance(account.accountId);
+                        const ROLE_NAMES_DISPLAY = { 0: 'Player', 1: 'Founder', 2: 'Admin', 3: 'Moderator', 4: 'Helper' };
+                        const roleName = ROLE_NAMES_DISPLAY[account.clientType || 0];
+
+                        LoggerService.log('info', `Player information for "${username}":`);
+                        LoggerService.log('info', `  Account ID: ${colors.cyan(account.accountId)}`);
+                        LoggerService.log('info', `  Email: ${colors.cyan(account.email || 'N/A')}`);
+                        LoggerService.log('info', `  Role: ${colors.cyan(roleName)}`);
+                        LoggerService.log('info', `  Banned: ${account.ban?.banned ? colors.red('YES') : colors.green('NO')}`);
+                        LoggerService.log('info', `  V-Bucks: ${colors.green(vbucks)}`);
+                        LoggerService.log('info', `  Last login: ${colors.cyan(new Date(account.lastLogin).toLocaleString())}`);
+                        LoggerService.log('info', `  Created: ${colors.cyan(new Date(account.created).toLocaleString())}`);
+
+                        if (account.ban?.banned && account.ban.banReasons?.length > 0) {
+                            LoggerService.log('info', `  Ban reasons: ${colors.red(account.ban.banReasons.join(', '))}`);
+                        }
+                    } catch (error) {
+                        LoggerService.log('error', `Failed to get player info: ${error.message}`);
+                    }
+                    break;
+
+                case 'list':
+                    try {
+                        const allAccounts = await DatabaseManager.getAllAccounts();
+                        const page = parseInt(args[1]) || 1;
+                        const perPage = 10;
+                        const totalPages = Math.ceil(allAccounts.length / perPage);
+
+                        if (page < 1 || page > totalPages) {
+                            LoggerService.log('warn', `Invalid page. Available: 1-${totalPages}`);
+                            return;
+                        }
+
+                        const startIndex = (page - 1) * perPage;
+                        const pageAccounts = allAccounts.slice(startIndex, startIndex + perPage);
+
+                        LoggerService.log('info', `Accounts (Page ${page}/${totalPages}) - Total: ${colors.cyan(allAccounts.length)}`);
+                        pageAccounts.forEach((account, index) => {
+                            const num = startIndex + index + 1;
+                            LoggerService.log('info', `  ${num}. ${colors.cyan(account.displayName)} - ${account.email}`);
+                        });
+
+                        if (page < totalPages) {
+                            LoggerService.log('info', `Type ${colors.cyan(`/account list ${page + 1}`)} for more`);
+                        }
+                    } catch (error) {
+                        LoggerService.log('error', `Failed to list accounts: ${error.message}`);
+                    }
+                    break;
+
+                default:
+                    LoggerService.log('info', `Usage: ${colors.cyan('/account <create|info|list>')}`);
+                    LoggerService.log('info', 'Subcommands:');
+                    LoggerService.log('info', `  ${colors.cyan('create')} - Create a new account (usage: /account create <email> <password> <displayName>)`);
+                    LoggerService.log('info', `  ${colors.cyan('info')}   - View account details (usage: /account info <username>)`);
+                    LoggerService.log('info', `  ${colors.cyan('list')}   - List all accounts (usage: /account list [page])`);
+                    break;
             }
         });
 
@@ -664,44 +741,6 @@ class CommandManager {
             }
         });
         
-        this.register('/player', async (args) => {
-            if (args.length < 1) {
-                LoggerService.log('info', `Usage: ${colors.cyan('/player <username>')}`);
-                return;
-            }
-        
-            try {
-                const username = args[0];
-        
-                const account = await DatabaseManager.getAccountByDisplayName(username);
-                if (!account) {
-                    LoggerService.log('error', `Player "${username}" not found`);
-                    return;
-                }
-
-                const vbucks = await DatabaseManager.getVbucksBalance(account.accountId);
-        
-                LoggerService.log('info', `Player information for "${username}":`);
-                LoggerService.log('info', `  Account ID: ${colors.cyan(account.accountId)}`);
-                LoggerService.log('info', `  Email: ${colors.cyan(account.email || 'N/A')}`);
-                const ROLE_NAMES_DISPLAY = { 0: 'Player', 1: 'Founder', 2: 'Admin', 3: 'Moderator', 4: 'Helper' };
-                const roleName = ROLE_NAMES_DISPLAY[account.clientType || 0];
-                LoggerService.log('info', `  Role: ${colors.cyan(roleName)}`);
-                LoggerService.log('info', `  Banned: ${account.ban.banned ? colors.red('YES') : colors.green('NO')}`);
-                LoggerService.log('info', `  V-Bucks: ${colors.green(vbucks)}`);
-                LoggerService.log('info', `  Last login: ${colors.cyan(new Date(account.lastLogin).toLocaleString())}`);
-                LoggerService.log('info', `  Created: ${colors.cyan(new Date(account.created).toLocaleString())}`);
-        
-                if (account.ban.banned) {
-                    const banInfo = account.ban.banReasons
-                    LoggerService.log('info', `  Ban reasons: ${colors.red(banInfo.reasons.join(', '))}`);
-                }
-        
-            } catch (error) {
-                LoggerService.log('error', `Failed to get player info: ${error.message}`);
-            }
-        });
-
         this.register('/backup', async (args) => {
             const subCommand = args[0]?.toLowerCase();
         
