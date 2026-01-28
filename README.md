@@ -49,6 +49,10 @@ Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed t
 - [ ] 🏁 Implement **queue system** for matchmaking / waitingroom
 - [ ] 🏆 Implement **leaderboard system**
 
+## 🔌 Plugins
+
+Neodyme supports a powerful plugin system. See the [available plugins](https://github.com/Aorux01/Neodyme-Plugins) or create your own!
+
 ## 📁 Installation
 
 1. Download the latest version of the backend.
