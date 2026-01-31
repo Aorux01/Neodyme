@@ -14,12 +14,24 @@ class PluginManager {
             return;
         }
 
-        const files = fs.readdirSync(pluginsDir).filter(file => file.endsWith('.js'));
+        const pluginPaths = [];
+        const entries = fs.readdirSync(pluginsDir, { withFileTypes: true });
+
+        for (const entry of entries) {
+            if (entry.isFile() && entry.name.endsWith('.js')) {
+                pluginPaths.push(path.join(pluginsDir, entry.name));
+            } else if (entry.isDirectory()) {
+                const indexPath = path.join(pluginsDir, entry.name, 'index.js');
+                if (fs.existsSync(indexPath)) {
+                    pluginPaths.push(indexPath);
+                }
+            }
+        }
+
         this.plugins = [];
 
         try {
-            for (const file of files) {
-                const pluginPath = path.join(pluginsDir, file);
+            for (const pluginPath of pluginPaths) {
                 delete require.cache[require.resolve(pluginPath)];
                 const PluginClass = require(pluginPath);
                 const plugin = new PluginClass();
@@ -39,7 +51,7 @@ class PluginManager {
                         LoggerService.log('error', `Failed to initialize plugin: ${plugin.name}`);
                     }
                 } else {
-                    LoggerService.log('error', `Invalid plugin structure in file (invalid format): ${file}`);
+                    LoggerService.log('error', `Invalid plugin structure in file: ${pluginPath}`);
                 }
             }
 
