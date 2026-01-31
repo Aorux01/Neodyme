@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neodyme Server</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .neodyme-hero {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 160px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            background: linear-gradient(45deg, #ffffff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: #b0b0b0;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 80px auto 0;
+            padding: 0 24px;
+        }
+
+        .feature-card {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 32px;
+            text-align: center;
+            border: 1px solid #333;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: #8b5cf6;
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: #8b5cf6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .feature-icon i {
+            font-size: 28px;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #ffffff;
+        }
+
+        .feature-desc {
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-large {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="#" class="neodyme-logo">N</a>
+            
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="#" class="active">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="html/updates.html">UPDATES</a></li>
+                    <li><a href="html/shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme/wiki" target="_blank">DOCS</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <a href="html/login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="html/register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="neodyme-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">NEODYME SERVER</h1>
+            <p class="hero-subtitle">
+                Open-source server implementation. Self-hosted, customizable, and community-driven.
+            </p>
+            
+            <div class="hero-actions">
+                <a href="html/register.html" class="btn btn-primary btn-large">
+                    <i class="fas fa-user-plus"></i> CREATE ACCOUNT
+                </a>
+                <a href="html/login.html" class="btn btn-secondary btn-large">
+                    <i class="fas fa-sign-in-alt"></i> SIGN IN
+                </a>
+            </div>
+            
+            <div class="server-status">
+                <div class="status-dot"></div>
+                <span>SERVER STATUS: ONLINE</span>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: 80px 0; background: #121212;">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <h3 class="feature-title">Open Source</h3>
+                <p class="feature-desc">Full source code available. Contribute and customize to your needs.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+                <h3 class="feature-title">Self-Hosted</h3>
+                <p class="feature-desc">Run your own private server with complete control.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-plug"></i>
+                </div>
+                <h3 class="feature-title">Compatible</h3>
+                <p class="feature-desc">Works with existing clients and launchers.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="neodyme-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>PROJECT</h4>
+                    <a href="https://github.com/Aorux01/Neodyme">Source Code</a>
+                    <a href="https://github.com/Aorux01/Neodyme/issues">Issues</a>
+                    <a href="html/updates.html">Updates</a>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>SUPPORT</h4>
+                    <a href="https://github.com/Aorux01/Neodyme/">Discussions</a>
+                    <a href="https://github.com/Aorux01/Neodyme/">FAQ</a>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>LEGAL</h4>
+                    <a href="https://github.com/Aorux01/Neodyme/blob/main/LICENSE">License</a>
+                    <a href="#">Privacy</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025-2026 Neodyme Project</p>
+                <div class="social-links">
+                    <a href="https://github.com/Aorux01/Neodyme" target="_blank"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+</body>
+</html>

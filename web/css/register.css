@@ -1,0 +1,163 @@
+.register-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.register-sidebar {
+    flex: 1;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.sidebar-content {
+    max-width: 400px;
+    text-align: center;
+}
+
+.neodyme-logo-large {
+    font-size: 80px;
+    font-weight: 900;
+    color: #8b5cf6;
+    margin-bottom: 40px;
+}
+
+.sidebar-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #ffffff;
+}
+
+.sidebar-subtitle {
+    color: #b0b0b0;
+    font-size: 16px;
+    margin-bottom: 40px;
+}
+
+.register-form-container {
+    width: 400px;
+    background: #1e1e1e;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-header {
+    margin-bottom: 40px;
+}
+
+.form-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-subtitle {
+    color: #b0b0b0;
+    font-size: 14px;
+}
+
+.form-options {
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.checkbox-container input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #8b5cf6;
+    margin-top: 2px;
+}
+
+.checkbox-container label {
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.divider {
+    text-align: center;
+    margin: 24px 0;
+    color: #666;
+    font-size: 14px;
+    position: relative;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #4a4a4a;
+}
+
+.divider span {
+    background: #1e1e1e;
+    padding: 0 16px;
+}
+
+.signin-link {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 14px;
+    color: #b0b0b0;
+}
+
+.signin-link a {
+    color: #8b5cf6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.signin-link a:hover {
+    text-decoration: underline;
+}
+
+.back-home {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    color: #b0b0b0;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1001;
+}
+
+.back-home:hover {
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .register-container {
+        flex-direction: column;
+    }
+    
+    .register-sidebar {
+        display: none;
+    }
+    
+    .register-form-container {
+        width: 100%;
+        min-height: 100vh;
+    }
+    
+    .back-home {
+        position: relative;
+        margin-bottom: 20px;
+    }
+}
