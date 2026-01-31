@@ -238,10 +238,30 @@ class CommandManager {
                     }
                     break;
 
+                case 'info':
+                    if (pluginName) {
+                        const pluginInfo = PluginManager.getPluginInfo(pluginName);
+                        if (pluginInfo) {
+                            LoggerService.log('info', `Plugin Information: ${colors.cyan(pluginInfo.name)}`);
+                            LoggerService.log('info', `  Version:            ${colors.green(pluginInfo.version)}`);
+                            LoggerService.log('info', `  Description:        ${pluginInfo.description}`);
+                            LoggerService.log('info', `  Author:             ${pluginInfo.author}`);
+                            LoggerService.log('info', `  Min Backend Ver:    ${colors.yellow(pluginInfo.minBackendVersion)}`);
+                            LoggerService.log('info', `  Dependencies:       ${pluginInfo.dependencies.length > 0 ? pluginInfo.dependencies.join(', ') : 'None'}`);
+                            LoggerService.log('info', `  Path:               ${pluginInfo.path}`);
+                        } else {
+                            LoggerService.log('error', `Plugin '${pluginName}' not found. Use '/plugins list' to see loaded plugins.`);
+                        }
+                    } else {
+                        LoggerService.log('info', `Usage: ${colors.cyan('/plugins info <pluginName>')}`);
+                    }
+                    break;
+
                 default:
-                    LoggerService.log('info', `Usage: ${colors.cyan('/plugins <list|load|unload|reload>')}`);
+                    LoggerService.log('info', `Usage: ${colors.cyan('/plugins <list|info|load|unload|reload>')}`);
                     LoggerService.log('info', 'Subcommands:');
                     LoggerService.log('info', `  ${colors.cyan('list')}   - List all loaded plugins`);
+                    LoggerService.log('info', `  ${colors.cyan('info')}   - Show plugin details (usage: /plugins info <pluginName>)`);
                     LoggerService.log('info', `  ${colors.cyan('load')}   - Load a plugin (usage: /plugins load <pluginName|all>)`);
                     LoggerService.log('info', `  ${colors.cyan('unload')} - Unload a plugin (usage: /plugins unload <pluginName|all>)`);
                     LoggerService.log('info', `  ${colors.cyan('reload')} - Reload a plugin (usage: /plugins reload <pluginName|all>)`);
@@ -1184,3 +1204,4 @@ class CommandManager {
 }
 
 module.exports = CommandManager;
+
