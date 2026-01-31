@@ -1,0 +1,58 @@
+{
+    "_title": "Radio Stations",
+    "radioStationList": {
+        "_type": "RadioStationList",
+        "stations": [
+            {
+                "resourceID": "UndergroundRadio",
+                "stationImage": "https://fortnite-public-service-prod11.ol.epicgames.com/images/radios/Radio_Underground.jpg",
+                "_type": "RadioStationItem",
+                "title": {
+                    "ar": "نيوديم راديو",
+                    "de": "Underground Radio",
+                    "en": "Underground Radio",
+                    "es": "Radio Underground",
+                    "es-419": "Radio Underground",
+                    "fr": "Radio Underground",
+                    "it": "Radio Underground",
+                    "ja": "ネオダイムラジオ",
+                    "ko": "네오다임 라디오",
+                    "pl": "Radio Underground",
+                    "pt-BR": "Rádio Underground",
+                    "ru": "Радио Неодим",
+                    "tr": "Underground Radyo",
+                    "zh-CN": "钕电台",
+                    "zh-Hant": "釹電台"
+                }
+            },
+            {
+                "resourceID": "PartyRoyale",
+                "stationImage": "https://fortnite-public-service-prod11.ol.epicgames.com/images/radios/PartyRoyale.jpg",
+                "_type": "RadioStationItem",
+                "title": {
+                    "ar": "الحفل الملكي",
+                    "de": "Party Royale",
+                    "en": "Party Royale",
+                    "es": "Fiesta magistral",
+                    "es-419": "Fiesta campal",
+                    "fr": "Fête royale",
+                    "it": "Party Reale",
+                    "ja": "パーティーロイヤル",
+                    "ko": "파티로얄",
+                    "pl": "Królewska Impreza",
+                    "pt-BR": "Festa Royale",
+                    "ru": "Королевская вечеринка",
+                    "tr": "Çılgın Parti",
+                    "zh-CN": "空降派对",
+                    "zh-Hant": "空降派對"
+                }
+            }
+        ]
+    },
+    "_noIndex": false,
+    "_activeDate": "2017-10-17T01:23:45.050Z",
+    "lastModified": "2025-10-29T01:23:45.060Z",
+    "_locale": "en-US",
+    "_templateName": "FortniteGameRadioStations",
+    "_suggestedPrefetch": []
+}
