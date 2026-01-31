@@ -1,0 +1,259 @@
+{
+  "contentType": "collection",
+  "contentId": "Neodyme-motd-v2",
+  "tcId": "634e8e85-e2fc-4c68-bb10-93604cf6605f",
+  "contentItems": [
+    {
+      "contentType": "content-item",
+      "contentId": "neodyme-welcome",
+      "tcId": "61fb3dd8-f23d-45cc-9058-058ab223ba5c",
+      "contentFields": {
+        "body": {
+          "ar": "استمتع بتجربة لعب استثنائية!",
+          "en": "Have a phenomenal gaming experience!",
+          "de": "Wünsche allen ein wunderbares Spielerlebnis!",
+          "es": "¡Que disfrutes de tu experiencia de videojuegos!",
+          "es-419": "¡Ten una experiencia de juego espectacular!",
+          "fr": "Un bon jeu à toutes et à tous !",
+          "it": "Ti auguriamo un'esperienza di gioco fenomenale!",
+          "ja": "驚きの体験をしよう！",
+          "ko": "게임에서 환상적인 경험을 해보세요!",
+          "pl": "Życzymy fenomenalnej gry!",
+          "pt-BR": "Tenha uma experiência de jogo fenomenal!",
+          "ru": "Желаю невероятно приятной игры!",
+          "tr": "Muhteşem bir oyun deneyimi yaşamanı dileriz!"
+        },
+        "entryType": "Texte",
+        "image": [
+          {
+            "width": 1920,
+            "height": 1080,
+            "url": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/neodyme_banner.jpg"
+          }
+        ],
+        "tileImage": [
+          {
+            "width": 1024,
+            "height": 512,
+            "url": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/neodyme_tile.jpg"
+          }
+        ],
+        "tabTitleOverride": "Neodyme",
+        "title": {
+          "ar": "مرحبًا بك في Neodyme",
+          "en": "Welcome to Neodyme",
+          "de": "Willkommen bei Neodyme",
+          "es": "Bienvenido a Neodyme",
+          "es-419": "Bienvenido a Neodyme",
+          "fr": "Bienvenue sur Neodyme",
+          "it": "Benvenuto in Neodyme",
+          "ja": "Neodymeへようこそ",
+          "ko": "Neodyme에 오신 것을 환영합니다",
+          "pl": "Witaj w Neodyme",
+          "pt-BR": "Bem-vindo ao Neodyme",
+          "ru": "Добро пожаловать в Neodyme",
+          "tr": "Neodyme'a hoş geldiniz"
+        },
+        "hidden": false,
+        "videoAutoplay": false,
+        "videoLoop": false,
+        "videoMute": false,
+        "videoFullscreen": false,
+        "videoStreamingEnabled": false,
+        "spotlight": false,
+        "sortingPriority": 90
+      },
+      "contentSchemaName": "MotdTextNewsWithVideo"
+    },
+    {
+      "contentType": "content-item",
+      "contentId": "neodyme-website",
+      "tcId": "web-neodyme-motd-1",
+      "contentFields": {
+        "body": {
+          "ar": "قم بزيارة موقعنا لإنشاء حسابك وإدارة ملفك الشخصي وشراء العناصر والمزيد!",
+          "en": "Visit our website to create your account, manage your profile, purchase items and more!",
+          "de": "Besuchen Sie unsere Website, um Ihr Konto zu erstellen, Ihr Profil zu verwalten, Artikel zu kaufen und vieles mehr!",
+          "es": "¡Visita nuestro sitio web para crear tu cuenta, gestionar tu perfil, comprar artículos y más!",
+          "es-419": "¡Visita nuestro sitio web para crear tu cuenta, gestionar tu perfil, comprar artículos y más!",
+          "fr": "Visitez notre site web pour créer votre compte, gérer votre profil, acheter des articles et bien plus encore !",
+          "it": "Visita il nostro sito per creare il tuo account, gestire il tuo profilo, acquistare articoli e molto altro!",
+          "ja": "私たちの Web サイトにアクセスして、アカウントを作成し、プロフィールを管理し、アイテムを購入するなど、さまざまなことができます。",
+          "ko": "웹사이트를 방문하여 계정을 만들고, 프로필을 관리하고, 아이템을 구매하는 등의 작업을 할 수 있습니다!",
+          "pl": "Odwiedź naszą stronę internetową, aby utworzyć konto, zarządzać profilem, kupować przedmioty i nie tylko!",
+          "pt-BR": "Visite nosso site para criar sua conta, gerenciar seu perfil, comprar itens e muito mais!",
+          "ru": "Посетите наш веб-сайт, чтобы создать учетную запись, управлять профилем, покупать предметы и многое другое!",
+          "tr": "Hesabınızı oluşturmak, profilinizi yönetmek, öğeler satın almak ve daha fazlası için web sitemizi ziyaret edin!"
+        },
+        "entryType": "Website",
+        "image": [
+          {
+            "width": 1920,
+            "height": 1080,
+            "url": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/web_banner.png"
+          }
+        ],
+        "tileImage": [
+          {
+            "width": 1024,
+            "height": 512,
+            "url": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/web_tile.png"
+          }
+        ],
+        "tabTitleOverride": "Website",
+        "title": {
+          "ar": "موقع Neodyme",
+          "en": "Neodyme Website",
+          "de": "Neodyme-Website",
+          "es": "Sitio web de Neodyme",
+          "es-419": "Sitio web de Neodyme",
+          "fr": "Site web Neodyme",
+          "it": "Sito web Neodyme",
+          "ja": "Neodyme ウェブサイト",
+          "ko": "Neodyme 웹사이트",
+          "pl": "Strona Neodyme",
+          "pt-BR": "Site Neodyme",
+          "ru": "Сайт Neodyme",
+          "tr": "Neodyme web sitesi"
+        },
+        "hidden": false,
+        "videoAutoplay": false,
+        "videoLoop": false,
+        "videoMute": false,
+        "videoFullscreen": false,
+        "videoStreamingEnabled": false,
+        "spotlight": false,
+        "sortingPriority": 80,
+        "websiteButtonText": "Visit Website",
+        "websiteURL": "https://fortnite-public-service-prod11.ol.epicgames.com/"
+      },
+      "contentSchemaName": "MotdWebsiteNewsWithVideo"
+    },
+    {
+      "contentType": "content-item",
+      "contentId": "neodyme-patch-notes",
+      "tcId": "web-neodyme-motd-2",
+      "contentFields": {
+        "body": {
+          "ar": "ملاحظات تصحيح Neodyme",
+          "en": "Neodyme Patch Notes",
+          "de": "Neodyme Patch-Hinweise",
+          "es": "Notas del parche Neodyme",
+          "es-419": "Notas del parche Neodyme",
+          "fr": "Notes de mise à jour Neodyme",
+          "it": "Note di patch Neodyme",
+          "ja": "Neodyme パッチノート",
+          "ko": "Neodyme 패치 노트",
+          "pl": "Informacje o aktualizacji Neodyme",
+          "pt-BR": "Notas de atualização Neodyme",
+          "ru": "Примечания к патчу Neodyme",
+          "tr": "Neodyme yama notları"
+        },
+        "entryType": "Texte",
+        "image": [
+          {
+            "width": 1920,
+            "height": 1080,
+            "url": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/patch_banner.jpg"
+          }
+        ],
+        "tileImage": [
+          {
+            "width": 1024,
+            "height": 512,
+            "url": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/patch_tile.jpg"
+          }
+        ],
+        "tabTitleOverride": "Patch Notes",
+        "title": {
+          "ar": "v1.2.0",
+          "en": "v1.2.0",
+          "de": "v1.2.0",
+          "es": "v1.2.0",
+          "es-419": "v1.2.0",
+          "fr": "v1.2.0",
+          "it": "v1.2.0",
+          "ja": "v1.2.0",
+          "ko": "v1.2.0",
+          "pl": "v1.2.0",
+          "pt-BR": "v1.2.0",
+          "ru": "v1.2.0",
+          "tr": "v1.2.0"
+        },
+        "adspace": "PATCH NOTES!",
+        "hidden": false,
+        "videoAutoplay": false,
+        "videoLoop": false,
+        "videoMute": false,
+        "videoFullscreen": false,
+        "videoStreamingEnabled": false,
+        "spotlight": false,
+        "sortingPriority": 70
+      },
+      "contentSchemaName": "MotdTextNewsWithVideo"
+    },
+    {
+      "contentType": "content-item",
+      "contentId": "neodyme-features",
+      "tcId": "web-neodyme-motd-3",
+      "contentFields": {
+        "body": {
+          "ar": "اكتشف أحدث التحسينات والميزات على Neodyme! قم بزيارة موقعنا لمزيد من التفاصيل.",
+          "en": "Discover the latest improvements and features on Neodyme! Visit our website for more details.",
+          "de": "Entdecken Sie die neuesten Verbesserungen und Funktionen auf Neodyme! Besuchen Sie unsere Website für weitere Details.",
+          "es": "¡Descubre las últimas mejoras y características en Neodyme! Visita nuestro sitio web para más detalles.",
+          "es-419": "¡Descubre las últimas mejoras y características en Neodyme! Visita nuestro sitio web para más detalles.",
+          "fr": "Découvrez les dernières améliorations et fonctionnalités sur Neodyme ! Visitez notre site web pour plus de détails.",
+          "it": "Scopri i miglioramenti e le funzionalità più recenti su Neodyme! Visita il nostro sito web per maggiori dettagli.",
+          "ja": "Neodymeの最新の改善と機能をご覧ください！詳細はウェブサイトをご覧ください。",
+          "ko": "Neodyme의 최신 개선 사항과 기능을 확인하세요! 자세한 내용은 웹사이트를 방문하세요.",
+          "pl": "Odkryj najnowsze ulepszenia i funkcje Neodyme! Odwiedź naszą stronę internetową, aby uzyskać więcej informacji.",
+          "pt-BR": "Descubra as últimas melhorias e recursos no Neodyme! Visite nosso site para mais detalhes.",
+          "ru": "Откройте для себя новейшие улучшения и функции Neodyme! Посетите наш веб-сайт для получения более подробной информации.",
+          "tr": "Neodyme'daki en son iyileştirmeleri ve özellikleri keşfedin! Daha fazla ayrıntı için web sitemizi ziyaret edin."
+        },
+        "entryType": "Texte",
+        "image": [
+          {
+            "width": 1920,
+            "height": 1080,
+            "url": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/feature_banner.jpg"
+          }
+        ],
+        "tileImage": [
+          {
+            "width": 1024,
+            "height": 512,
+            "url": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/feature_tile.jpg"
+          }
+        ],
+        "tabTitleOverride": "Features",
+        "title": {
+          "ar": "ميزات جديدة متاحة!",
+          "en": "New Features Available!",
+          "de": "Neue Funktionen verfügbar!",
+          "es": "¡Nuevas funciones disponibles!",
+          "es-419": "¡Nuevas funciones disponibles!",
+          "fr": "Nouvelles fonctionnalités disponibles !",
+          "it": "Nuove funzionalità disponibili!",
+          "ja": "新機能が利用可能になりました！",
+          "ko": "새로운 기능 사용 가능!",
+          "pl": "Dostępne nowe funkcje!",
+          "pt-BR": "Novos recursos disponíveis!",
+          "ru": "Доступны новые функции!",
+          "tr": "Yeni özellikler mevcut!"
+        },
+        "adspace": "NEW FEATURES!",
+        "hidden": false,
+        "videoAutoplay": false,
+        "videoLoop": false,
+        "videoMute": false,
+        "videoFullscreen": false,
+        "videoStreamingEnabled": false,
+        "spotlight": false,
+        "sortingPriority": 60
+      },
+      "contentSchemaName": "MotdTextNewsWithVideo"
+    }
+  ]
+}
