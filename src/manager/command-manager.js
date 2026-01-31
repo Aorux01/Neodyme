@@ -141,13 +141,8 @@ class CommandManager {
             LoggerService.log('info', `Server Uptime: ${hours}h ${minutes}m ${seconds}s`);
         });
 
-        this.register('/versionInfo', () => {
-            const uptime = Math.floor((Date.now() - this.startTime) / 1000);
-            const hours = Math.floor(uptime / 3600);
-            const minutes = Math.floor((uptime % 3600) / 60);
-            const seconds = uptime % 60;
-            
-            LoggerService.log('info', `versionInfo usage: ${Math.round(process.versionInfoUsage().heapUsed / 1024 / 1024)}MB`);
+        this.register('/memory', () => {
+            LoggerService.log('info', `Memory usage: ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`);
         });
 
         this.register('/version', () => {
@@ -1114,14 +1109,14 @@ class CommandManager {
         this.register('/health', async () => {
             try {
                 const uptimeSeconds = Math.floor((Date.now() - this.startTime) / 1000);
-                const versionInfoUsage = process.versionInfoUsage();
+                const memoryUsage = process.memoryUsage();
                 const tokenStats = TokenService.getTokenStats();
 
                 LoggerService.log('info', 'Server Health Check:');
                 LoggerService.log('info', `  Status: ${colors.green('HEALTHY')}`);
                 LoggerService.log('info', `  Uptime: ${colors.cyan(Math.floor(uptimeSeconds / 3600) + 'h ' + Math.floor((uptimeSeconds % 3600) / 60) + 'm ' + (uptimeSeconds % 60) + 's')}`);
-                LoggerService.log('info', `  versionInfo (Heap): ${colors.cyan(Math.round(versionInfoUsage.heapUsed / 1024 / 1024) + ' MB')} / ${colors.cyan(Math.round(versionInfoUsage.heapTotal / 1024 / 1024) + ' MB')}`);
-                LoggerService.log('info', `  versionInfo (RSS): ${colors.cyan(Math.round(versionInfoUsage.rss / 1024 / 1024) + ' MB')}`);
+                LoggerService.log('info', `  Memory (Heap): ${colors.cyan(Math.round(memoryUsage.heapUsed / 1024 / 1024) + ' MB')} / ${colors.cyan(Math.round(memoryUsage.heapTotal / 1024 / 1024) + ' MB')}`);
+                LoggerService.log('info', `  Memory (RSS): ${colors.cyan(Math.round(memoryUsage.rss / 1024 / 1024) + ' MB')}`);
                 LoggerService.log('info', `  Active tokens: ${colors.cyan(tokenStats.total)}`);
                 LoggerService.log('info', `  Node.js: ${colors.cyan(process.version)}`);
                 LoggerService.log('info', `  Platform: ${colors.cyan(process.platform + ' ' + process.arch)}`);
