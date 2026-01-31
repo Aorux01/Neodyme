@@ -6,9 +6,9 @@ Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed t
 
 ### ⚠️ Still under development, may contain bugs ⚠️
 
-**Latest version: 1.1.6**
+**Latest version: 1.2.0**
 
-**Latest API version: 1.2**
+**Latest API version: 1.3**
 
 ## 🎉 Main Features
 
@@ -29,6 +29,7 @@ Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed t
 - ✅ **Custom command system** (Console Server, see the documentation)
 - ✅ **Plugin system** to easily extend and customize the backend
 - ✅ **Economics endpoints** (EXP, V-Bucks)
+- ✅ **Database system** (JSON, MongoDB)
 
 ## 🚧 To-Do List
 
@@ -36,9 +37,9 @@ Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed t
 - [ ] ☁️ Full **party system**
 - [ ] 📂 Finish and expand the website (leaderboards, 2FA setup, player stats, etc.)
 - [ ] ⚙️ Complete configuration implementation and management
-- [ ] 🧰 Create a full **Admin Panel** (moderation tools, real-time view, SAC, tokens, moderation, stats server, etc.)
+- [ ] 🧰 Create a full **Admin Panel** (moderation tools, real-time view, tokens, moderation, stats server, etc.)
 - [ ] 🧾 Add more commands (SAC, moderation, server control, etc.)
-- [ ] 💾 Implement all remaining storage systems (**SQLite, MongoDB, MySQL, PostgreSQL**)
+- [ ] 💾 Implement all remaining storage systems (**SQLite, MySQL, PostgreSQL**)
 - [ ] 🔐 Finish **2FA setup**
 - [ ] 📘 Complete the **public API**
 
@@ -48,6 +49,8 @@ Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed t
 - [ ] 📡 Integrate **Vivox voice chat**
 - [ ] 🏁 Implement **queue system** for matchmaking / waitingroom
 - [ ] 🏆 Implement **leaderboard system**
+
+👉 **[See more - Full Roadmap & Features](ROADMAP.md)**
 
 ## 🔌 Plugins
 
