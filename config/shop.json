@@ -1,6 +1,5 @@
 {
   "//": "Neodyme Shop Configuration",
-  "//": "Add these settings to your main config.json file",
 
   "shopRotationTime": "00:00",
   "shopChapterLimit": 5,
