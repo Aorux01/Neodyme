@@ -6,7 +6,7 @@ Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed t
 
 ### ⚠️ Still under development, may contain bugs ⚠️
 
-**Latest version: 1.2.0**
+**Latest version: 1.2.1**
 
 **Latest API version: 1.3**
 
