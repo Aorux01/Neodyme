@@ -149,8 +149,8 @@ class Server {
                 await ShopManager.initialize();
             }
 
-            LoggerService.log('info', 'Generate Cloudstorage file(s)...');
-            await CloudStorageManager.generateDefaultEngine();
+            LoggerService.log('info', 'Initializing CloudStorage...');
+            CloudStorageManager.initialize();
 
             await EXPService.loadConfig();
 
