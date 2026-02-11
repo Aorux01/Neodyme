@@ -14,6 +14,7 @@ const XMPPManager = require('./src/manager/xmpp-manager');
 const CloudStorageManager = require('./src/manager/cloud-storage-manager');
 const GameServerManager = require('./src/manager/game-server-manager');
 const MatchmakerManager = require('./src/manager/matchmaker-manager');
+const PartyManager = require('./src/manager/party-manager');
 const ShopManager = require('./src/manager/shop-manager');
 const BackupManager = require('./src/manager/backup-manager');
 const EXPService = require('./src/service/api/experience-service');
@@ -138,7 +139,10 @@ class Server {
                 LoggerService.log('info', 'Initializing Matchmaker...');
                 await MatchmakerManager.initialize();
             }
-    
+
+            LoggerService.log('info', 'Initializing Party Manager...');
+            await PartyManager.initialize();
+
             if (ConfigManager.get('xmppEnable')) {
                 LoggerService.log('info', 'Starting XMPP server...');
                 await XMPPManager.start();
@@ -239,3 +243,4 @@ server.start().catch((error) => {
     LoggerService.log('error', 'Unhandled exception during server start:', { error: error.message });
     process.exit(1);
 });
+
