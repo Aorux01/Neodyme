@@ -243,4 +243,3 @@ server.start().catch((error) => {
     LoggerService.log('error', 'Unhandled exception during server start:', { error: error.message });
     process.exit(1);
 });
-
