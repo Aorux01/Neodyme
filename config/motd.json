@@ -165,21 +165,7 @@
           }
         ],
         "tabTitleOverride": "Patch Notes",
-        "title": {
-          "ar": "v1.2.0",
-          "en": "v1.2.0",
-          "de": "v1.2.0",
-          "es": "v1.2.0",
-          "es-419": "v1.2.0",
-          "fr": "v1.2.0",
-          "it": "v1.2.0",
-          "ja": "v1.2.0",
-          "ko": "v1.2.0",
-          "pl": "v1.2.0",
-          "pt-BR": "v1.2.0",
-          "ru": "v1.2.0",
-          "tr": "v1.2.0"
-        },
+        "title": "v1.2.3",
         "adspace": "PATCH NOTES!",
         "hidden": false,
         "videoAutoplay": false,
