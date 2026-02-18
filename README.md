@@ -86,6 +86,7 @@ Contributions are **highly welcome**! Feel free to open issues or submit pull re
 ## 📢 Contact
 
 - Discord: @aorux01
+- Discord Server: https://discord.gg/gWpDVKR4nF
 
 ---
 
