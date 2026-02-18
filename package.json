@@ -1,6 +1,6 @@
 {
   "name": "neodyme-server",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A powerful and optimized Fortnite backend server with XMPP support",
   "main": "server.js",
   "scripts": {
