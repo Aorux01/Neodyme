@@ -6250,7 +6250,7 @@
           "hidden": false,
           "tabTitleOverride": "Neodyme",
           "_type": "CommonUI Simple Message MOTD",
-          "title": "v1.2.0",
+          "title": "v1.2.3",
           "body": {
             "de": "Neodyme Patch-Hinweise",
             "ru": "Примечания к патчу Neodyme",
