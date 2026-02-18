@@ -252,4 +252,4 @@
 
 ---
 
-*Last updated: v1.2.0*
+*Last updated: v1.2.3*
