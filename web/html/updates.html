@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Updates - Neodyme</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/updates.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../index.html" class="neodyme-logo">N</a>
+            
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="#" class="active">UPDATES</a></li>
+                    <li><a href="shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme/wiki" target="_blank">DOCS</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <a href="login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="updates-container">
+        <div class="updates-header">
+            <h1 class="updates-title">Latest Updates</h1>
+            <p class="updates-subtitle">Stay informed about the latest changes and improvements</p>
+        </div>
+
+        <div class="updates-timeline">
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.2.3 - Plugin Store</h3>
+                        <div class="update-feature-date">February 18, 2026</div>
+                    </div>
+                    <span class="update-feature-badge">FEATURE</span>
+                </div>
+                <div class="update-content">
+                    <p>New integrated plugin store allowing to browse, install, and update plugins directly from the console with real-time progress tracking and automatic npm dependency management.</p>
+                    <ul class="update-features">
+                        <li><strong>Plugin Store:</strong> New <code>/plugins store</code> command to browse, search, install and update plugins directly from GitHub</li>
+                        <li><strong>Content & API:</strong> Improvements to content files and API endpoints</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.2.2 - Battle Pass & Game Mode Fixes</h3>
+                        <div class="update-hotfixes-date">February 11, 2026</div>
+                    </div>
+                    <span class="update-hotfixes-badge">HOTFIXES</span>
+                </div>
+                <div class="update-content">
+                    <p>Critical fixes for Battle Pass, game mode selection, shop display, and major backend improvements.</p>
+                    <ul class="update-features">
+                        <li><strong>Battle Pass Offers:</strong> Fixed 950 V-Bucks button for Season 11+ by implementing dynamic storefront generation (BRSeason11+)</li>
+                        <li><strong>Game Mode Selection:</strong> Fixed missing Save the World/Battle Royale/Creative menu</li>
+                        <li><strong>Shop Categories:</strong> Fixed shop tabs to display "Daily" and "Featured" instead of "NEODYME ITEM SHOP"</li>
+                        <li><strong>MCP Route:</strong> Added SetHardcoreModifier endpoint for game mode switching functionality</li>
+                        <li><strong>Catalog Structure:</strong> Improved battle pass offers structure with DenyOnFulfillment requirements, displayAssetPath, and proper metadata</li>
+                        <li><strong>Dynamic Quest Expiration:</strong> All quest and event dates now calculate dynamically (3 months from current date) instead of hardcoded "9999-01-01" dates</li>
+                        <li><strong>Redis Integration:</strong> Implemented Redis support for Party system with automatic fallback to memory storage</li>
+                        <li><strong>Party Manager:</strong> Added Redis persistence for party data with 24-hour TTL, enabling multi-instance deployments</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.2.1 - Hotfixes</h3>
+                        <div class="update-hotfixes-date">February 3, 2026</div>
+                    </div>
+                    <span class="update-hotfixes-badge">HOTFIXES</span>
+                </div>
+                <div class="update-content">
+                    <p>Bug fixes and improvements for shop, XMPP, and timeline systems.</p>
+                    <ul class="update-features">
+                        <li><strong>ClientSettings.Sav:</strong> Fixed binary encoding (latin1) for proper game settings persistence</li>
+                        <li><strong>Dynamic Timeline:</strong> Season dates and store expiration now calculated dynamically from shop_state.json</li>
+                        <li><strong>XMPP Friend Requests:</strong> Fixed direction values (OUTBOUND/INBOUND) for proper friend request handling</li>
+                        <li><strong>Dynamic Shop Categories:</strong> Website now support all custom shop categories from config</li>
+                        <li><strong>Shop Config API:</strong> New /api/shop/config endpoint for retrieving shop category configuration</li>
+                        <li><strong>Other:</strong> Command system and plugin system improvements</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.2.0 - Release</h3>
+                        <div class="update-release-date">January 31, 2026</div>
+                    </div>
+                    <span class="update-release-badge">RELEASE</span>
+                </div>
+                <div class="update-content">
+                    <p>Critical security hotfixes and enhanced server architecture.</p>
+                    <ul class="update-features">
+                        <li><strong>Bcrypt Work Factor:</strong> Increased to 12-14 (configurable) for 2026 security standards</li>
+                        <li><strong>Password Complexity:</strong> Enforced requirements (uppercase, lowercase, numbers, special chars)</li>
+                        <li><strong>Timing Attack Protection:</strong> Random delays (50-200ms) prevent account enumeration</li>
+                        <li><strong>Token Encryption:</strong> Optional AES-256-GCM encryption for tokens at rest</li>
+                        <li><strong>Session Management:</strong> Token rotation with family detection, IP binding, device fingerprinting</li>
+                        <li><strong>Session Dashboard:</strong> New "Security & Sessions" tab to view and manage active sessions</li>
+                        <li><strong>Global Logout:</strong> "Log Out All Devices" functionality added</li>
+                        <li><strong>Request Limits:</strong> Configurable 1MB limit for regular requests (50MB for cloud storage)</li>
+                        <li><strong>Shop Categories:</strong> Support for custom shop categories beyond Daily/Featured</li>
+                        <li><strong>V-Bucks API:</strong> New dedicated endpoints for V-Bucks management</li>
+                        <li><strong>EOS Connect:</strong> The server can now handle the connection correctly</li>
+                        <li><strong>Server architecture:</strong> The server architecture was reviewed and cleaned up</li>
+                        <li><strong>Admin Panel:</strong> The server now has an administrator panel</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.1.6 - Security Hardening</h3>
+                        <div class="update-security-date">January 15, 2026</div>
+                    </div>
+                    <span class="update-security-badge">SECURITY</span>
+                </div>
+                <div class="update-content">
+                    <p>Critical security improvements and Redis support.</p>
+                    <ul class="update-features">
+                        <li><strong>Token Hashing:</strong> Tokens are now stored as SHA-256 hashes - raw tokens never persisted</li>
+                        <li><strong>JWT Secret Rotation:</strong> Automatic monthly rotation with 256-bit secrets</li>
+                        <li><strong>HttpOnly Cookies:</strong> Authentication tokens moved from localStorage to secure HttpOnly cookies with SameSite=Strict</li>
+                        <li><strong>CSRF Protection:</strong> Added CSRF middleware with token validation for all forms</li>
+                        <li><strong>Account Enumeration Fix:</strong> /check-email and /check-username now return uniform responses</li>
+                        <li><strong>Redis Support:</strong> Optional Redis storage for tokens and cache (configurable in server.properties)</li>
+                        <li><strong>Async File Operations:</strong> Converted synchronous file reads to async for better performance</li>
+                        <li><strong>Site:</strong> Website functionality improvements</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.1.5 - Security</h3>
+                        <div class="update-security-date">December 21, 2025</div>
+                    </div>
+                    <span class="update-security-badge">SECURITY</span>
+                </div>
+                <div class="update-content">
+                    <p>Major security improvements and critical fixes.</p>
+                    <ul class="update-features">
+                        <li><strong>Automated Secret Management:</strong> JWT and Game Server secrets auto-generated on first startup</li>
+                        <li><strong>Secure Secret Storage:</strong> All secrets moved from server.properties to .env file</li>
+                        <li><strong>Enhanced Authentication:</strong> Fixed critical NULL pointer crash and added timing attack protection</li>
+                        <li><strong>Input Validation:</strong> Comprehensive type checking and length limits</li>
+                        <li><strong>Token Validation:</strong> Enhanced security with automatic account ownership validation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.1.4 - Security Hardening</h3>
+                        <div class="update-security-date">December 13, 2025</div>
+                    </div>
+                    <span class="update-security-badge">SECURITY</span>
+                </div>
+                <div class="update-content">
+                    <p>Major security fixes addressing 10 critical vulnerabilities.</p>
+                    <ul class="update-features">
+                        <li><strong>Token Persistence:</strong> Tokens now persist to Tokens.json file instead of in-versionInfo storage - survives server restarts</li>
+                        <li><strong>Input Validation:</strong> Added comprehensive input validation for all authentication endpoints with length limits</li>
+                        <li><strong>Password Requirements:</strong> Enforced strong password policy (8+ chars, uppercase, lowercase, number, special char) with visual strength indicator</li>
+                        <li><strong>Email Normalization:</strong> All emails are now normalized to lowercase to prevent duplicate accounts</li>
+                        <li><strong>Account Lockout:</strong> Added account lockout after 5 failed login attempts with exponential backoff</li>
+                        <li><strong>Race Condition Protection:</strong> Implemented file locking and atomic write operations for all JSON database operations</li>
+                        <li><strong>Shop Images:</strong> Shop now displays item images from fortnite-api.com and shows "Already Owned" badge</li>
+                        <li><strong>Token Commands:</strong> New /tokens, /health, /ready, /unlock commands for token and server management</li>
+                        <li><strong>Website:</strong> Updated the Neodyme website</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.1.3 - Rate Limiting & Security</h3>
+                        <div class="update-security-date">December 08, 2025</div>
+                    </div>
+                    <span class="update-security-badge">SECURITY</span>
+                </div>
+                <div class="update-content">
+                    <p>Complete rate limiting system with 3 protection levels and security improvements.</p>
+                    <ul class="update-features">
+                        <li><strong>Rate Limiting:</strong> 3 levels (Global, Authentication, Expensive Ops) - fully configurable</li>
+                        <li><strong>Protected Endpoints:</strong> Login, register, purchases, refunds, shop rotation</li>
+                        <li><strong>Security Settings:</strong> All security parameters (CORS, Helmet, Compression) now work correctly</li>
+                        <li><strong>Configuration:</strong> Fixed parameter naming consistency in server.properties</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.1.2</h3>
+                        <div class="update-hotfixes-date">November 21, 2025</div>
+                    </div>
+                    <span class="update-hotfixes-badge">HOTFIXES</span>
+                </div>
+                <div class="update-content">
+                    <p>Bug fixes and stability improvements.</p>
+                    <ul class="update-features">
+                        <li><strong>EXP System:</strong> Fixed experience point calculation errors</li>
+                        <li><strong>Tournaments:</strong> Fixed tournaments page display issues</li>
+                        <li><strong>Images:</strong> Resolved image loading and rendering bugs</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.1.1</h3>
+                        <div class="update-hotfixes-date">November 18, 2025</div>
+                    </div>
+                    <span class="update-hotfixes-badge">HOTFIXES</span>
+                </div>
+                <div class="update-content">
+                    <p>Fix update and new feature.</p>
+                    <ul class="update-features">
+                        <li><strong>Role System:</strong> Added role system for user management</li>
+                        <li><strong>Site Improvements:</strong> Fixed various website bugs and UI issues</li>
+                        <li><strong>Dependency Management:</strong> Fixed dependency installation process</li>
+                        <li><strong>CloudStorage:</strong> Fixed customer settings saving functionality</li>
+                        <li><strong>Commands:</strong> Fixed command execution bugs</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.1.0</h3>
+                        <div class="update-release-date">November 16, 2025</div>
+                    </div>
+                    <span class="update-release-badge">RELEASE</span>
+                </div>
+                <div class="update-content">
+                    <p>Major update with performance improvements and new features.</p>
+                    <ul class="update-features">
+                        <li><strong>Matchmaking:</strong> Improved matchmaking system with better player pairing</li>
+                        <li><strong>Game Modes:</strong> Added support for custom game modes</li>
+                        <li><strong>Server Stability:</strong> Enhanced server stability and crash prevention</li>
+                        <li><strong>API Updates:</strong> Updated and optimized API endpoints</li>
+                        <li><strong>Website:</strong> Complete website redesign with modern UI</li>
+                        <li><strong>Storage System:</strong> Multi-system storage foundation implementation</li>
+                        <li><strong>Shop Rotation:</strong> Automatic shop rotation system</li>
+                        <li><strong>Performance:</strong> General performance improvements across the board</li>
+                        <li><strong>Backup System:</strong> Automated backup system for data protection</li>
+                        <li><strong>CloudStorage:</strong> Enhanced CloudStorage functionality</li>
+                        <li><strong>Configuration:</strong> Improved configuration management system</li>
+                        <li><strong>Documentation:</strong> Comprehensive documentation added</li>
+                        <li><strong>Commands:</strong> New command system implementation</li>
+                        <li><strong>Bug Fixes:</strong> Fixed Friend system, Party system, and XMPP bugs</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.0.1 - 1.0.9</h3>
+                        <div class="update-hotfixes-date">August 28, 2024 - September 12, 2025</div>
+                    </div>
+                    <span class="update-hotfixes-badge">HOTFIXES</span>
+                </div>
+                <div class="update-content">
+                    <p>Contain bugs - fixes will be released in future updates.</p>
+                    <ul class="update-features">
+                        <li><strong>Fixed errors:</strong> Fixed most of the errors preventing the server from functioning correctly</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="update-card">
+                <div class="update-header">
+                    <div>
+                        <h3 class="update-title">Version 1.0.0 - Initial Release</h3>
+                        <div class="update-release-date">August 24, 2024</div>
+                    </div>
+                    <span class="update-release-badge">RELEASE</span>
+                </div>
+                <div class="update-content">
+                    <p>First official release of Neodyme. May contain bugs - fixes will be released in future updates.</p>
+                    <ul class="update-features">
+                        <li><strong>Season Support:</strong> Full support for Fortnite seasons 1-32</li>
+                        <li><strong>Configuration:</strong> Comprehensive configuration management system</li>
+                        <li><strong>Logging:</strong> Detailed logging and monitoring capabilities</li>
+                        <li><strong>Matchmaking:</strong> Foundation for matchmaking system</li>
+                        <li><strong>Error Handling:</strong> Robust error handling throughout the application</li>
+                        <li><strong>Multi-Account:</strong> Support for multiple user accounts</li>
+                        <li><strong>Web Dashboard:</strong> Simple and intuitive web-based dashboard</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
+</body>
+</html>
