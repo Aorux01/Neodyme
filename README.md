@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/images/neodyme-public-service/favicon.ico" alt="Neodyme Logo" width="80" height="80">
+  <img src="public/images/neodyme-public-service/favicon.ico" alt="Neodyme Logo" width="120" height="120">
 </p>
 
 # Neodyme - Fortnite Backend
