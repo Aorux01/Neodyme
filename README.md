@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/images/neodyme-public-service/favicon.ico" alt="Neodyme Logo" width="80" height="80">
+</p>
+
 # Neodyme - Fortnite Backend
 
 > ⚠️ **Note:** This backend is not affiliated with or endorsed by Epic Games, nor is it ready for production.
