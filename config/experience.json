@@ -1,0 +1,25 @@
+{
+  "maxLevel": 100,
+  "xpPerLevel": 80000,
+  "bookXpPerLevel": 1,
+  "bookXpRequiredForStar": 10,
+  "xpRewards": {
+    "kill": 300,
+    "elimination": 300,
+    "assist": 150,
+    "revive": 500,
+    "reboot": 800,
+    "chestOpen": 125,
+    "ammoBoxOpen": 75,
+    "supplyDrop": 500,
+    "medalBronze": 500,
+    "medalSilver": 1000,
+    "medalGold": 2000,
+    "medalPunchcard": 14000,
+    "win": 3000,
+    "top10": 1000,
+    "top25": 500,
+    "survivalMinute": 170,
+    "damageDealt": 1
+  }
+}

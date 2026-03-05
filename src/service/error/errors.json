@@ -1,0 +1,664 @@
+{
+  "proxy": {
+    "fetchError": {
+      "code": "errors.com.epicgames.proxy.fetchError",
+      "message": "An error occurred while fetching data from {0}",
+      "numericCode": 1000,
+      "statusCode": 500
+    },
+    "noResponseDetails": {
+      "code": "errors.com.epicgames.proxy.noResponseDetails",
+      "message": "No response details were found",
+      "numericCode": 1000,
+      "statusCode": 500
+    },
+    "invalidMethod": {
+      "code": "errors.com.epicgames.proxy.invalidMethod",
+      "message": "Invalid method",
+      "numericCode": 1000,
+      "statusCode": 500
+    },
+    "invalidBody": {
+      "code": "errors.com.epicgames.proxy.invalidBody",
+      "message": "Invalid body",
+      "numericCode": 1000,
+      "statusCode": 500
+    },
+    "invalidQuery": {
+      "code": "errors.com.epicgames.proxy.invalidQuery",
+      "message": "Invalid query",
+      "numericCode": 1000,
+      "statusCode": 500
+    },
+    "invalidHeader": {
+      "code": "errors.com.epicgames.proxy.invalidHeader",
+      "message": "Invalid header",
+      "numericCode": 1000,
+      "statusCode": 500
+    },
+    "invalidUrl": {
+      "code": "errors.com.epicgames.proxy.invalidUrl",
+      "message": "Invalid url",
+      "numericCode": 1000,
+      "statusCode": 500
+    },
+    "invalidStatus": {
+      "code": "errors.com.epicgames.proxy.invalidStatus",
+      "message": "Invalid status",
+      "numericCode": 1000,
+      "statusCode": 500
+    }
+  },
+  "storefront": {
+    "invalidItem": {
+      "code": "errors.com.epicgames.fortnite.invalid_item_id",
+      "message": "Failed to get item from the current shop.",
+      "numericCode": 1040,
+      "statusCode": 400
+    },
+    "currencyInsufficient": {
+      "code": "errors.com.epicgames.currency.mtx.insufficient",
+      "message": "You can not afford this item.",
+      "numericCode": 1040,
+      "statusCode": 400
+    },
+    "hasAllItems": {
+      "code": "errors.com.epicgames.offer.has_all_items",
+      "message": "You already own every item.",
+      "numericCode": 1040,
+      "statusCode": 400
+    },
+    "alreadyOwned": {
+      "code": "errors.com.epicgames.offer.already_owned",
+      "message": "You already own this item.",
+      "numericCode": 1040,
+      "statusCode": 400
+    }
+  },
+  "authentication": {
+    "invalidHeader": {
+      "code": "errors.com.epicgames.authentication.invalidHeader",
+      "message": "It looks like your authorization header is invalid or missing, please verify that you are sending the correct headers.",
+      "numericCode": 1011,
+      "statusCode": 400
+    },
+    "invalidRequest": {
+      "code": "errors.com.epicgames.authentication.invalidRequest",
+      "message": "The request body you provided is either invalid or missing elements.",
+      "numericCode": 1013,
+      "statusCode": 400
+    },
+    "invalidToken": {
+      "code": "errors.com.epicgames.authentication.invalidToken",
+      "message": "Invalid token {0}",
+      "numericCode": 1014,
+      "statusCode": 401
+    },
+    "wrongGrantType": {
+      "code": "errors.com.epicgames.authentication.wrongGrantType",
+      "message": "Sorry, your client does not have the proper grant_type for access.",
+      "numericCode": 1016,
+      "statusCode": 400
+    },
+    "notYourAccount": {
+      "code": "errors.com.epicgames.authentication.notYourAccount",
+      "message": "You are not allowed to make changes to other people's accounts",
+      "numericCode": 1023,
+      "statusCode": 403
+    },
+    "validationFailed": {
+      "code": "errors.com.epicgames.authentication.validationFailed",
+      "message": "Sorry we couldn't validate your token {0}. Please try with a new token.",
+      "numericCode": 1031,
+      "statusCode": 401
+    },
+    "authenticationFailed": {
+      "code": "errors.com.epicgames.authentication.authenticationFailed",
+      "message": "Authentication failed for {0}",
+      "numericCode": 1032,
+      "statusCode": 401
+    },
+    "notOwnSessionRemoval": {
+      "code": "errors.com.epicgames.authentication.notOwnSessionRemoval",
+      "message": "Sorry you cannot remove the auth session {0}. It was not issued to you.",
+      "numericCode": 18040,
+      "statusCode": 403
+    },
+    "unknownSession": {
+      "code": "errors.com.epicgames.authentication.unknownSession",
+      "message": "Sorry we could not find the auth session {0}",
+      "numericCode": 18051,
+      "statusCode": 404
+    },
+    "usedClientToken": {
+      "code": "errors.com.epicgames.authentication.wrongTokenType",
+      "message": "This route requires authentication via user access tokens, but you are using a client token",
+      "numericCode": 18052,
+      "statusCode": 401
+    },
+    "oauth": {
+      "invalidBody": {
+        "code": "errors.com.epicgames.authentication.oauth.invalidBody",
+        "message": "The request body you provided is either invalid or missing elements.",
+        "numericCode": 1013,
+        "statusCode": 400
+      },
+      "unsupportedGrant": {
+        "code": "errors.com.epicgames.common.oauth.unsupported_grant_type",
+        "message": "Unsupported grant type: {0}",
+        "numericCode": 1016,
+        "statusCode": 400
+      },
+      "invalidExternalAuthType": {
+        "code": "errors.com.epicgames.authentication.oauth.invalidExternalAuthType",
+        "message": "The external auth type {0} you used is not supported by the server.",
+        "numericCode": 1016,
+        "statusCode": 400
+      },
+      "grantNotImplemented": {
+        "code": "errors.com.epicgames.authentication.grantNotImplemented",
+        "message": "The grant_type {0} you used is not supported by the server.",
+        "numericCode": 1016,
+        "statusCode": 501
+      },
+      "tooManySessions": {
+        "code": "errors.com.epicgames.authentication.oauth.tooManySessions",
+        "message": "Sorry too many sessions have been issued for your account. Please try again later",
+        "numericCode": 18048,
+        "statusCode": 400
+      },
+      "invalidAccountCredentials": {
+        "code": "errors.com.epicgames.authentication.oauth.invalidAccountCredentials",
+        "message": "Sorry the account credentials you are using are invalid",
+        "numericCode": 18031,
+        "statusCode": 400
+      },
+      "invalidRefresh": {
+        "code": "errors.com.epicgames.authentication.oauth.invalidRefresh",
+        "message": "The refresh token you provided is invalid.",
+        "numericCode": 18036,
+        "statusCode": 400
+      },
+      "invalidClient": {
+        "code": "errors.com.epicgames.authentication.oauth.invalidClient",
+        "message": "The client credentials you are using are invalid.",
+        "numericCode": 18033,
+        "statusCode": 403
+      },
+      "invalidExchange": {
+        "code": "errors.com.epicgames.authentication.oauth.invalidExchange",
+        "message": "The exchange code {0} is invalid.",
+        "numericCode": 18057,
+        "statusCode": 400
+      },
+      "expiredExchangeCodeSession": {
+        "code": "errors.com.epicgames.authentication.oauth.expiredExchangeCodeSession",
+        "message": "Sorry the originating session for the exchange code has expired.",
+        "numericCode": 18128,
+        "statusCode": 400
+      },
+      "correctiveActionRequired": {
+        "code": "errors.com.epicgames.authentication.oauth.corrective_action_required",
+        "message": "Corrective action is required to continue.",
+        "numericCode": 18206,
+        "statusCode": 400
+      }
+    }
+  },
+  "party": {
+    "partyNotFound": {
+      "code": "errors.com.epicgames.party.partyNotFound",
+      "message": "Party {0} does not exist.",
+      "numericCode": 51002,
+      "statusCode": 404
+    },
+    "memberNotFound": {
+      "code": "errors.com.epicgames.party.memberNotFound",
+      "message": "Party member {0} does not exist.",
+      "numericCode": 51004,
+      "statusCode": 404
+    },
+    "alreadyInParty": {
+      "code": "errors.com.epicgames.party.alreadyInParty",
+      "message": "Your already in a party.",
+      "numericCode": 51012,
+      "statusCode": 409
+    },
+    "userHasNoParty": {
+      "code": "errors.com.epicgames.party.userHasNoParty",
+      "message": "User {0} has no party to join.",
+      "numericCode": 51019,
+      "statusCode": 404
+    },
+    "notLeader": {
+      "code": "errors.com.epicgames.party.notLeader",
+      "message": "You are not the party leader.",
+      "numericCode": 51015,
+      "statusCode": 403
+    },
+    "pingNotFound": {
+      "code": "errors.com.epicgames.party.pingNotFound",
+      "message": "Sorry, we couldn't find a ping.",
+      "numericCode": 51021,
+      "statusCode": 404
+    },
+    "pingForbidden": {
+      "code": "errors.com.epicgames.party.pingForbidden",
+      "message": "User is not authorized to send pings the desired user",
+      "numericCode": 51020,
+      "statusCode": 403
+    },
+    "notYourAccount": {
+      "code": "errors.com.epicgames.party.notYourAccount",
+      "message": "You are not allowed to make changes to other people's accounts",
+      "numericCode": 51023,
+      "statusCode": 403
+    },
+    "userOffline": {
+      "code": "errors.com.epicgames.party.userOffline",
+      "message": "User is offline.",
+      "numericCode": 51024,
+      "statusCode": 403
+    },
+    "selfPing": {
+      "code": "errors.com.epicgames.party.selfPing",
+      "message": "Self pings are not allowed.",
+      "numericCode": 51028,
+      "statusCode": 400
+    },
+    "selfInvite": {
+      "code": "errors.com.epicgames.party.selfInvite",
+      "message": "Self invites are not allowed.",
+      "numericCode": 51040,
+      "statusCode": 400
+    }
+  },
+  "cloudstorage": {
+    "fileNotFound": {
+      "code": "errors.com.epicgames.cloudstorage.fileNotFound",
+      "message": "Cannot find the file you requested.",
+      "numericCode": 12004,
+      "statusCode": 404
+    },
+    "fileTooLarge": {
+      "code": "errors.com.epicgames.cloudstorage.fileTooLarge",
+      "message": "The file you are trying to upload is too large",
+      "numericCode": 12004,
+      "statusCode": 413
+    },
+    "invalidAuth": {
+      "code": "errors.com.epicgames.cloudstorage.invalidAuth",
+      "message": "Invalid auth token",
+      "numericCode": 12004,
+      "statusCode": 401
+    }
+  },
+  "account": {
+    "disabledAccount": {
+      "code": "errors.com.epicgames.account.disabledAccount",
+      "message": "Sorry, your account is disabled.",
+      "numericCode": 18001,
+      "statusCode": 403
+    },
+    "inactiveAccount": {
+      "code": "errors.com.epicgames.account.account_not_active",
+      "message": "You have been permanently banned from Fortnite.",
+      "numericCode": -1,
+      "statusCode": 400
+    },
+    "invalidAccountIdCount": {
+      "code": "errors.com.epicgames.account.invalidAccountIdCount",
+      "message": "Sorry, the number of account id should be at least one and not more than 100.",
+      "numericCode": 18066,
+      "statusCode": 400
+    },
+    "accountNotFound": {
+      "code": "errors.com.epicgames.account.accountNotFound",
+      "message": "Sorry, we couldn't find an account for {0}",
+      "numericCode": 18007,
+      "statusCode": 404
+    },
+    "privacyNotFound": {
+      "code": "errors.com.epicgames.account.privacyNotFound",
+      "message": "Privacy settings for account {0} not found.",
+      "numericCode": 18008,
+      "statusCode": 404
+    }
+  },
+  "mcp": {
+    "profileNotFound": {
+      "code": "errors.com.epicgames.mcp.profileNotFound",
+      "message": "Sorry, we couldn't find a profile for {0}",
+      "numericCode": 18007,
+      "statusCode": 404
+    },
+    "emptyItems": {
+      "code": "errors.com.epicgames.mcp.emptyItems",
+      "message": "No items found",
+      "numericCode": 12700,
+      "statusCode": 404
+    },
+    "notEnoughMtx": {
+      "code": "errors.com.epicgames.mcp.notEnoughMtx",
+      "message": "Purchase: {0}: Required {1} MTX but account balance is only {2}.",
+      "numericCode": 12720,
+      "statusCode": 400
+    },
+    "wrongCommand": {
+      "code": "errors.com.epicgames.mcp.wrongCommand",
+      "message": "Wrong command.",
+      "numericCode": 12801,
+      "statusCode": 400
+    },
+    "operationForbidden": {
+      "code": "errors.com.epicgames.mcp.operationForbidden",
+      "message": "Operation Forbidden",
+      "numericCode": 12813,
+      "statusCode": 403
+    },
+    "templateNotFound": {
+      "code": "errors.com.epicgames.mcp.templateNotFound",
+      "message": "Unable to find template configuration for profile",
+      "numericCode": 12813,
+      "statusCode": 404
+    },
+    "invalidHeader": {
+      "code": "errors.com.epicgames.mcp.invalidHeader",
+      "message": "Parsing client revisions header failed.",
+      "numericCode": 12831,
+      "statusCode": 400
+    },
+    "invalidPayload": {
+      "code": "errors.com.epicgames.mcp.invalidPayload",
+      "message": "Unable to parse command",
+      "numericCode": 12806,
+      "statusCode": 400
+    },
+    "missingPermission": {
+      "code": "errors.com.epicgames.mcp.missingPermission",
+      "message": "Sorry your login does not posses the permissions '{0} {1}' needed to perform the requested operation",
+      "numericCode": 12806,
+      "statusCode": 403
+    },
+    "itemNotFound": {
+      "code": "errors.com.epicgames.mcp.itemNotFound",
+      "message": "Locker item not found",
+      "numericCode": 16006,
+      "statusCode": 404
+    },
+    "wrongItemType": {
+      "code": "errors.com.epicgames.mcp.wrongItemType",
+      "message": "Item {0} is not a {1}",
+      "numericCode": 16009,
+      "statusCode": 400
+    },
+    "invalidChatRequest": {
+      "code": "errors.com.epicgames.mcp.invalidChatRequest",
+      "message": "",
+      "numericCode": 16090,
+      "statusCode": 400
+    },
+    "operationNotFound": {
+      "code": "errors.com.epicgames.mcp.operationNotFound",
+      "message": "Operation not found",
+      "numericCode": 16035,
+      "statusCode": 404
+    },
+    "invalidLockerSlotIndex": {
+      "code": "errors.com.epicgames.mcp.InvalidLockerSlotIndex",
+      "message": "Invalid loadout index {0}, slot is empty",
+      "numericCode": 16173,
+      "statusCode": 400
+    },
+    "outOfBounds": {
+      "code": "errors.com.epicgames.mcp.outOfBounds",
+      "message": "Invalid loadout index (source: {0}, target: {1})",
+      "numericCode": 16026,
+      "statusCode": 400
+    },
+    "invalidCommand": {
+      "code": "errors.com.epicgames.modules.profiles.invalid_command",
+      "message": "{0} is not valid on {1} profile",
+      "numericCode": 12801,
+      "statusCode": 400
+    },
+    "insufficientCurrency": {
+      "code": "errors.com.epicgames.currency.mtx.insufficient",
+      "message": "You can not afford this item ({0}), you only have {1}.",
+      "numericCode": 1040,
+      "statusCode": 400
+    },
+    "personalMessageTooLong": {
+      "code": "errors.com.epicgames.string.length_check", 
+      "message": "The personalMessage you provided is longer than 100 characters.",
+      "numericCode": 16027,
+      "statusCode": 400
+    },
+    "invalidGiftBox": {
+      "code": "errors.com.epicgames.giftbox.invalid",
+      "message": "The giftbox you provided is invalid.",
+      "numericCode": 16027,
+      "statusCode": 400
+    },
+    "duplicateReceivers": {
+      "code": "errors.com.epicgames.array.duplicate_found",
+      "message": "There are duplicate accountIds in receiverAccountIds.",
+      "numericCode": 16027,
+      "statusCode": 400
+    },
+    "offerNotFound": {
+      "code": "errors.com.epicgames.fortnite.id_invalid",
+      "message": "Offer ID (id: '{0}') not found",
+      "numericCode": 16027,
+      "statusCode": 400
+    }
+  },
+  "gamecatalog": {
+    "invalidParameter": {
+      "code": "errors.com.epicgames.gamecatalog.invalidParameter",
+      "message": "PurchaseCatalogEntry cannot be used for RealMoney prices. Use VerifyRealMoneyPurchase flow instead.",
+      "numericCode": 28000,
+      "statusCode": 400
+    },
+    "itemNotFound": {
+      "code": "errors.com.epicgames.mcp.catalogOutOfDate",
+      "message": "Could not find catalog item {0}",
+      "numericCode": 28001,
+      "statusCode": 400
+    },
+    "priceMismatch": {
+      "code": "errors.com.epicgames.mcp.catalogOutOfDate",
+      "message": "Expected total price of {0} did not match actual price {1}",
+      "numericCode": 28001,
+      "statusCode": 400
+    },
+    "priceNotFound": {
+      "code": "errors.com.epicgames.mcp.catalogOutOfDate",
+      "message": "Could not find {0}-{1} price for catalog item {2}",
+      "numericCode": 28001,
+      "statusCode": 400
+    },
+    "purchaseNotAllowed": {
+      "code": "errors.com.epicgames.gamecatalog.purchaseNotAllowed",
+      "message": "Could not purchase catalog offer {0} because fulfillment {1} is owned {2} time(s) (exceeding the limit of {3})",
+      "numericCode": 28004,
+      "statusCode": 400
+    }
+  },
+  "matchmaking": {
+    "unknownSession": {
+      "code": "errors.com.epicgames.matchmaking.unknownSession",
+      "message": "unknown session id",
+      "numericCode": 12101,
+      "statusCode": 404
+    },
+    "missingCookie": {
+      "code": "errors.com.epicgames.matchmaking.missingCookie",
+      "message": "Missing custom NetCL cookie",
+      "numericCode": 1001,
+      "statusCode": 400
+    },
+    "invalidBucketId": {
+      "code": "errors.com.epicgames.matchmaking.invalidBucketId",
+      "message": "blank or invalid bucketId",
+      "numericCode": 16102,
+      "statusCode": 400
+    },
+    "invalidPartyPlayers": {
+      "code": "errors.com.epicgames.matchmaking.invalidPartyPlayers",
+      "message": "blank or invalid partyPlayerIds",
+      "numericCode": 16103,
+      "statusCode": 400
+    },
+    "invalidPlatform": {
+      "code": "errors.com.epicgames.matchmaking.invalidPlatform",
+      "message": "invalid platform",
+      "numericCode": 16104,
+      "statusCode": 400
+    },
+    "notAllowedIngame": {
+      "code": "errors.com.epicgames.matchmaking.notAllowedIngame",
+      "message": "Player is not allowed to play in game due to equipping items they do not own",
+      "numericCode": 16105,
+      "statusCode": 400
+    }
+  },
+  "friends": {
+    "selfFriend": {
+      "code": "errors.com.epicgames.friends.selfFriend",
+      "message": "You cannot be friend with yourself.",
+      "numericCode": 14001,
+      "statusCode": 400
+    },
+    "accountNotFound": {
+      "code": "errors.com.epicgames.friends.accountNotFound",
+      "message": "Account does not exist",
+      "numericCode": 14011,
+      "statusCode": 404
+    },
+    "friendshipNotFound": {
+      "code": "errors.com.epicgames.friends.friendshipNotFound",
+      "message": "Friendship does not exist",
+      "numericCode": 14004,
+      "statusCode": 404
+    },
+    "requestAlreadySent": {
+      "code": "errors.com.epicgames.friends.requestAlreadySent",
+      "message": "Friendship request has already been sent.",
+      "numericCode": 14014,
+      "statusCode": 409
+    },
+    "invalidData": {
+      "code": "errors.com.epicgames.friends.invalidData",
+      "message": "Invalid data",
+      "numericCode": 14015,
+      "statusCode": 400
+    }
+  },
+  "internal": {
+    "validationFailed": {
+      "code": "errors.com.epicgames.internal.validationFailed",
+      "message": "Validation Failed. Invalid fields were {0}",
+      "numericCode": 1040,
+      "statusCode": 400
+    },
+    "unknownRoute": {
+      "code": "errors.com.epicgames.common.not_found",
+      "message": "Sorry, the resource you were trying to find could not be found.",
+      "numericCode": 1004,
+      "statusCode": 404
+    },
+    "invalidUserAgent": {
+      "code": "errors.com.epicgames.internal.invalidUserAgent",
+      "message": "The user-agent header you provided does not match a unreal engine formated user-agent",
+      "numericCode": 16183,
+      "statusCode": 400
+    },
+    "serverError": {
+      "code": "errors.com.epicgames.internal.serverError",
+      "message": "Sorry an error occurred and we were unable to resolve it.",
+      "numericCode": 1000,
+      "statusCode": 500
+    },
+    "jsonParsingFailed": {
+      "code": "errors.com.epicgames.internal.jsonParsingFailed",
+      "message": "Json parse failed.",
+      "numericCode": 1020,
+      "statusCode": 400
+    },
+    "requestTimedOut": {
+      "code": "errors.com.epicgames.internal.requestTimedOut",
+      "message": "Request timed out.",
+      "numericCode": 1001,
+      "statusCode": 408
+    },
+    "unsupportedMediaType": {
+      "code": "errors.com.epicgames.internal.unsupportedMediaType",
+      "message": "Sorry, your request could not be processed because you provide a type of media that we do not support.",
+      "numericCode": 1006,
+      "statusCode": 415
+    },
+    "notImplemented": {
+      "code": "errors.com.epicgames.internal.notImplemented",
+      "message": "The resource you were trying to access is not yet implemented by the server.",
+      "numericCode": 1001,
+      "statusCode": 501
+    },
+    "dataBaseError": {
+      "code": "errors.com.epicgames.internal.dataBaseError",
+      "message": "There was an error while interacting with the database. Please report this issue.",
+      "numericCode": 1001,
+      "statusCode": 500
+    },
+    "unknownError": {
+      "code": "errors.com.epicgames.internal.unknownError",
+      "message": "Sorry an error occurred and we were unable to resolve it.",
+      "numericCode": 1001,
+      "statusCode": 500
+    },
+    "eosError": {
+      "code": "errors.com.epicgames.internal.EosError",
+      "message": "Sorry an error occurred while communication with Epic Online Service Servers.",
+      "numericCode": 1001,
+      "statusCode": 500
+    }
+  },
+  "basic": {
+    "badRequest": {
+      "code": "errors.com.epicgames.basic.badRequest",
+      "message": "Sorry but your request is invalid.",
+      "numericCode": 1001,
+      "statusCode": 400
+    },
+    "notFound": {
+      "code": "errors.com.epicgames.basic.notFound",
+      "message": "The resource you were trying to find could not be found.",
+      "numericCode": 1004,
+      "statusCode": 404
+    },
+    "notAcceptable": {
+      "code": "errors.com.epicgames.basic.notAcceptable",
+      "message": "Sorry your request could not be processed as you do not accept the response type generated by this resource. Please check your Accept header.",
+      "numericCode": 1008,
+      "statusCode": 406
+    },
+    "methodNotAllowed": {
+      "code": "errors.com.epicgames.basic.methodNotAllowed",
+      "message": "Sorry the resource you were trying to access cannot be accessed with the HTTP method you used.",
+      "numericCode": 1009,
+      "statusCode": 405
+    },
+    "jsonMappingFailed": {
+      "code": "errors.com.epicgames.basic.jsonMappingFailed",
+      "message": "Json mapping failed.",
+      "numericCode": 1019,
+      "statusCode": 400
+    },
+    "throttled": {
+      "code": "errors.com.epicgames.basic.throttled",
+      "message": "Operation access is limited by throttling policy.",
+      "numericCode": 1041,
+      "statusCode": 429
+    }
+  }
+}

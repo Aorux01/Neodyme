@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase V-Bucks - Neodyme</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/purchase.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="updates.html">UPDATES</a></li>
+                    <li><a href="shop.html">SHOP</a></li>
+                    <li><a href="status.html">STATUS</a></li>
+                    <li><a href="docs/index.html">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions"></div>
+        </div>
+    </header>
+
+    <div class="purchase-container">
+
+        <div class="purchase-header">
+            <h1 class="purchase-title">GET V-BUCKS</h1>
+            <p class="purchase-subtitle">Purchase V-Bucks to unlock the latest items from the shop</p>
+            <div class="current-balance">
+                <div class="balance-card">
+                    <i class="fas fa-coins"></i>
+                    <div class="balance-info">
+                        <span class="balance-label">Your Balance</span>
+                        <span class="balance-amount" id="current-vbucks">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="purchase-steps">
+            <div class="pstep active" id="pstep-1">
+                <div class="pstep-circle">1</div>
+                <div class="pstep-label">Package</div>
+            </div>
+            <div class="pstep-connector" id="pstep-conn-1"></div>
+            <div class="pstep" id="pstep-2">
+                <div class="pstep-circle">2</div>
+                <div class="pstep-label">Payment</div>
+            </div>
+            <div class="pstep-connector" id="pstep-conn-2"></div>
+            <div class="pstep" id="pstep-3">
+                <div class="pstep-circle">3</div>
+                <div class="pstep-label">Review</div>
+            </div>
+            <div class="pstep-connector" id="pstep-conn-3"></div>
+            <div class="pstep" id="pstep-4">
+                <div class="pstep-circle"><i class="fas fa-check"></i></div>
+                <div class="pstep-label">Done</div>
+            </div>
+        </nav>
+
+        <div class="alert alert-info" id="alert" style="display:none;">
+            <span id="alert-message"></span>
+        </div>
+
+        <div id="purchase-step-1" class="purchase-step-page">
+            <div class="package-grid">
+
+                <!-- 1 000 V-Bucks -->
+                <div class="package-card" onclick="selectPackage(1000, 7.99, this)">
+                    <div class="package-header">
+                        <div class="package-amount">1,000</div>
+                        <div class="package-bonus pkg-no-bonus">No Bonus</div>
+                    </div>
+                    <div class="package-icon"><i class="fas fa-coins"></i></div>
+                    <div class="package-price">$7.99</div>
+                    <button class="btn btn-primary package-btn" tabindex="-1">SELECT</button>
+                </div>
+
+                <!-- 2 800 V-Bucks (most popular) -->
+                <div class="package-card popular" onclick="selectPackage(2800, 19.99, this)">
+                    <div class="package-badge">MOST POPULAR</div>
+                    <div class="package-header" style="padding-top: 32px;">
+                        <div class="package-amount">2,800</div>
+                        <div class="package-bonus">+300 Bonus</div>
+                    </div>
+                    <div class="package-icon"><i class="fas fa-coins"></i></div>
+                    <div class="package-price">$19.99</div>
+                    <button class="btn btn-primary package-btn" tabindex="-1">SELECT</button>
+                </div>
+
+                <!-- 5 000 V-Bucks -->
+                <div class="package-card" onclick="selectPackage(5000, 31.99, this)">
+                    <div class="package-header">
+                        <div class="package-amount">5,000</div>
+                        <div class="package-bonus">+800 Bonus</div>
+                    </div>
+                    <div class="package-icon"><i class="fas fa-coins"></i></div>
+                    <div class="package-price">$31.99</div>
+                    <button class="btn btn-primary package-btn" tabindex="-1">SELECT</button>
+                </div>
+
+                <!-- 13 500 V-Bucks -->
+                <div class="package-card" onclick="selectPackage(13500, 79.99, this)">
+                    <div class="package-badge pkg-badge-value">BEST VALUE</div>
+                    <div class="package-header" style="padding-top: 32px;">
+                        <div class="package-amount">13,500</div>
+                        <div class="package-bonus">+1,500 Bonus</div>
+                    </div>
+                    <div class="package-icon"><i class="fas fa-coins"></i></div>
+                    <div class="package-price">$79.99</div>
+                    <button class="btn btn-primary package-btn" tabindex="-1">SELECT</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="purchase-step-2" class="purchase-step-page" style="display:none;">
+            <div class="step-card">
+                <div class="step-card-header">
+                    <div class="step-card-icon"><i class="fas fa-credit-card"></i></div>
+                    <div>
+                        <h3 class="step-title">Payment Method</h3>
+                        <p class="step-subtitle">Choose how you'd like to pay</p>
+                    </div>
+                </div>
+
+                <div class="method-options">
+                    <label class="method-option">
+                        <input type="radio" name="payment-method" value="paypal" checked>
+                        <div class="method-icon-wrap paypal-icon"><i class="fab fa-paypal"></i></div>
+                        <div class="method-info">
+                            <span class="method-name">PayPal</span>
+                            <span class="method-desc">Fast &amp; secure checkout</span>
+                        </div>
+                        <i class="fas fa-chevron-right method-arrow"></i>
+                    </label>
+
+                    <label class="method-option">
+                        <input type="radio" name="payment-method" value="credit">
+                        <div class="method-icon-wrap card-icon"><i class="fas fa-credit-card"></i></div>
+                        <div class="method-info">
+                            <span class="method-name">Credit / Debit Card</span>
+                            <span class="method-desc">Visa, Mastercard, Amex</span>
+                        </div>
+                        <i class="fas fa-chevron-right method-arrow"></i>
+                    </label>
+
+                    <label class="method-option">
+                        <input type="radio" name="payment-method" value="crypto">
+                        <div class="method-icon-wrap crypto-icon"><i class="fas fa-coins"></i></div>
+                        <div class="method-info">
+                            <span class="method-name">Cryptocurrency</span>
+                            <span class="method-desc">BTC, ETH &amp; more</span>
+                        </div>
+                        <i class="fas fa-chevron-right method-arrow"></i>
+                    </label>
+                </div>
+
+                <!-- Creator code -->
+                <div class="creator-code-section">
+                    <div class="creator-code-label">
+                        <i class="fas fa-heart"></i> Support a Creator <span class="creator-code-optional">(optional)</span>
+                    </div>
+                    <div class="creator-code-input-row">
+                        <input type="text" id="creator-code-input" class="creator-code-input" placeholder="Enter creator code" maxlength="16" oninput="onCreatorCodeInput()">
+                        <button class="creator-code-apply-btn" onclick="applyCreatorCode()">Apply</button>
+                    </div>
+                    <div id="creator-code-feedback" class="creator-code-feedback"></div>
+                </div>
+
+                <div class="step-actions">
+                    <button class="btn btn-secondary" onclick="goToStep(1)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary" onclick="goToStep(3)">
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="purchase-step-3" class="purchase-step-page" style="display:none;">
+            <div class="step-card">
+                <div class="step-card-header">
+                    <div class="step-card-icon receipt-icon"><i class="fas fa-receipt"></i></div>
+                    <div>
+                        <h3 class="step-title">Order Review</h3>
+                        <p class="step-subtitle">Check everything before completing your purchase</p>
+                    </div>
+                </div>
+
+                <div class="order-summary">
+                    <div class="summary-row">
+                        <span class="summary-label"><i class="fas fa-box-open"></i> Package</span>
+                        <span class="summary-value" id="summary-amount">0 V-Bucks</span>
+                    </div>
+                    <div class="summary-row" id="summary-bonus-row">
+                        <span class="summary-label"><i class="fas fa-gift"></i> Bonus</span>
+                        <span class="summary-value summary-bonus" id="summary-bonus">+0 V-Bucks</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-row summary-row-total">
+                        <span class="summary-label"><i class="fas fa-coins"></i> Total V-Bucks</span>
+                        <span class="summary-value summary-total" id="summary-total">0 V-Bucks</span>
+                    </div>
+                    <div class="summary-row summary-row-price">
+                        <span class="summary-label"><i class="fas fa-tag"></i> Price</span>
+                        <span class="summary-value summary-price" id="summary-price">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label"><i class="fas fa-credit-card"></i> Payment</span>
+                        <span class="summary-value" id="summary-method">-</span>
+                    </div>
+                    <div class="summary-row" id="summary-creator-row" style="display:none;">
+                        <span class="summary-label"><i class="fas fa-heart"></i> Creator</span>
+                        <span class="summary-value" id="summary-creator" style="color:#ec4899;">-</span>
+                    </div>
+                </div>
+
+                <div class="step-actions">
+                    <button class="btn btn-secondary" onclick="goToStep(2)">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary" id="confirm-purchase-btn" onclick="confirmPurchase()">
+                        <i class="fas fa-lock"></i> Pay $<span id="confirm-price">0.00</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="purchase-step-4" class="purchase-step-page" style="display:none;">
+            <div class="step-card success-step">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="success-title">Purchase Successful!</h3>
+                <p class="success-desc">You have received <strong id="success-amount">0 V-Bucks</strong></p>
+                <div class="success-balance">
+                    <i class="fas fa-coins"></i>
+                    <span>New balance: <strong id="success-new-balance">0</strong></span>
+                </div>
+                <div class="step-actions step-actions-center">
+                    <button class="btn btn-secondary" onclick="goToStep(1)">
+                        <i class="fas fa-plus"></i> Buy More
+                    </button>
+                    <button class="btn btn-primary" onclick="window.location.href='shop.html'">
+                        <i class="fas fa-store"></i> Go to Shop
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="purchase-footer">
+            <div class="security-info">
+                <i class="fas fa-shield-alt"></i>
+                <span>Secure payment · 256-bit SSL encryption</span>
+            </div>
+            <div class="support-info">
+                <a href="#"><i class="fas fa-question-circle"></i> Need help with payment?</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/purchase.js"></script>
+</body>
+</html>

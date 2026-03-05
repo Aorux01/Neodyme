@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started - Neodyme Docs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link active"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+        <main class="docs-content">
+            <h1>Getting Started</h1>
+            <p>Everything you need to install and run Neodyme.</p>
+
+            <div class="docs-alert"><i class="fas fa-info-circle"></i> Neodyme requires <strong>Node.js 18+</strong>. Download it from <a href="https://nodejs.org" target="_blank">nodejs.org</a>.</div>
+
+            <h2>Installation</h2>
+            <ol>
+                <li>Download or clone the latest version of Neodyme.</li>
+                <li>Run <code>install_packages.bat</code> to install all npm dependencies (only required once).</li>
+                <li>Launch the server with <code>start.bat</code>.</li>
+                <li>Open <code>http://localhost:3551</code> in your browser.</li>
+            </ol>
+
+            <h2>Configuration</h2>
+            <p>All settings are in <code>server.properties</code>. The most important ones:</p>
+            <table>
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>port</code></td><td>3551</td><td>HTTP port the server listens on</td></tr>
+                <tr><td><code>protocol</code></td><td>http</td><td><code>http</code> or <code>https</code></td></tr>
+                <tr><td><code>databaseType</code></td><td>json</td><td><code>json</code> or <code>mongodb</code></td></tr>
+                <tr><td><code>xmppEnable</code></td><td>true</td><td>Enable XMPP/chat server</td></tr>
+                <tr><td><code>autoShopRotation</code></td><td>true</td><td>Automatic daily shop rotation</td></tr>
+                <tr><td><code>plugins</code></td><td>true</td><td>Enable plugin system</td></tr>
+                <tr><td><code>webInterface</code></td><td>true</td><td>Enable web dashboard</td></tr>
+                <tr><td><code>maintenanceMode</code></td><td>false</td><td>Put server in maintenance mode</td></tr>
+            </table>
+
+            <h2>Environment Variables (.env)</h2>
+            <p>Secrets are stored in <code>.env</code> (auto-generated on first startup). You can override them:</p>
+            <pre><code>JWT_SECRET=your_jwt_secret_here
+GAME_SERVER_SECRET=your_game_server_secret_here
+MONGODB_URI=mongodb://localhost:27017/neodyme
+REDIS_URL=redis://localhost:6379</code></pre>
+
+            <h2>First Account</h2>
+            <p>Create your first admin account via the console:</p>
+            <pre><code>/account create admin@example.com Password123! AdminName
+/admin set AdminName owner</code></pre>
+
+            <h2>Connecting the Game</h2>
+            <p>Point your Fortnite launcher to <code>http://localhost:3551</code>. Configure your DNS or hosts file to redirect Epic's domains to <code>127.0.0.1</code>.</p>
+
+            <h2>Directory Structure</h2>
+            <table>
+                <tr><th>Path</th><th>Description</th></tr>
+                <tr><td><code>api/</code></td><td>Game API route handlers</td></tr>
+                <tr><td><code>config/</code></td><td>Config files (shop, motd, game-servers)</td></tr>
+                <tr><td><code>data/</code></td><td>Runtime data (JSON database, backups)</td></tr>
+                <tr><td><code>plugins/</code></td><td>Installed plugins</td></tr>
+                <tr><td><code>src/</code></td><td>Backend source (managers, services, middleware)</td></tr>
+                <tr><td><code>web/</code></td><td>Web interface (HTML, CSS, JS)</td></tr>
+                <tr><td><code>logs/</code></td><td>Daily log files</td></tr>
+                <tr><td><code>backups/</code></td><td>Automatic database backups</td></tr>
+            </table>
+        </main>
+    </div>
+    <script src="../../js/common.js"></script>
+</body>
+</html>

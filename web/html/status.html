@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Status - Neodyme</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/status.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="updates.html">UPDATES</a></li>
+                    <li><a href="shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="#" class="active">STATUS</a></li>
+                    <li><a href="docs/index.html">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="status-page">
+        <!-- Overall banner -->
+        <div id="status-banner" class="status-banner operational">
+            <div class="status-banner-icon"><i id="banner-icon" class="fas fa-circle-notch fa-spin"></i></div>
+            <div>
+                <div class="status-banner-title" id="banner-title">Checking status…</div>
+                <div class="status-banner-sub"  id="banner-sub"></div>
+            </div>
+        </div>
+
+        <!-- Services list -->
+        <div class="services-card">
+            <div class="services-card-header">Services</div>
+            <div id="services-list">
+                <!-- Skeleton rows -->
+                <div class="service-row" style="opacity:.4;" aria-hidden="true">
+                    <div class="service-dot" style="background:#333;"></div>
+                    <div class="service-name" style="background:#252525;border-radius:4px;height:14px;width:140px;"></div>
+                    <div class="service-status" style="background:#252525;border-radius:4px;height:12px;width:80px;"></div>
+                </div>
+                <div class="service-row" style="opacity:.3;" aria-hidden="true">
+                    <div class="service-dot" style="background:#333;"></div>
+                    <div class="service-name" style="background:#252525;border-radius:4px;height:14px;width:100px;"></div>
+                    <div class="service-status" style="background:#252525;border-radius:4px;height:12px;width:80px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-footer">
+            <div id="checked-at" style="margin-bottom:8px;"></div>
+            <div class="refresh-badge"><i class="fas fa-sync" id="refresh-spin"></i> Auto-refreshes every 60s</div>
+            <!-- <div style="margin-top:16px;">
+                For real-time details, visit the <a href="dashboard.html">Dashboard</a>.
+            </div> -->
+        </div>
+    </div>
+
+    <script src="../js/status.js"></script>
+</body>
+</html>

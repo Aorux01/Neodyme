@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Neodyme</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+
+        <main class="docs-content">
+            <div class="docs-hero">
+                <h1>Neodyme Documentation</h1>
+                <p>Welcome to the official Neodyme wiki. Find everything you need to configure, extend, and use your Fortnite backend server.</p>
+                <div class="docs-version-badge">Version 1.2.4 &nbsp;|&nbsp; API 1.6</div>
+            </div>
+
+            <div class="docs-grid">
+                <a href="getting-started.html" class="docs-card">
+                    <div class="docs-card-icon"><i class="fas fa-rocket"></i></div>
+                    <h3>Getting Started</h3>
+                    <p>Installation, setup, configuration, and first steps.</p>
+                </a>
+                <a href="commands.html" class="docs-card">
+                    <div class="docs-card-icon"><i class="fas fa-terminal"></i></div>
+                    <h3>Commands</h3>
+                    <p>Full console command reference with all options and flags.</p>
+                </a>
+                <a href="web-interface.html" class="docs-card">
+                    <div class="docs-card-icon"><i class="fas fa-globe"></i></div>
+                    <h3>Web Interface</h3>
+                    <p>Dashboard, admin panel, moderation, and developer tools.</p>
+                </a>
+                <a href="database.html" class="docs-card">
+                    <div class="docs-card-icon"><i class="fas fa-database"></i></div>
+                    <h3>Database</h3>
+                    <p>JSON, MongoDB, backup system, and data migration.</p>
+                </a>
+                <a href="security.html" class="docs-card">
+                    <div class="docs-card-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Security</h3>
+                    <p>Authentication, rate limiting, HTTPS, and audit logging.</p>
+                </a>
+                <a href="api.html" class="docs-card">
+                    <div class="docs-card-icon"><i class="fas fa-code"></i></div>
+                    <h3>API Reference</h3>
+                    <p>All game and web API endpoints, authentication, errors.</p>
+                </a>
+                <a href="plugins.html" class="docs-card">
+                    <div class="docs-card-icon"><i class="fas fa-plug"></i></div>
+                    <h3>Plugins</h3>
+                    <p>Install plugins from the store or create your own.</p>
+                </a>
+            </div>
+
+            <div class="docs-quicklinks">
+                <h2>Quick Links</h2>
+                <ul>
+                    <li><strong>Default Port:</strong> 3551</li>
+                    <li><strong>Web Interface:</strong> <code>http://localhost:3551</code></li>
+                    <li><strong>Configuration:</strong> <code>server.properties</code> and <code>config/</code></li>
+                    <li><strong>Database:</strong> <code>data/</code> (JSON) or MongoDB</li>
+                    <li><strong>Discord:</strong> <a href="https://discord.gg/gWpDVKR4nF" target="_blank">discord.gg/gWpDVKR4nF</a></li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/common.js"></script>
+</body>
+</html>

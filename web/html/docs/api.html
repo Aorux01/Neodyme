@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - Neodyme Docs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link active"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+        <main class="docs-content">
+            <h1>API Reference</h1>
+            <p>Neodyme exposes two sets of APIs: the <strong>Fortnite Game API</strong> (used by the game client) and the <strong>Web API</strong> (used by the web interface and admin panel).</p>
+
+            <h2>Authentication</h2>
+
+            <h3>Game Client Authentication</h3>
+            <p>The game client uses OAuth2 token-based authentication:</p>
+            <pre><code>POST /account/api/oauth/token
+Content-Type: application/x-www-form-urlencoded
+
+Grant types:
+  password           (email + password login)
+  exchange_code      (token exchange)
+  refresh_token      (session renewal)
+  client_credentials (client authentication)</code></pre>
+
+            <h3>Web Interface Authentication</h3>
+            <pre><code>POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password"
+}</code></pre>
+            <p>Response includes access token and refresh token cookies.</p>
+
+            <h2>Fortnite Game API</h2>
+            <p>These endpoints are used by the Fortnite game client.</p>
+
+            <h3>Account</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/account/api/public/account/:accountId</code></td><td>Get account details</td></tr>
+                <tr><td><code>GET</code></td><td><code>/account/api/public/account/displayName/:name</code></td><td>Get account by display name</td></tr>
+                <tr><td><code>GET</code></td><td><code>/account/api/public/account</code></td><td>Get multiple accounts</td></tr>
+                <tr><td><code>GET</code></td><td><code>/account/api/epicdomains/ssodomains</code></td><td>SSO domains</td></tr>
+            </table>
+
+            <h3>OAuth</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>POST</code></td><td><code>/account/api/oauth/token</code></td><td>Get/refresh tokens</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/account/api/oauth/sessions/kill</code></td><td>Kill sessions</td></tr>
+            </table>
+
+            <h3>Profile (MCP)</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/QueryProfile</code></td><td>Query profile</td></tr>
+                <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/EquipBattleRoyaleCustomization</code></td><td>Equip cosmetics</td></tr>
+                <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/SetBattleRoyaleBanner</code></td><td>Set banner</td></tr>
+                <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/SetCosmeticLockerSlot</code></td><td>Set locker slot</td></tr>
+                <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/PurchaseCatalogEntry</code></td><td>Purchase item</td></tr>
+                <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/SetAffiliateName</code></td><td>Set creator code</td></tr>
+                <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/MarkItemSeen</code></td><td>Mark items seen</td></tr>
+                <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/SetItemFavoriteStatus</code></td><td>Favorite item</td></tr>
+            </table>
+
+            <h3>Friends</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/friends/api/public/friends/:accountId</code></td><td>Get friends list</td></tr>
+                <tr><td><code>POST</code></td><td><code>/friends/api/public/friends/:accountId/:friendId</code></td><td>Add friend</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/friends/api/public/friends/:accountId/:friendId</code></td><td>Remove friend</td></tr>
+                <tr><td><code>GET</code></td><td><code>/friends/api/v1/:accountId/blocklist</code></td><td>Get blocklist</td></tr>
+            </table>
+
+            <h3>Storefront / Shop</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/fortnite/api/storefront/v2/catalog</code></td><td>Get shop catalog</td></tr>
+                <tr><td><code>GET</code></td><td><code>/fortnite/api/storefront/v2/keychain</code></td><td>Get keychain</td></tr>
+            </table>
+
+            <h3>Launcher Assets <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/launcher/api/public/assets/Windows/:catalogItemId/:appName</code></td><td>Proxy launcher asset requests to Epic's service</td></tr>
+            </table>
+
+            <h3>Status</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/fortnite/api/calendar/v1/timeline</code></td><td>Get events timeline</td></tr>
+                <tr><td><code>GET</code></td><td><code>/fortnite/api/v2/versioncheck</code></td><td>Version check</td></tr>
+                <tr><td><code>GET</code></td><td><code>/lightswitch/api/service/bulk/status</code></td><td>Service status</td></tr>
+            </table>
+
+            <h3>Cloud Storage</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/fortnite/api/cloudstorage/system</code></td><td>Get system files</td></tr>
+                <tr><td><code>GET</code></td><td><code>/fortnite/api/cloudstorage/system/:file</code></td><td>Get system file</td></tr>
+                <tr><td><code>GET</code></td><td><code>/fortnite/api/cloudstorage/user/:accountId</code></td><td>Get user files</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/fortnite/api/cloudstorage/user/:accountId/:file</code></td><td>Save user file</td></tr>
+            </table>
+
+            <h2>Web API</h2>
+            <p>These endpoints are used by the web interface dashboard.</p>
+
+            <h3>Authentication</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>POST</code></td><td><code>/api/auth/register</code></td><td>Register new account</td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/auth/login</code></td><td>Login</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/auth/verify</code></td><td>Verify token</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/auth/profile</code></td><td>Get profile</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/api/auth/profile</code></td><td>Update profile</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/api/auth/change-password</code></td><td>Change password</td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/auth/logout</code></td><td>Logout</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/auth/csrf-token</code></td><td>Get CSRF token</td></tr>
+            </table>
+
+            <h3>User</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/api/user/vbucks</code></td><td>Get V-Bucks balance</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/user/friends</code></td><td>Get friends list</td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/user/friends/add</code></td><td>Add friend</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/user/role</code></td><td>Get user role</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/users/search?q=</code></td><td>Search users</td></tr>
+            </table>
+
+            <h3>Shop</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/api/shop</code></td><td>Get shop data</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/shop/status</code></td><td>Shop rotation status</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/shop/items</code></td><td>Shop items</td></tr>
+            </table>
+
+            <h3>Sessions</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/api/sessions/active</code></td><td>Get active sessions</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/api/sessions/:sessionId</code></td><td>Terminate session</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/api/sessions/all</code></td><td>Terminate all sessions</td></tr>
+            </table>
+
+            <h3>Support Tickets</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>POST</code></td><td><code>/api/tickets</code></td><td>Create ticket</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/tickets/my</code></td><td>Get my tickets</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/tickets/:ticketId</code></td><td>Get ticket details</td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/tickets/:ticketId/messages</code></td><td>Add message</td></tr>
+            </table>
+
+            <h2>Moderator API</h2>
+            <p>Requires Moderator, Admin, or Developer role.</p>
+
+            <h3>Player Management</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/api/mod/players</code></td><td>List players</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/mod/players/:accountId/bans</code></td><td>Get ban info</td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/mod/players/:accountId/ban</code></td><td>Ban player</td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/mod/players/:accountId/unban</code></td><td>Unban player</td></tr>
+            </table>
+
+            <h3>Ticket Management</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/api/mod/tickets</code></td><td>Get all tickets</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/api/mod/tickets/:id/assign</code></td><td>Assign ticket</td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/mod/tickets/:id/reply</code></td><td>Reply as mod</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/api/mod/tickets/:id/status</code></td><td>Change status</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/api/mod/tickets/:id</code></td><td>Delete ticket</td></tr>
+            </table>
+
+            <h2>Admin API</h2>
+            <p>Requires Admin or Developer role.</p>
+
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/api/admin/users</code></td><td>List all users</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/api/admin/users/:accountId/role</code></td><td>Change user role</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/api/admin/users/:accountId/ban</code></td><td>Ban user</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/admin/stats</code></td><td>Server statistics</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/admin/audit-log</code></td><td>Get audit logs</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/admin/console-logs</code></td><td>Get server console logs <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/admin/live-stats</code></td><td>CPU, RAM, player count (real-time) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/admin/server-properties</code></td><td>Read server.properties <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
+                <tr><td><code>PUT</code></td><td><code>/api/admin/server-properties</code></td><td>Write server.properties <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/admin/plugins</code></td><td>List loaded plugins <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/admin/plugins/:name/load</code></td><td>Load a plugin <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/admin/plugins/:name/unload</code></td><td>Unload a plugin <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/admin/plugins/:name/reload</code></td><td>Reload a plugin <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/admin/command</code></td><td>Execute an admin command <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
+            </table>
+
+            <h2>Developer API</h2>
+            <p>Requires Developer role.</p>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/api/dev/config</code></td><td>Get all config values</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/api/dev/config/:key</code></td><td>Update config value</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/dev/config/files</code></td><td>List config files</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/dev/stats/server</code></td><td>Server statistics</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/dev/stats/database</code></td><td>Database statistics</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/dev/ssl/status</code></td><td>SSL certificate status</td></tr>
+            </table>
+
+            <h2>Error Responses</h2>
+            <p>All API errors follow this format:</p>
+            <pre><code>{
+  "errorCode": "errors.com.epicgames.common.not_found",
+  "errorMessage": "Resource not found",
+  "numericErrorCode": 1004,
+  "originatingService": "fortnite",
+  "intent": "prod"
+}</code></pre>
+
+            <h3>Common HTTP Status Codes</h3>
+            <table>
+                <tr><th>Code</th><th>Description</th></tr>
+                <tr><td><code>400</code></td><td>Bad request (invalid parameters)</td></tr>
+                <tr><td><code>401</code></td><td>Unauthorized (missing/invalid token)</td></tr>
+                <tr><td><code>403</code></td><td>Forbidden (insufficient permissions)</td></tr>
+                <tr><td><code>404</code></td><td>Resource not found</td></tr>
+                <tr><td><code>429</code></td><td>Rate limited</td></tr>
+                <tr><td><code>500</code></td><td>Internal server error</td></tr>
+            </table>
+        </main>
+    </div>
+    <script src="../../js/common.js"></script>
+</body>
+</html>

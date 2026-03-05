@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security - Neodyme Docs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link active"><i class="fas fa-shield-alt"></i> Security</a>
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+        <main class="docs-content">
+            <h1>Security</h1>
+            <p>Neodyme includes multiple layers of security to protect the server and player data.</p>
+
+            <h2>Authentication</h2>
+
+            <h3>Password Security</h3>
+            <ul>
+                <li>Passwords hashed with bcrypt (configurable work factor, default 12 rounds)</li>
+                <li>Minimum password length enforcement (default 8 characters)</li>
+                <li>Timing-safe authentication responses (configurable delay 50–200ms) to prevent timing attacks</li>
+            </ul>
+            <pre><code>bcryptWorkFactor=12
+passwordMinLength=8
+authTimingDelayMin=50
+authTimingDelayMax=200</code></pre>
+
+            <h3>Token System</h3>
+            <table>
+                <tr><th>Token Type</th><th>Default Expiry</th><th>Purpose</th></tr>
+                <tr><td>Access Token</td><td>8 hours</td><td>API authentication</td></tr>
+                <tr><td>Exchange Token</td><td>5 minutes</td><td>Token swapping between services</td></tr>
+                <tr><td>Refresh Token</td><td>30 days</td><td>Obtain new access tokens</td></tr>
+                <tr><td>Web Access Token</td><td>8 hours</td><td>Web interface authentication</td></tr>
+                <tr><td>Web Refresh Token</td><td>30 days</td><td>Web interface session renewal</td></tr>
+                <tr><td>CSRF Token</td><td>60 minutes</td><td>Cross-site request forgery protection</td></tr>
+            </table>
+            <pre><code>accessTokenExpiryHours=8
+exchangeTokenExpiryMinutes=5
+refreshTokenExpiryDays=30
+webAccessTokenExpiryHours=8
+webRefreshTokenExpiryDays=30
+csrfTokenExpiryMinutes=60</code></pre>
+
+            <h3>Token Encryption</h3>
+            <p>Tokens can be encrypted at rest in JSON storage:</p>
+            <pre><code>tokenEncryptionEnabled=false</code></pre>
+
+            <h3>CSRF Protection</h3>
+            <p>All web interface forms are protected with CSRF tokens. Every mutating request (<code>POST</code>, <code>PUT</code>, <code>DELETE</code>) must include a valid CSRF token.</p>
+            <pre><code>csrfTokenExpiryMinutes=60
+csrfSessionExpiryHours=24
+csrfCleanupIntervalMinutes=60</code></pre>
+
+            <h2>Rate Limiting</h2>
+            <p>Three tiers of rate limiting protect against abuse:</p>
+
+            <h3>Global Rate Limiting</h3>
+            <pre><code>rateLimiting=true
+maxRequestsPerMinute=125
+rateLimitWindowMinutes=1</code></pre>
+
+            <h3>Authentication Rate Limiting</h3>
+            <p>Stricter limits on login and registration - maximum 5 attempts per IP within 15 minutes:</p>
+            <pre><code>authMaxAttempts=5
+authWindowMinutes=15
+authSkipSuccessfulRequests=false</code></pre>
+
+            <h3>Expensive Operations Rate Limiting</h3>
+            <p>For resource-intensive endpoints (search, bulk operations):</p>
+            <pre><code>expensiveMaxRequests=10
+expensiveWindowMinutes=5</code></pre>
+
+            <h2>HTTP Security</h2>
+
+            <h3>Helmet</h3>
+            <p>Security headers that protect against common web vulnerabilities (XSS, clickjacking, MIME sniffing):</p>
+            <pre><code>helmetEnable=true</code></pre>
+
+            <h3>CORS</h3>
+            <pre><code>corsEnable=true</code></pre>
+
+            <h3>Compression</h3>
+            <pre><code>compressionEnable=true</code></pre>
+
+            <h3>Request Size Limits</h3>
+            <p>Prevent memory exhaustion attacks:</p>
+            <pre><code>limitBodySize=50mb       # File uploads
+limitRequestSize=1mb     # Regular API calls</code></pre>
+
+            <h3>Reverse Proxy</h3>
+            <p>When running behind nginx, Apache, or Cloudflare:</p>
+            <pre><code>trustProxy=true</code></pre>
+
+            <h2>HTTPS / SSL</h2>
+
+            <h3>Configuration</h3>
+            <pre><code>protocol=https
+sslCertPath=config/ssl/cert.pem
+sslKeyPath=config/ssl/key.pem</code></pre>
+
+            <h3>Setup Steps</h3>
+            <ol>
+                <li>Set <code>protocol=https</code> in <code>server.properties</code></li>
+                <li>Place your SSL certificate and private key in <code>config/ssl/</code></li>
+                <li>Restart the server</li>
+            </ol>
+            <p>When HTTPS is enabled, cookies are automatically configured with <code>secure: true</code>. Certificate files must be in PEM format (<code>cert.pem</code> + <code>key.pem</code>).</p>
+
+            <h2>Audit Logging</h2>
+            <p>All administrative actions are automatically logged:</p>
+            <table>
+                <tr><th>Action</th><th>Description</th></tr>
+                <tr><td><code>ban_user</code></td><td>User banned</td></tr>
+                <tr><td><code>unban_user</code></td><td>User unbanned</td></tr>
+                <tr><td><code>change_role</code></td><td>User role changed</td></tr>
+                <tr><td><code>close_ticket</code></td><td>Ticket closed</td></tr>
+                <tr><td><code>approve_code</code></td><td>Creator code approved</td></tr>
+                <tr><td><code>update_config</code></td><td>Configuration value changed</td></tr>
+                <tr><td><code>force_shop_rotation</code></td><td>Manual shop rotation</td></tr>
+                <tr><td><code>toggle_maintenance</code></td><td>Maintenance mode toggled</td></tr>
+            </table>
+            <p>Each entry contains: action type, who performed it (account ID + display name), target, detailed changes (old/new values), timestamp, and IP address.</p>
+
+            <h2>Ban System</h2>
+            <pre><code># Temporary bans
+/ban add "PlayerName" "Reason" "7d"    # 7-day ban
+/ban add "PlayerName" "Reason" "24h"   # 24-hour ban
+
+# Permanent ban
+/ban add "PlayerName" "Reason"
+
+# Duration formats: h (hours), d (days), m (months)
+# Management
+/ban info "PlayerName"
+/ban remove "PlayerName"
+/ban list</code></pre>
+
+            <h2>Role-Based Access Control</h2>
+            <table>
+                <tr><th>Role</th><th>Level</th><th>Permissions</th></tr>
+                <tr><td>Player</td><td>0</td><td>Basic gameplay and web dashboard</td></tr>
+                <tr><td>Founder</td><td>—</td><td>Player + founder badge</td></tr>
+                <tr><td>Helper</td><td>—</td><td>Player + helper badge</td></tr>
+                <tr><td>Moderator</td><td>1</td><td>Player management, bans, tickets, creator codes</td></tr>
+                <tr><td>Developer</td><td>2</td><td>Configuration, logs, plugins, live monitor, dev tools</td></tr>
+                <tr><td>Admin</td><td>3</td><td>All moderator + user roles, audit log, advanced settings</td></tr>
+                <tr><td>Owner</td><td>4</td><td>Full access to all panels</td></tr>
+                <tr><td>Server</td><td>5</td><td>Internal service accounts — game server authentication only</td></tr>
+            </table>
+
+            <h3>Setting Roles</h3>
+            <pre><code>/admin set "PlayerName" admin
+/admin set "PlayerName" moderator
+/admin set "PlayerName" developer
+/admin set "PlayerName" owner
+/admin set "PlayerName" helper
+/admin set "PlayerName" founder
+/admin set "PlayerName" 0        # Remove role (regular player)</code></pre>
+
+            <h2>Account Lock</h2>
+            <p>Accounts are automatically locked after repeated failed login attempts. Unlock manually with:</p>
+            <pre><code>/unlock &lt;username&gt;</code></pre>
+
+            <h2>Best Practices</h2>
+            <ol>
+                <li><strong>Change default secrets</strong> - Always change <code>jwtSecret</code> and <code>gameServerSecret</code> in production</li>
+                <li><strong>Enable HTTPS</strong> - Use <code>protocol=https</code> with valid SSL certificates</li>
+                <li><strong>Keep rate limiting on</strong> - Prevents brute force and abuse</li>
+                <li><strong>Use bcrypt factor 12–14</strong> - Good balance of security and performance</li>
+                <li><strong>Enable Helmet</strong> - Protects against common web vulnerabilities</li>
+                <li><strong>Enable regular backups</strong> - <code>databaseBackup=true</code></li>
+                <li><strong>Review audit logs</strong> - Watch for suspicious administrative activity</li>
+                <li><strong>Least privilege</strong> - Only grant users the minimum role they need</li>
+            </ol>
+        </main>
+    </div>
+    <script src="../../js/common.js"></script>
+</body>
+</html>

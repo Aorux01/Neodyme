@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Interface - Neodyme Docs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link active"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+        <main class="docs-content">
+            <h1>Web Interface</h1>
+            <p>Neodyme includes a full web interface accessible at <code>http://localhost:3551</code> (or your configured port). It provides dashboard access for players, moderators, admins, and developers.</p>
+
+            <h2>Accessing the Dashboard</h2>
+            <ol>
+                <li>Open your browser to <code>http://localhost:3551</code></li>
+                <li>Register or login with your account</li>
+                <li>Navigate using the sidebar menu</li>
+                <li>Role-specific panels appear automatically based on your account role</li>
+            </ol>
+            <p>To promote your first account to admin, use the server console:</p>
+            <pre><code>/admin set "YourUsername" admin</code></pre>
+
+            <h2>Role Hierarchy</h2>
+            <table>
+                <tr><th>Role</th><th>Level</th><th>Panels Access</th></tr>
+                <tr><td>Player</td><td>0</td><td>Player Dashboard</td></tr>
+                <tr><td>Moderator</td><td>1</td><td>Player + Moderator</td></tr>
+                <tr><td>Developer</td><td>2</td><td>Player + Developer</td></tr>
+                <tr><td>Admin</td><td>3</td><td>Player + Moderator + Developer + Admin</td></tr>
+                <tr><td>Owner</td><td>4</td><td>All panels</td></tr>
+                <tr><td>Server</td><td>5</td><td>Internal service accounts only</td></tr>
+            </table>
+
+            <h2>Player Dashboard</h2>
+            <p>Available to all registered users.</p>
+
+            <h3>Profile</h3>
+            <ul>
+                <li>View and edit display name</li>
+                <li>View account ID and email</li>
+                <li>Change password</li>
+            </ul>
+
+            <h3>Friends</h3>
+            <ul>
+                <li>View friends list with online/offline status</li>
+                <li>Send friend requests by username</li>
+                <li>Accept or reject incoming requests</li>
+                <li>Remove friends and block/unblock users</li>
+            </ul>
+
+            <h3>Sessions</h3>
+            <ul>
+                <li>View all active sessions (devices)</li>
+                <li>Terminate individual sessions</li>
+                <li>Terminate all sessions (logout everywhere)</li>
+            </ul>
+
+            <h3>Item Shop</h3>
+            <ul>
+                <li>Browse current shop items (Featured &amp; Daily sections) with rarity-coloured cards</li>
+                <li>View item details, prices, and "Already Owned" badge</li>
+                <li>Purchase items with V-Bucks (with confirmation dialogs)</li>
+                <li>Support a creator: enter a creator code in the sidebar — commission is automatically credited on purchase</li>
+            </ul>
+
+            <h3>V-Bucks</h3>
+            <ul>
+                <li>View current V-Bucks balance</li>
+                <li>Purchase V-Bucks via a multi-step flow: Package → Payment → Review → Done</li>
+                <li>Enter a creator code during checkout to support a creator (step 2 of the flow)</li>
+                <li>View purchase history</li>
+                <li>Refund purchases</li>
+            </ul>
+
+            <h3>Creator Code</h3>
+            <ul>
+                <li>View your current creator code</li>
+                <li>Request a new creator code (3–16 chars, alphanumeric + <code>_</code> <code>-</code>)</li>
+                <li>View request status (pending/approved/rejected)</li>
+                <li>Earn commission when other players support your code during V-Bucks or item shop purchases</li>
+                <li>Commission tracking and earnings history</li>
+            </ul>
+
+            <h3>Support Tickets</h3>
+            <ul>
+                <li>Create support tickets with subject, message, and priority (low/medium/high)</li>
+                <li>View your ticket history and reply to open tickets</li>
+                <li>Track ticket status (open, in_progress, resolved, closed)</li>
+                <li>Maximum 3 open tickets at a time</li>
+            </ul>
+
+            <h2>Moderator Panel</h2>
+            <p>Available to Moderator, Admin, and Owner roles.</p>
+
+            <h3>Player Management</h3>
+            <ul>
+                <li>Search players by username</li>
+                <li>View detailed player information (account ID, email, role, ban status)</li>
+                <li>Ban players (temporary or permanent) with reason</li>
+                <li>Unban players and view ban history</li>
+            </ul>
+
+            <h3>Ticket Management</h3>
+            <ul>
+                <li>View all support tickets with filters (status, priority)</li>
+                <li>Assign/unassign tickets, reply as moderator, change status/priority</li>
+                <li>Delete tickets</li>
+                <li>Ticket statistics overview (total, open, unassigned, high priority)</li>
+            </ul>
+
+            <h3>Creator Code Management</h3>
+            <ul>
+                <li>View pending creator code requests — approve or reject with notes</li>
+                <li>View all active creator codes</li>
+                <li>Toggle code active/inactive, delete codes</li>
+                <li>Creator code statistics (total codes, earnings, uses)</li>
+            </ul>
+
+            <h3>Commands <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h3>
+            <ul>
+                <li>Execute moderation commands directly from the panel (ban, unban, account lookup)</li>
+                <li>Only commands available to the Moderator role are shown</li>
+            </ul>
+
+            <h2>Admin Panel</h2>
+            <p>Available to Admin and Owner roles. Includes all Moderator features plus:</p>
+
+            <h3>User Management</h3>
+            <ul>
+                <li>View all user accounts</li>
+                <li>Change user roles (Player, Founder, Helper, Moderator, Admin, Owner)</li>
+                <li>Ban/unban users from the admin panel</li>
+            </ul>
+
+            <h3>Audit Log</h3>
+            <ul>
+                <li>View complete audit log of all administrative actions</li>
+                <li>Filter by action type, administrator, date range</li>
+                <li>Audit log summary (action counts over 24h)</li>
+            </ul>
+
+            <h3>Command Panel <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h3>
+            <p>Execute common server commands with a single click:</p>
+            <table>
+                <tr><th>Button</th><th>Command</th></tr>
+                <tr><td>Reload All</td><td><code>/reload</code></td></tr>
+                <tr><td>Reload Config</td><td><code>/reload config</code></td></tr>
+                <tr><td>Reload Plugins</td><td><code>/reload plugins</code></td></tr>
+                <tr><td>Reload Shop</td><td><code>/reload shop</code></td></tr>
+                <tr><td>Rotate Shop</td><td><code>/shop rotate</code></td></tr>
+                <tr><td>Create Backup</td><td><code>/backup create</code></td></tr>
+                <tr><td>Cleanup Backups</td><td><code>/backup cleanup</code></td></tr>
+                <tr><td>Cleanup Tokens</td><td><code>/tokens cleanup</code></td></tr>
+                <tr><td>Maintenance ON</td><td><code>/maintenance on</code></td></tr>
+                <tr><td>Maintenance OFF</td><td><code>/maintenance off</code></td></tr>
+            </table>
+
+            <h2>Developer Panel</h2>
+            <p>Available to Developer role only. Includes all Admin features plus:</p>
+
+            <h3>Configuration Editor</h3>
+            <p>Full control over all <code>server.properties</code> settings organized by category: Core Server, Debug, Features, XMPP, Database, Redis, Security, Rate Limiting, Authentication, CSRF, Web Tokens, Creator Codes, Events, Maintenance, SSL/HTTPS, and more.</p>
+
+            <h3>Configuration Files</h3>
+            <ul>
+                <li>View and edit config files (<code>shop_config.json</code>, <code>xp_config.json</code>, etc.)</li>
+                <li>JSON editor with validation</li>
+            </ul>
+
+            <h3>Server Statistics</h3>
+            <ul>
+                <li>Detailed server metrics (uptime, memory, CPU)</li>
+                <li>API request statistics and database type/connection status</li>
+            </ul>
+
+            <h3>SSL/HTTPS Status</h3>
+            <ul>
+                <li>Current protocol (HTTP/HTTPS)</li>
+                <li>Certificate file status (exists, size, modification date)</li>
+            </ul>
+
+            <h3>Live Monitor <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h3>
+            <ul>
+                <li>Real-time CPU usage chart (updated every 3 seconds)</li>
+                <li>Real-time RAM usage chart</li>
+                <li>Active player count chart</li>
+                <li>Start/stop polling from the dashboard</li>
+            </ul>
+
+            <h3>Console Logs <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h3>
+            <ul>
+                <li>Read server log files directly in the browser</li>
+                <li>Filter by log level (INFO, WARN, ERROR, SUCCESS)</li>
+                <li>Auto-refresh every 5 seconds</li>
+                <li>Color-coded log entries by severity</li>
+            </ul>
+
+            <h3>Plugin Manager <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h3>
+            <ul>
+                <li>View all loaded plugins (name, version, author, description)</li>
+                <li>Load, unload, and reload individual plugins from the UI</li>
+                <li>Browse and edit plugin configuration files directly from the browser</li>
+                <li>Real-time feedback on plugin status changes</li>
+            </ul>
+        </main>
+    </div>
+    <script src="../../js/common.js"></script>
+</body>
+</html>

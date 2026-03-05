@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database - Neodyme Docs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="database.html" class="docs-nav-link active"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+        <main class="docs-content">
+            <h1>Database</h1>
+            <p>Neodyme supports multiple database backends. All data access goes through the <code>DatabaseManager</code> abstraction layer, ensuring consistent behavior regardless of the storage engine.</p>
+
+            <h2>Supported Databases</h2>
+            <table>
+                <tr><th>Type</th><th>Status</th><th>Config Value</th><th>Requirements</th></tr>
+                <tr><td>JSON</td><td>Stable</td><td><code>json</code></td><td>None (default)</td></tr>
+                <tr><td>MongoDB</td><td>Stable</td><td><code>mongodb</code></td><td><code>npm install mongodb mongoose</code></td></tr>
+                <tr><td>SQLite</td><td>Planned</td><td><code>sqlite</code></td><td><code>npm install better-sqlite3</code></td></tr>
+                <tr><td>MySQL</td><td>Planned</td><td><code>mysql</code></td><td><code>npm install mysql2</code></td></tr>
+                <tr><td>PostgreSQL</td><td>Planned</td><td><code>postgresql</code></td><td><code>npm install pg</code></td></tr>
+            </table>
+
+            <h2>JSON Database (Default)</h2>
+            <p>The simplest option. All data is stored in JSON files in the <code>data/</code> directory.</p>
+
+            <h3>Configuration</h3>
+            <pre><code>databaseType=json
+databasePath=data/
+getJsonSpacing=true    # Pretty-print for readability</code></pre>
+
+            <h3>Data Files</h3>
+            <pre><code>data/
+  clients.json          # User accounts
+  friends.json          # Friend relationships
+  tickets.json          # Support tickets
+  creator-codes.json    # Creator codes and requests
+  audit-log.json        # Audit log entries
+  reports.json          # User reports</code></pre>
+
+            <h3>Characteristics</h3>
+            <ul>
+                <li>No external dependencies</li>
+                <li>Human-readable data files</li>
+                <li>Atomic writes with temp files for safety</li>
+                <li>Suitable for small to medium servers</li>
+            </ul>
+
+            <h2>MongoDB</h2>
+            <p>Production-ready database with high scalability.</p>
+
+            <h3>Setup</h3>
+            <ol>
+                <li>Install MongoDB on your system or use MongoDB Atlas (cloud)</li>
+                <li>Install the Node.js driver: <code>npm install mongodb mongoose</code></li>
+                <li>Configure <code>server.properties</code>:</li>
+            </ol>
+            <pre><code>databaseType=mongodb
+databasePath=mongodb://localhost:27017/neodyme</code></pre>
+
+            <h3>Connection String Examples</h3>
+            <pre><code># Local MongoDB
+databasePath=mongodb://localhost:27017/neodyme
+
+# MongoDB with authentication
+databasePath=mongodb://user:password@localhost:27017/neodyme
+
+# MongoDB Atlas (cloud)
+databasePath=mongodb+srv://user:password@cluster.mongodb.net/neodyme</code></pre>
+
+            <h3>Collections</h3>
+            <table>
+                <tr><th>Collection</th><th>Contents</th></tr>
+                <tr><td><code>accounts</code></td><td>User accounts and profiles</td></tr>
+                <tr><td><code>friends</code></td><td>Friend relationships</td></tr>
+                <tr><td><code>tickets</code></td><td>Support tickets</td></tr>
+                <tr><td><code>creatorcodes</code></td><td>Creator codes</td></tr>
+                <tr><td><code>creatorcoderequests</code></td><td>Creator code requests</td></tr>
+                <tr><td><code>auditlogs</code></td><td>Audit log entries</td></tr>
+            </table>
+
+            <h2>Architecture</h2>
+            <p>All database operations go through <code>DatabaseManager</code>, which delegates to the active implementation. Switching databases only requires changing <code>databaseType</code> in <code>server.properties</code>.</p>
+            <pre><code>Service Layer (TicketService, AuditService, ...)
+       |
+  DatabaseManager (abstraction)
+       |
+  JsonDatabase  OR  MongoDatabase</code></pre>
+
+            <h3>Data Entities</h3>
+            <table>
+                <tr><th>Entity</th><th>Description</th></tr>
+                <tr><td>Accounts</td><td>User accounts with credentials, roles, profiles</td></tr>
+                <tr><td>Friends</td><td>Friend relationships and requests</td></tr>
+                <tr><td>Tickets</td><td>Support tickets with messages</td></tr>
+                <tr><td>Creator Codes</td><td>Affiliate codes and requests</td></tr>
+                <tr><td>Audit Logs</td><td>Administrative action history</td></tr>
+                <tr><td>Cloud Storage</td><td>User and system cloud storage files</td></tr>
+            </table>
+
+            <h2>Data Migration <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h2>
+            <p>Migrate data between database backends using the <code>/data</code> command:</p>
+
+            <pre><code># Preview what would be migrated (no data written)
+/data migrate json mongodb --dry-run
+
+# Migrate from JSON to MongoDB
+/data migrate json mongodb --confirm
+
+# Migrate from MongoDB back to JSON
+/data migrate mongodb json --confirm</code></pre>
+
+            <h3>Migration Flags</h3>
+            <table>
+                <tr><th>Flag</th><th>Description</th></tr>
+                <tr><td><code>--dry-run</code></td><td>Preview migration - no data is written</td></tr>
+                <tr><td><code>--confirm</code></td><td>Skip the confirmation prompt and run immediately</td></tr>
+            </table>
+
+            <h2>Backup System</h2>
+
+            <h3>Configuration</h3>
+            <pre><code>databaseBackup=true              # Enable backups
+databaseBackupInterval=60        # Backup every 60 minutes
+databaseBackupExpiryDays=7       # Delete backups older than 7 days</code></pre>
+
+            <h3>Commands</h3>
+            <pre><code>/backup create              # Create manual backup
+/backup list                # List available backups
+/backup stats               # Backup statistics
+/backup restore &lt;name&gt;      # Restore a backup (requires /confirm restore)
+/backup delete &lt;name&gt;       # Delete a backup (requires /confirm delete)
+/backup cleanup             # Force cleanup of expired backups</code></pre>
+
+            <h3>Restore Process</h3>
+            <ol>
+                <li>Run <code>/backup restore &lt;backup-name&gt;</code></li>
+                <li>Confirm with <code>/confirm restore</code></li>
+                <li>Restart the server after restoration</li>
+            </ol>
+            <p>Backups are stored in <code>data/backups/</code> with timestamped folder names.</p>
+
+            <h2>Redis Cache (Optional)</h2>
+            <p>Redis can be used alongside any database for caching tokens, profiles, and sessions.</p>
+
+            <h3>Configuration</h3>
+            <pre><code>redisEnabled=false
+redisHost=127.0.0.1
+redisPort=6379
+redisPassword=</code></pre>
+
+            <h3>Setup</h3>
+            <pre><code>npm install ioredis</code></pre>
+            <p>Redis improves performance by reducing database queries on frequently accessed data (auth tokens, profile data, session info).</p>
+        </main>
+    </div>
+    <script src="../../js/common.js"></script>
+</body>
+</html>

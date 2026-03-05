@@ -1,0 +1,161 @@
+.status-page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 88px 20px 80px;
+}
+
+.status-banner {
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid transparent;
+}
+
+.status-banner.operational {
+    background: rgba(16,185,129,.08);
+    border-color: rgba(16,185,129,.25);
+}
+
+.status-banner.degraded {
+    background: rgba(245,158, 11,.08);
+    border-color: rgba(245,158, 11,.25);
+}
+
+.status-banner.outage {
+    background: rgba(239, 68, 68,.08);
+    border-color: rgba(239, 68, 68,.25);
+}
+
+.status-banner-icon {
+    font-size: 36px;
+}
+
+.status-banner.operational .status-banner-icon {
+    color: #10b981;
+}
+
+.status-banner.degraded .status-banner-icon {
+    color: #f59e0b;
+}
+
+.status-banner.outage .status-banner-icon {
+    color: #ef4444;
+}
+
+.status-banner-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.status-banner-sub {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 3px;
+}
+
+.services-card {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.services-card-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.service-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #1e1e1e;
+}
+
+.service-row:last-child {
+    border-bottom: none;
+}
+
+.service-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.service-dot.operational {
+    background: #10b981;
+    box-shadow: 0 0 6px rgba(16,185,129,.6);
+}
+
+.service-dot.degraded {
+    background: #f59e0b;
+    box-shadow: 0 0 6px rgba(245,158,11,.6);
+}
+
+.service-dot.outage {
+    background: #ef4444;
+    box-shadow: 0 0 6px rgba(239,68,68,.6);
+}
+
+.service-name {
+    flex: 1;
+    font-size: 14px;
+    color: #d4d4d4;
+    font-weight: 500;
+}
+
+.service-status {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.service-status.operational {
+    color: #10b981;
+}
+
+.service-status.degraded    {
+    color: #f59e0b;
+}
+
+.service-status.outage      {
+    color: #ef4444;
+}
+
+.status-footer {
+    text-align: center;
+    margin-top: 28px;
+    color: #555;
+    font-size: 12px;
+}
+
+.status-footer a {
+    color: #8b5cf6;
+    text-decoration: none;
+}
+
+.status-footer a:hover {
+    text-decoration: underline;
+}
+
+.refresh-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px; background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    color: #888;
+    margin-top: 10px;
+}

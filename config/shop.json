@@ -1,0 +1,19 @@
+{
+  "//": "Neodyme Shop Configuration",
+
+  "shopRotationTime": "00:00",
+  "shopChapterLimit": 5,
+  "shopSeasonLimit": "REMIX",
+  "shopExcludedItems": [],
+
+  "shopCategories": {
+    "DailyItems": {
+      "count": 6,
+      "displayName": "Daily"
+    },
+    "FeaturedItems": {
+      "count": 8,
+      "displayName": "Featured"
+    }
+  }
+}

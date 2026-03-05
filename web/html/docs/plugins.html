@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plugins - Neodyme Docs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link active"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+        <main class="docs-content">
+            <h1>Plugin System</h1>
+            <p>Neodyme features a plugin system that allows you to extend server functionality without modifying the core codebase. Plugins are JavaScript modules loaded dynamically at server startup.</p>
+
+            <h2>Configuration</h2>
+            <p>The plugin system is controlled via <code>server.properties</code>:</p>
+            <pre><code>plugins=true    # Enable/disable plugin loading</code></pre>
+            <p>When <code>plugins=true</code>, the server automatically scans the <code>plugins/</code> directory at startup and loads all valid <code>.js</code> files or subdirectories containing an <code>index.js</code> file.</p>
+
+            <h2>Plugin Structure</h2>
+
+            <h3>Properties and Methods</h3>
+            <table>
+                <tr><th>Element</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                <tr><td><code>name</code></td><td>string</td><td>Yes</td><td>Unique plugin identifier</td></tr>
+                <tr><td><code>version</code></td><td>string</td><td>No</td><td>Plugin version (default: "1.0.0")</td></tr>
+                <tr><td><code>description</code></td><td>string</td><td>No</td><td>Plugin description</td></tr>
+                <tr><td><code>author</code></td><td>string</td><td>No</td><td>Plugin author name</td></tr>
+                <tr><td><code>license</code></td><td>string</td><td>No</td><td>Plugin license (e.g., "MIT")</td></tr>
+                <tr><td><code>repository</code></td><td>string</td><td>No</td><td>Repository URL</td></tr>
+                <tr><td><code>minBackendVersion</code></td><td>string</td><td>No</td><td>Minimum required backend version (e.g., "1.2.0")</td></tr>
+                <tr><td><code>dependencies</code></td><td>object</td><td>No</td><td>NPM packages and plugin dependencies</td></tr>
+                <tr><td><code>init(pluginManager)</code></td><td>async function</td><td>Yes</td><td>Initialization method - return <code>true</code> on success</td></tr>
+                <tr><td><code>shutdown()</code></td><td>async function</td><td>No</td><td>Cleanup method called on unload</td></tr>
+            </table>
+
+            <h3>Minimal Template</h3>
+            <pre><code>class MyPlugin {
+    constructor() {
+        this.name = "MyPlugin";
+        this.version = "1.0.0";
+        this.description = "My plugin description";
+        this.author = "Your Name";
+        this.license = "MIT";
+        this.repository = "https://github.com/username/my-plugin";
+        this.minBackendVersion = "1.2.0";
+
+        this.dependencies = {
+            npm: ["axios", "moment"],           // NPM packages
+            plugins: ["other-plugin-name"]      // Required plugins
+        };
+    }
+
+    async init(pluginManager) {
+        // Initialization code
+        return true; // return false to abort loading
+    }
+
+    async shutdown() {
+        // Resource cleanup
+    }
+}
+
+module.exports = MyPlugin;</code></pre>
+
+            <h3>Validation Rules</h3>
+            <p>The PluginManager checks these conditions before loading:</p>
+            <ol>
+                <li><code>plugin.name</code> must be defined and non-empty</li>
+                <li><code>plugin.init</code> must be a function</li>
+                <li>If <code>minBackendVersion</code> is defined, current backend version must be &gt;= that value</li>
+            </ol>
+
+            <h2>PluginManager API</h2>
+            <table>
+                <tr><th>Method</th><th>Description</th><th>Return</th></tr>
+                <tr><td><code>PluginManager.load()</code></td><td>Load all plugins from <code>plugins/</code> directory</td><td>void</td></tr>
+                <tr><td><code>PluginManager.loadPlugin(name)</code></td><td>Load a specific plugin by filename</td><td>boolean</td></tr>
+                <tr><td><code>PluginManager.reloadPlugin(name)</code></td><td>Reload a plugin (shutdown + load)</td><td>boolean</td></tr>
+                <tr><td><code>PluginManager.reload()</code></td><td>Reload all plugins</td><td>void</td></tr>
+                <tr><td><code>PluginManager.unloadAll()</code></td><td>Unload all plugins</td><td>void</td></tr>
+                <tr><td><code>PluginManager.getPlugins()</code></td><td>Return list of active plugins</td><td>array</td></tr>
+                <tr><td><code>PluginManager.getPlugin(name)</code></td><td>Get a specific plugin by name</td><td>Plugin or null</td></tr>
+                <tr><td><code>PluginManager.getBackendVersion()</code></td><td>Get the current backend version</td><td>string</td></tr>
+            </table>
+
+            <h2>Available Services</h2>
+
+            <h3>LoggerService</h3>
+            <pre><code>const LoggerService = require('../src/service/logger/logger-service');
+
+LoggerService.log('info', 'Informational message');
+LoggerService.log('success', 'Operation successful');
+LoggerService.log('warn', 'Warning message');
+LoggerService.log('error', 'Error detected');</code></pre>
+
+            <h3>ConfigManager</h3>
+            <pre><code>const ConfigManager = require('../src/manager/config-manager');
+
+const debug = ConfigManager.get('debug');
+const port = ConfigManager.get('port');</code></pre>
+
+            <h2>Lifecycle</h2>
+            <table>
+                <tr><th>Phase</th><th>Steps</th></tr>
+                <tr><td>Load</td><td>Scan <code>plugins/</code> → import → instantiate → validate → call <code>init()</code> → add to list</td></tr>
+                <tr><td>Reload</td><td>Call <code>shutdown()</code> → clear require cache → re-import → call <code>init()</code></td></tr>
+                <tr><td>Unload</td><td>Call <code>shutdown()</code> for each plugin → clear list</td></tr>
+            </table>
+
+            <h2>Directory Structure</h2>
+            <p>Plugins can be single files or subdirectories:</p>
+            <pre><code>plugins/
+  MyPlugin.js             # Single file plugin
+  discord-integration/    # Subdirectory plugin
+    index.js              # Main file (required)
+    config.json
+    utils.js</code></pre>
+
+            <h2>Examples</h2>
+
+            <h3>Basic Plugin</h3>
+            <pre><code>const LoggerService = require('../src/service/logger/logger-service');
+
+class HelloPlugin {
+    name = "HelloPlugin";
+    version = "1.0.0";
+    description = "Demo plugin";
+    author = "Your Name";
+    minBackendVersion = "1.2.0";
+
+    async init(pluginManager) {
+        LoggerService.log('success', 'HelloPlugin initialized');
+        return true;
+    }
+
+    async shutdown() {
+        LoggerService.log('info', 'HelloPlugin stopped');
+    }
+}
+
+module.exports = HelloPlugin;</code></pre>
+
+            <h3>Plugin with Periodic Tasks</h3>
+            <pre><code>class SchedulerPlugin {
+    name = "SchedulerPlugin";
+    version = "1.0.0";
+
+    constructor() {
+        this.intervals = [];
+    }
+
+    async init(pluginManager) {
+        const interval = setInterval(() => {
+            this.periodicTask();
+        }, 5 * 60 * 1000); // every 5 minutes
+
+        this.intervals.push(interval);
+        return true;
+    }
+
+    periodicTask() {
+        LoggerService.log('info', 'Periodic task executed');
+    }
+
+    async shutdown() {
+        // Always clean up intervals
+        this.intervals.forEach(i => clearInterval(i));
+        this.intervals = [];
+    }
+}
+
+module.exports = SchedulerPlugin;</code></pre>
+
+            <h2>Plugin Store</h2>
+            <p>Browse, install, and update plugins directly from the console:</p>
+            <pre><code>/plugins store list                      # Browse available plugins
+/plugins store search discord            # Search by keyword
+/plugins store install discord-integration   # Install a plugin
+/plugins store update discord-integration    # Update installed plugin
+/plugins store uninstall discord-integration # Uninstall plugin</code></pre>
+
+            <p>When installing from the store, NPM dependencies are installed automatically. For manually placed plugins, install dependencies yourself:</p>
+            <pre><code>npm install axios moment</code></pre>
+
+            <h2>Best Practices</h2>
+            <ul>
+                <li>Always wrap <code>init()</code> in a try-catch and return <code>false</code> on failure</li>
+                <li>Implement <code>shutdown()</code> if you use intervals, connections, or event listeners</li>
+                <li>Use <code>path.join(__dirname, ...)</code> for relative file paths</li>
+                <li>Set <code>minBackendVersion</code> to the oldest compatible version</li>
+                <li>For store plugins, always include <code>license</code>, <code>repository</code>, and <code>bugs</code> metadata</li>
+            </ul>
+
+            <h2>Troubleshooting</h2>
+            <table>
+                <tr><th>Symptom</th><th>Probable Cause</th><th>Solution</th></tr>
+                <tr><td>"Invalid plugin structure"</td><td><code>name</code> or <code>init</code> missing</td><td>Verify required properties are defined</td></tr>
+                <tr><td>Syntax error on load</td><td>Invalid JavaScript</td><td>Check file syntax with <code>node -c MyPlugin.js</code></td></tr>
+                <tr><td>"Plugin file does not exist"</td><td>Wrong filename</td><td>File must be in <code>plugins/</code> or <code>plugins/&lt;name&gt;/index.js</code></td></tr>
+                <tr><td><code>init()</code> returns false</td><td>Initialization failure</td><td>Check server logs for details</td></tr>
+                <tr><td>"requires backend version X.X.X"</td><td>Backend too old</td><td>Update backend or lower <code>minBackendVersion</code></td></tr>
+                <tr><td>Memory grows over time</td><td>Intervals not cleared in <code>shutdown()</code></td><td>Always clean up in <code>shutdown()</code></td></tr>
+            </table>
+        </main>
+    </div>
+    <script src="../../js/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Neodyme</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/register.css">
+</head>
+<body>
+    <a href="../index.html" class="back-home">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+
+    <div class="register-container">
+        <div class="register-sidebar">
+            <div class="sidebar-content">
+                <div class="neodyme-logo-large">N</div>
+                <h1 class="sidebar-title">Neodyme Server</h1>
+                <p class="sidebar-subtitle">Create your server account</p>
+            </div>
+        </div>
+
+        <div class="register-form-container">
+            <div class="form-header">
+                <h2 class="form-title">Create Account</h2>
+                <p class="form-subtitle">Join the Neodyme server</p>
+            </div>
+
+            <div class="alert alert-error" id="alert">
+                <span id="alert-message"></span>
+            </div>
+
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="Choose a username" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Create a password" required autocomplete="new-password">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password" class="form-label">Confirm Password</label>
+                    <input type="password" id="confirm-password" class="form-input" placeholder="Confirm your password" required autocomplete="new-password">
+                </div>
+
+                <div class="form-options">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">I agree to the Terms of Service</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="register-btn" data-original-text="CREATE ACCOUNT">CREATE ACCOUNT</button>
+            </form>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <button class="btn btn-secondary" onclick="window.location.href='login.html'">
+                SIGN IN
+            </button>
+
+            <div class="signin-link">
+                Already have an account? <a href="login.html">Sign in here</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/register.js"></script>
+</body>
+</html>

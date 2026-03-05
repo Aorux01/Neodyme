@@ -1,0 +1,93 @@
+{
+  "_id": "Neodyme",
+  "created": "0001-01-01T00:00:00.000Z",
+  "updated": "0001-01-01T00:00:00.000Z",
+  "rvn": 1,
+  "wipeNumber": 1,
+  "accountId": "Neodyme",
+  "profileId": "campaign",
+  "version": "no_version",
+  "items": {},
+  "stats": {
+    "attributes": {
+      "node_costs": {
+        "research_node_default_page": {
+          "Token:collectionresource_nodegatetoken01": 0
+        },
+        "homebase_node_default_page": {
+          "Token:homebasepoints": 0
+        }
+      },
+      "use_random_loadout": false,
+      "mission_alert_redemption_record": {
+        "claimData": []
+      },
+      "rewards_claimed_post_max_level": 0,
+      "selected_hero_loadout": "CampaignHeroLoadout1",
+      "loadouts": [
+        "CosmeticLocker:cosmeticlocker_stw",
+        "CosmeticLocker:cosmeticlocker_stw_1"
+      ],
+      "collection_book": {
+        "pages": [
+        ],
+        "maxBookXpLevelAchieved": 0
+      },
+      "mfa_reward_claimed": true,
+      "quest_manager": {
+        "dailyLoginInterval": "2020-02-05T19:05:26.904Z",
+        "dailyQuestRerolls": 1,
+        "questPoolStats": {
+          "poolStats": [
+          ]
+        }
+      },
+      "legacy_research_points_spent": 0,
+      "gameplay_stats": [
+        {
+          "statName": "zonescompleted",
+          "statValue": 1
+        }
+      ],
+      "permissions": [],
+      "unslot_mtx_spend": 0,
+      "twitch": {},
+      "client_settings": {
+        "pinnedQuestInstances": []
+      },
+      "research_levels": {
+        "technology": 0,
+        "fortitude": 0,
+        "offense": 0,
+        "resistance": 0
+      },
+      "level": 1,
+      "xp_overflow": 0,
+      "latent_xp_marker": "0",
+      "event_currency": {
+        "templateId": "AccountResource:eventcurrency_snowballs",
+        "cf": 9111182
+      },
+      "inventory_limit_bonus": 100000,
+      "matches_played": 0,
+      "xp_lost": 0,
+      "mode_loadouts": [],
+      "daily_rewards": {
+        "nextDefaultReward": 0,
+        "totalDaysLoggedIn": 0,
+        "lastClaimDate": "0001-01-01T00:00:00.000Z",
+        "additionalSchedules": {
+          "founderspackdailyrewardtoken": {
+            "rewardsClaimed": 0,
+            "claimedToday": true
+          }
+        }
+      },
+      "last_applied_loadout": "CosmeticLocker:cosmeticlocker_stw_1",
+      "xp": 0,
+      "packs_granted": 0,
+      "active_loadout_index": 0
+    }
+  },
+  "commandRevision": 0
+}

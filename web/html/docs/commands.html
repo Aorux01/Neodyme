@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commands - Neodyme Docs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="commands.html" class="docs-nav-link active"><i class="fas fa-terminal"></i> Commands</a>
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+        <main class="docs-content">
+            <h1>Console Commands</h1>
+            <p>Commands are entered in the server terminal. All commands start with <code>/</code>.</p>
+
+            <h2>General</h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/help [page]</code></td><td>List available commands (paginated, 10 per page)</td></tr>
+                <tr><td><code>/version</code></td><td>Show server version</td></tr>
+                <tr><td><code>/uptime</code></td><td>Show server uptime</td></tr>
+                <tr><td><code>/memory</code></td><td>Show heap memory usage</td></tr>
+                <tr><td><code>/health</code></td><td>Full health check (memory, tokens, platform)</td></tr>
+                <tr><td><code>/ready</code></td><td>Check if all services are operational</td></tr>
+                <tr><td><code>/clear</code></td><td>Clear console and print ASCII logo</td></tr>
+                <tr><td><code>/stop</code></td><td>Gracefully shut down the server</td></tr>
+            </table>
+
+            <h2>/reload <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">IMPROVED 1.2.4</span></h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/reload</code></td><td>Reload config + plugins + shop in one shot</td></tr>
+                <tr><td><code>/reload config</code></td><td>Reload configuration from server.properties only</td></tr>
+                <tr><td><code>/reload plugins</code></td><td>Unload and reload all plugins</td></tr>
+                <tr><td><code>/reload shop</code></td><td>Re-initialize shop rotation</td></tr>
+            </table>
+
+            <h2>/data - Database Migration <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/data migrate json mongodb</code></td><td>Migrate all data from JSON files to MongoDB</td></tr>
+                <tr><td><code>/data migrate mongodb json</code></td><td>Migrate all data from MongoDB to JSON files</td></tr>
+            </table>
+            <p>Flags:</p>
+            <ul>
+                <li><code>--dry-run</code> - Preview what would be migrated, no data is written</li>
+                <li><code>--confirm</code> - Skip the confirmation prompt and run immediately</li>
+            </ul>
+            <pre><code># Preview migration
+/data migrate json mongodb --dry-run
+
+# Run with auto-confirm
+/data migrate json mongodb --confirm</code></pre>
+
+            <h2>/test - Test Suite <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/test all</code></td><td>Run all test suites</td></tr>
+                <tr><td><code>/test account</code></td><td>Account + database read tests</td></tr>
+                <tr><td><code>/test plugins</code></td><td>Plugin system tests</td></tr>
+                <tr><td><code>/test server</code></td><td>Config + token service tests</td></tr>
+                <tr><td><code>/test database</code></td><td>Database connection tests</td></tr>
+            </table>
+
+            <h2>/diagnostic <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h2>
+            <p>Prints a full server diagnostic report: OS, CPU, RAM, uptime, database type, active services, token counts, and loaded plugins.</p>
+            <pre><code>/diagnostic</code></pre>
+
+            <h2>/account</h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/account create &lt;email&gt; &lt;password&gt; &lt;name&gt;</code></td><td>Create a new account</td></tr>
+                <tr><td><code>/account info &lt;username&gt;</code></td><td>View account details (role, ban, V-Bucks)</td></tr>
+                <tr><td><code>/account list [page]</code></td><td>List all accounts (paginated)</td></tr>
+            </table>
+
+            <h2>/admin</h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/admin set &lt;user&gt; &lt;role&gt;</code></td><td>Set role: 0=Player 1=Mod 2=Dev 3=Admin 4=Owner 5=Server</td></tr>
+                <tr><td><code>/admin list</code></td><td>List all staff members grouped by role</td></tr>
+                <tr><td><code>/admin ban &lt;user&gt; [reason]</code></td><td>Ban a player</td></tr>
+                <tr><td><code>/admin unban &lt;user&gt;</code></td><td>Unban a player</td></tr>
+                <tr><td><code>/admin info &lt;user&gt;</code></td><td>View player information</td></tr>
+            </table>
+
+            <h2>/ban</h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/ban add &lt;user&gt; &lt;reason&gt; [duration]</code></td><td>Ban a player (duration: 2h, 7d, 1m, or omit for permanent)</td></tr>
+                <tr><td><code>/ban remove &lt;user&gt;</code></td><td>Unban a player</td></tr>
+                <tr><td><code>/ban info &lt;user&gt;</code></td><td>View ban details and time remaining</td></tr>
+                <tr><td><code>/ban list</code></td><td>List all banned players</td></tr>
+            </table>
+
+            <h2>/shop</h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/shop rotate</code></td><td>Force shop rotation immediately</td></tr>
+                <tr><td><code>/shop info</code></td><td>Show current daily and featured items</td></tr>
+                <tr><td><code>/shop status</code></td><td>Show last/next rotation times</td></tr>
+            </table>
+
+            <h2>/plugins</h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/plugins list</code></td><td>List loaded plugins</td></tr>
+                <tr><td><code>/plugins load &lt;name|all&gt;</code></td><td>Load plugin(s)</td></tr>
+                <tr><td><code>/plugins unload &lt;name|all&gt;</code></td><td>Unload plugin(s)</td></tr>
+                <tr><td><code>/plugins reload &lt;name|all&gt;</code></td><td>Reload plugin(s)</td></tr>
+                <tr><td><code>/plugins info &lt;name&gt;</code></td><td>Show plugin details</td></tr>
+                <tr><td><code>/plugins store list [page]</code></td><td>Browse plugin store</td></tr>
+                <tr><td><code>/plugins store search &lt;query&gt;</code></td><td>Search plugins</td></tr>
+                <tr><td><code>/plugins store install &lt;id&gt;</code></td><td>Install plugin from store</td></tr>
+                <tr><td><code>/plugins store update &lt;id&gt;</code></td><td>Update installed plugin</td></tr>
+                <tr><td><code>/plugins store uninstall &lt;id&gt;</code></td><td>Uninstall plugin</td></tr>
+                <tr><td><code>/plugins store refresh</code></td><td>Refresh store cache</td></tr>
+            </table>
+
+            <h2>/backup</h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/backup create</code></td><td>Create a manual backup</td></tr>
+                <tr><td><code>/backup list</code></td><td>List all backups with size and date</td></tr>
+                <tr><td><code>/backup stats</code></td><td>Backup system statistics</td></tr>
+                <tr><td><code>/backup restore &lt;name&gt;</code></td><td>Restore a backup (requires <code>/confirm restore</code>)</td></tr>
+                <tr><td><code>/backup delete &lt;name&gt;</code></td><td>Delete a backup (requires <code>/confirm delete</code>)</td></tr>
+                <tr><td><code>/backup cleanup</code></td><td>Remove old backups based on retention policy</td></tr>
+            </table>
+
+            <h2>/tokens</h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/tokens stats</code></td><td>Show access/refresh/client token counts</td></tr>
+                <tr><td><code>/tokens cleanup</code></td><td>Remove expired tokens</td></tr>
+                <tr><td><code>/tokens revoke &lt;username|all&gt;</code></td><td>Revoke tokens for a user or all users</td></tr>
+                <tr><td><code>/tokens user &lt;username&gt;</code></td><td>Show token details for a user</td></tr>
+            </table>
+
+            <h2>/maintenance <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/maintenance on</code></td><td>Enable maintenance mode — blocks new player logins</td></tr>
+                <tr><td><code>/maintenance off</code></td><td>Disable maintenance mode</td></tr>
+            </table>
+
+            <h2>/broadcast <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/broadcast &lt;message&gt;</code></td><td>Send a message to all connected players</td></tr>
+            </table>
+
+            <h2>Miscellaneous</h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/unlock &lt;username&gt;</code></td><td>Unlock account locked after failed login attempts</td></tr>
+                <tr><td><code>/confirm restore|delete</code></td><td>Confirm a destructive operation</td></tr>
+                <tr><td><code>/cancel</code></td><td>Cancel pending restore or delete operation</td></tr>
+            </table>
+        </main>
+    </div>
+    <script src="../../js/common.js"></script>
+</body>
+</html>
