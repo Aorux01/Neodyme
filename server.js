@@ -99,7 +99,7 @@ class Server {
                 try {
                     await BackupManager.initialize();
                 } catch (error) {
-                    LoggerService.log('warn', `Backup system failed to start: ${error.message} — service disabled`);
+                    LoggerService.log('warn', `Backup system failed to start: ${error.message} - service disabled`);
                 }
             }
 
@@ -107,7 +107,7 @@ class Server {
             try {
                 await CommandManager.load();
             } catch (error) {
-                LoggerService.log('warn', `Command system failed to load: ${error.message} — commands disabled`);
+                LoggerService.log('warn', `Command system failed to load: ${error.message} - commands disabled`);
             }
 
             LoggerService.log('info', 'Initializing database...');
@@ -139,7 +139,7 @@ class Server {
                 try {
                     await PluginManager.load();
                 } catch (error) {
-                    LoggerService.log('warn', `Plugin system failed to load: ${error.message} — plugins disabled`);
+                    LoggerService.log('warn', `Plugin system failed to load: ${error.message} - plugins disabled`);
                 }
             }
     
@@ -164,7 +164,7 @@ class Server {
                     await XMPPManager.start();
                 } catch (error) {
                     XMPPManager.startError = error.message;
-                    LoggerService.log('warn', `XMPP service failed to start: ${error.message} — service disabled`);
+                    LoggerService.log('warn', `XMPP service failed to start: ${error.message} - service disabled`);
                 }
             }
 
@@ -174,7 +174,7 @@ class Server {
                     await ShopManager.initialize();
                 } catch (error) {
                     ShopManager.startError = error.message;
-                    LoggerService.log('warn', `Shop system failed to start: ${error.message} — service disabled`);
+                    LoggerService.log('warn', `Shop system failed to start: ${error.message} - service disabled`);
                 }
             }
 

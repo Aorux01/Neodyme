@@ -7,33 +7,33 @@ const VERSIONS = [
         latest: true,
         summary: 'New commands, greatly enhanced admin/dev/mod panels with role-based access, creator code integration, V-Bucks purchase flow redesign, improved shop UI, live monitoring, local docs, and a series of bug fixes.',
         features: [
-            { label: 'Graceful Service Startup', text: 'XMPP, Shop, Backup, Commands, Plugins, and Rate Limiting no longer crash the server on startup failure — each service logs a warning and marks itself as disabled, so the rest of the server continues running normally' },
+            { label: 'Graceful Service Startup', text: 'XMPP, Shop, Backup, Commands, Plugins, and Rate Limiting no longer crash the server on startup failure - each service logs a warning and marks itself as disabled, so the rest of the server continues running normally' },
             { label: 'New Commands', text: '<code>/data migrate</code> (JSON↔MongoDB with <code>--dry-run</code>), <code>/test</code> suite, <code>/diagnostic</code> full system report; <code>/reload</code> now reloads config+plugins+shop in one shot' },
-            { label: 'Role-Based Command Access', text: 'Each staff level now sees only their own commands — Moderators see moderation tools, Developers see dev commands, Admins see the full command set across all levels' },
-            { label: 'Live Monitor', text: 'Real-time charts for CPU (system & process), RAM (system & process heap), and active players — sampling-based CPU measurement works correctly on Windows; RAM chart line order corrected (dashed = Process, solid = System)' },
+            { label: 'Role-Based Command Access', text: 'Each staff level now sees only their own commands - Moderators see moderation tools, Developers see dev commands, Admins see the full command set across all levels' },
+            { label: 'Live Monitor', text: 'Real-time charts for CPU (system & process), RAM (system & process heap), and active players - sampling-based CPU measurement works correctly on Windows; RAM chart line order corrected (dashed = Process, solid = System)' },
             { label: 'Plugin Config Editor', text: "Browse and edit any plugin's JSON config files directly from the Dev panel without leaving the dashboard" },
-            { label: 'Dev Panel', text: 'Added Logs and Plugins tabs — developers can view console logs and manage plugins from the Dev section' },
+            { label: 'Dev Panel', text: 'Added Logs and Plugins tabs - developers can view console logs and manage plugins from the Dev section' },
             { label: 'Admin Panel', text: 'Commands panel redesigned as categorized buttons (Reload, Shop, Backup, Tokens, Maintenance); Settings expanded with Creator Code commission, Maintenance toggle, and Security options; Server Config tab removed (managed via <code>server.properties</code>)' },
             { label: 'Mod Panel', text: 'Commands tab added for moderation actions (ban/unban/lookup); tab icons added; players list now filters correctly by role level so staff are never shown' },
             { label: 'V-Bucks Purchase Redesign', text: 'Multi-step flow with animated step indicator (Package → Payment → Review → Done); package cards now correctly display base amount + bonus breakdown before purchase' },
-            { label: 'Creator Code — Purchase', text: 'Creator code input added to the V-Bucks purchase flow (step 2); code is validated live against the server; commission is credited to the creator on successful purchase; pre-filled from <code>?creator=</code> URL param or localStorage' },
-            { label: 'Creator Code — Shop', text: '"Support a Creator" card added to the shop sidebar; code persists in localStorage and is automatically applied when visiting the V-Bucks purchase page' },
-            { label: 'Creator Code — Validate API', text: 'New public endpoint <code>GET /api/creator-code/validate/:code</code> to check if a creator code is active without authentication' },
+            { label: 'Creator Code - Purchase', text: 'Creator code input added to the V-Bucks purchase flow (step 2); code is validated live against the server; commission is credited to the creator on successful purchase; pre-filled from <code>?creator=</code> URL param or localStorage' },
+            { label: 'Creator Code - Shop', text: '"Support a Creator" card added to the shop sidebar; code persists in localStorage and is automatically applied when visiting the V-Bucks purchase page' },
+            { label: 'Creator Code - Validate API', text: 'New public endpoint <code>GET /api/creator-code/validate/:code</code> to check if a creator code is active without authentication' },
             { label: 'Shop UI', text: 'Rarity-coloured card accents and image backgrounds, item price display, owned badge, pill-shape filter buttons, and improved section styling' },
             { label: 'CSRF Fix', text: 'Fixed a token field mismatch (<code>data.token</code> → <code>data.csrfToken</code>) that caused all mutating operations (role change, plugin reload, file save) to return 403' },
             { label: '404 Page', text: 'Unknown routes now serve <code>web/html/404.html</code> for browser requests; API paths still return JSON errors' },
-            { label: 'Updates Page', text: 'Redesigned with a split layout — version list on the left, feature detail panel on the right; fully JavaScript-driven for easy maintenance' },
-            { label: 'Docs', text: 'Documentation pages served locally — DOCS nav link points to built-in pages' },
+            { label: 'Updates Page', text: 'Redesigned with a split layout - version list on the left, feature detail panel on the right; fully JavaScript-driven for easy maintenance' },
+            { label: 'Docs', text: 'Documentation pages served locally - DOCS nav link points to built-in pages' },
             { label: 'Code Architecture', text: 'Commands split into <code>src/commands/</code> modules; <code>api/network/web.js</code> split into 11 focused sub-modules under <code>api/web/</code>' },
             { label: 'Server Role', text: 'New <code>server</code> role (level 5) for internal service accounts; <code>verifyServer</code> middleware restricts endpoints to server-only callers; assignable via admin panel or <code>/admin set &lt;user&gt; server</code>' },
-            { label: 'Security Toggle State', text: 'Admin Panel › Settings › Security buttons (Rate Limiting, CORS, Helmet, Compression, Trust Proxy) now show the current active state — the active option is highlighted green and the inactive one is highlighted red' },
+            { label: 'Security Toggle State', text: 'Admin Panel › Settings › Security buttons (Rate Limiting, CORS, Helmet, Compression, Trust Proxy) now show the current active state - the active option is highlighted green and the inactive one is highlighted red' },
             { label: 'System Tests', text: 'Dev Panel › System tests now distinguish config-disabled services (XMPP off, shop rotation off) from startup failures, and report the exact error message when a service failed to start' },
             { label: 'Fix: Creator Code on Shop Purchases', text: 'Creator codes entered on the purchase page are now persisted to localStorage so they are correctly applied when buying items directly from the shop' },
-            { label: 'Fix: CMD_PERMS_SORTED', text: 'Moved command permission table into <code>web-service.js</code> where <code>getCommandMinRole()</code> lives — resolved "CMD_PERMS_SORTED is not defined" runtime error on command execution' },
-            { label: 'CloudStorage MongoDB', text: 'ClientSettings.Sav is now stored directly in MongoDB as a binary document when the database type is set to MongoDB — no more filesystem writes for user cloud storage data in MongoDB mode' },
+            { label: 'Fix: CMD_PERMS_SORTED', text: 'Moved command permission table into <code>web-service.js</code> where <code>getCommandMinRole()</code> lives - resolved "CMD_PERMS_SORTED is not defined" runtime error on command execution' },
+            { label: 'CloudStorage MongoDB', text: 'ClientSettings.Sav is now stored directly in MongoDB as a binary document when the database type is set to MongoDB - no more filesystem writes for user cloud storage data in MongoDB mode' },
             { label: 'CloudStorage Auth', text: 'All three user CloudStorage routes (<code>GET /user/:accountId</code>, <code>GET /user/*/:file</code>, <code>PUT /user/*/:file</code>) now require a valid bearer token via <code>verifyToken</code> middleware' },
-            { label: 'Ownership Validation', text: 'Wildcard CloudStorage routes now explicitly verify that the accountId in the URL matches the authenticated user — prevents any user from reading or overwriting another account\'s settings' },
-            { label: 'Fix: version.buildId', text: 'Corrected a bug where <code>version.buildId</code> (undefined) was passed to all ClientSettings calls — replaced with the correct <code>version.build</code> field from VersionService' },
+            { label: 'Ownership Validation', text: 'Wildcard CloudStorage routes now explicitly verify that the accountId in the URL matches the authenticated user - prevents any user from reading or overwriting another account\'s settings' },
+            { label: 'Fix: version.buildId', text: 'Corrected a bug where <code>version.buildId</code> (undefined) was passed to all ClientSettings calls - replaced with the correct <code>version.build</code> field from VersionService' },
         ]
     },
     {
@@ -108,7 +108,7 @@ const VERSIONS = [
         type: 'security',
         summary: 'Critical security improvements and Redis support.',
         features: [
-            { label: 'Token Hashing', text: 'Tokens are now stored as SHA-256 hashes — raw tokens never persisted' },
+            { label: 'Token Hashing', text: 'Tokens are now stored as SHA-256 hashes - raw tokens never persisted' },
             { label: 'JWT Secret Rotation', text: 'Automatic monthly rotation with 256-bit secrets' },
             { label: 'HttpOnly Cookies', text: 'Authentication tokens moved from localStorage to secure HttpOnly cookies with SameSite=Strict' },
             { label: 'CSRF Protection', text: 'Added CSRF middleware with token validation for all forms' },
@@ -139,7 +139,7 @@ const VERSIONS = [
         type: 'security',
         summary: 'Major security fixes addressing 10 critical vulnerabilities.',
         features: [
-            { label: 'Token Persistence', text: 'Tokens now persist to Tokens.json file instead of in-memory storage — survives server restarts' },
+            { label: 'Token Persistence', text: 'Tokens now persist to Tokens.json file instead of in-memory storage - survives server restarts' },
             { label: 'Input Validation', text: 'Added comprehensive input validation for all authentication endpoints with length limits' },
             { label: 'Password Requirements', text: 'Enforced strong password policy (8+ chars, uppercase, lowercase, number, special char) with visual strength indicator' },
             { label: 'Email Normalization', text: 'All emails are now normalized to lowercase to prevent duplicate accounts' },
@@ -157,7 +157,7 @@ const VERSIONS = [
         type: 'security',
         summary: 'Complete rate limiting system with 3 protection levels and security improvements.',
         features: [
-            { label: 'Rate Limiting', text: '3 levels (Global, Authentication, Expensive Ops) — fully configurable' },
+            { label: 'Rate Limiting', text: '3 levels (Global, Authentication, Expensive Ops) - fully configurable' },
             { label: 'Protected Endpoints', text: 'Login, register, purchases, refunds, shop rotation' },
             { label: 'Security Settings', text: 'All security parameters (CORS, Helmet, Compression) now work correctly' },
             { label: 'Configuration', text: 'Fixed parameter naming consistency in server.properties' },
@@ -228,7 +228,7 @@ const VERSIONS = [
         date: 'August 24, 2024',
         type: 'release',
         isOrigin: true,
-        summary: 'First official release of Neodyme. May contain bugs — fixes released in subsequent updates.',
+        summary: 'First official release of Neodyme. May contain bugs - fixes released in subsequent updates.',
         features: [
             { label: 'Season Support', text: 'Full support for Fortnite seasons 1-32' },
             { label: 'Configuration', text: 'Comprehensive configuration management system' },
@@ -309,5 +309,5 @@ function selectVersion(idx) {
     renderDetail(VERSIONS[idx]);
 }
 
-// Init — select latest (index 0)
+// Init - select latest (index 0)
 selectVersion(0);
