@@ -318,6 +318,38 @@ router.get('/friends/api/public/list/fortnite/:accountId/recentPlayers', verifyT
     res.json([]);
 });
 
+router.all('/friends/api/v1/:accountId/friends/:friendId/alias', verifyToken, (req, res) => {
+    res.status(204).end();
+});
+
+router.post('/friends/api/v1/:accountId/blocklist/:friendId', verifyToken, async (req, res) => {
+    try {
+        if (req.params.accountId !== req.user.accountId) {
+            throw Errors.Authentication.notYourAccount();
+        }
+        await DatabaseManager.blockFriend(req.user.accountId, req.params.friendId);
+        res.status(204).end();
+    } catch (error) {
+        if (error.statusCode) return res.status(error.statusCode).json(error.toJSON());
+        LoggerService.log('error', `Failed to block user: ${error.message}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.delete('/friends/api/v1/:accountId/blocklist/:friendId', verifyToken, async (req, res) => {
+    try {
+        if (req.params.accountId !== req.user.accountId) {
+            throw Errors.Authentication.notYourAccount();
+        }
+        await DatabaseManager.unblockFriend(req.user.accountId, req.params.friendId);
+        res.status(204).end();
+    } catch (error) {
+        if (error.statusCode) return res.status(error.statusCode).json(error.toJSON());
+        LoggerService.log('error', `Failed to unblock user: ${error.message}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
 router.get('/friends/api/public/blocklist/:accountId', verifyToken, async (req, res) => {
     try {
         if (req.params.accountId !== req.user.accountId) {

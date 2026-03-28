@@ -69,11 +69,13 @@ router.get('/content/api/pages/fortnite-game/*', async (req, res) => {
 router.post('/api/v1/fortnite-br/*/target', async (req, res) => {
     try {
         const motd = PagesService.getMotd();
+        if (!motd) return res.json({});
+
         const language = req.body.language || req.body.parameters?.language || 'en';
-        
+
         const translatedMotd = PagesService.applyTranslations(motd, req, language);
-        
-        if (req.body.tags && Array.isArray(req.body.tags)) {
+
+        if (req.body.tags && Array.isArray(req.body.tags) && Array.isArray(translatedMotd.contentItems)) {
             translatedMotd.contentItems.forEach(item => {
                 item.placements = req.body.tags.map((tag, index) => ({
                     trackingId: FunctionsService.generateRandomString(16),
@@ -82,7 +84,7 @@ router.post('/api/v1/fortnite-br/*/target', async (req, res) => {
                 }));
             });
         }
-        
+
         res.json(translatedMotd);
     } catch (error) {
         LoggerService.log('error', `MOTD error: ${error.message}`);

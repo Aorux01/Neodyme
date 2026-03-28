@@ -204,7 +204,8 @@ function startMonitor() {
     monitorRunning = true;
     document.getElementById('monitor-toggle-btn').innerHTML = '<i class="fas fa-stop"></i> Stop';
     fetchLiveStats();
-    monitorInterval = setInterval(fetchLiveStats, 3000);
+    loadXmppClients();
+    monitorInterval = setInterval(() => { fetchLiveStats(); loadXmppClients(); }, 3000);
 }
 
 let logsAutoInterval = null;
@@ -675,7 +676,7 @@ function showDevTab(tab) {
     if (tab === 'plugins')   loadAdminPlugins('dev-plugins-list');
     if (tab === 'commands')  loadDevCommands();
     if (tab === 'system')  { loadSystemTests(); loadSystemChart(24); }
-    if (tab === 'monitor')   buildCharts();
+    if (tab === 'monitor')   { buildCharts(); loadXmppClients(); }
 
     if (tab !== 'system' && systemAutoRunning) toggleSystemAutoRefresh();
     if (tab !== 'monitor' && monitorRunning)   startMonitor();
@@ -787,10 +788,10 @@ const DEV_COMMANDS = [
     },
     {
         cat: 'Data', icon: 'fa-database', color: '#ec4899', cmds: [
-            { label: 'Dry Run JSON→Mongo',   cmd: 'data migrate json mongodb --dry-run', args: [] },
-            { label: 'Migrate JSON→Mongo',   cmd: 'data migrate json mongodb --confirm', args: [{id:'dcmd-mongo-uri',ph:'--uri=mongodb://host:port/db'}] },
-            { label: 'Migrate Mongo→JSON',   cmd: 'data migrate mongodb json --confirm', args: [{id:'dcmd-mongo-uri2',ph:'--uri=mongodb://host:port/db (opt.)'}] },
-            { label: 'Migrate+Switch J→M',   cmd: 'data migrate json mongodb --confirm --switch', args: [{id:'dcmd-mongo-uri3',ph:'--uri=mongodb://host:port/db'}], danger: false },
+            { label: 'Dry Run JSON->Mongo',   cmd: 'data migrate json mongodb --dry-run', args: [] },
+            { label: 'Migrate JSON->Mongo',   cmd: 'data migrate json mongodb --confirm', args: [{id:'dcmd-mongo-uri',ph:'--uri=mongodb://host:port/db'}] },
+            { label: 'Migrate Mongo->JSON',   cmd: 'data migrate mongodb json --confirm', args: [{id:'dcmd-mongo-uri2',ph:'--uri=mongodb://host:port/db (opt.)'}] },
+            { label: 'Migrate+Switch J->M',   cmd: 'data migrate json mongodb --confirm --switch', args: [{id:'dcmd-mongo-uri3',ph:'--uri=mongodb://host:port/db'}], danger: false },
         ]
     },
     {
@@ -909,6 +910,58 @@ function toggleSystemAutoRefresh() {
         if (btn) btn.innerHTML = '<i class="fas fa-stop"></i> Stop Auto';
         loadSystemTests();
         systemAutoInterval = setInterval(loadSystemTests, 5 * 60 * 1000);
+    }
+}
+
+async function loadXmppClients() {
+    const container = document.getElementById('xmpp-clients-list');
+    if (!container) return;
+
+    try {
+        const res  = await fetch('/api/admin/xmpp-clients', { credentials: 'include' });
+        const data = await res.json();
+
+        if (!data.success) {
+            container.innerHTML = `<span style="color:#ef4444;font-size:13px;">Error: ${escHtml(data.error || 'Failed to load')}</span>`;
+            return;
+        }
+
+        if (data.count === 0) {
+            container.innerHTML = '<span style="color:#6b7280;font-size:13px;">No players connected via XMPP.</span>';
+            return;
+        }
+
+        const mucMap = {};
+        (data.mucs || []).forEach(m => { mucMap[m.name] = m.members; });
+
+        const rows = data.clients.map(c => {
+            const statusDot  = c.away
+                ? '<span style="color:#f59e0b;" title="Away">&#9679;</span>'
+                : '<span style="color:#10b981;" title="Online">&#9679;</span>';
+            const mucsLabel  = c.joinedMUCs && c.joinedMUCs.length > 0
+                ? c.joinedMUCs.map(r => `<span style="font-size:10px;background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);border-radius:4px;padding:1px 6px;">${escHtml(r)}</span>`).join(' ')
+                : '<span style="color:#444;font-size:11px;">-</span>';
+
+            return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:7px;margin-bottom:5px;">
+                <span style="font-size:14px;">${statusDot}</span>
+                <div style="flex:1;min-width:0;">
+                    <span style="color:#e5e5e5;font-size:13px;font-weight:600;">${escHtml(c.displayName)}</span>
+                    <span style="color:#555;font-size:11px;margin-left:8px;font-family:monospace;">${escHtml(c.accountId)}</span>
+                    <div style="margin-top:3px;">${mucsLabel}</div>
+                </div>
+            </div>`;
+        }).join('');
+
+        const mucSummary = data.mucs && data.mucs.length > 0
+            ? `<div style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;">${data.mucs.map(m =>
+                `<span style="font-size:11px;color:#888;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:5px;padding:2px 8px;">
+                    ${escHtml(m.name)} &mdash; ${m.members} member${m.members !== 1 ? 's' : ''}
+                </span>`).join('')}</div>`
+            : '';
+
+        container.innerHTML = mucSummary + rows;
+    } catch (err) {
+        container.innerHTML = `<span style="color:#ef4444;font-size:13px;">${escHtml(err.message)}</span>`;
     }
 }
 

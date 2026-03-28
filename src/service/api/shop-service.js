@@ -1,10 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 class ItemShop {
     static getShopConfig() {
         try {
-            const configPath = path.join(__dirname, '../../../config/Shop.json');
+            const configPath = path.join(__dirname, '../../../config/shop.json');
             return JSON.parse(fs.readFileSync(configPath, 'utf8'));
         } catch {
             return {
@@ -122,7 +123,7 @@ class ItemShop {
 
     static getBattlePassOffers(season) {
         try {
-            const battlepassPath = path.join(__dirname, `../../../content/athena/battlepasses/Season${season}.json`);
+            const battlepassPath = path.join(__dirname, `../../../content/athena/battlepasses/season-${season}.json`);
             if (!fs.existsSync(battlepassPath)) return null;
 
             const battlepass = JSON.parse(fs.readFileSync(battlepassPath, 'utf8'));
@@ -153,6 +154,10 @@ class ItemShop {
             seasonStorefrontIndex = catalog.storefronts.length - 1;
         }
 
+        const chapterNum = season >= 11 ? Math.floor((season - 11) / 4) + 2 : 1;
+        const seasonInChapter = season >= 11 ? ((season - 11) % 4) + 1 : season;
+        const seasonLabel = `Chapter ${chapterNum} - Season ${seasonInChapter}`;
+
         // Battle Pass Offer (950 V-Bucks)
         if (offers.battlePassOfferId) {
             catalog.storefronts[seasonStorefrontIndex].catalogEntries.push({
@@ -180,20 +185,26 @@ class ItemShop {
                     minQuantity: 1
                 }],
                 metaInfo: [
-                    { key: "Preroll", value: "False" }
+                    { key: "bShowInItemShop",           value: "true"       },
+                    { key: "SectionId",                 value: "Battlepass" },
+                    { key: "TileSize",                  value: "DoubleWide" },
+                    { key: "sectionPriority",           value: "1000"       },
+                    { key: "ShouldShowBattlePassPurchase", value: "true"    },
+                    { key: "Preroll",                   value: "False"      },
+                    { key: "NewDisplayAssetPath",       value: `/Game/Catalog/NewDisplayAssets/DAv2_BR_Season${season}_BattlePass.DAv2_BR_Season${season}_BattlePass` }
                 ],
                 catalogGroup: "",
                 catalogGroupPriority: 0,
                 sortPriority: 1,
                 title: "Battle Pass",
-                shortDescription: `Chapter ${season >= 11 ? Math.floor((season - 11) / 4) + 2 : 1} - Season ${season >= 11 ? ((season - 11) % 4) + 1 : season}`,
-                description: "Battle Pass",
-                displayAssetPath: `/Game/Catalog/DisplayAssets/DA_BR_Season${season}_BattlePass.DA_BR_Season${season}_Rare`,
+                shortDescription: seasonLabel,
+                description: `Unlock over 100 rewards in the ${seasonLabel} Battle Pass!`,
+                displayAssetPath: `/Game/Catalog/DisplayAssets/DA_BR_Season${season}_BattlePass.DA_BR_Season${season}_BattlePass`,
                 itemGrants: []
             });
         }
 
-        // Tier Offer (Individual Levels)
+        // Tier Offer (Individual Levels - 150 V-Bucks each)
         if (offers.tierOfferId) {
             catalog.storefronts[seasonStorefrontIndex].catalogEntries.push({
                 offerId: offers.tierOfferId,
@@ -229,7 +240,7 @@ class ItemShop {
             });
         }
 
-        // Battle Bundle Offer (25 Levels)
+        // Battle Bundle Offer (Battle Pass + 25 levels - 2800 V-Bucks, shown as 4700 → 2800)
         if (offers.battleBundleOfferId) {
             catalog.storefronts[seasonStorefrontIndex].catalogEntries.push({
                 offerId: offers.battleBundleOfferId,
@@ -241,7 +252,7 @@ class ItemShop {
                     regularPrice: 4700,
                     dynamicRegularPrice: -1,
                     finalPrice: 2800,
-                    saleType: "PercentOff",
+                    saleType: "Strikethrough",
                     saleExpiration: "9999-12-31T23:59:59.999Z",
                     basePrice: 2800
                 }],
@@ -257,26 +268,20 @@ class ItemShop {
                     minQuantity: 1
                 }],
                 metaInfo: [
-                    { key: "Preroll", value: "False" },
-                    { key: "BannerOverride", value: "BattleBundle" }
+                    { key: "bShowInItemShop",             value: "false"      },
+                    { key: "ShouldShowBattlePassPurchase", value: "true"      },
+                    { key: "LevelsToGrant",               value: "25"         },
+                    { key: "Preroll",                     value: "False"      },
+                    { key: "BannerOverride",              value: "BattleBundle" },
+                    { key: "NewDisplayAssetPath",         value: `/Game/Catalog/NewDisplayAssets/DAv2_BR_Season${season}_BattlePass.DAv2_BR_Season${season}_BattlePass` }
                 ],
                 catalogGroup: "",
                 catalogGroupPriority: 0,
                 sortPriority: 2,
                 title: "Battle Bundle",
-                shortDescription: {
-                    "en": "Battle Pass + 25 tiers!",
-                    "fr": "Passe de combat + 25 paliers !",
-                    "de": "Battle Pass + 25 Stufen!",
-                    "es": "¡Pase de batalla y 25 niveles!",
-                    "it": "Pass battaglia + 25 livelli!",
-                    "pt-BR": "Passe de Batalha + 25 categorias!",
-                    "ru": "Боевой пропуск + 25 уровней!",
-                    "ja": "バトルパス+25ティア！",
-                    "ko": "배틀패스 + 25티어!"
-                },
-                description: `Season ${season >= 11 ? Math.floor((season - 11) / 4) + 2 : 1} - Battle Pass with 25 bonus tiers! Get great rewards instantly!`,
-                displayAssetPath: `/Game/Catalog/DisplayAssets/DA_BR_Season${season}_BattleBundle.DA_BR_Season${season}_BattleBundle`,
+                shortDescription: "Battle Pass + 25 tiers!",
+                description: `${seasonLabel} - Battle Pass with 25 bonus tiers! Get great rewards instantly!`,
+                displayAssetPath: `/Game/Catalog/DisplayAssets/DA_BR_Season${season}_BattlePassWithLevels.DA_BR_Season${season}_BattlePassWithLevels`,
                 itemGrants: []
             });
         }
@@ -426,21 +431,40 @@ class ItemShop {
 
     static getItemShop(season = 2) {
         const catalog = JSON.parse(JSON.stringify(require("../../../content/catalog.json")));
-        const CatalogConfig = require("../../../data/shop.json");
+        let CatalogConfig;
+        try {
+            CatalogConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../data/shop.json'), 'utf8'));
+        } catch {
+            CatalogConfig = {};
+        }
         const shopConfig = this.getShopConfig();
-        const categories = shopConfig.shopCategories || {};
+
+        // isChapter1 is driven exclusively by config/shop.json, not by the client version
+        const useChapter1 = shopConfig.isChapter1 === true;
+
+        // For Chapter 1 mode, always use fixed daily/featured categories
+        const categories = useChapter1
+            ? {
+                daily:    { storefrontName: 'BRDailyStorefront',  tileSize: 'Small',  displayName: 'Daily'    },
+                featured: { storefrontName: 'BRWeeklyStorefront', tileSize: 'Normal', displayName: 'Featured' }
+              }
+            : (shopConfig.shopCategories || {
+                daily:    { storefrontName: 'BRDailyStorefront',  tileSize: 'Small',  displayName: 'Daily'    },
+                featured: { storefrontName: 'BRWeeklyStorefront', tileSize: 'Normal', displayName: 'Featured' }
+              });
 
         try {
             for (var value in CatalogConfig) {
                 if (value === '//' || !Array.isArray(CatalogConfig[value].itemGrants)) continue;
                 if (CatalogConfig[value].itemGrants.length === 0) continue;
 
-                // Try to get category from meta.category first, fallback to prefix matching
-                let categoryKey = null;
+                let storefrontName;
+                let tileSize;
+                let categoryKey;
                 let matchedCategory = null;
 
+                // Route item to the correct storefront
                 if (CatalogConfig[value].meta?.category) {
-                    // Use meta.category if available
                     const metaCategory = CatalogConfig[value].meta.category.toLowerCase();
                     for (const [key, catConfig] of Object.entries(categories)) {
                         if (metaCategory === key.toLowerCase() || metaCategory === catConfig.displayName?.toLowerCase()) {
@@ -451,7 +475,6 @@ class ItemShop {
                     }
                 }
 
-                // Fallback to prefix matching if meta.category didn't match
                 if (!matchedCategory) {
                     for (const [key, catConfig] of Object.entries(categories)) {
                         if (value.toLowerCase().startsWith(key.toLowerCase())) {
@@ -464,40 +487,29 @@ class ItemShop {
 
                 if (!matchedCategory) continue;
 
-                const storefrontName = matchedCategory.storefrontName || 'BRDailyStorefront';
-                const tileSize = CatalogConfig[value].meta?.tileSize || matchedCategory.tileSize || 'Small';
+                storefrontName = matchedCategory.storefrontName || 'BRDailyStorefront';
+                tileSize = CatalogConfig[value].meta?.tileSize || matchedCategory.tileSize || 'Small';
 
-                const storefrontIndex = catalog.storefronts.findIndex(sf => sf.name === storefrontName);
-
+                let storefrontIndex = catalog.storefronts.findIndex(sf => sf.name === storefrontName);
                 if (storefrontIndex === -1) {
-                    catalog.storefronts.push({
-                        name: storefrontName,
-                        catalogEntries: []
-                    });
+                    catalog.storefronts.push({ name: storefrontName, catalogEntries: [] });
+                    storefrontIndex = catalog.storefronts.length - 1;
                 }
 
-                const targetStorefrontIndex = storefrontIndex === -1 ? catalog.storefronts.length - 1 : storefrontIndex;
+                // Chapter 1 clients only render a grid when SectionId is "Featured".
+                // Using "Daily" triggers a single-item carousel (1/5 arrow navigation).
+                // BetterReload hardcodes "Featured" for all items in Ch1 mode.
+                const sectionId = useChapter1
+                    ? "Featured"
+                    : (CatalogConfig[value].meta?.category
+                        || categories[categoryKey]?.displayName
+                        || (categoryKey === 'daily' ? 'Daily' : 'Featured'));
 
-                // Use meta.category or displayName as SectionId
-                const sectionId = CatalogConfig[value].meta?.category || matchedCategory.displayName || (categoryKey === "daily" ? "Daily" : "Featured");
-
-                const CatalogEntry = {
-                    devName: "",
-                    offerId: "",
-                    fulfillmentIds: [],
-                    dailyLimit: -1,
-                    weeklyLimit: -1,
-                    monthlyLimit: -1,
-                    categories: [sectionId],  // Add categories array like Neonite
-                    prices: [{
-                        currencyType: "MtxCurrency",
-                        currencySubType: "",
-                        regularPrice: 0,
-                        finalPrice: 0,
-                        saleExpiration: "9999-12-02T01:12:00Z",
-                        basePrice: 0
-                    }],
-                    meta: {
+                // Ch1: minimal meta/metaInfo (SectionId + TileSize only), empty categories.
+                // Ch2+: full meta with LayoutId, colors, dates etc.
+                const entryMeta = useChapter1
+                    ? { SectionId: sectionId, TileSize: tileSize }
+                    : {
                         SectionId: sectionId,
                         LayoutId: "Neodyme.99",
                         TileSize: tileSize,
@@ -508,20 +520,14 @@ class ItemShop {
                         color1: "#50C878",
                         color2: "#1B5E20",
                         textBackgroundColor: "#0D3D0D"
-                    },
-                    matchFilter: "",
-                    filterWeight: 0,
-                    appStoreId: [],
-                    requirements: [],
-                    offerType: "StaticPrice",
-                    giftInfo: {
-                        bIsEnabled: true,  // Changed to true like Neonite
-                        forcedGiftBoxTemplateId: "",
-                        purchaseRequirements: [],
-                        giftRecordIds: []
-                    },
-                    refundable: true,
-                    metaInfo: [
+                    };
+
+                const entryMetaInfo = useChapter1
+                    ? [
+                        { key: "SectionId", value: sectionId },
+                        { key: "TileSize", value: tileSize }
+                    ]
+                    : [
                         { key: "SectionId", value: sectionId },
                         { key: "LayoutId", value: "Neodyme.99" },
                         { key: "TileSize", value: tileSize },
@@ -532,7 +538,38 @@ class ItemShop {
                         { key: "color1", value: "#50C878" },
                         { key: "color2", value: "#1B5E20" },
                         { key: "textBackgroundColor", value: "#0D3D0D" }
-                    ],
+                    ];
+
+                const CatalogEntry = {
+                    devName: "",
+                    offerId: "",
+                    fulfillmentIds: [],
+                    dailyLimit: -1,
+                    weeklyLimit: -1,
+                    monthlyLimit: -1,
+                    categories: [],
+                    prices: [{
+                        currencyType: "MtxCurrency",
+                        currencySubType: "",
+                        regularPrice: 0,
+                        finalPrice: 0,
+                        saleExpiration: "9999-12-02T01:12:00Z",
+                        basePrice: 0
+                    }],
+                    meta: entryMeta,
+                    matchFilter: "",
+                    filterWeight: 0,
+                    appStoreId: [],
+                    requirements: [],
+                    offerType: "StaticPrice",
+                    giftInfo: {
+                        bIsEnabled: true,
+                        forcedGiftBoxTemplateId: "",
+                        purchaseRequirements: [],
+                        giftRecordIds: []
+                    },
+                    refundable: true,
+                    metaInfo: entryMetaInfo,
                     displayAssetPath: "",
                     itemGrants: [],
                     sortPriority: categoryKey === "daily" ? -1 : 0,
@@ -546,7 +583,6 @@ class ItemShop {
                     if (typeof CatalogConfig[value].itemGrants[x] === "string") {
                         if (CatalogConfig[value].itemGrants[x].length !== 0) {
                             CatalogEntry.devName = CatalogConfig[value].itemGrants[0];
-                            CatalogEntry.offerId = CatalogConfig[value].itemGrants[0];
 
                             CatalogEntry.requirements.push({
                                 requirementType: "DenyOnItemOwnership",
@@ -558,12 +594,14 @@ class ItemShop {
                                 quantity: 1
                             });
 
-                            // Add templateId to meta and metaInfo
-                            CatalogEntry.meta.templateId = CatalogConfig[value].itemGrants[x];
-                            CatalogEntry.metaInfo.push({
-                                key: "templateId",
-                                value: CatalogConfig[value].itemGrants[x]
-                            });
+                            // Ch2+: expose templateId in meta/metaInfo for display assets
+                            if (!useChapter1) {
+                                CatalogEntry.meta.templateId = CatalogConfig[value].itemGrants[x];
+                                CatalogEntry.metaInfo.push({
+                                    key: "templateId",
+                                    value: CatalogConfig[value].itemGrants[x]
+                                });
+                            }
                         }
                     }
                 }
@@ -572,15 +610,189 @@ class ItemShop {
                 CatalogEntry.prices[0].regularPrice = CatalogConfig[value].price;
                 CatalogEntry.prices[0].finalPrice = CatalogConfig[value].price;
 
+                // Generate a unique offerId using SHA1(grants + price) - method from BetterReload
+                // This prevents collisions and avoids exposing raw template IDs as offer IDs
                 if (CatalogEntry.itemGrants.length !== 0) {
-                    catalog.storefronts[targetStorefrontIndex].catalogEntries.push(CatalogEntry);
+                    const offerKey = CatalogEntry.itemGrants.map(g => g.templateId).join('') + CatalogEntry.prices[0].finalPrice;
+                    CatalogEntry.offerId = crypto.createHash('sha1').update(offerKey).digest('hex');
+
+                    catalog.storefronts[storefrontIndex].catalogEntries.push(CatalogEntry);
                 }
             }
         } catch (err) {
             console.error('[Shop] Error building catalog:', err.message);
         }
 
-        this.addBattlePassOffers(catalog, season);
+        if (shopConfig.includeBattlePass !== false && season >= 11) {
+            this.addBattlePassOffers(catalog, season);
+        }
+
+        return catalog;
+    }
+
+    static async getRandomItemShop(season = 2) {
+        const shopConfig = this.getShopConfig();
+        const ShopManager = require('../../manager/shop-manager');
+
+        // Auto-detect Chapter 1 from client version
+        const useChapter1 = season <= 10;
+
+        // Category definitions based on auto-detected mode
+        const categories = useChapter1
+            ? {
+                daily:    { storefrontName: 'BRDailyStorefront',  tileSize: 'Small',  count: 4, displayName: 'Daily'    },
+                featured: { storefrontName: 'BRWeeklyStorefront', tileSize: 'Normal', count: 2, displayName: 'Featured' }
+              }
+            : (() => {
+                const cats = shopConfig.shopCategories || {
+                    daily:    { storefrontName: 'BRDailyStorefront',  tileSize: 'Small',  count: 6, displayName: 'Daily'    },
+                    featured: { storefrontName: 'BRWeeklyStorefront', tileSize: 'Normal', count: 8, displayName: 'Featured' }
+                };
+                // Ensure counts come from config or defaults
+                return Object.fromEntries(Object.entries(cats).map(([k, v]) => [k, {
+                    storefrontName: v.storefrontName || (k === 'daily' ? 'BRDailyStorefront' : 'BRWeeklyStorefront'),
+                    tileSize: v.tileSize || (k === 'daily' ? 'Small' : 'Normal'),
+                    count: v.count || (k === 'daily' ? 6 : 8),
+                    displayName: v.displayName || (k.charAt(0).toUpperCase() + k.slice(1))
+                }]));
+              })();
+
+        // Get cosmetics - use cache if available, otherwise fetch
+        let allCosmetics = ShopManager.cosmeticsCache;
+        if (!allCosmetics || allCosmetics.length === 0) {
+            try { allCosmetics = await ShopManager.fetchCosmetics(); } catch { allCosmetics = []; }
+        }
+
+        // Filter to items available in the client's era (backendValue <= season)
+        const excludedItems = shopConfig.shopExcludedItems || [];
+        const bpExcludedIds = ShopManager.getBattlepassAndWinterfestIds();
+        const cosmetics = allCosmetics.filter(item => {
+            const bv = item.introduction?.backendValue;
+            if (!bv || bv > season) return false;
+            if (excludedItems.includes(item.id)) return false;
+            if (bpExcludedIds.has(item.id.toLowerCase())) return false;
+            if (item.rarity?.displayValue?.toLowerCase() === 'common') return false;
+            return true;
+        });
+
+        const seedStr = `${season}-${new Date().toISOString().slice(0, 10)}`;
+        let rngState = 0;
+        for (let i = 0; i < seedStr.length; i++) {
+            rngState = Math.imul(31, rngState) + seedStr.charCodeAt(i) | 0;
+        }
+        const rng = () => {
+            rngState ^= rngState << 13;
+            rngState ^= rngState >> 17;
+            rngState ^= rngState << 5;
+            return (rngState >>> 0) / 0xFFFFFFFF;
+        };
+        const seededShuffle = (arr) => {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(rng() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        };
+
+        const catalog = JSON.parse(JSON.stringify(require("../../../content/catalog.json")));
+        const usedIds = new Set();
+
+        for (const [categoryKey, catConfig] of Object.entries(categories)) {
+            const { storefrontName, tileSize, count } = catConfig;
+
+            let storefrontIndex = catalog.storefronts.findIndex(sf => sf.name === storefrontName);
+            if (storefrontIndex === -1) {
+                catalog.storefronts.push({ name: storefrontName, catalogEntries: [] });
+                storefrontIndex = catalog.storefronts.length - 1;
+            }
+
+            // Ensure type diversity: at least 1 outfit, emote, backpack, glider, pickaxe
+            const buckets = { outfit: [], emote: [], backpack: [], glider: [], pickaxe: [], other: [] };
+            for (const item of seededShuffle(cosmetics.filter(c => !usedIds.has(c.id)))) {
+                const t = item.type?.value?.toLowerCase();
+                if (buckets[t]) buckets[t].push(item);
+                else buckets.other.push(item);
+            }
+
+            const picked = [];
+            const minPer = { outfit: Math.min(2, count), emote: 1, backpack: 1, glider: 1, pickaxe: 1 };
+            for (const [type, min] of Object.entries(minPer)) {
+                for (let i = 0; i < min && buckets[type].length > 0 && picked.length < count; i++) {
+                    picked.push(buckets[type].shift());
+                }
+            }
+            // Fill remainder from all remaining shuffled
+            const remaining = seededShuffle([
+                ...buckets.outfit, ...buckets.emote, ...buckets.backpack,
+                ...buckets.glider, ...buckets.pickaxe, ...buckets.other
+            ]);
+            for (const item of remaining) {
+                if (picked.length >= count) break;
+                if (!picked.some(p => p.id === item.id)) picked.push(item);
+            }
+
+            // Ch1: always "Featured" (grid requires it); Ch2+: use category displayName
+            const sectionId = useChapter1
+                ? "Featured"
+                : (catConfig.displayName || (categoryKey === 'daily' ? 'Daily' : 'Featured'));
+            const entryMeta = useChapter1
+                ? { SectionId: sectionId, TileSize: tileSize }
+                : { SectionId: sectionId, LayoutId: "Neodyme.99", TileSize: tileSize,
+                    AnalyticOfferGroupId: `Neodyme/${categoryKey}`, FirstSeen: "2/2/2020",
+                    inDate: "2018-04-30T00:00:00.000Z", outDate: "9999-12-31T23:59:59.999Z",
+                    color1: "#50C878", color2: "#1B5E20", textBackgroundColor: "#0D3D0D" };
+            const entryMetaInfo = useChapter1
+                ? [{ key: "SectionId", value: sectionId }, { key: "TileSize", value: tileSize }]
+                : [
+                    { key: "SectionId", value: sectionId }, { key: "LayoutId", value: "Neodyme.99" },
+                    { key: "TileSize", value: tileSize }, { key: "AnalyticOfferGroupId", value: `Neodyme/${categoryKey}` },
+                    { key: "FirstSeen", value: "2/2/2020" }, { key: "inDate", value: "2018-04-30T00:00:00.000Z" },
+                    { key: "outDate", value: "9999-12-31T23:59:59.999Z" },
+                    { key: "color1", value: "#50C878" }, { key: "color2", value: "#1B5E20" },
+                    { key: "textBackgroundColor", value: "#0D3D0D" }
+                  ];
+
+            for (const item of picked) {
+                usedIds.add(item.id);
+                const itemGrants = this.formatItemGrants(item);
+                const price = this.calculatePrice(item);
+
+                const entry = {
+                    devName: "",
+                    offerId: "",
+                    fulfillmentIds: [],
+                    dailyLimit: -1, weeklyLimit: -1, monthlyLimit: -1,
+                    categories: [],
+                    prices: [{
+                        currencyType: "MtxCurrency", currencySubType: "",
+                        regularPrice: price, finalPrice: price,
+                        saleExpiration: "9999-12-02T01:12:00Z", basePrice: price
+                    }],
+                    meta: entryMeta,
+                    matchFilter: "", filterWeight: 0, appStoreId: [],
+                    requirements: itemGrants.map(tpl => ({ requirementType: "DenyOnItemOwnership", requiredId: tpl, minQuantity: 1 })),
+                    offerType: "StaticPrice",
+                    giftInfo: { bIsEnabled: true, forcedGiftBoxTemplateId: "", purchaseRequirements: [], giftRecordIds: [] },
+                    refundable: true,
+                    metaInfo: entryMetaInfo,
+                    displayAssetPath: "",
+                    itemGrants: itemGrants.map(tpl => ({ templateId: tpl, quantity: 1 })),
+                    sortPriority: categoryKey === "daily" ? -1 : 0,
+                    catalogGroupPriority: 0
+                };
+
+                const offerKey = itemGrants.join('') + price;
+                entry.offerId = crypto.createHash('sha1').update(offerKey).digest('hex');
+                entry.devName = entry.offerId;
+
+                catalog.storefronts[storefrontIndex].catalogEntries.push(entry);
+            }
+        }
+
+        if (shopConfig.includeBattlePass !== false && season >= 11) {
+            this.addBattlePassOffers(catalog, season);
+        }
 
         return catalog;
     }

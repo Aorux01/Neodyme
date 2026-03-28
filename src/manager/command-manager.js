@@ -19,7 +19,10 @@ class CommandManager {
         this.readline = readline.createInterface({
             input: process.stdin,
             output: process.stdout,
+            prompt: '> ',
         });
+
+        LoggerService.setReadline(this.readline);
 
         this.registerDefaultCommands();
 
@@ -29,9 +32,12 @@ class CommandManager {
             if (command) {
                 this.execute(command, args);
             }
+
+            this.readline.prompt();
         });
 
         LoggerService.log('success', 'Command system ready.');
+        this.readline.prompt();
     }
 
     static async serverStop() {

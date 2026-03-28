@@ -49,13 +49,6 @@ class PlayerStatsService {
         this.points = this.points.filter(p => p.t >= cutoff);
     }
 
-    /**
-     * Record a stat snapshot.
-     * @param {number} activePlayers  accounts active in last 5 min
-     * @param {number} totalAccounts
-     * @param {number} activeSessions
-     * @param {object} [sys]          optional { passing, total } from system check
-     */
     static async record(activePlayers, totalAccounts, activeSessions, sys) {
         await this.load();
         const point = { t: Date.now(), a: activePlayers, c: totalAccounts, s: activeSessions };
@@ -65,10 +58,6 @@ class PlayerStatsService {
         await this.save();
     }
 
-    /**
-     * @param {number} hours  0 = all data
-     * @returns {Array}
-     */
     static async getPlayerRange(hours) {
         await this.load();
         if (hours === 0) return this.points;
@@ -76,11 +65,6 @@ class PlayerStatsService {
         return this.points.filter(p => p.t >= cutoff);
     }
 
-    /**
-     * Returns system health history for the chart.
-     * @param {number} hours
-     * @returns {Array<{t:number, pct:number}>}
-     */
     static async getSystemHistory(hours) {
         await this.load();
         const cutoff = Date.now() - hours * 60 * 60 * 1000;

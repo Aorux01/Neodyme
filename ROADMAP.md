@@ -41,6 +41,9 @@
 - [x] **LockInImmutableItem** - Immutable items
 - [x] **UnlockRewardNode** - Reward unlocking
 - [x] **DedicatedServer** - Dedicated server operations
+- [x] **CopyCosmeticLoadout** - Cosmetic loadout preset copy/apply
+- [x] **DeleteCosmeticLoadout** - Cosmetic loadout preset deletion
+- [x] **RequestRestedStateIncrease** - Rested XP accumulation
 
 ### Save the World MCP
 - [x] **AssignHeroToLoadout** - Hero assignment
@@ -98,16 +101,16 @@
 
 ### XMPP & Communication
 - [x] **XMPP Server** - WebSocket XMPP server
-- [ ] **In-game chat** - Private messages between players
-- [x] **Presence system** - Online/offline/away status
-- [x] **Real-time notifications** - Friend notifications, invites, etc.
-- [ ] **Vivox integration** - In-game voice chat
+- [x] **In-game chat** - Private messages and groupchat (MUC) between players
+- [x] **Presence system** - Online/offline/away status, friend-filtered broadcasts
+- [x] **Real-time notifications** - Friend notifications, invites, party events
+- [x] **Vivox voice chat** - JWT token generation (HMAC-SHA256) for party voice channels
 
 ### Friends System
 - [x] **Friend request sending** - Via API and XMPP
 - [x] **Accept/Decline** - Request management
 - [x] **Friend removal** - Remove from list
-- [x] **Player blocking** - Block system
+- [x] **Player blocking** - Block and unblock via API
 - [x] **XMPP notifications** - Real-time alerts for friend actions
 - [x] **Presence updates** - Status sync between friends
 
@@ -119,10 +122,11 @@
 - [x] **Party configuration** - Joinability, max size, etc.
 - [x] **Party deletion** - Party dissolution
 - [x] **Auto promotion** - New captain if old one leaves
-- [ ] **Party invitations** - Full invitation system
+- [x] **Party invitations** - Full invite/decline/cancel flow with XMPP
+- [x] **Leadership transfer** - Manual captain promotion with XMPP broadcast
+- [x] **Party pings** - Ping notifications with XMPP
+- [x] **Join intentions** - Join-request flow with friend cross-check
 - [ ] **Member kick** - Kick by captain
-- [ ] **Leadership transfer** - Manual captain change
-- [ ] **Party pings** - Ping notifications
 
 ### Matchmaking
 - [x] **Ticket creation** - Signed matchmaking tickets
@@ -143,9 +147,13 @@
 - [x] **Experience service (XP)** - XP gain and management
 - [x] **Creator codes (SAC)** - Support-A-Creator
 - [x] **Shop configuration** - `config/shop.json`
+- [x] **Gift eligibility** - Validates offer, friendship, and ownership before gifting
+- [x] **Historical shop rotation** - Date-based cosmetic rotation via fortnite-api.com
+- [x] **Shop image generation** - Server-side SVG with rarity gradients, zero native deps
 - [ ] **Purchase history** - Transaction list
-- [ ] **Gifting system** - Gifting between players
+- [ ] **Gifting system** - Full gift sending between players
 - [ ] **Dynamic bundles** - Promotional packs
+- [ ] **SAC command management** - Add/list/delete creator codes from console
 
 ### Website
 - [x] **Homepage** - Landing page
@@ -164,33 +172,39 @@
 - [x] **System storage** - Server files (hotfixes, etc.)
 - [x] **User storage** - Per-account files
 - [x] **Upload/Download** - File management
-- [ ] **ClientSettings** - Client settings
+- [x] **ClientSettings** - Client settings persisted (JSON filesystem + MongoDB binary)
 
 ---
 
 ## Priority 4 - Low
 
-### Admin Panel
+### Admin Panel (BETA)
 - [x] **Admin dashboard** - Server overview
 - [x] **Account management** - Users CRUD
-- [x] **Moderation** - Ban, tickets
-- [ ] **Tokens management** - Active tokens management
-- [ ] **Server statistics** - Precise real-time stats
-- [ ] **Logs viewer** - Logs visualization
-- [ ] **Shop editor** - Integrated shop editor
-- [ ] **Live configuration** - Modify without restart
+- [x] **Moderation** - Ban, unban, tickets, player reports
+- [x] **Tokens management** - Active tokens view and revocation
+- [x] **Server statistics** - Real-time CPU, RAM, active players (live monitor)
+- [x] **Logs viewer** - Console logs in Dev panel
+- [x] **Plugin manager** - Browse, install, update, configure plugins
+- [x] **Shop controls** - Manual rotation, date-based rotation, featured items
+- [x] **Security settings** - Rate limiting, CORS, Helmet, Trust Proxy toggles
+- [x] **XMPP monitor** - Real-time connected clients widget
+- [ ] **Shop editor** - Integrated shop editor (drag-and-drop)
+- [ ] **Live configuration** - Modify server.properties without restart
 - [ ] **Game modes** - Manage game servers and game modes
 - [ ] **Events** - Manage in-game events
 - [ ] **Announcements** - Broadcast system
 
 ### Console Commands
-- [x] **Command system** - Base architecture
-- [ ] **SAC commands** - Creator codes management
-- [x] **Moderation commands** - Ban, unban
-- [x] **Server commands** - Restart, status, reload, stop
+- [x] **Command system** - Base architecture with role-based access
+- [ ] **SAC commands** - Creator code add/list/delete management
+- [x] **Moderation commands** - Ban, unban, lookup
+- [x] **Server commands** - Restart, status, reload, stop, diagnostic
+- [x] **Data commands** - Migrate JSON↔MongoDB with --dry-run
+- [x] **Test commands** - Full system test suite
 - [ ] **Player commands** - Give items, V-Bucks, XP
-- [x] **Shop commands** - Manual rotation, featured items
-- [x] **Debug commands** - Logs, profiling
+- [x] **Shop commands** - Manual rotation, featured items, date-based rotation
+- [x] **Debug commands** - Logs, profiling, token management
 
 ### Database
 - [x] **JSON Database** - Local file storage
@@ -236,12 +250,13 @@
 
 ### Advanced Features
 - [ ] **Replay system** - Match recording
-- [ ] **Report system** - Player reporting
+- [x] **Report system** - In-game toxicity reports with mod panel integration
 - [ ] **Appeal system** - Ban appeals
 - [ ] **Newsletter** - Automated emails
 - [ ] **Push notifications** - Mobile notifications
 - [ ] **Animation** - Animations and videos
 - [ ] **EXP, V-BUCKS** - Game server connection
+- [ ] **Aegis Service** - Anti cheat
 
 ---
 
@@ -252,4 +267,4 @@
 
 ---
 
-*Last updated: v1.2.4*
+*Last updated: v1.2.5*

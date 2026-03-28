@@ -10,7 +10,7 @@ class ShopManager {
         this.fortniteApiUrl = 'https://fortnite-api.com/v2/cosmetics/br';
         this.shopDataPath = path.join(__dirname, '../../data/shop.json');
         this.shopStatePath = path.join(__dirname, '../../data/shop_state.json');
-        this.shopConfigPath = path.join(__dirname, '../../config/Shop.json');
+        this.shopConfigPath = path.join(__dirname, '../../config/shop.json');
         this.rotationTimeouts = {};
         this.isInitialized = false;
         this.config = null;
@@ -29,7 +29,7 @@ class ShopManager {
             await this.ensureDataDirectory();
 
             const categories = this.getCategories();
-            for (const [categoryKey, category] of Object.entries(categories)) {
+            for (const categoryKey of Object.keys(categories)) {
                 const needsRotation = await this.checkIfCategoryRotationNeeded(categoryKey);
                 if (needsRotation) {
                     LoggerService.log('info', `[Shop] Category "${categoryKey}" needs rotation, generating...`);
@@ -58,12 +58,20 @@ class ShopManager {
     }
 
     getCategories() {
+        // Chapter 1 mode always uses fixed daily+weekly categories regardless of shopCategories config
+        if (this.config.isChapter1 === true) {
+            return {
+                daily:    { count: 6, displayName: 'Daily',    storefrontName: 'BRDailyStorefront',  tileSize: 'Small',   rotationInterval: 'daily'  },
+                featured: { count: 2, displayName: 'Featured', storefrontName: 'BRWeeklyStorefront', tileSize: 'Normal',  rotationInterval: 'weekly' }
+            };
+        }
+
         if (this.config.shopCategories) {
             return this.config.shopCategories;
         }
 
         return {
-            daily: { count: this.config.shopDailyItemsCount || 6, displayName: 'Daily', storefrontName: 'BRDailyStorefront', tileSize: 'Small', rotationInterval: 'daily' },
+            daily:    { count: this.config.shopDailyItemsCount    || 6, displayName: 'Daily',    storefrontName: 'BRDailyStorefront',  tileSize: 'Small',  rotationInterval: 'daily'  },
             featured: { count: this.config.shopFeaturedItemsCount || 8, displayName: 'Featured', storefrontName: 'BRWeeklyStorefront', tileSize: 'Normal', rotationInterval: 'weekly' }
         };
     }
@@ -72,8 +80,7 @@ class ShopManager {
         return {
             shopCategories: this.getCategories(),
             shopRotationTime: this.config?.shopRotationTime || '00:00',
-            shopChapterLimit: this.config?.shopChapterLimit || 5,
-            shopSeasonLimit: this.config?.shopSeasonLimit || 'REMIX'
+            shopMaxSeason: this.config?.shopMaxSeason ?? 0
         };
     }
 
@@ -195,6 +202,56 @@ class ShopManager {
         return nextRotation;
     }
 
+    getBattlepassAndWinterfestIds() {
+        const excludedIds = new Set();
+        const fs = require('fs');
+
+        // Extract item IDs from all battlepass files
+        const bpDir = path.join(__dirname, '../../content/athena/battlepasses');
+        try {
+            if (fs.existsSync(bpDir)) {
+                const files = fs.readdirSync(bpDir);
+                for (const file of files) {
+                    if (!file.endsWith('.json')) continue;
+                    try {
+                        const data = JSON.parse(fs.readFileSync(path.join(bpDir, file), 'utf-8'));
+                        const allRewards = [...(data.paidRewards || []), ...(data.freeRewards || [])];
+                        for (const rewardObj of allRewards) {
+                            for (const templateId of Object.keys(rewardObj)) {
+                                const parts = templateId.split(':');
+                                if (parts.length === 2) {
+                                    excludedIds.add(parts[1].toLowerCase());
+                                }
+                            }
+                        }
+                    } catch {}
+                }
+            }
+        } catch {}
+
+        // Extract item IDs from winterfest rewards
+        const winterfestPath = path.join(__dirname, '../../content/athena/winterfest-rewards.json');
+        try {
+            if (fs.existsSync(winterfestPath)) {
+                const data = JSON.parse(fs.readFileSync(winterfestPath, 'utf-8'));
+                for (const season of Object.values(data)) {
+                    if (typeof season !== 'object') continue;
+                    for (const nodeItems of Object.values(season)) {
+                        if (!Array.isArray(nodeItems)) continue;
+                        for (const templateId of nodeItems) {
+                            const parts = templateId.split(':');
+                            if (parts.length === 2) {
+                                excludedIds.add(parts[1].toLowerCase());
+                            }
+                        }
+                    }
+                }
+            }
+        } catch {}
+
+        return excludedIds;
+    }
+
     async fetchCosmetics() {
         // Use cache if available and less than 1 hour old
         if (this.cosmeticsCache && this.cosmeticsCacheTime) {
@@ -209,72 +266,35 @@ class ShopManager {
             const cosmetics = response.data.data || [];
             const excludedItems = this.config.shopExcludedItems || [];
 
-            let chapterLimit, seasonLimit;
+            // Build battlepass + winterfest exclusion set (item IDs in lowercase)
+            const bpExcludedIds = this.getBattlepassAndWinterfestIds();
 
-            if (ConfigManager.get('customVersion')) {
-                chapterLimit = this.config.shopChapterLimit || 5;
-                seasonLimit = this.config.shopSeasonLimit || 'REMIX';
+            // Determine the maximum backendValue allowed (inclusive). 0 = no limit.
+            // backendValue is a monotonically increasing integer from fortnite-api.com:
+            //   1=C1S1, 2=C1S2, ..., 10=C1SX, 11=C2S1, ..., 31=C5S4(REMIX), 32=C5S5
+            let maxSeason;
+            const customVersion = ConfigManager.get('customVersion');
+            if (customVersion === true || customVersion === 'true') {
+                maxSeason = this.config.shopMaxSeason ?? 0;
             } else {
+                // When locked to a specific build, derive the limit from the major version.
+                // e.g. fnVersion "7.40" -> major 7 -> backendValue 7 (C1S7)
                 const fnVersion = ConfigManager.get('fnVersion') || '3.60';
-                const versionString = fnVersion.toString();
-                const versionParts = versionString.split('.');
-                const season = parseInt(versionParts[0], 10);
-
-                if (season >= 11 && season <= 18) {
-                    chapterLimit = 2;
-                } else if (season >= 19 && season <= 22) {
-                    chapterLimit = 3;
-                } else if (season >= 23 && season <= 27) {
-                    chapterLimit = 4;
-                } else if (season >= 28 && season <= 32) {
-                    chapterLimit = 5;
-                } else {
-                    chapterLimit = 1;
-                }
-
-                const chapterSeasons = {
-                    1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                    2: [11, 12, 13, 14, 15, 16, 17, 18],
-                    3: [19, 20, 21, 22],
-                    4: [23, 24, 25, 26, 27],
-                    5: [28, 29, 30, 31, 32]
-                };
-
-                const seasonIndex = chapterSeasons[chapterLimit].indexOf(season);
-                seasonLimit = (seasonIndex + 1).toString();
+                maxSeason = parseInt(fnVersion.toString().split('.')[0], 10) || 0;
             }
+
+            LoggerService.log('info', `[Shop] Fetching cosmetics (shopMaxSeason=${maxSeason || 'unlimited'}, bpExcluded=${bpExcludedIds.size})`);
 
             const filteredCosmetics = cosmetics.filter(item => {
                 const { id, introduction, rarity } = item;
-                const chapter = introduction?.chapter ? parseInt(introduction.chapter, 10) : null;
-                const season = introduction?.season ? introduction.season.toString() : null;
+                const backendValue = introduction?.backendValue;
                 const itemRarity = rarity?.displayValue?.toLowerCase();
 
-                if (!chapter || !season) return false;
+                if (!backendValue) return false;
                 if (excludedItems.includes(id)) return false;
+                if (bpExcludedIds.has(id.toLowerCase())) return false;
                 if (itemRarity === 'common') return false;
-
-                if (seasonLimit === 'OG' || seasonLimit === 'REMIX') {
-                    return chapter >= 1 && chapter <= chapterLimit;
-                }
-
-                if (chapter < 1 || chapter > chapterLimit) {
-                    return false;
-                }
-
-                if (chapter === chapterLimit) {
-                    if (season === 'X') return true;
-
-                    const seasonUpper = season.toUpperCase();
-                    if (seasonUpper === seasonLimit.toUpperCase()) return true;
-
-                    const currentSeason = parseInt(season, 10);
-                    const maxSeason = parseInt(seasonLimit, 10);
-
-                    if (!isNaN(currentSeason) && !isNaN(maxSeason)) {
-                        return currentSeason <= maxSeason;
-                    }
-                }
+                if (maxSeason > 0 && backendValue > maxSeason) return false;
 
                 return true;
             });
@@ -347,14 +367,14 @@ class ShopManager {
                         description: item.description || '',
                         rarity: item.rarity?.displayValue || 'Unknown',
                         type: item.type?.displayValue || 'Unknown',
-                        image: item.images?.smallIcon || item.images?.icon || null,
+                        image: item.images?.icon || item.images?.smallIcon || null,
                         category: category.displayName || categoryKey,
                         tileSize: category.tileSize || 'Small'
                     }
                 };
                 categoryItems.push({
                     key,
-                    image: item.images?.smallIcon || item.images?.icon || null
+                    image: item.images?.icon || item.images?.smallIcon || null
                 });
             });
 
@@ -378,6 +398,8 @@ class ShopManager {
             });
 
             await fs.writeFile(this.shopStatePath, JSON.stringify(state, null, 2), 'utf-8');
+
+            try { require('../service/shop/shop-image-generator').invalidateCache(); } catch {}
 
             LoggerService.log('success', `[Shop] Category "${categoryKey}" rotated successfully (${items.length} items)`);
 
@@ -411,7 +433,7 @@ class ShopManager {
 
         const categories = this.getCategories();
 
-        for (const [categoryKey, category] of Object.entries(categories)) {
+        for (const categoryKey of Object.keys(categories)) {
             this.scheduleCategoryRotation(categoryKey);
         }
     }
@@ -463,6 +485,12 @@ class ShopManager {
     }
 
     async forceRotation(categoryKey = null) {
+        // Reload config from disk and clear cosmetics cache so the new
+        // shopChapterLimit / shopSeasonLimit values are picked up immediately.
+        await this.loadConfigs();
+        this.cosmeticsCache = null;
+        this.cosmeticsCacheTime = null;
+
         if (categoryKey) {
             LoggerService.log('info', `[Shop] Manual rotation triggered for category "${categoryKey}"`);
             await this.rotateCategoryShop(categoryKey);
@@ -472,6 +500,104 @@ class ShopManager {
             await this.rotateShop();
             this.scheduleAllRotations();
         }
+    }
+
+    async fetchCosmeticsByDate(dateStr) {
+        try {
+            const response = await axios.get(this.fortniteApiUrl);
+            const cosmetics = response.data.data || [];
+            const excludedItems = this.config.shopExcludedItems || [];
+            const target = dateStr.trim().substring(0, 10);
+
+            const filtered = cosmetics.filter(item => {
+                if (!item.added) return false;
+                if (item.added.substring(0, 10) !== target) return false;
+                if (excludedItems.includes(item.id)) return false;
+                return item.rarity?.displayValue?.toLowerCase() !== 'common';
+            });
+
+            LoggerService.log('info', `[Shop] Found ${filtered.length} cosmetics added on ${target}`);
+            return filtered;
+        } catch (error) {
+            LoggerService.log('error', `[Shop] Failed to fetch cosmetics by date: ${error.message}`);
+            return [];
+        }
+    }
+
+    async rotateToDate(dateStr, categoryKey = null) {
+        const categories = this.getCategories();
+
+        if (categoryKey && !categories[categoryKey]) {
+            throw new Error(`Category "${categoryKey}" not found`);
+        }
+
+        const dateItems = await this.fetchCosmeticsByDate(dateStr);
+        if (dateItems.length === 0) {
+            throw new Error(`No cosmetics found for date: ${dateStr}`);
+        }
+
+        let shopConfig;
+        try {
+            const shopData = await fs.readFile(this.shopDataPath, 'utf-8');
+            shopConfig = JSON.parse(shopData);
+        } catch {
+            shopConfig = { "//": "BR Item Shop Config" };
+        }
+
+        const state = await this.getShopState();
+        if (!state.categories) state.categories = {};
+
+        const shuffled = ItemShop.shuffleArray([...dateItems]);
+        const categoriesToRotate = categoryKey
+            ? { [categoryKey]: categories[categoryKey] }
+            : categories;
+
+        let offset = 0;
+        for (const [catKey, category] of Object.entries(categoriesToRotate)) {
+            const keysToRemove = Object.keys(shopConfig).filter(k => k.startsWith(catKey) && k !== '//');
+            keysToRemove.forEach(k => delete shopConfig[k]);
+
+            const count = category.count || 6;
+            const items = shuffled.slice(offset, offset + count);
+            offset += count;
+
+            const categoryItems = [];
+            items.forEach((item, index) => {
+                const key = `${catKey}${index + 1}`;
+                shopConfig[key] = {
+                    itemGrants: ItemShop.formatItemGrants(item),
+                    price: ItemShop.calculatePrice(item),
+                    meta: {
+                        name: item.name || 'Unknown',
+                        description: item.description || '',
+                        rarity: item.rarity?.displayValue || 'Unknown',
+                        type: item.type?.displayValue || 'Unknown',
+                        image: item.images?.icon || item.images?.smallIcon || null,
+                        category: category.displayName || catKey,
+                        tileSize: category.tileSize || 'Small'
+                    }
+                };
+                categoryItems.push({ key, image: item.images?.icon || item.images?.smallIcon || null });
+            });
+
+            const now = new Date();
+            state.categories[catKey] = {
+                lastRotation: now.toISOString(),
+                nextRotation: this.calculateNextRotationTime(catKey, now).toISOString(),
+                items: categoryItems.map(i => i.key)
+            };
+            categoryItems.forEach(item => { state[item.key] = item.image; });
+        }
+
+        await fs.writeFile(this.shopDataPath, JSON.stringify(shopConfig, null, 2), 'utf-8');
+        await fs.writeFile(this.shopStatePath, JSON.stringify(state, null, 2), 'utf-8');
+
+        // Invalidate generated image cache
+        try {
+            require('../service/shop/shop-image-generator').invalidateCache();
+        } catch {}
+
+        LoggerService.log('success', `[Shop] Date rotation to ${dateStr} completed (${Object.keys(shopConfig).filter(k => k !== '//').length} items)`);
     }
 
     async cleanup() {

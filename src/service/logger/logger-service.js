@@ -8,6 +8,11 @@ class LoggerService {
     static currentLogDate = null;
     static maxLineLength = 2000;
     static writeStream = null;
+    static rl = null;
+
+    static setReadline(rl) {
+        this.rl = rl;
+    }
 
     static ensureLogsDirectory() {
         if (!fs.existsSync(this.logsDir)) {
@@ -127,8 +132,16 @@ class LoggerService {
             return;
         }
 
-        // Write to console
-        console.log(logMessage);
+        // Write to console (with sticky prompt support)
+        if (this.rl && process.stdout.isTTY) {
+            const readline = require('readline');
+            readline.clearLine(process.stdout, 0);
+            readline.cursorTo(process.stdout, 0);
+            process.stdout.write(logMessage + '\n');
+            this.rl.prompt(true);
+        } else {
+            console.log(logMessage);
+        }
 
         // Write to file (without colors)
         this.writeToFile(level, message, data);

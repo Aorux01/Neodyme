@@ -240,7 +240,7 @@ class JsonDatabase {
         };
 
         await this.saveClients(clients);
-        LoggerService.log('warning', `Account banned: ${accountId}`);
+        LoggerService.log('warn', `Account banned: ${accountId}`);
         return true;
     }
 
@@ -299,7 +299,7 @@ class JsonDatabase {
             account.lockedUntil = new Date(Date.now() + lockoutDuration).toISOString();
             account.lockoutCount = lockoutCount + 1;
 
-            LoggerService.log('warning', `Account locked due to failed attempts: ${accountId} for ${lockoutDuration / 1000}s`);
+            LoggerService.log('warn', `Account locked due to failed attempts: ${accountId} for ${lockoutDuration / 1000}s`);
         }
 
         await this.saveClients(clients);
@@ -450,7 +450,10 @@ class JsonDatabase {
                     let content = fs.readFileSync(filePath, 'utf8');
                     const originalContent = content;
 
+                    const now = new Date().toISOString();
                     content = content.replace(/"accountId"\s*:\s*"Neodyme"/g, `"accountId": "${accountId}"`);
+                    content = content.replace(/"created"\s*:\s*"0001-01-01T00:00:00\.000Z"/g, `"created": "${now}"`);
+                    content = content.replace(/"updated"\s*:\s*"0001-01-01T00:00:00\.000Z"/g, `"updated": "${now}"`);
 
                     if (content !== originalContent) {
                         this.atomicWriteFile(filePath, content);
@@ -469,7 +472,8 @@ class JsonDatabase {
         'dev': 2,
         'developer': 2,
         'admin': 3,
-        'owner': 4
+        'owner': 4,
+        'server': 5
     };
 
     static ROLE_NAMES = {
@@ -477,7 +481,8 @@ class JsonDatabase {
         1: 'moderator',
         2: 'developer',
         3: 'admin',
-        4: 'owner'
+        4: 'owner',
+        5: 'server'
     };
 
     static getRoleName(clientType) {
@@ -495,7 +500,7 @@ class JsonDatabase {
 
         if (!account) return false;
 
-        if (typeof clientType !== 'number' || clientType < 0 || clientType > 4) {
+        if (typeof clientType !== 'number' || clientType < 0 || clientType > 5) {
             return false;
         }
 
@@ -512,7 +517,7 @@ class JsonDatabase {
 
         const clientType = typeof role === 'number' ? role : this.getRoleLevel(role);
 
-        if (clientType < 0 || clientType > 4) {
+        if (clientType < 0 || clientType > 5) {
             return false;
         }
 
@@ -532,7 +537,7 @@ class JsonDatabase {
             account.banned = true;
             account.banReasons = reason ? [reason] : [];
             account.banExpires = null;
-            LoggerService.log('warning', `Account banned: ${accountId}${reason ? ' - ' + reason : ''}`);
+            LoggerService.log('warn', `Account banned: ${accountId}${reason ? ' - ' + reason : ''}`);
         } else {
             account.banned = false;
             delete account.banReasons;
@@ -906,30 +911,59 @@ class JsonDatabase {
             const commonCore = JSON.parse(fs.readFileSync(commonCorePath, 'utf8'));
             const purchaseHistory = commonCore.stats?.attributes?.mtx_purchase_history;
 
-            if (!purchaseHistory || !purchaseHistory.purchases) {
+            if (!purchaseHistory || !Array.isArray(purchaseHistory.purchases)) {
                 return { success: false, message: 'No purchase history found' };
             }
 
-            const purchaseIndex = purchaseHistory.purchases.findIndex(p => p.purchaseId === purchaseId);
-            if (purchaseIndex === -1) {
+            const purchase = purchaseHistory.purchases.find(p => p.purchaseId === purchaseId);
+            if (!purchase) {
                 return { success: false, message: 'Purchase not found' };
             }
 
-            const purchase = purchaseHistory.purchases[purchaseIndex];
+            if (purchase.refundDate) {
+                return { success: false, message: 'Already refunded' };
+            }
+
+            if (purchaseHistory.refundCredits === undefined) purchaseHistory.refundCredits = 3;
+            if (purchaseHistory.refundsUsed === undefined) purchaseHistory.refundsUsed = 0;
 
             if (!purchase.freeRefundEligible && purchaseHistory.refundCredits <= 0) {
                 return { success: false, message: 'No refund credits available' };
             }
 
-            commonCore.items.Currency.quantity += purchase.totalMtxPaid;
+            // Find the V-Bucks currency item dynamically
+            const currentPlatform = commonCore.stats?.attributes?.current_mtx_platform?.toLowerCase() || '';
+            let vbucksKey = null;
+            let vbucksNewBalance = 0;
+            for (const [key, item] of Object.entries(commonCore.items)) {
+                if (item.templateId?.toLowerCase().startsWith('currency:mtx')) {
+                    const platform = item.attributes?.platform?.toLowerCase() || '';
+                    if (platform === currentPlatform || platform === 'shared') {
+                        item.quantity = (item.quantity || 0) + purchase.totalMtxPaid;
+                        vbucksKey = key;
+                        vbucksNewBalance = item.quantity;
+                        break;
+                    }
+                }
+            }
 
+            // Remove granted items from athena
+            const removedItemGuids = [];
+            let athenaRvn = 0;
+            let athenaCommandRevision = 0;
             if (fs.existsSync(athenaPath)) {
                 const athena = JSON.parse(fs.readFileSync(athenaPath, 'utf8'));
                 for (const loot of purchase.lootResult || []) {
-                    delete athena.items[loot.itemGuid];
+                    if (athena.items[loot.itemGuid]) {
+                        delete athena.items[loot.itemGuid];
+                        removedItemGuids.push(loot.itemGuid);
+                    }
                 }
                 athena.rvn = (athena.rvn || 0) + 1;
+                athena.commandRevision = (athena.commandRevision || 0) + 1;
                 athena.updated = new Date().toISOString();
+                athenaRvn = athena.rvn;
+                athenaCommandRevision = athena.commandRevision;
                 this.atomicWriteFile(athenaPath, JSON.stringify(athena, null, 2));
             }
 
@@ -937,16 +971,24 @@ class JsonDatabase {
                 purchaseHistory.refundCredits--;
             }
             purchaseHistory.refundsUsed++;
-            purchaseHistory.purchases.splice(purchaseIndex, 1);
+            purchase.refundDate = new Date().toISOString();
 
             commonCore.rvn = (commonCore.rvn || 0) + 1;
+            commonCore.commandRevision = (commonCore.commandRevision || 0) + 1;
             commonCore.updated = new Date().toISOString();
             this.atomicWriteFile(commonCorePath, JSON.stringify(commonCore, null, 2));
 
             return {
                 success: true,
                 refundAmount: purchase.totalMtxPaid,
-                newBalance: commonCore.items.Currency.quantity
+                vbucksKey,
+                vbucksNewBalance,
+                removedItemGuids,
+                updatedPurchaseHistory: purchaseHistory,
+                athenaRvn,
+                athenaCommandRevision,
+                commonCoreRvn: commonCore.rvn,
+                commonCoreCommandRevision: commonCore.commandRevision
             };
 
         } catch (error) {
@@ -1048,8 +1090,48 @@ class JsonDatabase {
         return true;
     }
 
-    static generateItemId() {
+    static generateItemId(templateId) {
+        if (templateId && typeof templateId === 'string') return templateId;
         return uuidv4().replace(/-/g, '');
+    }
+
+    static async deleteAccount(accountId) {
+        const clients = await this.getClients();
+        const index = clients.findIndex(c => c.accountId === accountId);
+        if (index === -1) return false;
+        clients.splice(index, 1);
+        await this.saveClients(clients);
+
+        const playerDir = path.join(this.playersPath, accountId);
+        if (fs.existsSync(playerDir)) {
+            fs.rmSync(playerDir, { recursive: true, force: true });
+        }
+        return true;
+    }
+
+    static async resetAccount(accountId) {
+        const clients = await this.getClients();
+        const account = clients.find(c => c.accountId === accountId);
+        if (!account) return false;
+
+        const playerDir = path.join(this.playersPath, accountId);
+        if (fs.existsSync(playerDir)) {
+            fs.rmSync(playerDir, { recursive: true, force: true });
+        }
+        fs.mkdirSync(playerDir, { recursive: true });
+
+        const templatePath = path.join(__dirname, '../../template');
+        try {
+            if (fs.existsSync(templatePath)) {
+                fs.cpSync(templatePath, playerDir, { recursive: true });
+                this.replaceAccountIdInJsonFiles(playerDir, accountId);
+                LoggerService.log('success', `Template files regenerated for ${accountId}`);
+            }
+        } catch (error) {
+            LoggerService.log('error', `Failed to copy template files: ${error.message}`);
+        }
+
+        return true;
     }
 
     static async getFriends(accountId) {
@@ -1148,6 +1230,13 @@ class JsonDatabase {
             friends.blocklist.push(friendAccountId);
         }
 
+        await this.saveFriends(accountId, friends);
+        return true;
+    }
+
+    static async unblockFriend(accountId, friendAccountId) {
+        const friends = await this.getFriends(accountId);
+        friends.blocklist = friends.blocklist.filter(id => id !== friendAccountId);
         await this.saveFriends(accountId, friends);
         return true;
     }
@@ -1291,7 +1380,7 @@ class JsonDatabase {
     }
 
     static async getAthenaProfile(accountId, profileId) {
-        const profilePath = path.join(this.playersPath, accountId, 'Athena', `${profileId}.json`);
+        const profilePath = path.join(this.playersPath, accountId, 'athena', `${profileId}.json`);
         if (!fs.existsSync(profilePath)) {
             return null;
         }
@@ -1301,7 +1390,7 @@ class JsonDatabase {
     }
 
     static async saveAthenaProfile(accountId, profileId, profileData) {
-        const athenaPath = path.join(this.playersPath, accountId, 'Athena', `${profileId}.json`);
+        const athenaPath = path.join(this.playersPath, accountId, 'athena', `${profileId}.json`);
         if (!fs.existsSync(path.dirname(athenaPath))) {
             fs.mkdirSync(path.dirname(athenaPath), { recursive: true });
         }
@@ -1453,6 +1542,55 @@ class JsonDatabase {
         Object.assign(data.requests[requestId], updates);
         await this.saveCreatorCodesData(data);
         return data.requests[requestId];
+    }
+
+    static reportsFile = path.join(this.dataPath, 'reports.json');
+
+    static async getReportsData() {
+        if (!fs.existsSync(this.reportsFile)) {
+            return { reports: {}, lastUpdated: new Date().toISOString() };
+        }
+        const data = await this.safeReadFile(this.reportsFile);
+        const parsed = JSON.parse(data);
+        return { reports: parsed.reports || {}, lastUpdated: parsed.lastUpdated || new Date().toISOString() };
+    }
+
+    static async saveReportsData(reportsData) {
+        reportsData.lastUpdated = new Date().toISOString();
+        await this.safeWriteFile(this.reportsFile, JSON.stringify(reportsData, null, 2));
+    }
+
+    static async getReport(reportId) {
+        const data = await this.getReportsData();
+        return data.reports[reportId] || null;
+    }
+
+    static async createReport(report) {
+        const data = await this.getReportsData();
+        data.reports[report.reportId] = report;
+        await this.saveReportsData(data);
+        return report;
+    }
+
+    static async deleteReport(reportId) {
+        const data = await this.getReportsData();
+        if (!data.reports[reportId]) return false;
+        delete data.reports[reportId];
+        await this.saveReportsData(data);
+        return true;
+    }
+
+    static async getReportsByTarget(reportedAccountId) {
+        const data = await this.getReportsData();
+        return Object.values(data.reports)
+            .filter(r => r.reportedAccountId === reportedAccountId)
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    static async getAllReports() {
+        const data = await this.getReportsData();
+        return Object.values(data.reports)
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
 }
 

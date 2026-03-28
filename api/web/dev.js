@@ -198,7 +198,7 @@ router.get('/api/dev/config/files/:fileName', verifyToken, requireDeveloper, asy
     try {
         const { fileName } = req.params;
 
-        const allowedFiles = ['experience.json', 'game-servers.json', 'shop.json', 'motd.json'];
+        const allowedFiles = ['experience.json', 'game-servers.json', 'shop.json', 'motd.json', 'playlists.json'];
         if (!allowedFiles.includes(fileName)) {
             return res.status(403).json({ success: false, error: 'Access to this file is not allowed' });
         }
@@ -221,7 +221,7 @@ router.put('/api/dev/config/files/:fileName', verifyToken, requireDeveloper, csr
         const { fileName } = req.params;
         const { content } = req.body;
 
-        const allowedFiles = ['experience.json', 'game-servers.json', 'shop.json', 'motd.json'];
+        const allowedFiles = ['experience.json', 'game-servers.json', 'shop.json', 'motd.json', 'playlists.json'];
         if (!allowedFiles.includes(fileName)) {
             return res.status(403).json({ success: false, error: 'Access to this file is not allowed' });
         }
@@ -248,6 +248,63 @@ router.put('/api/dev/config/files/:fileName', verifyToken, requireDeveloper, csr
         res.json({ success: true, message: `${fileName} updated successfully` });
     } catch (error) {
         LoggerService.log('error', `Update config file error: ${error.message}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+// INI file endpoints (cloud storage system files - plain text)
+const ALLOWED_INI_FILES = ['DefaultGame.ini', 'DefaultRuntimeOptions.ini'];
+
+router.get('/api/dev/ini-files/:fileName', verifyToken, requireDeveloper, async (req, res) => {
+    try {
+        const { fileName } = req.params;
+        if (!ALLOWED_INI_FILES.includes(fileName)) {
+            return res.status(403).json({ success: false, error: 'Access to this file is not allowed' });
+        }
+
+        const filePath = path.join(__dirname, '../../data/cloudstorage/system', fileName);
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({ success: false, error: 'File not found' });
+        }
+
+        const content = fs.readFileSync(filePath, 'utf8');
+        res.json({ success: true, fileName, content });
+    } catch (error) {
+        LoggerService.log('error', `Get ini file error: ${error.message}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.put('/api/dev/ini-files/:fileName', verifyToken, requireDeveloper, csrfProtection, async (req, res) => {
+    try {
+        const { fileName } = req.params;
+        const { content } = req.body;
+
+        if (!ALLOWED_INI_FILES.includes(fileName)) {
+            return res.status(403).json({ success: false, error: 'Access to this file is not allowed' });
+        }
+
+        if (typeof content !== 'string') {
+            return res.status(400).json({ success: false, error: 'Content must be a string' });
+        }
+
+        const filePath = path.join(__dirname, '../../data/cloudstorage/system', fileName);
+        const tempPath = filePath + '.tmp';
+
+        fs.writeFileSync(tempPath, content, 'utf8');
+        fs.renameSync(tempPath, filePath);
+
+        await AuditService.logConfigFileChange(
+            req.user.accountId,
+            req.user.displayName,
+            fileName,
+            req.ip
+        );
+
+        LoggerService.log('info', `INI file ${fileName} updated by ${req.user.displayName}`);
+        res.json({ success: true, message: `${fileName} updated successfully` });
+    } catch (error) {
+        LoggerService.log('error', `Update ini file error: ${error.message}`);
         sendError(res, Errors.Internal.serverError());
     }
 });

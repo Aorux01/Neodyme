@@ -445,6 +445,26 @@ router.post('/api/admin/plugins/:pluginName/reload', verifyToken, requireDevelop
     }
 });
 
+router.get('/api/admin/xmpp-clients', verifyToken, requireDeveloper, async (req, res) => {
+    try {
+        const XMPPManager = require('../../src/manager/xmpp-manager');
+        const clients = XMPPManager.clients.map(c => ({
+            accountId: c.accountId,
+            displayName: c.displayName,
+            jid: c.jid,
+            away: c.lastPresenceUpdate.away,
+            joinedMUCs: c.joinedMUCs || []
+        }));
+        const mucs = Object.entries(XMPPManager.mucs).map(([name, muc]) => ({
+            name,
+            members: muc.members.length
+        }));
+        res.json({ success: true, count: clients.length, clients, mucs });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 router.post('/api/admin/command', verifyToken, requireModerator, csrfProtection, async (req, res) => {
     try {
         const { command } = req.body;
@@ -468,6 +488,27 @@ router.post('/api/admin/command', verifyToken, requireModerator, csrfProtection,
         return res.json(result);
     } catch (error) {
         LoggerService.log('error', `Admin command failed: ${error.message}`);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+router.post('/api/admin/shop/rotate-date', verifyToken, requireAdmin, csrfProtection, async (req, res) => {
+    try {
+        const { date, categoryKey } = req.body;
+
+        if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+            return res.status(400).json({ success: false, error: 'date must be in YYYY-MM-DD format' });
+        }
+
+        const ShopManager = require('../../src/manager/shop-manager');
+        await ShopManager.rotateToDate(date, categoryKey || null);
+
+        const scope = categoryKey ? `category "${categoryKey}"` : 'all categories';
+        LoggerService.log('info', `[Admin] Date rotation to ${date} (${scope}) triggered by ${req.user.displayName}`);
+
+        res.json({ success: true, message: `Shop rotated to cosmetics from ${date}` });
+    } catch (error) {
+        LoggerService.log('error', `Admin date rotation failed: ${error.message}`);
         res.status(500).json({ success: false, error: error.message });
     }
 });

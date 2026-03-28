@@ -41,19 +41,31 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/SetCosmeticLockerSl
                     const newVariants = [{ variants: [] }];
 
                     if (profileId === "athena") {
+                        // itemToSlot may be a templateId or a UUID key - resolve to whichever exists
+                        let resolvedItemId = itemToSlot;
                         if (!profile.items[itemToSlot]) {
+                            const lowerTarget = itemToSlot.toLowerCase();
+                            for (const [id, item] of Object.entries(profile.items)) {
+                                if (item.templateId?.toLowerCase() === lowerTarget) {
+                                    resolvedItemId = id;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!profile.items[resolvedItemId]) {
                             const err = Errors.MCP.itemNotFound();
                             return res.status(err.statusCode).json(err.toJSON());
                         }
 
-                        if (!profile.items[itemToSlot].attributes.variants) {
-                            profile.items[itemToSlot].attributes.variants = [];
+                        if (!profile.items[resolvedItemId].attributes.variants) {
+                            profile.items[resolvedItemId].attributes.variants = [];
                         }
 
                         for (const variantUpdate of variantUpdates) {
                             let found = false;
-                            
-                            for (const variant of profile.items[itemToSlot].attributes.variants) {
+
+                            for (const variant of profile.items[resolvedItemId].attributes.variants) {
                                 if (variantUpdate.channel === variant.channel) {
                                     variant.active = variantUpdate.active;
                                     found = true;
@@ -62,19 +74,19 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/SetCosmeticLockerSl
                             }
 
                             if (!found) {
-                                profile.items[itemToSlot].attributes.variants.push(variantUpdate);
+                                profile.items[resolvedItemId].attributes.variants.push(variantUpdate);
                             }
                         }
 
-                        await DatabaseManager.updateItemInProfile(accountId, profileId, itemToSlot, {
-                            'attributes.variants': profile.items[itemToSlot].attributes.variants
+                        await DatabaseManager.updateItemInProfile(accountId, profileId, resolvedItemId, {
+                            'attributes.variants': profile.items[resolvedItemId].attributes.variants
                         });
 
                         changes.push({
                             changeType: 'itemAttrChanged',
-                            itemId: itemToSlot,
+                            itemId: resolvedItemId,
                             attributeName: 'variants',
-                            attributeValue: profile.items[itemToSlot].attributes.variants
+                            attributeValue: profile.items[resolvedItemId].attributes.variants
                         });
                     }
 

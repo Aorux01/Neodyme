@@ -38,7 +38,7 @@ class MongoDatabase {
         });
 
         mongoose.connection.on('disconnected', () => {
-            LoggerService.log('warning', 'MongoDB disconnected');
+            LoggerService.log('warn', 'MongoDB disconnected');
         });
 
         if (!fs.existsSync(this.dataPath)) {
@@ -60,7 +60,8 @@ class MongoDatabase {
         return 'purchase_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     }
 
-    static generateItemId() {
+    static generateItemId(templateId) {
+        if (templateId && typeof templateId === 'string') return templateId;
         return uuidv4().replace(/-/g, '');
     }
 
@@ -263,8 +264,11 @@ class MongoDatabase {
             const filePath = path.join(templatePath, `${profileName}.json`);
             if (fs.existsSync(filePath)) {
                 let content = fs.readFileSync(filePath, 'utf8');
+                const now = new Date().toISOString();
                 content = content.replace(/"accountId"\s*:\s*"Neodyme"/g, `"accountId": "${accountId}"`);
                 content = content.replace(/"_id"\s*:\s*"Neodyme"/g, `"_id": "${accountId}"`);
+                content = content.replace(/"created"\s*:\s*"0001-01-01T00:00:00\.000Z"/g, `"created": "${now}"`);
+                content = content.replace(/"updated"\s*:\s*"0001-01-01T00:00:00\.000Z"/g, `"updated": "${now}"`);
                 profiles[profileName] = JSON.parse(content);
             }
         }
@@ -378,7 +382,7 @@ class MongoDatabase {
 
         if (result.matchedCount === 0) return false;
 
-        LoggerService.log('warning', `Account banned: ${accountId}`);
+        LoggerService.log('warn', `Account banned: ${accountId}`);
         return true;
     }
 
@@ -445,7 +449,7 @@ class MongoDatabase {
             updates.lockoutUntil = new Date(Date.now() + lockoutDuration);
             updates.lockoutCount = lockoutCount + 1;
 
-            LoggerService.log('warning', `Account locked due to failed attempts: ${accountId} for ${lockoutDuration / 1000}s`);
+            LoggerService.log('warn', `Account locked due to failed attempts: ${accountId} for ${lockoutDuration / 1000}s`);
         }
 
         await User.updateOne({ accountId }, { $set: updates });
@@ -497,7 +501,7 @@ class MongoDatabase {
     }
 
     static async setClientType(accountId, clientType) {
-        if (typeof clientType !== 'number' || clientType < 0 || clientType > 4) {
+        if (typeof clientType !== 'number' || clientType < 0 || clientType > 5) {
             return false;
         }
 
@@ -511,7 +515,7 @@ class MongoDatabase {
     static async updateAccountRole(accountId, role) {
         const clientType = typeof role === 'number' ? role : this.getRoleLevel(role);
 
-        if (clientType < 0 || clientType > 4) {
+        if (clientType < 0 || clientType > 5) {
             return false;
         }
 
@@ -835,30 +839,59 @@ class MongoDatabase {
 
             const purchaseHistory = commonCore.stats?.attributes?.mtx_purchase_history;
 
-            if (!purchaseHistory || !purchaseHistory.purchases) {
+            if (!purchaseHistory || !Array.isArray(purchaseHistory.purchases)) {
                 return { success: false, message: 'No purchase history found' };
             }
 
-            const purchaseIndex = purchaseHistory.purchases.findIndex(p => p.purchaseId === purchaseId);
-            if (purchaseIndex === -1) {
+            const purchase = purchaseHistory.purchases.find(p => p.purchaseId === purchaseId);
+            if (!purchase) {
                 return { success: false, message: 'Purchase not found' };
             }
 
-            const purchase = purchaseHistory.purchases[purchaseIndex];
+            if (purchase.refundDate) {
+                return { success: false, message: 'Already refunded' };
+            }
+
+            if (purchaseHistory.refundCredits === undefined) purchaseHistory.refundCredits = 3;
+            if (purchaseHistory.refundsUsed === undefined) purchaseHistory.refundsUsed = 0;
 
             if (!purchase.freeRefundEligible && purchaseHistory.refundCredits <= 0) {
                 return { success: false, message: 'No refund credits available' };
             }
 
-            commonCore.items.Currency.quantity += purchase.totalMtxPaid;
+            // Find the V-Bucks currency item dynamically
+            const currentPlatform = commonCore.stats?.attributes?.current_mtx_platform?.toLowerCase() || '';
+            let vbucksKey = null;
+            let vbucksNewBalance = 0;
+            for (const [key, item] of Object.entries(commonCore.items)) {
+                if (item.templateId?.toLowerCase().startsWith('currency:mtx')) {
+                    const platform = item.attributes?.platform?.toLowerCase() || '';
+                    if (platform === currentPlatform || platform === 'shared') {
+                        item.quantity = (item.quantity || 0) + purchase.totalMtxPaid;
+                        vbucksKey = key;
+                        vbucksNewBalance = item.quantity;
+                        break;
+                    }
+                }
+            }
 
+            // Remove granted items from athena
+            const removedItemGuids = [];
+            let athenaRvn = 0;
+            let athenaCommandRevision = 0;
             const athena = await this.getProfile(accountId, 'athena');
             if (athena) {
                 for (const loot of purchase.lootResult || []) {
-                    delete athena.items[loot.itemGuid];
+                    if (athena.items[loot.itemGuid]) {
+                        delete athena.items[loot.itemGuid];
+                        removedItemGuids.push(loot.itemGuid);
+                    }
                 }
                 athena.rvn = (athena.rvn || 0) + 1;
+                athena.commandRevision = (athena.commandRevision || 0) + 1;
                 athena.updated = new Date().toISOString();
+                athenaRvn = athena.rvn;
+                athenaCommandRevision = athena.commandRevision;
                 await this.saveProfile(accountId, 'athena', athena);
             }
 
@@ -866,16 +899,24 @@ class MongoDatabase {
                 purchaseHistory.refundCredits--;
             }
             purchaseHistory.refundsUsed++;
-            purchaseHistory.purchases.splice(purchaseIndex, 1);
+            purchase.refundDate = new Date().toISOString();
 
             commonCore.rvn = (commonCore.rvn || 0) + 1;
+            commonCore.commandRevision = (commonCore.commandRevision || 0) + 1;
             commonCore.updated = new Date().toISOString();
             await this.saveProfile(accountId, 'common_core', commonCore);
 
             return {
                 success: true,
                 refundAmount: purchase.totalMtxPaid,
-                newBalance: commonCore.items.Currency.quantity
+                vbucksKey,
+                vbucksNewBalance,
+                removedItemGuids,
+                updatedPurchaseHistory: purchaseHistory,
+                athenaRvn,
+                athenaCommandRevision,
+                commonCoreRvn: commonCore.rvn,
+                commonCoreCommandRevision: commonCore.commandRevision
             };
 
         } catch (error) {
@@ -950,6 +991,33 @@ class MongoDatabase {
         return friends.friends.find(f => f.accountId === friendAccountId) || null;
     }
 
+    static async deleteAccount(accountId) {
+        const user = await User.findOne({ accountId });
+        if (!user) return false;
+        await User.deleteOne({ accountId });
+        await Profile.deleteOne({ accountId });
+        await Friends.deleteOne({ accountId });
+        await CloudStorage.deleteMany({ accountId });
+        const playerDir = path.join(this.playersPath, accountId);
+        if (fs.existsSync(playerDir)) {
+            fs.rmSync(playerDir, { recursive: true, force: true });
+        }
+        return true;
+    }
+
+    static async resetAccount(accountId) {
+        const user = await User.findOne({ accountId });
+        if (!user) return false;
+        const profiles = await this.generateDefaultProfiles(accountId);
+        await Profile.findOneAndUpdate({ accountId }, { profiles }, { upsert: true });
+        await Friends.findOneAndUpdate(
+            { accountId },
+            { $set: { list: { accepted: [], incoming: [], outgoing: [], blocked: [] } } },
+            { upsert: true }
+        );
+        return true;
+    }
+
     static async removeFriend(accountId, friendAccountId) {
         const friends = await this.getFriends(accountId);
 
@@ -972,6 +1040,13 @@ class MongoDatabase {
             friends.blocklist.push(friendAccountId);
         }
 
+        await this.saveFriends(accountId, friends);
+        return true;
+    }
+
+    static async unblockFriend(accountId, friendAccountId) {
+        const friends = await this.getFriends(accountId);
+        friends.blocklist = friends.blocklist.filter(id => id !== friendAccountId);
         await this.saveFriends(accountId, friends);
         return true;
     }
@@ -1127,7 +1202,7 @@ class MongoDatabase {
     }
 
     static getClientsSync() {
-        //LoggerService.log('warning', 'getClientsSync called - use async getAllAccounts instead');
+        //LoggerService.log('warn', 'getClientsSync called - use async getAllAccounts instead');
         return [];
     }
 
@@ -1138,11 +1213,11 @@ class MongoDatabase {
     static async saveClients(clients) {
         // This doesn't make sense for MongoDB
         // Each client should be updated individually
-        //LoggerService.log('warning', 'saveClients called - this is a no-op for MongoDB');
+        //LoggerService.log('warn', 'saveClients called - this is a no-op for MongoDB');
     }
 
     static saveClientsSync(clients) {
-        //LoggerService.log('warning', 'saveClientsSync called - this is a no-op for MongoDB');
+        //LoggerService.log('warn', 'saveClientsSync called - this is a no-op for MongoDB');
     }
 
     static AuditLogModel = null;
@@ -1296,6 +1371,42 @@ class MongoDatabase {
             { new: true }
         ).lean();
         return result;
+    }
+
+    static ReportModel = null;
+
+    static getReportModel() {
+        if (!this.ReportModel) {
+            this.ReportModel = require('./mongodb/reports');
+        }
+        return this.ReportModel;
+    }
+
+    static async getReport(reportId) {
+        const Report = this.getReportModel();
+        return await Report.findOne({ reportId }).lean();
+    }
+
+    static async createReport(report) {
+        const Report = this.getReportModel();
+        await Report.create(report);
+        return report;
+    }
+
+    static async deleteReport(reportId) {
+        const Report = this.getReportModel();
+        const result = await Report.deleteOne({ reportId });
+        return result.deletedCount > 0;
+    }
+
+    static async getReportsByTarget(reportedAccountId) {
+        const Report = this.getReportModel();
+        return await Report.find({ reportedAccountId }).sort({ createdAt: -1 }).lean();
+    }
+
+    static async getAllReports() {
+        const Report = this.getReportModel();
+        return await Report.find({}).sort({ createdAt: -1 }).lean();
     }
 }
 

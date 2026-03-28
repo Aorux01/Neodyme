@@ -144,6 +144,10 @@ function register(CM) {
             LoggerService.log('error', `Failed to unlock account: ${error.message}`);
         }
     });
+
+    CM.register('/web', async (args) => {
+        LoggerService.log('info', `Web interface is available at: ${colors.cyan('http://localhost:' + ConfigManager.get('port'))}`);
+    });
 }
 
 module.exports = { register };

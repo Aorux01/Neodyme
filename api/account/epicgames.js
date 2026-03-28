@@ -43,7 +43,7 @@ router.get('/epic/id/v2/sdk/accounts', async (req, res) => {
 
     if (displayName === accountId) {
         try {
-            const user = DatabaseManager.getUser(accountId);
+            const user = await DatabaseManager.getAccount(accountId);
             if (user && user.displayName) {
                 displayName = user.displayName;
             }

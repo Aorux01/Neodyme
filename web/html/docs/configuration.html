@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration - Neodyme Docs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+    <style>
+        .config-table { width: 100%; border-collapse: collapse; margin: 1rem 0 2rem 0; font-size: 0.92rem; }
+        .config-table th { background: var(--surface2, #1e1e2e); color: var(--text, #cdd6f4); padding: 10px 14px; text-align: left; font-weight: 600; }
+        .config-table td { padding: 9px 14px; border-bottom: 1px solid var(--border, #313244); vertical-align: top; }
+        .config-table tr:last-child td { border-bottom: none; }
+        .config-table code { background: var(--surface2, #1e1e2e); padding: 2px 6px; border-radius: 4px; font-size: 0.88rem; }
+        .config-table td:first-child code { color: var(--accent, #cba6f7); }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; margin-left: 6px; }
+        .badge-yes { background: #a6e3a1; color: #1e1e2e; }
+        .badge-no { background: #f38ba8; color: #1e1e2e; }
+        .badge-partial { background: #f9e2af; color: #1e1e2e; }
+        .section-anchor { scroll-margin-top: 80px; }
+        .callout { background: var(--surface2, #1e1e2e); border-left: 4px solid var(--accent, #cba6f7); padding: 12px 18px; border-radius: 0 8px 8px 0; margin: 1rem 0; font-size: 0.93rem; }
+        .callout.info { border-color: #89b4fa; }
+        .callout.warning { border-color: #f9e2af; }
+        .callout.tip { border-color: #a6e3a1; }
+        .toc { background: var(--surface2, #1e1e2e); border-radius: 10px; padding: 18px 24px; margin-bottom: 2rem; }
+        .toc h3 { margin: 0 0 12px 0; font-size: 1rem; color: var(--text-muted, #a6adc8); text-transform: uppercase; letter-spacing: .06em; }
+        .toc ul { list-style: none; padding: 0; margin: 0; columns: 2; }
+        .toc li { margin-bottom: 6px; }
+        .toc a { color: var(--accent, #cba6f7); text-decoration: none; font-size: 0.92rem; }
+        .toc a:hover { text-decoration: underline; }
+        .backend-table th:nth-child(2), .backend-table td:nth-child(2) { color: #cba6f7; }
+        h2 { margin-top: 2.5rem; }
+        h3 { margin-top: 1.8rem; color: var(--text-muted, #a6adc8); }
+    </style>
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="../status.html">STATUS</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="configuration.html" class="docs-nav-link active"><i class="fas fa-sliders-h"></i> Configuration</a>
+                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+
+        <main class="docs-content">
+            <h1>Configuration Reference</h1>
+            <p>Neodyme configuration is spread across <code>server.properties</code> (server behaviour) and several JSON files in <code>config/</code>: <code>shop.json</code>, <code>playlists.json</code>, <code>experience.json</code>, <code>game-servers.json</code>, and <code>motd.json</code>. Cloud storage INI files (<code>DefaultGame.ini</code>, <code>DefaultRuntimeOptions.ini</code>) are documented on the <a href="game-files.html">Game Files</a> page. No restart is required for shop changes when using <code>/shop rotate force</code>; most <code>server.properties</code> changes require a restart.</p>
+
+            <div class="toc">
+                <h3>On this page</h3>
+                <ul>
+                    <li><a href="#server-properties">server.properties</a></li>
+                    <li><a href="#core">1. Core</a></li>
+                    <li><a href="#debug">2. Debug &amp; Logging</a></li>
+                    <li><a href="#features">3. Features &amp; Plugins</a></li>
+                    <li><a href="#xmpp">4. XMPP Chat</a></li>
+                    <li><a href="#vivox">5. Voice Chat (Vivox)</a></li>
+                    <li><a href="#database">6. Database</a></li>
+                    <li><a href="#redis">7. Redis Cache</a></li>
+                    <li><a href="#security">8. Security</a></li>
+                    <li><a href="#ratelimit">9–11. Rate Limiting</a></li>
+                    <li><a href="#auth">12–14. Auth &amp; Tokens</a></li>
+                    <li><a href="#creator">15. Creator Codes</a></li>
+                    <li><a href="#webui">16. Web Interface</a></li>
+                    <li><a href="#events">17. Game Events</a></li>
+                    <li><a href="#defaults">18. Profile Defaults</a></li>
+                    <li><a href="#gameserver">19. Game Server</a></li>
+                    <li><a href="#maintenance">20. Maintenance</a></li>
+                    <li><a href="#ssl">21. SSL / HTTPS</a></li>
+                    <li><a href="#shop-json">config/shop.json</a></li>
+                    <li><a href="#backendvalue">shopMaxSeason reference</a></li>
+                    <li><a href="#feature-status">Feature status</a></li>
+                </ul>
+            </div>
+
+            <h2 id="server-properties" class="section-anchor">server.properties</h2>
+            <p>Located at the root of the server directory. One <code>key=value</code> pair per line. Lines starting with <code>#</code> are comments.</p>
+
+            <h3 id="core" class="section-anchor">[1] Core Server Settings</h3>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>port</code></td><td><code>3551</code></td><td>TCP port the HTTP server listens on.</td></tr>
+                <tr><td><code>version</code></td><td><code>1.2.5</code></td><td>Backend version string exposed via API.</td></tr>
+                <tr><td><code>apiVersion</code></td><td><code>1.7</code></td><td>API version string exposed via API.</td></tr>
+                <tr><td><code>customVersion</code></td><td><code>true</code></td><td>When <code>true</code>, any Fortnite client version can connect and <code>shopMaxSeason</code> from <code>shop.json</code> controls the shop era. When <code>false</code>, only clients matching <code>fnVersion</code> can connect and the shop era is derived from <code>fnVersion</code> automatically.</td></tr>
+                <tr><td><code>fnVersion</code></td><td><code>3.50</code></td><td>Specific Fortnite version allowed when <code>customVersion=false</code>. Also used to derive the shop era when <code>customVersion=false</code> (major component = season number).</td></tr>
+            </table>
+
+            <h3 id="debug" class="section-anchor">[2] Debug &amp; Logging Settings</h3>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>globalDebug</code></td><td><code>true</code></td><td>Master switch for all debug output. Set to <code>false</code> in production to silence verbose logs.</td></tr>
+                <tr><td><code>debug</code></td><td><code>true</code></td><td>Detailed debug output for incoming requests (route + params).</td></tr>
+                <tr><td><code>debugRequests</code></td><td><code>false</code></td><td>Log the full body of every incoming request.</td></tr>
+                <tr><td><code>debugResponses</code></td><td><code>false</code></td><td>Log the full body of every server response.</td></tr>
+                <tr><td><code>debugIps</code></td><td><code>false</code></td><td>Include client IP addresses in debug output.</td></tr>
+            </table>
+
+            <h3 id="features" class="section-anchor">[3] Features &amp; Plugins</h3>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>plugins</code></td><td><code>true</code></td><td>Enable the plugin system. Plugins are loaded from the <code>plugins/</code> directory at startup.</td></tr>
+                <tr><td><code>autoShopRotation</code></td><td><code>true</code></td><td>Automatically rotate the shop at the time defined by <code>shopRotationTime</code> in <code>config/shop.json</code>. See <a href="#shop-json">shop.json</a> for full details.</td></tr>
+            </table>
+
+            <h3 id="xmpp" class="section-anchor">[4] XMPP Chat Server</h3>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>xmppEnable</code></td><td><code>true</code></td><td>Enable the built-in XMPP WebSocket server for in-game chat and presence.</td></tr>
+                <tr><td><code>xmppPort</code></td><td><code>80</code></td><td>Port for the XMPP WebSocket server. Must match the port the game client connects to (often port 80).</td></tr>
+                <tr><td><code>xmppHost</code></td><td><code>127.0.0.1</code></td><td>Host address sent to Fortnite clients via <code>DefaultEngine.ini</code>. <strong>Set to your LAN/public IP</strong> so clients on other machines can connect to XMPP. Restart required.</td></tr>
+                <tr><td><code>xmppDomain</code></td><td><code>prod.ol.epicgames.com</code></td><td>XMPP JID domain. Should not need to be changed unless you're running a custom DNS setup.</td></tr>
+            </table>
+
+            <h3 id="vivox" class="section-anchor">[5] Voice Chat (Vivox)</h3>
+            <div class="callout info">Voice chat requires a Vivox HMAC key issued by Epic Games. This feature is available for educational/research purposes. Without a valid key, tokens generated will not authenticate with Vivox servers.</div>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>vivoxKey</code></td><td><em>(example key)</em></td><td>HMAC-SHA256 signing key for Vivox JWT generation.</td></tr>
+                <tr><td><code>vivoxDomain</code></td><td><code>mtu1xp.vivox.com</code></td><td>Vivox server domain.</td></tr>
+                <tr><td><code>vivoxTokenTtl</code></td><td><code>7200</code></td><td>Vivox token validity in seconds (default 2 hours).</td></tr>
+            </table>
+
+            <h3 id="database" class="section-anchor">[6] Database Configuration</h3>
+            <div class="callout tip">The default <code>json</code> backend requires zero setup - data is stored as plain JSON files under <code>data/</code>. Switch to <code>mongodb</code> for production deployments with multiple concurrent users.</div>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>databaseType</code></td><td><code>json</code></td><td>Storage backend. Supported: <code>json</code>, <code>mongodb</code>. (SQLite, MySQL, PostgreSQL are planned but not yet implemented.)</td></tr>
+                <tr><td><code>databasePath</code></td><td><code>data/</code></td><td>For <code>json</code>: directory for player data files. For <code>mongodb</code>: full connection URI, e.g. <code>mongodb://localhost:27017/neodyme</code>.</td></tr>
+                <tr><td><code>databaseLogging</code></td><td><code>false</code></td><td>Log every database read/write operation to the console.</td></tr>
+                <tr><td><code>databaseBackup</code></td><td><code>true</code></td><td>Enable automatic backups (<code>json</code> only). Backups are placed in <code>data/backups/</code>.</td></tr>
+                <tr><td><code>databaseBackupInterval</code></td><td><code>60</code></td><td>Backup interval in minutes.</td></tr>
+                <tr><td><code>databaseBackupExpiryDays</code></td><td><code>7</code></td><td>Auto-delete backups older than this many days. Set to <code>0</code> to keep all backups.</td></tr>
+                <tr><td><code>performInitialBackup</code></td><td><code>false</code></td><td>Create an immediate backup when the server starts.</td></tr>
+                <tr><td><code>getJsonSpacing</code></td><td><code>true</code></td><td>Pretty-print JSON data files with 2-space indentation (easier to inspect manually).</td></tr>
+                <tr><td><code>sqliteJournalMode</code></td><td><code>WAL</code></td><td>SQLite journal mode (reserved for future use).</td></tr>
+            </table>
+
+            <h3 id="redis" class="section-anchor">[7] Redis Cache</h3>
+            <div class="callout info">Redis is optional. When disabled, tokens and profiles are handled in-process. Enable Redis when running multiple server processes behind a load balancer.</div>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>redisEnabled</code></td><td><code>false</code></td><td>Enable Redis caching (requires <code>npm install ioredis</code>).</td></tr>
+                <tr><td><code>redisHost</code></td><td><code>127.0.0.1</code></td><td>Redis server hostname.</td></tr>
+                <tr><td><code>redisPort</code></td><td><code>6379</code></td><td>Redis server port.</td></tr>
+                <tr><td><code>redisPassword</code></td><td><em>empty</em></td><td>Redis password. Leave empty if no authentication is set.</td></tr>
+            </table>
+
+            <h3 id="security" class="section-anchor">[8] Security &amp; Protection</h3>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>rateLimiting</code></td><td><code>true</code></td><td>Enable IP-based rate limiting across all API endpoints.</td></tr>
+                <tr><td><code>corsEnable</code></td><td><code>true</code></td><td>Enable CORS headers for cross-origin requests.</td></tr>
+                <tr><td><code>compressionEnable</code></td><td><code>true</code></td><td>Enable HTTP response compression (gzip/deflate).</td></tr>
+                <tr><td><code>helmetEnable</code></td><td><code>true</code></td><td>Add secure HTTP headers via Helmet.js.</td></tr>
+                <tr><td><code>trustProxy</code></td><td><code>true</code></td><td>Trust <code>X-Forwarded-For</code> headers. Enable when behind nginx, Cloudflare, or another reverse proxy.</td></tr>
+                <tr><td><code>secureCookies</code></td><td><code>false</code></td><td>Mark session cookies as <code>Secure</code>. Requires HTTPS (<code>protocol=https</code>).</td></tr>
+                <tr><td><code>limitBodySize</code></td><td><code>50mb</code></td><td>Maximum request body size for file uploads.</td></tr>
+                <tr><td><code>limitRequestSize</code></td><td><code>1mb</code></td><td>Maximum request size for regular API calls.</td></tr>
+            </table>
+
+            <h3 id="ratelimit" class="section-anchor">[9–11] Rate Limiting</h3>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>maxRequestsPerMinute</code></td><td><code>125</code></td><td>Global: maximum requests per IP per minute.</td></tr>
+                <tr><td><code>rateLimitWindowMinutes</code></td><td><code>1</code></td><td>Global: sliding window duration in minutes.</td></tr>
+                <tr><td><code>authMaxAttempts</code></td><td><code>5</code></td><td>Auth: max login/register attempts per IP per window.</td></tr>
+                <tr><td><code>authWindowMinutes</code></td><td><code>15</code></td><td>Auth: window duration in minutes.</td></tr>
+                <tr><td><code>authSkipSuccessfulRequests</code></td><td><code>false</code></td><td>Auth: if <code>true</code>, successful logins do not count towards the limit.</td></tr>
+                <tr><td><code>expensiveMaxRequests</code></td><td><code>10</code></td><td>Expensive ops: max requests per IP per window (e.g. shop purchases).</td></tr>
+                <tr><td><code>expensiveWindowMinutes</code></td><td><code>5</code></td><td>Expensive ops: window duration in minutes.</td></tr>
+            </table>
+
+            <h3 id="auth" class="section-anchor">[12–14] Authentication &amp; Tokens</h3>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>accessTokenExpiryHours</code></td><td><code>8</code></td><td>Game access token validity in hours.</td></tr>
+                <tr><td><code>exchangeTokenExpiryMinutes</code></td><td><code>5</code></td><td>Exchange token validity in minutes.</td></tr>
+                <tr><td><code>refreshTokenExpiryDays</code></td><td><code>30</code></td><td>Refresh token validity in days.</td></tr>
+                <tr><td><code>bcryptWorkFactor</code></td><td><code>12</code></td><td>Bcrypt salt rounds for password hashing. Values 12–14 are recommended. Higher = slower but more secure.</td></tr>
+                <tr><td><code>passwordMinLength</code></td><td><code>8</code></td><td>Minimum password length when registering a new account.</td></tr>
+                <tr><td><code>authTimingDelayMin</code></td><td><code>50</code></td><td>Minimum random delay (ms) added to auth responses to prevent timing attacks.</td></tr>
+                <tr><td><code>authTimingDelayMax</code></td><td><code>200</code></td><td>Maximum random delay (ms) added to auth responses.</td></tr>
+                <tr><td><code>tokenEncryptionEnabled</code></td><td><code>false</code></td><td>Encrypt token data at rest in JSON storage.</td></tr>
+                <tr><td><code>csrfTokenExpiryMinutes</code></td><td><code>60</code></td><td>CSRF token validity in minutes.</td></tr>
+                <tr><td><code>csrfSessionExpiryHours</code></td><td><code>24</code></td><td>CSRF session cookie expiry in hours.</td></tr>
+                <tr><td><code>csrfCleanupIntervalMinutes</code></td><td><code>60</code></td><td>How often expired CSRF tokens are purged from memory.</td></tr>
+                <tr><td><code>webAccessTokenExpiryHours</code></td><td><code>8</code></td><td>Web dashboard access token validity in hours.</td></tr>
+                <tr><td><code>webRefreshTokenExpiryDays</code></td><td><code>30</code></td><td>Web dashboard refresh token validity in days.</td></tr>
+                <tr><td><code>webTokenCleanupIntervalMinutes</code></td><td><code>60</code></td><td>How often expired web tokens are purged.</td></tr>
+            </table>
+
+            <h3 id="creator" class="section-anchor">[15] Creator Code Settings</h3>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>creatorCodeCommissionPercent</code></td><td><code>1</code></td><td>Percentage of V-Bucks purchases credited to the creator whose code was active at time of purchase. Range 0–100.</td></tr>
+            </table>
+
+            <h3 id="webui" class="section-anchor">[16] Web Interface</h3>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>webInterface</code></td><td><code>true</code></td><td>Enable the web dashboard served at <code>http://&lt;host&gt;:&lt;port&gt;</code>.</td></tr>
+            </table>
+
+            <h3 id="events" class="section-anchor">[17] Game Events</h3>
+            <div class="callout info">Events are time-gated in-game occurrences (cube movement, crack in the sky, etc.). They require compatible client versions to display correctly.</div>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>bEnableAllEvents</code></td><td><code>true</code></td><td>Master switch. Set to <code>false</code> to disable all events regardless of individual flags.</td></tr>
+                <tr><td><code>bAllSTWEventsActivated</code></td><td><code>true</code></td><td>Enable all Save the World events.</td></tr>
+                <tr><td><code>bEnableGeodeEvent</code></td><td><code>false</code></td><td>Enable the Geode event.</td></tr>
+                <tr><td><code>geodeEventStartDate</code></td><td><code>2020-01-01T00:00:00.000Z</code></td><td>ISO 8601 start time for the Geode event.</td></tr>
+                <tr><td><code>bEnableCrackInTheSky</code></td><td><code>false</code></td><td>Enable the Crack in the Sky event (Season 10).</td></tr>
+                <tr><td><code>bEnableS4OddityPrecursor</code></td><td><code>false</code></td><td>Enable the Season 4 Oddity precursor event.</td></tr>
+                <tr><td><code>bEnableS4OddityExecution</code></td><td><code>false</code></td><td>Enable the Season 4 Oddity execution event.</td></tr>
+                <tr><td><code>S4OddityEventStartDate</code></td><td><code>2020-01-01T00:00:00.000Z</code></td><td>ISO 8601 start time for Season 4 Oddity events.</td></tr>
+                <tr><td><code>S4OddityEventsInterval</code></td><td><code>0</code></td><td>Interval (seconds) between Season 4 Oddity event phases.</td></tr>
+                <tr><td><code>bEnableS5OddityPrecursor</code></td><td><code>false</code></td><td>Enable the Season 5 Oddity precursor.</td></tr>
+                <tr><td><code>S5OddityPrecursorDate</code></td><td><code>2020-01-01T00:00:00.000Z</code></td><td>ISO 8601 start date for Season 5 precursor.</td></tr>
+                <tr><td><code>bEnableS5OddityExecution</code></td><td><code>false</code></td><td>Enable the Season 5 Oddity execution event.</td></tr>
+                <tr><td><code>S5OddityExecutionDate</code></td><td><code>2020-01-01T00:00:00.000Z</code></td><td>ISO 8601 start date for Season 5 execution.</td></tr>
+                <tr><td><code>bEnableCubeLightning</code></td><td><code>false</code></td><td>Enable the Cube Lightning event (Season 6).</td></tr>
+                <tr><td><code>cubeSpawnDate</code></td><td><code>2020-01-01T00:00:00.000Z</code></td><td>ISO 8601 date for cube spawn.</td></tr>
+                <tr><td><code>bEnableBlockbusterRiskyEvent</code></td><td><code>false</code></td><td>Enable the Blockbuster Risky Reels event (Season 4).</td></tr>
+                <tr><td><code>bEnableCubeLake</code></td><td><code>false</code></td><td>Enable the Cube Lake event (Season 6).</td></tr>
+                <tr><td><code>cubeLakeDate</code></td><td><code>2020-01-01T00:00:00.000Z</code></td><td>ISO 8601 date for cube lake.</td></tr>
+            </table>
+
+            <h3 id="defaults" class="section-anchor">[18] Profile Defaults</h3>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>bGrantFoundersPacks</code></td><td><code>false</code></td><td>Automatically grant the Save the World Founder's Pack to every new player profile.</td></tr>
+                <tr><td><code>bCompletedSeasonalQuests</code></td><td><code>false</code></td><td>Mark all seasonal quests as completed for every new player profile.</td></tr>
+            </table>
+
+            <h3 id="gameserver" class="section-anchor">[19] Game Server</h3>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>gameServerHeartbeatInterval</code></td><td><code>30</code></td><td>How often (seconds) game servers send a heartbeat to the backend.</td></tr>
+                <tr><td><code>gameServerTimeout</code></td><td><code>120</code></td><td>Seconds without a heartbeat before a game server is marked offline.</td></tr>
+            </table>
+
+            <h3 id="maintenance" class="section-anchor">[20] Maintenance Mode</h3>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>maintenanceMode</code></td><td><code>false</code></td><td>When <code>true</code>, all client connections are rejected with the maintenance message.</td></tr>
+                <tr><td><code>maintenanceMessage</code></td><td><em>see file</em></td><td>Message shown to clients during maintenance.</td></tr>
+                <tr><td><code>maintenanceEstimatedDowntime</code></td><td><em>ISO date</em></td><td>Estimated end time (ISO 8601) shown to clients. Example: <code>2025-10-27T15:00:00Z</code></td></tr>
+            </table>
+
+            <h3 id="ssl" class="section-anchor">[21] SSL / HTTPS</h3>
+            <div class="callout warning">Changing <code>protocol</code> requires a full server restart. Also enable <code>secureCookies=true</code> when using HTTPS.</div>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>protocol</code></td><td><code>http</code></td><td>Server protocol: <code>http</code> or <code>https</code>.</td></tr>
+                <tr><td><code>sslCertPath</code></td><td><code>config/ssl/cert.pem</code></td><td>Path to the SSL certificate (PEM format).</td></tr>
+                <tr><td><code>sslKeyPath</code></td><td><code>config/ssl/key.pem</code></td><td>Path to the SSL private key (PEM format).</td></tr>
+            </table>
+
+            <h2 id="shop-json" class="section-anchor">config/shop.json</h2>
+            <p>Controls the automatic item shop rotation. Changes take effect immediately when you run <code>/shop rotate force</code> from the server console - no restart needed.</p>
+
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>randomShop</code></td><td><code>false</code></td><td>When <code>true</code>, the shop is generated <strong>on-the-fly per request</strong> from the fortnite-api.com cosmetics cache - <code>data/shop.json</code> is never read or written. Chapter 1/2 layout is <strong>auto-detected from the connecting client's version</strong>: Season ≤ 10 → Ch1 (4 daily + 2 featured, <code>BRDailyStorefront</code> / <code>BRWeeklyStorefront</code>) ; Season &gt; 10 → Ch2+ (counts from <code>shopCategories</code>). Cosmetics are filtered to the client's own era (<code>backendValue ≤ season</code>), so a Season 5 client only sees Season 1–5 items while a Season 14 client sees Seasons 1–14 items. The shop is seeded on <em>season + date</em> - identical for the same client reconnecting the same day, automatically different the next day. <code>isChapter1</code>, <code>shopRotationTime</code>, and the rotation scheduler are all ignored when this mode is active.</td></tr>
+                <tr><td><code>isChapter1</code></td><td><code>false</code></td><td>When <code>true</code>, forces Chapter 1 shop mode: the shop always uses exactly two fixed storefronts - <code>BRDailyStorefront</code> (4 small tiles, daily rotation) and <code>BRWeeklyStorefront</code> (2 normal tiles, weekly rotation). The <code>shopCategories</code> block is ignored in this mode. Set to <code>true</code> when hosting Chapter 1 builds (Seasons 1–10). Ignored when <code>randomShop: true</code> (Chapter detection is automatic).</td></tr>
+                <tr><td><code>shopRotationTime</code></td><td><code>"00:00"</code></td><td>Time of day (HH:MM, 24-hour) at which the daily rotation fires automatically. Requires <code>autoShopRotation=true</code> in <code>server.properties</code>. Unused when <code>randomShop: true</code>.</td></tr>
+                <tr><td><code>shopMaxSeason</code></td><td><code>32</code></td><td>Maximum <em>backendValue</em> of cosmetics to include in the shop. <code>0</code> = no limit (all seasons). See the <a href="#backendvalue">reference table</a> below for values per season. Ignored when <code>customVersion=false</code> (era is derived from <code>fnVersion</code> major component instead). In <code>randomShop</code> mode the client's own season is used as the ceiling - this setting is ignored.</td></tr>
+                <tr><td><code>shopExcludedItems</code></td><td><em>array</em></td><td>Array of cosmetic IDs to never include in the shop, regardless of other filters. Battle Pass and Winterfest reward items are always excluded automatically (read from <code>content/athena/battlepasses/</code> and <code>content/athena/winterfest-rewards.json</code>). Applied in both normal and <code>randomShop</code> mode.</td></tr>
+                <tr><td><code>includeBattlePass</code></td><td><code>true</code></td><td>Include the Battle Pass bundle in the season storefront (<code>BRSeason&lt;N&gt;</code>). Set to <code>false</code> to hide the Battle Pass offer from the catalog.</td></tr>
+                <tr><td><code>shopCategories</code></td><td><em>object</em></td><td>Defines each shop section. Ignored when <code>isChapter1: true</code> or <code>randomShop: true</code>. See below.</td></tr>
+            </table>
+
+            <h3>shopCategories</h3>
+            <p>Each key under <code>shopCategories</code> is a section identifier used as the prefix for shop item keys in <code>data/shop.json</code> (e.g. key <code>"daily"</code> -> items <code>daily1</code>, <code>daily2</code>…). The built-in sections are <code>daily</code> and <code>featured</code>. You can add custom sections with any lowercase name.</p>
+            <table class="config-table">
+                <tr><th>Field</th><th>Description</th></tr>
+                <tr><td><code>count</code></td><td>Number of items to pick randomly for this section each rotation.</td></tr>
+                <tr><td><code>displayName</code></td><td>Display label shown in the game UI.</td></tr>
+                <tr><td><code>storefrontName</code></td><td>Internal storefront identifier sent to the game client. Do not change unless you know the client-side storefront name.</td></tr>
+                <tr><td><code>tileSize</code></td><td>Tile size in the shop UI: <code>"Small"</code> (daily) or <code>"Normal"</code> (featured).</td></tr>
+                <tr><td><code>rotationInterval</code></td><td><code>"daily"</code> or <code>"weekly"</code>. Daily sections rotate every day at <code>shopRotationTime</code>; weekly sections rotate every 7 days.</td></tr>
+            </table>
+
+            <h3 id="backendvalue" class="section-anchor">shopMaxSeason - backendValue reference</h3>
+            <div class="callout tip">
+                <strong>How it works:</strong> Every cosmetic from the fortnite-api.com dataset has an <code>introduction.backendValue</code> - a monotonically increasing integer that identifies the season the item was introduced. Setting <code>shopMaxSeason</code> to a value <em>N</em> means only items with <code>backendValue &lt;= N</code> can appear in the shop. The value is <strong>inclusive</strong> - setting <code>13</code> will include Chapter 2 Season 3 items.
+            </div>
+            <table class="config-table backend-table">
+                <tr><th>backendValue</th><th>Season</th><th>backendValue</th><th>Season</th></tr>
+                <tr><td><code>1</code></td><td>Chapter 1 Season 1</td><td><code>17</code></td><td>Chapter 2 Season 7</td></tr>
+                <tr><td><code>2</code></td><td>Chapter 1 Season 2</td><td><code>18</code></td><td>Chapter 2 Season 8</td></tr>
+                <tr><td><code>3</code></td><td>Chapter 1 Season 3</td><td><code>19</code></td><td>Chapter 3 Season 1</td></tr>
+                <tr><td><code>4</code></td><td>Chapter 1 Season 4</td><td><code>20</code></td><td>Chapter 3 Season 2</td></tr>
+                <tr><td><code>5</code></td><td>Chapter 1 Season 5</td><td><code>21</code></td><td>Chapter 3 Season 3</td></tr>
+                <tr><td><code>6</code></td><td>Chapter 1 Season 6</td><td><code>22</code></td><td>Chapter 3 Season 4</td></tr>
+                <tr><td><code>7</code></td><td>Chapter 1 Season 7</td><td><code>23</code></td><td>Chapter 4 Season 1</td></tr>
+                <tr><td><code>8</code></td><td>Chapter 1 Season 8</td><td><code>24</code></td><td>Chapter 4 Season 2</td></tr>
+                <tr><td><code>9</code></td><td>Chapter 1 Season 9</td><td><code>25</code></td><td>Chapter 4 Season 3</td></tr>
+                <tr><td><code>10</code></td><td>Chapter 1 Season X</td><td><code>26</code></td><td>Chapter 4 Season 4</td></tr>
+                <tr><td><code>11</code></td><td>Chapter 2 Season 1</td><td><code>27</code></td><td>Chapter 4 Season 5 (OG)</td></tr>
+                <tr><td><code>12</code></td><td>Chapter 2 Season 2</td><td><code>28</code></td><td>Chapter 5 Season 1</td></tr>
+                <tr><td><code>13</code></td><td>Chapter 2 Season 3</td><td><code>29</code></td><td>Chapter 5 Season 2</td></tr>
+                <tr><td><code>14</code></td><td>Chapter 2 Season 4</td><td><code>30</code></td><td>Chapter 5 Season 3</td></tr>
+                <tr><td><code>15</code></td><td>Chapter 2 Season 5</td><td><code>31</code></td><td>Chapter 5 Season 4</td></tr>
+                <tr><td><code>16</code></td><td>Chapter 2 Season 6</td><td><code>32</code></td><td>Chapter 5 Season 5 (REMIX)</td></tr>
+            </table>
+            <p>Example: to serve a classic Chapter 1 experience, set <code>"shopMaxSeason": 10</code>. To include all seasons through Chapter 2 Season 3, set <code>"shopMaxSeason": 13</code> (13 is <strong>inclusive</strong>).</p>
+
+            <div class="callout warning">
+                <strong>customVersion=false mode:</strong> When <code>customVersion=false</code>, the <code>shopMaxSeason</code> field is ignored. Instead, the major component of <code>fnVersion</code> is used as the limit (e.g. <code>fnVersion=7.40</code> -> <code>shopMaxSeason=7</code>).
+            </div>
+
+            <h2 id="feature-status" class="section-anchor">Feature Status</h2>
+            <p>What actually works in the current build (v1.2.5):</p>
+            <table class="config-table">
+                <tr><th>Feature</th><th>Status</th><th>Notes</th></tr>
+                <tr><td>Account registration &amp; login</td><td><span class="badge badge-yes">Working</span></td><td>Full auth flow with bcrypt + JWT.</td></tr>
+                <tr><td>Profile system (Athena / Common Core)</td><td><span class="badge badge-yes">Working</span></td><td>QueryProfile, UpdateProfile, SetCosmeticLockerSlot, etc.</td></tr>
+                <tr><td>Item Shop</td><td><span class="badge badge-yes">Working</span></td><td>Auto-rotation, seasonal filter (<code>shopMaxSeason</code>), Battle Pass entry.</td></tr>
+                <tr><td>Shop purchases (V-Bucks)</td><td><span class="badge badge-yes">Working</span></td><td>PurchaseCatalogEntry deducts V-Bucks and grants item.</td></tr>
+                <tr><td>Battle Pass purchase</td><td><span class="badge badge-yes">Working</span></td><td>Grants pass, rewards, and sets <code>book_purchased</code> flag.</td></tr>
+                <tr><td>Gifting</td><td><span class="badge badge-yes">Working</span></td><td>SendGift + RemoveGiftBox MCP commands.</td></tr>
+                <tr><td>Friends system</td><td><span class="badge badge-yes">Working</span></td><td>Add, remove, block, pending requests.</td></tr>
+                <tr><td>Party system</td><td><span class="badge badge-yes">Working</span></td><td>Create, join, leave, kick, promote, set privacy.</td></tr>
+                <tr><td>XMPP chat &amp; presence</td><td><span class="badge badge-yes">Working</span></td><td>In-game chat, friend presence, party chat over WebSocket.</td></tr>
+                <tr><td>Matchmaking</td><td><span class="badge badge-yes">Working</span></td><td>Ticket generation and session management. Requires a compatible game server.</td></tr>
+                <tr><td>Stats (player stats)</td><td><span class="badge badge-yes">Working</span></td><td>Read/write battle royale stats.</td></tr>
+                <tr><td>Creator codes</td><td><span class="badge badge-yes">Working</span></td><td>Support-a-Creator affiliate system with configurable commission.</td></tr>
+                <tr><td>Reports</td><td><span class="badge badge-yes">Working</span></td><td>Player reporting API + web panel display.</td></tr>
+                <tr><td>Voice chat (Vivox)</td><td><span class="badge badge-partial">Partial</span></td><td>Token generation works; requires a valid Vivox HMAC key from Epic Games.</td></tr>
+                <tr><td>Web Dashboard</td><td><span class="badge badge-yes">Working</span></td><td>Admin panel, mod tools, player management, live sessions.</td></tr>
+                <tr><td>Plugin system</td><td><span class="badge badge-yes">Working</span></td><td>Load custom plugins from the <code>plugins/</code> directory.</td></tr>
+                <tr><td>Automatic DB backups</td><td><span class="badge badge-yes">Working</span></td><td>JSON backend only. Configurable interval and expiry.</td></tr>
+                <tr><td>MongoDB backend</td><td><span class="badge badge-yes">Working</span></td><td>Set <code>databaseType=mongodb</code> and provide connection URI.</td></tr>
+                <tr><td>Redis cache</td><td><span class="badge badge-partial">Optional</span></td><td>Requires separate Redis install. Off by default.</td></tr>
+                <tr><td>HTTPS / SSL</td><td><span class="badge badge-partial">Manual setup</span></td><td>Supported but requires providing cert + key files.</td></tr>
+                <tr><td>SQLite backend</td><td><span class="badge badge-no">Not yet</span></td><td>Planned.</td></tr>
+                <tr><td>MySQL / PostgreSQL</td><td><span class="badge badge-no">Not yet</span></td><td>Planned.</td></tr>
+            </table>
+        </main>
+    </div>
+
+    <script src="../../js/common.js"></script>
+</body>
+</html>

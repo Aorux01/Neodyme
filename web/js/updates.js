@@ -1,10 +1,44 @@
 const VERSIONS = [
     {
+        version: '1.2.5',
+        title: 'XMPP Overhaul & Shop Generator',
+        date: 'March 21, 2026',
+        type: 'feature',
+        latest: true,
+        lts: true,
+        summary: 'Complete XMPP overhaul, full party system (pings, invites, promote, intentions, Vivox voice chat) with real-time XMPP notifications, SVG shop image generation with zero native dependencies, historical date-based shop rotation, real gift eligibility validation, player report system with moderation panel, improved item image quality, and optional HTTPS/SSL support. Known issues remain: Battle Pass on some seasons, and EOS on builds 19+.',
+        features: [
+            { label: 'XMPP Overhaul', text: 'Full MUC (party lobbies), friend-based presence filtering, real-time party notifications (join, leave, meta patch), and stale connection cleanup on reconnect' },
+            { label: 'Party System', text: 'Full ping/invite flow (<code>PING</code>, <code>INITIAL_INVITE</code>, <code>INVITE_CANCELLED</code>), captain promotion (<code>MEMBER_NEW_CAPTAIN</code>), join-request intentions, and Vivox JWT voice chat' },
+            { label: 'Shop Image Generator', text: 'Server-side SVG shop image generation with zero native dependencies. Available at <code>GET /api/shop/image</code> with 10-minute cache and a "Shop Preview" button in the dashboard' },
+            { label: 'Historical Shop by Date', text: '<code>POST /api/admin/shop/rotate-date</code> rotates the shop to cosmetics released on a specific date (<code>{ date: "YYYY-MM-DD" }</code>)' },
+            { label: 'Optional HTTPS / SSL', text: 'Set <code>protocol=https</code> in <code>server.properties</code> to enable HTTPS with <code>sslCertPath</code> / <code>sslKeyPath</code>' },
+            { label: 'Player Reports', text: 'In-game toxicity report system stored in JSON/MongoDB, visible in Mod Panel with dismiss and ban shortcuts' },
+            { label: 'Friend Block / Unblock', text: 'Block/unblock fully implemented with ownership check and database persistence' },
+            { label: 'Cosmetic Loadout Presets', text: '<code>CopyCosmeticLoadout</code>, <code>DeleteCosmeticLoadout</code>, and <code>RequestRestedStateIncrease</code> MCP operations added' },
+            { label: 'config/playlists.json', text: 'Single source of truth for lobby game modes: <code>enabled</code> toggle, <code>minBuild</code> version gate. Controls both <code>DefaultGame.ini</code> cloud storage and the discovery surface. Trios from 15.0+, STW from 19.30+' },
+            { label: '/give item command', text: '<code>/give item &lt;username&gt; &lt;templateId&gt;</code> - grants any athena cosmetic directly from the console' },
+            { label: 'PurchaseMultipleCatalogEntries', text: 'New MCP endpoint - batch version of <code>PurchaseCatalogEntry</code>, processes multiple offers in a single request' },
+            { label: 'Fix: Purchases not finalizing', text: 'Stale <code>rvn</code> caused the client to discard purchases ("impossible de finaliser") - fixed by sharing the same profile object reference' },
+            { label: 'Fix: XP Boost Showing 0%', text: 'Battle Pass XP boost tokens were treated as cosmetics - <code>season_match_boost</code> now correctly accumulates the bonus' },
+            { label: 'Fix: Battle Pass Double Purchase', text: '<code>battlePassPurchased</code> guard now returns error 19000 if the pass was already bought this season' },
+            { label: 'Fix: Skins with Styles (BP rewards)', text: 'Athena cosmetics granted from Battle Pass tiers were missing <code>variants: []</code> - style options now display correctly' },
+            { label: 'Fix: SetCosmeticLockerSlot on Purchased Items', text: 'Items purchased were stored under UUID keys but client sends templateId - fixed with two-step key resolution' },
+            { label: 'Fix: Trios Not Showing in Lobby', text: '<code>Playlist_Trios</code> was hardcoded disabled in <code>DefaultGame.ini</code> - now driven by <code>config/playlists.json</code>' },
+            { label: 'Fix: XMPP Unreachable from Other Machines', text: '<code>DefaultEngine.ini</code> had <code>ServerAddr="ws://127.0.0.1"</code> hardcoded - now uses configurable <code>xmppHost</code>' },
+            { label: 'Fix: Refund System', text: 'Refund unified under a single code path, free-refund items no longer consume a token, duplicate refunds blocked, and V-Bucks restoration no longer uses a hardcoded item key' },
+            { label: 'Fix: Chapter 1 Shop', text: 'Added <code>isChapter1</code> flag so Chapter 1 clients always get the correct <code>BRDailyStorefront</code> / <code>BRWeeklyStorefront</code> layout' },
+            { label: 'Fix: Creator Code Commission', text: 'Commissions now credited on all in-game V-Bucks deductions (BP, tiers, BR cosmetics, STW)' },
+            { label: '404 Page', text: 'Unknown routes now serve <code>web/html/404.html</code> for browser requests; API paths still return JSON errors' },
+        ]
+    },
+    {
         version: '1.2.4',
         title: 'Commands & Admin Panel',
         date: 'March 05, 2026',
         type: 'feature',
-        latest: true,
+        latest: false,
+        lts: false,
         summary: 'New commands, greatly enhanced admin/dev/mod panels with role-based access, creator code integration, V-Bucks purchase flow redesign, improved shop UI, live monitoring, local docs, and a series of bug fixes.',
         features: [
             { label: 'Graceful Service Startup', text: 'XMPP, Shop, Backup, Commands, Plugins, and Rate Limiting no longer crash the server on startup failure - each service logs a warning and marks itself as disabled, so the rest of the server continues running normally' },
@@ -15,12 +49,12 @@ const VERSIONS = [
             { label: 'Dev Panel', text: 'Added Logs and Plugins tabs - developers can view console logs and manage plugins from the Dev section' },
             { label: 'Admin Panel', text: 'Commands panel redesigned as categorized buttons (Reload, Shop, Backup, Tokens, Maintenance); Settings expanded with Creator Code commission, Maintenance toggle, and Security options; Server Config tab removed (managed via <code>server.properties</code>)' },
             { label: 'Mod Panel', text: 'Commands tab added for moderation actions (ban/unban/lookup); tab icons added; players list now filters correctly by role level so staff are never shown' },
-            { label: 'V-Bucks Purchase Redesign', text: 'Multi-step flow with animated step indicator (Package → Payment → Review → Done); package cards now correctly display base amount + bonus breakdown before purchase' },
+            { label: 'V-Bucks Purchase Redesign', text: 'Multi-step flow with animated step indicator (Package -> Payment -> Review -> Done); package cards now correctly display base amount + bonus breakdown before purchase' },
             { label: 'Creator Code - Purchase', text: 'Creator code input added to the V-Bucks purchase flow (step 2); code is validated live against the server; commission is credited to the creator on successful purchase; pre-filled from <code>?creator=</code> URL param or localStorage' },
             { label: 'Creator Code - Shop', text: '"Support a Creator" card added to the shop sidebar; code persists in localStorage and is automatically applied when visiting the V-Bucks purchase page' },
             { label: 'Creator Code - Validate API', text: 'New public endpoint <code>GET /api/creator-code/validate/:code</code> to check if a creator code is active without authentication' },
             { label: 'Shop UI', text: 'Rarity-coloured card accents and image backgrounds, item price display, owned badge, pill-shape filter buttons, and improved section styling' },
-            { label: 'CSRF Fix', text: 'Fixed a token field mismatch (<code>data.token</code> → <code>data.csrfToken</code>) that caused all mutating operations (role change, plugin reload, file save) to return 403' },
+            { label: 'CSRF Fix', text: 'Fixed a token field mismatch (<code>data.token</code> -> <code>data.csrfToken</code>) that caused all mutating operations (role change, plugin reload, file save) to return 403' },
             { label: '404 Page', text: 'Unknown routes now serve <code>web/html/404.html</code> for browser requests; API paths still return JSON errors' },
             { label: 'Updates Page', text: 'Redesigned with a split layout - version list on the left, feature detail panel on the right; fully JavaScript-driven for easy maintenance' },
             { label: 'Docs', text: 'Documentation pages served locally - DOCS nav link points to built-in pages' },
@@ -41,6 +75,8 @@ const VERSIONS = [
         title: 'Plugin Store',
         date: 'February 18, 2026',
         type: 'feature',
+        latest: false,
+        lts: false,
         summary: 'New integrated plugin store allowing to browse, install, and update plugins directly from the console with real-time progress tracking and automatic npm dependency management.',
         features: [
             { label: 'Plugin Store', text: 'New <code>/plugins store</code> command to browse, search, install and update plugins directly from GitHub' },
@@ -52,6 +88,8 @@ const VERSIONS = [
         title: 'Battle Pass & Game Mode Fixes',
         date: 'February 11, 2026',
         type: 'hotfix',
+        latest: false,
+        lts: false,
         summary: 'Critical fixes for Battle Pass, game mode selection, shop display, and major backend improvements.',
         features: [
             { label: 'Battle Pass Offers', text: 'Fixed 950 V-Bucks button for Season 11+ by implementing dynamic storefront generation (BRSeason11+)' },
@@ -69,6 +107,8 @@ const VERSIONS = [
         title: 'Hotfixes',
         date: 'February 3, 2026',
         type: 'hotfix',
+        latest: false,
+        lts: false,
         summary: 'Bug fixes and improvements for shop, XMPP, and timeline systems.',
         features: [
             { label: 'ClientSettings.Sav', text: 'Fixed binary encoding (latin1) for proper game settings persistence' },
@@ -84,6 +124,8 @@ const VERSIONS = [
         title: 'Release',
         date: 'January 31, 2026',
         type: 'release',
+        latest: false,
+        lts: false,
         summary: 'Major security hardening and enhanced server architecture.',
         features: [
             { label: 'Bcrypt Work Factor', text: 'Increased to 12-14 (configurable) for 2026 security standards' },
@@ -96,16 +138,18 @@ const VERSIONS = [
             { label: 'Request Limits', text: 'Configurable 1 MB limit for regular requests (50 MB for cloud storage)' },
             { label: 'Shop Categories', text: 'Support for custom shop categories beyond Daily/Featured' },
             { label: 'V-Bucks API', text: 'New dedicated endpoints for V-Bucks management' },
-            { label: 'EOS Connect', text: 'The server can now handle the EOS connection correctly' },
+            { label: 'EOS Connect (Partial)', text: 'Basic EOS authentication routes implemented. Builds 19+ (EOS-only auth) may still encounter connection failures - ongoing investigation' },
             { label: 'Server Architecture', text: 'The server architecture was reviewed and cleaned up' },
             { label: 'Admin Panel', text: 'The server now has an administrator panel' },
         ]
     },
     {
-        version: '1.1.6',
+        version: '1.1.7',
         title: 'Security Hardening',
         date: 'January 15, 2026',
         type: 'security',
+        latest: false,
+        lts: false,
         summary: 'Critical security improvements and Redis support.',
         features: [
             { label: 'Token Hashing', text: 'Tokens are now stored as SHA-256 hashes - raw tokens never persisted' },
@@ -123,6 +167,8 @@ const VERSIONS = [
         title: 'Security',
         date: 'December 21, 2025',
         type: 'security',
+        latest: false,
+        lts: false,
         summary: 'Major security improvements and critical fixes.',
         features: [
             { label: 'Automated Secret Management', text: 'JWT and Game Server secrets auto-generated on first startup' },
@@ -137,6 +183,8 @@ const VERSIONS = [
         title: 'Security Hardening',
         date: 'December 13, 2025',
         type: 'security',
+        latest: false,
+        lts: false,
         summary: 'Major security fixes addressing 10 critical vulnerabilities.',
         features: [
             { label: 'Token Persistence', text: 'Tokens now persist to Tokens.json file instead of in-memory storage - survives server restarts' },
@@ -155,6 +203,8 @@ const VERSIONS = [
         title: 'Rate Limiting & Security',
         date: 'December 08, 2025',
         type: 'security',
+        latest: false,
+        lts: false,
         summary: 'Complete rate limiting system with 3 protection levels and security improvements.',
         features: [
             { label: 'Rate Limiting', text: '3 levels (Global, Authentication, Expensive Ops) - fully configurable' },
@@ -180,6 +230,8 @@ const VERSIONS = [
         title: 'Hotfixes',
         date: 'November 18, 2025',
         type: 'hotfix',
+        latest: false,
+        lts: false,
         summary: 'Fix update and new feature.',
         features: [
             { label: 'Role System', text: 'Added role system for user management' },
@@ -194,6 +246,8 @@ const VERSIONS = [
         title: 'Major Update',
         date: 'November 16, 2025',
         type: 'release',
+        latest: false,
+        lts: false,
         summary: 'Major update with performance improvements and new features.',
         features: [
             { label: 'Matchmaking', text: 'Improved matchmaking system with better player pairing' },
@@ -217,6 +271,8 @@ const VERSIONS = [
         title: 'Early Hotfixes',
         date: 'Aug 28, 2024 – Sep 12, 2025',
         type: 'hotfix',
+        latest: false,
+        lts: false,
         summary: 'Series of hotfixes addressing bugs found after initial release.',
         features: [
             { label: 'Fixed errors', text: 'Fixed most of the errors preventing the server from functioning correctly' },
@@ -227,6 +283,8 @@ const VERSIONS = [
         title: 'Initial Release',
         date: 'August 24, 2024',
         type: 'release',
+        latest: false,
+        lts: false,
         isOrigin: true,
         summary: 'First official release of Neodyme. May contain bugs - fixes released in subsequent updates.',
         features: [
@@ -257,6 +315,7 @@ function renderList(activeIdx) {
                 <span class="vbtn-ver">${v.version}</span>
                 <span class="vbtn-badges">
                     ${v.latest ? '<span class="vbadge vbadge-latest">LATEST</span>' : ''}
+                    ${v.lts ? '<span class="vbadge vbadge-lts">LTS</span>' : ''}
                     <span class="vbadge ${meta.cls}">${meta.label}</span>
                 </span>
                 <span class="vbtn-date">${v.date}</span>
@@ -277,6 +336,7 @@ function renderDetail(v) {
                 </div>
                 <div class="vd-badges">
                     ${v.latest ? '<span class="vbadge vbadge-latest">LATEST</span>' : ''}
+                    ${v.lts ? '<span class="vbadge vbadge-lts">LTS</span>' : ''}
                     <span class="vbadge ${meta.cls}">${meta.label}</span>
                 </div>
             </div>

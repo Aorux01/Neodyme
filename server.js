@@ -206,9 +206,11 @@ class Server {
                 }
 
                 try {
+                    const caPath = ConfigManager.get('sslCaPath', '');
                     const sslOptions = {
                         cert: fs.readFileSync(certPath),
-                        key: fs.readFileSync(keyPath)
+                        key: fs.readFileSync(keyPath),
+                        ...(caPath && fs.existsSync(caPath) ? { ca: fs.readFileSync(caPath) } : {})
                     };
                     this.server = https.createServer(sslOptions, this.app);
                 } catch (err) {

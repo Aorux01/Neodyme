@@ -1,19 +1,26 @@
 {
-  "//": "Neodyme Shop Configuration",
+  "isChapter1": false,
+  "randomShop": true,
 
   "shopRotationTime": "00:00",
-  "shopChapterLimit": 5,
-  "shopSeasonLimit": "REMIX",
-  "shopExcludedItems": [],
+  "shopMaxSeason": 32,
+  "shopExcludedItems": ["CID_VIP_Athena_Commando_M_GalileoGondola_SG", "CID_636_Athena_Commando_M_GalileoGondola_78MFZ", "CID_637_Athena_Commando_M_GalileoOutrigger_7Q0YU", "CID_VIP_Athena_Commando_M_GalileoFerry_SG", "CID_VIP_Athena_Commando_F_GalileoRocket_SG", "CID_568_Athena_Commando_M_RebirthSoldier"],
+  "includeBattlePass": true,
 
   "shopCategories": {
-    "DailyItems": {
+    "daily": {
       "count": 6,
-      "displayName": "Daily"
+      "displayName": "Daily",
+      "storefrontName": "BRDailyStorefront",
+      "tileSize": "Small",
+      "rotationInterval": "daily"
     },
-    "FeaturedItems": {
+    "featured": {
       "count": 8,
-      "displayName": "Featured"
+      "displayName": "Featured",
+      "storefrontName": "BRWeeklyStorefront",
+      "tileSize": "Normal",
+      "rotationInterval": "weekly"
     }
   }
 }

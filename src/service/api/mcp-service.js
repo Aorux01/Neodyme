@@ -1,6 +1,6 @@
 const DatabaseManager = require('../../manager/database-manager');
 const LoggerService = require('../logger/logger-service');
-const { Errors } = require('../error/Errorss');
+const { Errors } = require('../error/Errors');
 const fs = require('fs');
 const path = require('path');
 
@@ -550,7 +550,7 @@ class MCPService {
                 quantity: 1
             };
 
-            const itemId = DatabaseManager.generateItemId();
+            const itemId = DatabaseManager.generateItemId(mfaRewardItem.templateId);
             profile.items[itemId] = mfaRewardItem;
 
             profileChanges.push({

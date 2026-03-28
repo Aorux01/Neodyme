@@ -6237,7 +6237,7 @@
           "sortingPriority": 80,
           "websiteButtonText": "Visit Website",
           "websiteURL": "https://fortnite-public-service-prod11.ol.epicgames.com/",
-          "id": "web-neodyme-motd",
+          "id": "web-neodyme-motd-2",
           "videoAutoplay": false,
           "videoFullscreen": false,
           "spotlight": false
@@ -6250,7 +6250,7 @@
           "hidden": false,
           "tabTitleOverride": "Neodyme",
           "_type": "CommonUI Simple Message MOTD",
-          "title": "v1.2.4",
+          "title": "v1.2.5",
           "body": {
             "de": "Neodyme Patch-Hinweise",
             "ru": "Примечания к патчу Neodyme",
@@ -6269,7 +6269,7 @@
           "videoLoop": false,
           "videoStreamingEnabled": false,
           "sortingPriority": 70,
-          "id": "web-neodyme-motd",
+          "id": "web-neodyme-motd-3",
           "videoAutoplay": false,
           "videoFullscreen": false,
           "spotlight": false
@@ -6315,13 +6315,85 @@
           "videoLoop": false,
           "videoStreamingEnabled": false,
           "sortingPriority": 60,
-          "id": "web-neodyme-motd",
+          "id": "web-neodyme-motd-4",
           "videoAutoplay": false,
           "videoFullscreen": false,
           "spotlight": false
         }
       ],
       "messages": [
+        {
+          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/neodyme_banner.jpg",
+          "hidden": false,
+          "_type": "CommonUI Simple Message Base",
+          "title": {
+            "ar": "مرحبًا بك في Neodyme",
+            "en": "Welcome to Neodyme",
+            "de": "Willkommen bei Neodyme",
+            "es": "Bienvenido a Neodyme",
+            "es-419": "Bienvenido a Neodyme",
+            "fr": "Bienvenue sur Neodyme",
+            "it": "Benvenuto in Neodyme",
+            "ja": "Neodymeへようこそ",
+            "ko": "Neodyme에 오신 것을 환영합니다",
+            "pl": "Witaj w Neodyme",
+            "pt-BR": "Bem-vindo ao Neodyme",
+            "ru": "Добро пожаловать в Neodyme",
+            "tr": "Neodyme'a hoş geldiniz"
+          },
+          "body": {
+            "ar": "استمتع بتجربة لعب استثنائية!",
+            "en": "Have a phenomenal gaming experience!",
+            "de": "Wünsche allen ein wunderbares Spielerlebnis!",
+            "es": "¡Que disfrutes de tu experiencia de videojuegos!",
+            "es-419": "¡Ten una experiencia de juego espectacular!",
+            "fr": "Un bon jeu à toutes et à tous !",
+            "it": "Ti auguriamo un'esperienza di gioco fenomenale!",
+            "ja": "驚きの体験をしよう！",
+            "ko": "게임에서 환상적인 경험을 해보세요!",
+            "pl": "Życzymy fenomenalnej gry!",
+            "pt-BR": "Tenha uma experiência de jogo fenomenal!",
+            "ru": "Желаю невероятно приятной игры!",
+            "tr": "Muhteşem bir oyun deneyimi yaşamanı dileriz!"
+          },
+          "spotlight": false
+        },
+        {
+          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/web_banner.png",
+          "hidden": false,
+          "_type": "CommonUI Simple Message Base",
+          "title": {
+            "ar": "موقع Neodyme",
+            "en": "Neodyme Website",
+            "de": "Neodyme-Website",
+            "es": "Sitio web de Neodyme",
+            "es-419": "Sitio web de Neodyme",
+            "fr": "Site web Neodyme",
+            "it": "Sito web Neodyme",
+            "ja": "Neodyme ウェブサイト",
+            "ko": "Neodyme 웹사이트",
+            "pl": "Strona Neodyme",
+            "pt-BR": "Site Neodyme",
+            "ru": "Сайт Neodyme",
+            "tr": "Neodyme web sitesi"
+          },
+          "body": {
+            "ar": "قم بزيارة موقعنا لإنشاء حسابك وإدارة ملفك الشخصي وشراء العناصر والمزيد!",
+            "en": "Visit our website to create your account, manage your profile, purchase items and more!",
+            "de": "Besuchen Sie unsere Website, um Ihr Konto zu erstellen, Ihr Profil zu verwalten, Artikel zu kaufen und vieles mehr!",
+            "es": "¡Visita nuestro sitio web para crear tu cuenta, gestionar tu perfil, comprar artículos y más!",
+            "es-419": "¡Visita nuestro sitio web para crear tu cuenta, gestionar tu perfil, comprar artículos y más!",
+            "fr": "Visitez notre site web pour créer votre compte, gérer votre profil, acheter des articles et bien plus encore !",
+            "it": "Visita il nostro sito per creare il tuo account, gestire il tuo profilo, acquistare articoli e molto altro!",
+            "ja": "私たちの Web サイトにアクセスして、アカウントを作成し、プロフィールを管理し、アイテムを購入するなど、さまざまなことができます。",
+            "ko": "웹사이트를 방문하여 계정을 만들고, 프로필을 관리하고, 아이템을 구매하는 등의 작업을 할 수 있습니다!",
+            "pl": "Odwiedź naszą stronę internetową, aby utworzyć konto, zarządzać profilem, kupować przedmioty i nie tylko!",
+            "pt-BR": "Visite nosso site para criar sua conta, gerenciar seu perfil, comprar itens e muito mais!",
+            "ru": "Посетите наш веб-сайт, чтобы создать учетную запись, управлять профилем, покупать предметы и многое другое!",
+            "tr": "Hesabınızı oluşturmak, profilinizi yönetmek, öğeler satın almak ve daha fazlası için web sitemizi ziyaret edin!"
+          },
+          "spotlight": false
+        },
         {
           "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/patch_banner.jpg",
           "hidden": false,
@@ -6484,17 +6556,22 @@
           "sortingPriority": 80,
           "websiteButtonText": "Visit Website",
           "websiteURL": "https://fortnite-public-service-prod11.ol.epicgames.com/",
-          "id": "web-neodyme-motd",
+          "id": "web-neodyme-motd-2",
           "videoAutoplay": false,
           "videoFullscreen": false,
           "spotlight": false
         },
         {
+          "entryType": "Texte",
           "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/patch_banner.jpg",
+          "tileImage": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/patch_tile.jpg",
+          "videoMute": false,
           "hidden": false,
-          "_type": "CommonUI Simple Message Base",
+          "tabTitleOverride": "Patch Notes",
+          "_type": "CommonUI Simple Message MOTD",
           "adspace": "PATCH NOTES!",
-          "title": {
+          "title": "v1.2.5",
+          "body": {
             "de": "Neodyme Patch-Hinweise",
             "ru": "Примечания к патчу Neodyme",
             "ko": "Neodyme 패치 노트",
@@ -6508,13 +6585,23 @@
             "es-419": "Notas del parche Neodyme",
             "tr": "Neodyme yama notları"
           },
-          "body": "https://fortnite-public-service-prod11.ol.epicgames.com/updates.html",
+          "offerAction": "ShowOfferDetails",
+          "videoLoop": false,
+          "videoStreamingEnabled": false,
+          "sortingPriority": 70,
+          "id": "web-neodyme-motd-3",
+          "videoAutoplay": false,
+          "videoFullscreen": false,
           "spotlight": false
         },
         {
+          "entryType": "Texte",
           "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/feature_banner.jpg",
+          "tileImage": "https://fortnite-public-service-prod11.ol.epicgames.com/images/neodyme-public-service/feature_tile.jpg",
+          "videoMute": false,
           "hidden": false,
-          "_type": "CommonUI Simple Message Base",
+          "tabTitleOverride": "Features",
+          "_type": "CommonUI Simple Message MOTD",
           "adspace": "NEW FEATURES!",
           "title": {
             "de": "Neue Funktionen verfügbar!",
@@ -6544,6 +6631,13 @@
             "es-419": "¡Descubre las últimas mejoras y características en Neodyme! Visita nuestro sitio web para más detalles.",
             "tr": "Neodyme'daki en son iyileştirmeleri ve özellikleri keşfedin! Daha fazla ayrıntı için web sitemizi ziyaret edin."
           },
+          "offerAction": "ShowOfferDetails",
+          "videoLoop": false,
+          "videoStreamingEnabled": false,
+          "sortingPriority": 60,
+          "id": "web-neodyme-motd-4",
+          "videoAutoplay": false,
+          "videoFullscreen": false,
           "spotlight": false
         }
       ],

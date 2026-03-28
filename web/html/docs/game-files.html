@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Files - Neodyme Docs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+    <style>
+        .config-table { width: 100%; border-collapse: collapse; margin: 1rem 0 2rem 0; font-size: 0.92rem; }
+        .config-table th { background: var(--surface2, #1e1e2e); color: var(--text, #cdd6f4); padding: 10px 14px; text-align: left; font-weight: 600; }
+        .config-table td { padding: 9px 14px; border-bottom: 1px solid var(--border, #313244); vertical-align: top; }
+        .config-table tr:last-child td { border-bottom: none; }
+        .config-table code { background: var(--surface2, #1e1e2e); padding: 2px 6px; border-radius: 4px; font-size: 0.88rem; }
+        .config-table td:first-child code { color: var(--accent, #cba6f7); }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; margin-left: 6px; }
+        .badge-yes  { background: #a6e3a1; color: #1e1e2e; }
+        .badge-no   { background: #f38ba8; color: #1e1e2e; }
+        .badge-auto { background: #89dceb; color: #1e1e2e; }
+        .section-anchor { scroll-margin-top: 80px; }
+        .callout { background: var(--surface2, #1e1e2e); border-left: 4px solid var(--accent, #cba6f7); padding: 12px 18px; border-radius: 0 8px 8px 0; margin: 1rem 0; font-size: 0.93rem; }
+        .callout.info    { border-color: #89b4fa; }
+        .callout.warning { border-color: #f9e2af; }
+        .callout.tip     { border-color: #a6e3a1; }
+        .toc { background: var(--surface2, #1e1e2e); border-radius: 10px; padding: 18px 24px; margin-bottom: 2rem; }
+        .toc h3 { margin: 0 0 12px 0; font-size: 1rem; color: var(--text-muted, #a6adc8); text-transform: uppercase; letter-spacing: .06em; }
+        .toc ul { list-style: none; padding: 0; margin: 0; columns: 2; }
+        .toc li { margin-bottom: 6px; }
+        .toc a { color: var(--accent, #cba6f7); text-decoration: none; font-size: 0.92rem; }
+        .toc a:hover { text-decoration: underline; }
+        h2 { margin-top: 2.5rem; }
+        h3 { margin-top: 1.8rem; color: var(--text-muted, #a6adc8); }
+        .file-path { background: var(--surface2, #1e1e2e); border: 1px solid var(--border, #313244); border-radius: 6px; padding: 6px 14px; font-family: monospace; font-size: 0.92rem; color: var(--accent, #cba6f7); display: inline-block; margin-bottom: 0.75rem; }
+        pre.ini-block { background: var(--surface2, #1e1e2e); border: 1px solid var(--border, #313244); border-radius: 8px; padding: 16px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; line-height: 1.6; white-space: pre; }
+        .pill { display: inline-block; padding: 1px 8px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; border: 1px solid; margin-left: 6px; vertical-align: middle; }
+        .pill-json { border-color: #a6e3a1; color: #a6e3a1; }
+        .pill-ini  { border-color: #89b4fa; color: #89b4fa; }
+        .pill-auto { border-color: #89dceb; color: #89dceb; }
+    </style>
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="../status.html">STATUS</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="configuration.html" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
+                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="game-files.html" class="docs-nav-link active"><i class="fas fa-gamepad"></i> Game Files</a>
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+
+        <main class="docs-content">
+            <h1>Game Files Reference</h1>
+            <p>Neodyme serves several configuration files to Fortnite clients via the cloud storage system. Some are static, some are dynamically generated per client version. All can be edited from the <strong>Dev Panel → Config Files</strong> in the dashboard.</p>
+
+            <div class="toc">
+                <h3>On this page</h3>
+                <ul>
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#playlists-json">config/playlists.json</a></li>
+                    <li><a href="#default-game">DefaultGame.ini</a></li>
+                    <li><a href="#default-engine">DefaultEngine.ini</a></li>
+                    <li><a href="#default-runtime">DefaultRuntimeOptions.ini</a></li>
+                    <li><a href="#config-json">Other config/ JSON files</a></li>
+                </ul>
+            </div>
+
+            <!-- Overview -->
+            <h2 id="overview" class="section-anchor">Overview</h2>
+            <p>When Fortnite starts, it fetches files from <code>GET /fortnite/api/cloudstorage/system</code>. These files override the game's built-in settings. Neodyme generates some files at runtime based on <code>server.properties</code> and config JSON files.</p>
+
+            <table class="config-table">
+                <thead>
+                    <tr><th>File</th><th>Location</th><th>Type</th><th>Generated</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>DefaultEngine.ini</code></td>
+                        <td><code>data/cloudstorage/system/</code></td>
+                        <td><span class="pill pill-ini">INI</span></td>
+                        <td><span class="badge badge-yes">On startup</span> - XMPP host/port, regions</td>
+                    </tr>
+                    <tr>
+                        <td><code>DefaultGame.ini</code></td>
+                        <td><code>data/cloudstorage/system/</code></td>
+                        <td><span class="pill pill-ini">INI</span></td>
+                        <td><span class="badge badge-auto">Per request</span> - playlist section rebuilt from <code>playlists.json</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>DefaultRuntimeOptions.ini</code></td>
+                        <td><code>data/cloudstorage/system/</code></td>
+                        <td><span class="pill pill-ini">INI</span></td>
+                        <td><span class="badge badge-auto">Per request</span> - <code>bForceBRMode</code>, <code>bSkipSubgameSelect</code> injected from build 19.30+</td>
+                    </tr>
+                    <tr>
+                        <td><code>playlists.json</code></td>
+                        <td><code>config/</code></td>
+                        <td><span class="pill pill-json">JSON</span></td>
+                        <td><span class="badge badge-no">Static</span> - source of truth for game modes</td>
+                    </tr>
+                    <tr>
+                        <td><code>shop.json</code></td>
+                        <td><code>config/</code></td>
+                        <td><span class="pill pill-json">JSON</span></td>
+                        <td><span class="badge badge-no">Static</span> - item rotation and shop categories</td>
+                    </tr>
+                    <tr>
+                        <td><code>experience.json</code></td>
+                        <td><code>config/</code></td>
+                        <td><span class="pill pill-json">JSON</span></td>
+                        <td><span class="badge badge-no">Static</span> - XP tables and level thresholds</td>
+                    </tr>
+                    <tr>
+                        <td><code>game-servers.json</code></td>
+                        <td><code>config/</code></td>
+                        <td><span class="pill pill-json">JSON</span></td>
+                        <td><span class="badge badge-no">Static</span> - matchmaking regions and server IPs</td>
+                    </tr>
+                    <tr>
+                        <td><code>motd.json</code></td>
+                        <td><code>config/</code></td>
+                        <td><span class="pill pill-json">JSON</span></td>
+                        <td><span class="badge badge-no">Static</span> - Message of the Day shown in lobby</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- playlists.json -->
+            <h2 id="playlists-json" class="section-anchor">config/playlists.json <span class="pill pill-json">JSON</span></h2>
+            <p>Single source of truth for which game modes appear in the Fortnite lobby. Used by two systems:</p>
+            <ul>
+                <li><strong>Cloud Storage</strong> - <code>DefaultGame.ini</code> <code>FrontEndPlaylistData</code> section is rebuilt from this file for each client request, filtered by the client's build number.</li>
+                <li><strong>Discovery Surface</strong> - <code>POST /api/v2/discovery/surface/*</code> results are filtered by <code>linkCode</code> and <code>minBuild</code>.</li>
+            </ul>
+
+            <h3>Fields</h3>
+            <table class="config-table">
+                <thead>
+                    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>name</code></td><td>string</td><td>UE4 playlist name (e.g. <code>Playlist_Trios</code>)</td></tr>
+                    <tr><td><code>linkCode</code></td><td>string</td><td>Discovery surface identifier (e.g. <code>playlist_trios</code>, <code>campaign</code>)</td></tr>
+                    <tr><td><code>enabled</code></td><td>boolean</td><td>Master switch - <code>false</code> hides regardless of build</td></tr>
+                    <tr><td><code>minBuild</code></td><td>number</td><td>Minimum Fortnite build required (<code>0</code> = always shown). e.g. <code>15.0</code>, <code>19.30</code></td></tr>
+                    <tr><td><code>ini.bIsDefaultPlaylist</code></td><td>boolean</td><td>Marks as the default selected mode</td></tr>
+                    <tr><td><code>ini.bVisibleWhenDisabled</code></td><td>boolean</td><td>Show grayed-out tile when <code>bEnabled=false</code></td></tr>
+                    <tr><td><code>ini.bDisplayAsNew</code></td><td>boolean</td><td>Show "NEW" badge on the tile</td></tr>
+                    <tr><td><code>ini.bInvisibleWhenEnabled</code></td><td>boolean</td><td>Hide tile even when enabled (for background playlists)</td></tr>
+                    <tr><td><code>ini.categoryIndex</code></td><td>number</td><td><code>0</code> = main tab, <code>1</code> = LTM tab</td></tr>
+                    <tr><td><code>ini.displayPriority</code></td><td>number</td><td>Order within the category (lower = first)</td></tr>
+                </tbody>
+            </table>
+
+            <div class="callout tip">
+                <strong>Tip:</strong> Changes to <code>playlists.json</code> take effect immediately - no restart needed. The file is read on each cloud storage request.
+            </div>
+
+            <h3>Available playlist names</h3>
+            <p>All valid values for the <code>name</code> field, sourced from <code>DefaultGame.ini</code> and Fortnite's playlist registry.</p>
+
+            <h4 style="color: var(--text-muted); margin-top: 1.2rem;">Main modes - <code>categoryIndex: 0</code></h4>
+            <table class="config-table">
+                <thead><tr><th>name</th><th>linkCode</th><th>Description</th><th>minBuild</th></tr></thead>
+                <tbody>
+                    <tr><td><code>Playlist_DefaultSolo</code></td><td><code>playlist_defaultsolo</code></td><td>Solo Battle Royale</td><td>0 (always)</td></tr>
+                    <tr><td><code>Playlist_DefaultDuo</code></td><td><code>playlist_defaultduo</code></td><td>Duos Battle Royale</td><td>0 (always)</td></tr>
+                    <tr><td><code>Playlist_Trios</code></td><td><code>playlist_trios</code></td><td>Trios Battle Royale</td><td>15.0 (Ch2S5)</td></tr>
+                    <tr><td><code>Playlist_DefaultSquad</code></td><td><code>playlist_defaultsquad</code></td><td>Squads Battle Royale</td><td>0 (always)</td></tr>
+                    <tr><td><code>Playlist_Respawn_24</code></td><td><code>playlist_respawn_24</code></td><td>Team Rumble (respawn enabled, 24 players/team)</td><td>-</td></tr>
+                    <tr><td><code>Playlist_Campaign</code></td><td><code>campaign</code></td><td>Save The World</td><td>19.30 (Ch3S1)</td></tr>
+                </tbody>
+            </table>
+
+            <h4 style="color: var(--text-muted); margin-top: 1.2rem;">Secondary / LTM - <code>categoryIndex: 1</code></h4>
+            <table class="config-table">
+                <thead><tr><th>name</th><th>Description</th><th>Notes</th></tr></thead>
+                <tbody>
+                    <tr><td><code>Playlist_BattleLab</code></td><td>Battle Lab (custom Creative-like sandbox)</td><td>Default disabled</td></tr>
+                    <tr><td><code>Playlist_Playground</code></td><td>Playground (old Creative precursor, Ch1)</td><td>Default disabled</td></tr>
+                    <tr><td><code>Playlist_PlaygroundV2</code></td><td>Playground V2</td><td>Default disabled</td></tr>
+                    <tr><td><code>Playlist_ShowdownAlt_Solo</code></td><td>Arena Solo (ranked)</td><td>Default disabled</td></tr>
+                    <tr><td><code>Playlist_ShowdownAlt_Duos</code></td><td>Arena Duos (ranked)</td><td>Default disabled</td></tr>
+                    <tr><td><code>Playlist_DADBRO_Squads_12</code></td><td>Squads LTM (12-player variant)</td><td>Default disabled</td></tr>
+                    <tr><td><code>Playlist_Schedule_LTM_S12_SpyGames</code></td><td>Season 12 - Spy Games LTM</td><td>Default disabled</td></tr>
+                    <tr><td><code>Playlist_Fritter_40</code></td><td>LTM (40-player variant)</td><td>Commented in DefaultGame.ini</td></tr>
+                    <tr><td><code>Playlist_Buffet</code></td><td>LTM</td><td>Commented in DefaultGame.ini</td></tr>
+                    <tr><td><code>Playlist_Vamp_Duo</code></td><td>Vampires Duos LTM</td><td>Commented in DefaultGame.ini</td></tr>
+                    <tr><td><code>Playlist_Race_12</code></td><td>Race LTM (12 players)</td><td>Commented in DefaultGame.ini</td></tr>
+                    <tr><td><code>Playlist_Respawn_20_Lava</code></td><td>Floor Is Lava (20 players, respawn)</td><td>Commented in DefaultGame.ini</td></tr>
+                    <tr><td><code>Playlist_Barrier_16_B_Lava</code></td><td>Lava variant LTM</td><td>Commented in DefaultGame.ini</td></tr>
+                    <tr><td><code>Playlist_Fill_Solo</code></td><td>Fill Solo</td><td>Commented in DefaultGame.ini</td></tr>
+                    <tr><td><code>Playlist_Classic_Squads</code></td><td>Classic Squads (no building)</td><td>Commented in DefaultGame.ini</td></tr>
+                    <tr><td><code>Playlist_Sword_Solo</code></td><td>Sword Fight Solo LTM</td><td>Commented in DefaultGame.ini</td></tr>
+                    <tr><td><code>Playlist_Goose_Duos_16_SP</code></td><td>LTM (16-player duos, split-push)</td><td>Commented in DefaultGame.ini</td></tr>
+                    <tr><td><code>Playlist_Music_High</code></td><td>Party Royale / Music LTM</td><td>Commented in DefaultGame.ini</td></tr>
+                </tbody>
+            </table>
+
+            <div class="callout info">
+                <strong>To enable an LTM:</strong> add an entry in <code>playlists.json</code> with <code>"enabled": true</code>, <code>"categoryIndex": 1</code>, and the correct <code>name</code>. The playlist must also exist in the game build you're running.
+            </div>
+
+            <!-- DefaultGame.ini -->
+            <h2 id="default-game" class="section-anchor">DefaultGame.ini <span class="pill pill-ini">INI</span></h2>
+            <div class="file-path">data/cloudstorage/system/DefaultGame.ini</div>
+            <p>Controls gameplay settings, chat configuration, text replacements, and playlist visibility. The <code>FrontEndPlaylistData</code> block is <strong>replaced dynamically</strong> at request time - edits to that section in the file will be overwritten. All other sections are served as-is.</p>
+
+            <h3>Key sections</h3>
+            <table class="config-table">
+                <thead>
+                    <tr><th>Section</th><th>Notable keys</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>[/Script/FortniteGame.FortTextHotfixConfig]</code></td>
+                        <td>Text replacements shown in-game (e.g. "Logging Into Neodyme…")</td>
+                    </tr>
+                    <tr>
+                        <td><code>[/Script/FortniteGame.FortChatManager]</code></td>
+                        <td>Global/founder/Athena chat toggles, reconnect delays</td>
+                    </tr>
+                    <tr>
+                        <td><code>[/Script/FortniteGame.FortGameInstance]</code></td>
+                        <td><code>FrontEndPlaylistData</code> - auto-generated from <code>playlists.json</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout warning">
+                <strong>Note:</strong> Do not manually edit the <code>FrontEndPlaylistData</code> lines - they are overwritten on every request. Use <code>config/playlists.json</code> instead.
+            </div>
+
+            <!-- DefaultEngine.ini -->
+            <h2 id="default-engine" class="section-anchor">DefaultEngine.ini <span class="pill pill-ini">INI</span> <span class="badge badge-yes">Auto-generated</span></h2>
+            <div class="file-path">data/cloudstorage/system/DefaultEngine.ini</div>
+            <p>Generated on every server startup from <code>server.properties</code>. <strong>Do not edit manually</strong> - changes are overwritten on restart.</p>
+
+            <h3>Key settings (from server.properties)</h3>
+            <table class="config-table">
+                <thead>
+                    <tr><th>server.properties key</th><th>INI field</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>xmppHost</code></td><td><code>ServerAddr</code></td><td>XMPP WebSocket address sent to clients. <strong>Set to your LAN/public IP for multi-machine setups.</strong></td></tr>
+                    <tr><td><code>xmppPort</code></td><td><code>ServerPort</code></td><td>XMPP WebSocket port (default: 80)</td></tr>
+                </tbody>
+            </table>
+
+            <div class="callout info">
+                <strong>Multi-machine setup:</strong> Set <code>xmppHost=192.168.x.x</code> (your server's LAN IP) in <code>server.properties</code> so clients on other machines can connect to XMPP. Restart the server to regenerate <code>DefaultEngine.ini</code>.
+            </div>
+
+            <!-- DefaultRuntimeOptions.ini -->
+            <h2 id="default-runtime" class="section-anchor">DefaultRuntimeOptions.ini <span class="pill pill-ini">INI</span></h2>
+            <div class="file-path">data/cloudstorage/system/DefaultRuntimeOptions.ini</div>
+            <p>Runtime feature flags. Most fields are static, but two are <strong>injected dynamically</strong> depending on the client's build:</p>
+
+            <table class="config-table">
+                <thead>
+                    <tr><th>Key</th><th>Default</th><th>Dynamic behaviour</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>bForceBRMode</code></td>
+                        <td><code>false</code></td>
+                        <td>Set to <code>true</code> for builds &ge; 19.30 - skips subgame selection and boots directly into BR</td>
+                    </tr>
+                    <tr>
+                        <td><code>bSkipSubgameSelect</code></td>
+                        <td><code>false</code></td>
+                        <td>Set to <code>true</code> for builds &ge; 19.30 - hides the STW/BR/Creative selection screen</td>
+                    </tr>
+                    <tr>
+                        <td><code>bDisableGifting</code></td>
+                        <td><code>false</code></td>
+                        <td>Enable/disable item gifting globally</td>
+                    </tr>
+                    <tr>
+                        <td><code>bEnableGlobalChat</code></td>
+                        <td><code>true</code></td>
+                        <td>Enable global chat channel in lobby</td>
+                    </tr>
+                    <tr>
+                        <td><code>DaysOfFriendshipBeforeCanGift</code></td>
+                        <td><code>3</code></td>
+                        <td>Days two players must be friends before gifting is allowed</td>
+                    </tr>
+                    <tr>
+                        <td><code>bSkipTrailerMovie</code></td>
+                        <td><code>false</code></td>
+                        <td>Skip the intro video on launch</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Other JSON configs -->
+            <h2 id="config-json" class="section-anchor">Other config/ JSON files</h2>
+
+            <h3>config/shop.json</h3>
+            <p>Defines shop categories, item rotation rules, and which items are eligible for the daily/featured rotation. See the <a href="configuration.html#shop">Configuration</a> page for the full reference.</p>
+
+            <h3>config/experience.json</h3>
+            <p>XP requirements per level and season XP multipliers.</p>
+
+            <h3>config/game-servers.json</h3>
+            <p>Matchmaking regions and dedicated game server addresses. Changes here are reflected in the next <code>DefaultEngine.ini</code> regeneration (server restart).</p>
+
+            <h3>config/motd.json</h3>
+            <p>Message of the Day shown in the lobby news panel. Supports multiple entries with title, body, image, and tab name.</p>
+
+        </main>
+    </div>
+</body>
+</html>

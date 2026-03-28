@@ -20,6 +20,7 @@
                     <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
                     <li><a href="../updates.html">UPDATES</a></li>
                     <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="../status.html">STATUS</a></li>
                     <li><a href="index.html" class="active">DOCS</a></li>
                 </ul>
             </nav>
@@ -35,11 +36,13 @@
             <nav class="docs-nav">
                 <div class="docs-nav-section">Getting Started</div>
                 <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="configuration.html" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
                 <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
                 <div class="docs-nav-section">Features</div>
                 <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
                 <a href="database.html" class="docs-nav-link active"><i class="fas fa-database"></i> Database</a>
                 <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
                 <div class="docs-nav-section">Development</div>
                 <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
                 <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
@@ -115,6 +118,7 @@ databasePath=mongodb+srv://user:password@cluster.mongodb.net/neodyme</code></pre
                 <tr><td><code>creatorcodes</code></td><td>Creator codes</td></tr>
                 <tr><td><code>creatorcoderequests</code></td><td>Creator code requests</td></tr>
                 <tr><td><code>auditlogs</code></td><td>Audit log entries</td></tr>
+                <tr><td><code>reports</code></td><td>In-game toxicity reports <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
             </table>
 
             <h2>Architecture</h2>
@@ -134,9 +138,10 @@ databasePath=mongodb+srv://user:password@cluster.mongodb.net/neodyme</code></pre
                 <tr><td>Creator Codes</td><td>Affiliate codes and requests</td></tr>
                 <tr><td>Audit Logs</td><td>Administrative action history</td></tr>
                 <tr><td>Cloud Storage</td><td>User and system cloud storage files</td></tr>
+                <tr><td>Reports</td><td>In-game toxicity reports (reporter, reported, reason, timestamp) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
             </table>
 
-            <h2>Data Migration <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h2>
+            <h2>Data Migration</span></h2>
             <p>Migrate data between database backends using the <code>/data</code> command:</p>
 
             <pre><code># Preview what would be migrated (no data written)

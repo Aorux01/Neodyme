@@ -20,6 +20,7 @@
                     <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
                     <li><a href="../updates.html">UPDATES</a></li>
                     <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="../status.html">STATUS</a></li>
                     <li><a href="index.html" class="active">DOCS</a></li>
                 </ul>
             </nav>
@@ -35,11 +36,13 @@
             <nav class="docs-nav">
                 <div class="docs-nav-section">Getting Started</div>
                 <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="configuration.html" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
                 <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
                 <div class="docs-nav-section">Features</div>
                 <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
                 <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
                 <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
                 <div class="docs-nav-section">Development</div>
                 <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
                 <a href="plugins.html" class="docs-nav-link active"><i class="fas fa-plug"></i> Plugins</a>
@@ -140,9 +143,9 @@ const port = ConfigManager.get('port');</code></pre>
             <h2>Lifecycle</h2>
             <table>
                 <tr><th>Phase</th><th>Steps</th></tr>
-                <tr><td>Load</td><td>Scan <code>plugins/</code> → import → instantiate → validate → call <code>init()</code> → add to list</td></tr>
-                <tr><td>Reload</td><td>Call <code>shutdown()</code> → clear require cache → re-import → call <code>init()</code></td></tr>
-                <tr><td>Unload</td><td>Call <code>shutdown()</code> for each plugin → clear list</td></tr>
+                <tr><td>Load</td><td>Scan <code>plugins/</code> -> import -> instantiate -> validate -> call <code>init()</code> -> add to list</td></tr>
+                <tr><td>Reload</td><td>Call <code>shutdown()</code> -> clear require cache -> re-import -> call <code>init()</code></td></tr>
+                <tr><td>Unload</td><td>Call <code>shutdown()</code> for each plugin -> clear list</td></tr>
             </table>
 
             <h2>Directory Structure</h2>

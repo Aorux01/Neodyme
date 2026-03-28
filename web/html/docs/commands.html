@@ -20,6 +20,7 @@
                     <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
                     <li><a href="../updates.html">UPDATES</a></li>
                     <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="../status.html">STATUS</a></li>
                     <li><a href="index.html" class="active">DOCS</a></li>
                 </ul>
             </nav>
@@ -35,11 +36,13 @@
             <nav class="docs-nav">
                 <div class="docs-nav-section">Getting Started</div>
                 <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="configuration.html" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
                 <a href="commands.html" class="docs-nav-link active"><i class="fas fa-terminal"></i> Commands</a>
                 <div class="docs-nav-section">Features</div>
                 <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
                 <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
                 <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
                 <div class="docs-nav-section">Development</div>
                 <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
                 <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
@@ -62,7 +65,7 @@
                 <tr><td><code>/stop</code></td><td>Gracefully shut down the server</td></tr>
             </table>
 
-            <h2>/reload <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">IMPROVED 1.2.4</span></h2>
+            <h2>/reload</h2>
             <table>
                 <tr><th>Command</th><th>Description</th></tr>
                 <tr><td><code>/reload</code></td><td>Reload config + plugins + shop in one shot</td></tr>
@@ -71,7 +74,7 @@
                 <tr><td><code>/reload shop</code></td><td>Re-initialize shop rotation</td></tr>
             </table>
 
-            <h2>/data - Database Migration <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h2>
+            <h2>/data - Database Migration</span></h2>
             <table>
                 <tr><th>Command</th><th>Description</th></tr>
                 <tr><td><code>/data migrate json mongodb</code></td><td>Migrate all data from JSON files to MongoDB</td></tr>
@@ -88,7 +91,7 @@
 # Run with auto-confirm
 /data migrate json mongodb --confirm</code></pre>
 
-            <h2>/test - Test Suite <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h2>
+            <h2>/test - Test Suite</span></h2>
             <table>
                 <tr><th>Command</th><th>Description</th></tr>
                 <tr><td><code>/test all</code></td><td>Run all test suites</td></tr>
@@ -98,7 +101,7 @@
                 <tr><td><code>/test database</code></td><td>Database connection tests</td></tr>
             </table>
 
-            <h2>/diagnostic <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h2>
+            <h2>/diagnostic</span></h2>
             <p>Prints a full server diagnostic report: OS, CPU, RAM, uptime, database type, active services, token counts, and loaded plugins.</p>
             <pre><code>/diagnostic</code></pre>
 
@@ -109,6 +112,32 @@
                 <tr><td><code>/account info &lt;username&gt;</code></td><td>View account details (role, ban, V-Bucks)</td></tr>
                 <tr><td><code>/account list [page]</code></td><td>List all accounts (paginated)</td></tr>
             </table>
+
+            <h2>/give</h2>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/give vbucks &lt;username&gt; &lt;amount&gt;</code></td><td>Give V-Bucks to a player</td></tr>
+                <tr><td><code>/give item &lt;username&gt; &lt;templateId&gt;</code></td><td>Give a cosmetic item to a player's locker</td></tr>
+            </table>
+            <p>The <code>templateId</code> must include the type prefix and the item ID, separated by <code>:</code>. For example:</p>
+            <pre><code>/give item JojoM AthenaCharacter:CID_A_248_Athena_Commando_M_ZombieElastic_E
+/give item JojoM AthenaBackpack:Backpack_Titanium
+/give item JojoM AthenaDance:EID_BoogieDown
+/give item JojoM AthenaPickaxe:Pickaxe_ID_010_Lockjaw</code></pre>
+            <p>Supported item types:</p>
+            <ul>
+                <li><code>AthenaCharacter</code> - Outfits (skins)</li>
+                <li><code>AthenaBackpack</code> - Back Blings</li>
+                <li><code>AthenaPickaxe</code> - Harvesting Tools</li>
+                <li><code>AthenaGlider</code> - Gliders</li>
+                <li><code>AthenaDance</code> - Emotes</li>
+                <li><code>AthenaItemWrap</code> - Wraps</li>
+                <li><code>AthenaSkyDiveContrail</code> - Contrails</li>
+                <li><code>AthenaMusicPack</code> - Music</li>
+                <li><code>AthenaLoadingScreen</code> - Loading Screens</li>
+                <li><code>AthenaBattleBus</code>, <code>AthenaVehicleCosmetics</code>, <code>AthenaPet</code>, <code>AthenaPetCarrier</code>, <code>AthenaSpray</code>, <code>AthenaToy</code>, <code>AthenaEmoji</code></li>
+            </ul>
+            <p>If the player already owns the item, the command will warn you instead of adding a duplicate.</p>
 
             <h2>/admin</h2>
             <table>
@@ -173,14 +202,14 @@
                 <tr><td><code>/tokens user &lt;username&gt;</code></td><td>Show token details for a user</td></tr>
             </table>
 
-            <h2>/maintenance <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h2>
+            <h2>/maintenance</span></h2>
             <table>
                 <tr><th>Command</th><th>Description</th></tr>
                 <tr><td><code>/maintenance on</code></td><td>Enable maintenance mode - blocks new player logins</td></tr>
                 <tr><td><code>/maintenance off</code></td><td>Disable maintenance mode</td></tr>
             </table>
 
-            <h2>/broadcast <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h2>
+            <h2>/broadcast</span></h2>
             <table>
                 <tr><th>Command</th><th>Description</th></tr>
                 <tr><td><code>/broadcast &lt;message&gt;</code></td><td>Send a message to all connected players</td></tr>

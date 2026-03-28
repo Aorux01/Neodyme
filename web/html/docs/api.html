@@ -20,6 +20,7 @@
                     <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
                     <li><a href="../updates.html">UPDATES</a></li>
                     <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="../status.html">STATUS</a></li>
                     <li><a href="index.html" class="active">DOCS</a></li>
                 </ul>
             </nav>
@@ -35,11 +36,13 @@
             <nav class="docs-nav">
                 <div class="docs-nav-section">Getting Started</div>
                 <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="configuration.html" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
                 <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
                 <div class="docs-nav-section">Features</div>
                 <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
                 <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
                 <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
                 <div class="docs-nav-section">Development</div>
                 <a href="api.html" class="docs-nav-link active"><i class="fas fa-code"></i> API Reference</a>
                 <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
@@ -99,6 +102,7 @@ Content-Type: application/json
                 <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/SetBattleRoyaleBanner</code></td><td>Set banner</td></tr>
                 <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/SetCosmeticLockerSlot</code></td><td>Set locker slot</td></tr>
                 <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/PurchaseCatalogEntry</code></td><td>Purchase item</td></tr>
+                <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/PurchaseMultipleCatalogEntries</code></td><td>Purchase multiple items (batch)</td></tr>
                 <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/SetAffiliateName</code></td><td>Set creator code</td></tr>
                 <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/MarkItemSeen</code></td><td>Mark items seen</td></tr>
                 <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/profile/:id/client/SetItemFavoriteStatus</code></td><td>Favorite item</td></tr>
@@ -118,9 +122,28 @@ Content-Type: application/json
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
                 <tr><td><code>GET</code></td><td><code>/fortnite/api/storefront/v2/catalog</code></td><td>Get shop catalog</td></tr>
                 <tr><td><code>GET</code></td><td><code>/fortnite/api/storefront/v2/keychain</code></td><td>Get keychain</td></tr>
+                <tr><td><code>GET</code></td><td><code>/fortnite/api/storefront/v2/gift/check_eligibility/...</code></td><td>Check gift eligibility (validates offer, friendship, and ownership) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
             </table>
 
-            <h3>Launcher Assets <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h3>
+            <h3>Party <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.5</span></h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>POST</code></td><td><code>/party/api/v1/Fortnite/user/:id/pings/:pingerId</code></td><td>Send ping / party invite notification</td></tr>
+                <tr><td><code>POST</code></td><td><code>/party/api/v1/Fortnite/parties/:pid/invites/:accountId</code></td><td>Send party invite</td></tr>
+                <tr><td><code>POST</code></td><td><code>/party/api/v1/Fortnite/parties/:pid/invites/:accountId/decline</code></td><td>Decline party invite</td></tr>
+                <tr><td><code>POST</code></td><td><code>/party/api/v1/Fortnite/parties/:pid/members/:accountId/promote</code></td><td>Promote member to captain</td></tr>
+                <tr><td><code>POST</code></td><td><code>/party/api/v1/Fortnite/user/:id/intentions/:senderId</code></td><td>Join-request intention flow</td></tr>
+                <tr><td><code>POST</code></td><td><code>/party/api/v1/Fortnite/parties/:pid/members/:accountId/conferences/connection</code></td><td>Get Vivox voice chat token</td></tr>
+                <tr><td><code>GET</code></td><td><code>/party/api/v1/Fortnite/user/:id/notifications/undelivered/count</code></td><td>Undelivered notification count</td></tr>
+            </table>
+
+            <h3>Player Reports <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.5</span></h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>POST</code></td><td><code>/fortnite/api/game/v2/toxicity/account/:reporter/report/:reported</code></td><td>Submit in-game toxicity report (stored via DB abstraction)</td></tr>
+            </table>
+
+            <h3>Launcher Assets</span></h3>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
                 <tr><td><code>GET</code></td><td><code>/launcher/api/public/assets/Windows/:catalogItemId/:appName</code></td><td>Proxy launcher asset requests to Epic's service</td></tr>
@@ -174,7 +197,10 @@ Content-Type: application/json
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
                 <tr><td><code>GET</code></td><td><code>/api/shop</code></td><td>Get shop data</td></tr>
                 <tr><td><code>GET</code></td><td><code>/api/shop/status</code></td><td>Shop rotation status</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/shop/items</code></td><td>Shop items</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/shop/items</code></td><td>Shop items list</td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/shop/image</code></td><td>Generated SVG shop image (<code>Content-Type: image/svg+xml</code>, 10-min cache) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/shop/config</code></td><td>Shop category configuration <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/shop/rotate</code></td><td>Force shop rotation (requires auth) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
             </table>
 
             <h3>Sessions</h3>
@@ -216,6 +242,14 @@ Content-Type: application/json
                 <tr><td><code>DELETE</code></td><td><code>/api/mod/tickets/:id</code></td><td>Delete ticket</td></tr>
             </table>
 
+            <h3>Reports <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.5</span></h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/api/mod/reports</code></td><td>Get all player reports (grouped by reported player)</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/api/mod/reports/:reportId</code></td><td>Dismiss a report</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/api/mod/reports/player/:accountId</code></td><td>Dismiss all reports for a player</td></tr>
+            </table>
+
             <h2>Admin API</h2>
             <p>Requires Admin or Developer role.</p>
 
@@ -226,15 +260,17 @@ Content-Type: application/json
                 <tr><td><code>PUT</code></td><td><code>/api/admin/users/:accountId/ban</code></td><td>Ban user</td></tr>
                 <tr><td><code>GET</code></td><td><code>/api/admin/stats</code></td><td>Server statistics</td></tr>
                 <tr><td><code>GET</code></td><td><code>/api/admin/audit-log</code></td><td>Get audit logs</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/admin/console-logs</code></td><td>Get server console logs <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/admin/live-stats</code></td><td>CPU, RAM, player count (real-time) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/admin/server-properties</code></td><td>Read server.properties <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
-                <tr><td><code>PUT</code></td><td><code>/api/admin/server-properties</code></td><td>Write server.properties <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/admin/plugins</code></td><td>List loaded plugins <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/admin/plugins/:name/load</code></td><td>Load a plugin <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/admin/plugins/:name/unload</code></td><td>Unload a plugin <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/admin/plugins/:name/reload</code></td><td>Reload a plugin <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/admin/command</code></td><td>Execute an admin command <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.4</span></td></tr>
+                <tr><td><code>GET</code></td><td><code>/api/admin/console-logs</code></td><td>Get server console logs</tr>
+                <tr><td><code>GET</code></td><td><code>/api/admin/live-stats</code></td><td>CPU, RAM, player count (real-time)</tr>
+                <tr><td><code>GET</code></td><td><code>/api/admin/server-properties</code></td><td>Read server.properties</tr>
+                <tr><td><code>PUT</code></td><td><code>/api/admin/server-properties</code></td><td>Write server.properties</tr>
+                <tr><td><code>GET</code></td><td><code>/api/admin/plugins</code></td><td>List loaded plugins</tr>
+                <tr><td><code>POST</code></td><td><code>/api/admin/plugins/:name/load</code></td><td>Load a plugin</tr>
+                <tr><td><code>POST</code></td><td><code>/api/admin/plugins/:name/unload</code></td><td>Unload a plugin</tr>
+                <tr><td><code>POST</code></td><td><code>/api/admin/plugins/:name/reload</code></td><td>Reload a plugin</tr>
+                <tr><td><code>POST</code></td><td><code>/api/admin/command</code></td><td>Execute an admin command</tr>
+                <tr><td><code>GET</code></td><td><code>/api/admin/xmpp-clients</code></td><td>List connected XMPP clients (display name, JID, away status, rooms) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
+                <tr><td><code>POST</code></td><td><code>/api/admin/shop/rotate-date</code></td><td>Rotate shop to a historical date - body: <code>{ "date": "YYYY-MM-DD" }</code> <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
             </table>
 
             <h2>Developer API</h2>
@@ -247,6 +283,16 @@ Content-Type: application/json
                 <tr><td><code>GET</code></td><td><code>/api/dev/stats/server</code></td><td>Server statistics</td></tr>
                 <tr><td><code>GET</code></td><td><code>/api/dev/stats/database</code></td><td>Database statistics</td></tr>
                 <tr><td><code>GET</code></td><td><code>/api/dev/ssl/status</code></td><td>SSL certificate status</td></tr>
+            </table>
+
+            <h2>Purchase Error Codes <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.5</span></h2>
+            <p>Errors returned by <code>PurchaseCatalogEntry</code>:</p>
+            <table>
+                <tr><th>Code</th><th>Error</th><th>Cause</th></tr>
+                <tr><td><code>16027</code></td><td><code>offer_not_found</code></td><td>offerId not found in any storefront</td></tr>
+                <tr><td><code>1040</code></td><td><code>mtx.insufficient</code></td><td>Not enough V-Bucks</td></tr>
+                <tr><td><code>19000</code></td><td><code>purchase_not_allowed</code></td><td>Battle Pass already purchased this season</td></tr>
+                <tr><td><code>1040</code></td><td><code>offer.already_owned</code></td><td>Cosmetic already in the player's locker</td></tr>
             </table>
 
             <h2>Error Responses</h2>

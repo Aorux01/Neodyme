@@ -99,6 +99,10 @@ function getStoredUser() {
 
 let csrfToken = null;
 
+function getAuthToken() {
+    return localStorage.getItem('neodyme_token') || sessionStorage.getItem('neodyme_token') || null;
+}
+
 async function getCsrfToken() {
     if (csrfToken) return csrfToken;
 
@@ -129,6 +133,14 @@ async function secureFetch(url, options = {}) {
         }
 
         csrfToken = null;
+    }
+
+    const authToken = getAuthToken();
+    if (authToken) {
+        options.headers = {
+            ...options.headers,
+            Authorization: `Bearer ${authToken}`
+        };
     }
 
     options.credentials = 'include';

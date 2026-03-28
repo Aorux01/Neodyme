@@ -3,6 +3,7 @@ const fs = require('fs');
 const colors = require('../utils/colors');
 const LoggerService = require('../service/logger/logger-service');
 const BackupManager = require('../manager/backup-manager');
+const DatabaseManager = require('../manager/database-manager');
 
 function register(CM) {
     CM.register('/confirm', async (args) => {
@@ -48,10 +49,54 @@ function register(CM) {
                 }
                 break;
 
+            case 'account-delete':
+                if (!CM.pendingAccountDelete) {
+                    LoggerService.log('error', 'No pending account deletion. Use "/account delete <username>" first.');
+                    return;
+                }
+                try {
+                    const name = CM.pendingAccountDeleteName || CM.pendingAccountDelete;
+                    const ok = await DatabaseManager.deleteAccount(CM.pendingAccountDelete);
+                    if (ok) {
+                        LoggerService.log('success', `Account "${name}" has been permanently deleted.`);
+                    } else {
+                        LoggerService.log('error', `Failed to delete account "${name}" (not found).`);
+                    }
+                } catch (error) {
+                    LoggerService.log('error', `Account deletion failed: ${error.message}`);
+                } finally {
+                    CM.pendingAccountDelete = null;
+                    CM.pendingAccountDeleteName = null;
+                }
+                break;
+
+            case 'account-reset':
+                if (!CM.pendingAccountReset) {
+                    LoggerService.log('error', 'No pending account reset. Use "/account reset <username>" first.');
+                    return;
+                }
+                try {
+                    const name = CM.pendingAccountResetName || CM.pendingAccountReset;
+                    const ok = await DatabaseManager.resetAccount(CM.pendingAccountReset);
+                    if (ok) {
+                        LoggerService.log('success', `Account "${name}" has been reset. All game data erased.`);
+                    } else {
+                        LoggerService.log('error', `Failed to reset account "${name}" (not found).`);
+                    }
+                } catch (error) {
+                    LoggerService.log('error', `Account reset failed: ${error.message}`);
+                } finally {
+                    CM.pendingAccountReset = null;
+                    CM.pendingAccountResetName = null;
+                }
+                break;
+
             default:
                 LoggerService.log('info', 'Available confirmations:');
-                LoggerService.log('info', `  ${colors.cyan('/confirm restore')} - Confirm backup restoration`);
-                LoggerService.log('info', `  ${colors.cyan('/confirm delete')}  - Confirm backup deletion`);
+                LoggerService.log('info', `  ${colors.cyan('/confirm restore')}       - Confirm backup restoration`);
+                LoggerService.log('info', `  ${colors.cyan('/confirm delete')}        - Confirm backup deletion`);
+                LoggerService.log('info', `  ${colors.cyan('/confirm account-delete')} - Confirm permanent account deletion`);
+                LoggerService.log('info', `  ${colors.cyan('/confirm account-reset')}  - Confirm account game data reset`);
                 break;
         }
     });
@@ -63,6 +108,14 @@ function register(CM) {
         } else if (CM.pendingDelete) {
             LoggerService.log('info', `Cancelled pending delete: ${CM.pendingDelete}`);
             CM.pendingDelete = null;
+        } else if (CM.pendingAccountDelete) {
+            LoggerService.log('info', `Cancelled account deletion for: ${CM.pendingAccountDeleteName || CM.pendingAccountDelete}`);
+            CM.pendingAccountDelete = null;
+            CM.pendingAccountDeleteName = null;
+        } else if (CM.pendingAccountReset) {
+            LoggerService.log('info', `Cancelled account reset for: ${CM.pendingAccountResetName || CM.pendingAccountReset}`);
+            CM.pendingAccountReset = null;
+            CM.pendingAccountResetName = null;
         } else {
             LoggerService.log('info', 'No pending operations to cancel');
         }

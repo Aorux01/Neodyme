@@ -91,12 +91,60 @@ function register(CM) {
                 }
                 break;
 
+            case 'delete': {
+                if (args.length < 2) {
+                    LoggerService.log('info', `Usage: ${colors.cyan('/account delete <username>')}`);
+                    return;
+                }
+                try {
+                    const username = args[1];
+                    const account = await DatabaseManager.getAccountByDisplayName(username);
+                    if (!account) {
+                        LoggerService.log('error', `Player "${username}" not found`);
+                        return;
+                    }
+                    CM.pendingAccountDelete = account.accountId;
+                    CM.pendingAccountDeleteName = account.displayName;
+                    LoggerService.log('warn', `You are about to PERMANENTLY delete account "${account.displayName}" (${account.accountId}).`);
+                    LoggerService.log('warn', `This will remove all their data (cosmetics, V-Bucks, friends). This cannot be undone!`);
+                    LoggerService.log('info', `Type ${colors.cyan('/confirm account-delete')} to confirm, or ${colors.cyan('/cancel')} to abort.`);
+                } catch (error) {
+                    LoggerService.log('error', `Failed to prepare account deletion: ${error.message}`);
+                }
+                break;
+            }
+
+            case 'reset': {
+                if (args.length < 2) {
+                    LoggerService.log('info', `Usage: ${colors.cyan('/account reset <username>')}`);
+                    return;
+                }
+                try {
+                    const username = args[1];
+                    const account = await DatabaseManager.getAccountByDisplayName(username);
+                    if (!account) {
+                        LoggerService.log('error', `Player "${username}" not found`);
+                        return;
+                    }
+                    CM.pendingAccountReset = account.accountId;
+                    CM.pendingAccountResetName = account.displayName;
+                    LoggerService.log('warn', `You are about to reset ALL game data for "${account.displayName}" (${account.accountId}).`);
+                    LoggerService.log('warn', `This will erase cosmetics, V-Bucks, friends, etc. The account login will remain.`);
+                    LoggerService.log('info', `Type ${colors.cyan('/confirm account-reset')} to confirm, or ${colors.cyan('/cancel')} to abort.`);
+                } catch (error) {
+                    LoggerService.log('error', `Failed to prepare account reset: ${error.message}`);
+                }
+                break;
+            }
+
             default:
-                LoggerService.log('info', `Usage: ${colors.cyan('/account <create|info|list>')}`);
+                LoggerService.log('info', `Usage: ${colors.cyan('/account <create|info|list|delete|reset>')}`);
                 LoggerService.log('info', 'Subcommands:');
                 LoggerService.log('info', `  ${colors.cyan('create')} - Create a new account (usage: /account create <email> <password> <displayName>)`);
                 LoggerService.log('info', `  ${colors.cyan('info')}   - View account details (usage: /account info <username>)`);
                 LoggerService.log('info', `  ${colors.cyan('list')}   - List all accounts (usage: /account list [page])`);
+                LoggerService.log('info', `  ${colors.cyan('delete')} - Delete an account permanently (usage: /account delete <username>)`);
+                LoggerService.log('info', `  ${colors.cyan('reset')}  - Reset all game data for an account (usage: /account reset <username>)`);
                 break;
         }
     });

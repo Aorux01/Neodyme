@@ -310,12 +310,12 @@ class DatabaseManager {
         throw new Error('Update item in profile not supported');
     }
     
-    static generateItemId() {
+    static generateItemId(templateId) {
         const dbInstance = this.getDatabaseInstance();
         if (dbInstance.generateItemId) {
-            return dbInstance.generateItemId();
+            return dbInstance.generateItemId(templateId);
         }
-        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        return templateId || (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15));
     }
 
     static async getFriends(accountId) {
@@ -495,6 +495,14 @@ class DatabaseManager {
         throw new Error('Block friend not supported');
     }
 
+    static async unblockFriend(accountId, friendAccountId) {
+        const dbInstance = this.getDatabaseInstance();
+        if (dbInstance.unblockFriend) {
+            return await dbInstance.unblockFriend(accountId, friendAccountId);
+        }
+        throw new Error('Unblock friend not supported');
+    }
+
     static async getFriendData(accountId, friendAccountId) {
         const dbInstance = this.getDatabaseInstance();
         if (dbInstance.getFriendData) {
@@ -519,6 +527,22 @@ class DatabaseManager {
     static async saveFriends(accountId, friends) {
         const dbInstance = this.getDatabaseInstance();
         return await dbInstance.saveFriends(accountId, friends);
+    }
+
+    static async deleteAccount(accountId) {
+        const dbInstance = this.getDatabaseInstance();
+        if (dbInstance.deleteAccount) {
+            return await dbInstance.deleteAccount(accountId);
+        }
+        return false;
+    }
+
+    static async resetAccount(accountId) {
+        const dbInstance = this.getDatabaseInstance();
+        if (dbInstance.resetAccount) {
+            return await dbInstance.resetAccount(accountId);
+        }
+        return false;
     }
 
     static async getSeasonData(accountId) {
@@ -631,6 +655,26 @@ class DatabaseManager {
 
     static async updateCreatorCodeRequest(requestId, updates) {
         return await this.getDatabaseInstance().updateCreatorCodeRequest(requestId, updates);
+    }
+
+    static async getReport(reportId) {
+        return await this.getDatabaseInstance().getReport(reportId);
+    }
+
+    static async createReport(report) {
+        return await this.getDatabaseInstance().createReport(report);
+    }
+
+    static async deleteReport(reportId) {
+        return await this.getDatabaseInstance().deleteReport(reportId);
+    }
+
+    static async getReportsByTarget(reportedAccountId) {
+        return await this.getDatabaseInstance().getReportsByTarget(reportedAccountId);
+    }
+
+    static async getAllReports() {
+        return await this.getDatabaseInstance().getAllReports();
     }
 }
 

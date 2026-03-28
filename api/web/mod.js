@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
 const DatabaseManager = require('../../src/manager/database-manager');
 const { Errors, sendError } = require('../../src/service/error/errors-system');
 const LoggerService = require('../../src/service/logger/logger-service');
 const CreatorCodeService = require('../../src/service/api/creator-code-service');
 const TicketService = require('../../src/service/api/ticket-service');
+const ReportService = require('../../src/service/api/report-service');
 const AuditService = require('../../src/service/api/audit-service');
 const { csrfProtection } = require('../../src/service/token/csrf-token-service');
 const WebService = require('../../src/service/api/web-service');
@@ -378,6 +381,131 @@ router.post('/api/mod/players/:accountId/unban', verifyToken, requireModerator, 
         });
     } catch (error) {
         LoggerService.log('error', `Unban player error: ${error.message}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.get('/api/mod/reports', verifyToken, requireModerator, async (req, res) => {
+    try {
+        const { search, reportedAccountId, reporterAccountId } = req.query;
+        const filters = {};
+        if (search) filters.search = search;
+        if (reportedAccountId) filters.reportedAccountId = reportedAccountId;
+        if (reporterAccountId) filters.reporterAccountId = reporterAccountId;
+
+        const reports = await ReportService.getAllReports(filters);
+        res.json({ success: true, reports });
+    } catch (error) {
+        LoggerService.log('error', `Get reports error: ${error.message}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.get('/api/mod/reports/stats', verifyToken, requireModerator, async (req, res) => {
+    try {
+        const stats = await ReportService.getStats();
+        res.json({ success: true, stats });
+    } catch (error) {
+        LoggerService.log('error', `Get report stats error: ${error.message}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.get('/api/mod/reports/player/:accountId', verifyToken, requireModerator, async (req, res) => {
+    try {
+        const reports = await ReportService.getReportsByTarget(req.params.accountId);
+        res.json({ success: true, reports });
+    } catch (error) {
+        LoggerService.log('error', `Get player reports error: ${error.message}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.delete('/api/mod/reports/:reportId', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+    try {
+        const result = await ReportService.deleteReport(req.params.reportId);
+        if (!result.success) {
+            return res.status(404).json(result);
+        }
+        LoggerService.log('info', `Report ${req.params.reportId} dismissed by ${req.user.displayName}`);
+        res.json(result);
+    } catch (error) {
+        LoggerService.log('error', `Delete report error: ${error.message}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+const feedbackStoragePath = path.join(process.cwd(), 'data', 'feedback');
+
+router.get('/api/mod/feedback', verifyToken, requireModerator, async (req, res) => {
+    try {
+        const basePath = path.join(feedbackStoragePath, 'client-feedback', 'Fortnite');
+        if (!fs.existsSync(basePath)) return res.json({ success: true, submissions: [] });
+
+        const submissions = [];
+        for (const accountId of fs.readdirSync(basePath)) {
+            const accountPath = path.join(basePath, accountId);
+            if (!fs.statSync(accountPath).isDirectory()) continue;
+
+            for (const profileDir of fs.readdirSync(accountPath)) {
+                const profilePath = path.join(accountPath, profileDir);
+                if (!fs.statSync(profilePath).isDirectory()) continue;
+
+                for (const submissionDir of fs.readdirSync(profilePath)) {
+                    const submissionPath = path.join(profilePath, submissionDir);
+                    if (!fs.statSync(submissionPath).isDirectory()) continue;
+
+                    const dashIdx = submissionDir.indexOf('-');
+                    const type = dashIdx > 0 ? submissionDir.substring(0, dashIdx) : submissionDir;
+                    const datetime = dashIdx > 0 ? submissionDir.substring(dashIdx + 1) : '';
+
+                    const files = fs.readdirSync(submissionPath).map(f => ({
+                        name: f,
+                        relPath: `client-feedback/Fortnite/${accountId}/${profileDir}/${submissionDir}/${f}`
+                    }));
+
+                    const account = await DatabaseManager.getAccount(accountId);
+                    submissions.push({
+                        id: `${accountId}/${profileDir}/${submissionDir}`,
+                        accountId,
+                        displayName: account?.displayName || accountId,
+                        type,
+                        datetime,
+                        files
+                    });
+                }
+            }
+        }
+
+        submissions.sort((a, b) => b.datetime.localeCompare(a.datetime));
+        res.json({ success: true, submissions });
+    } catch (error) {
+        LoggerService.log('error', `Get feedback list error: ${error.message}`);
+        sendError(res, Errors.Internal.serverError());
+    }
+});
+
+router.get('/api/mod/feedback/file', verifyToken, requireModerator, async (req, res) => {
+    try {
+        const filePath = path.resolve(feedbackStoragePath, req.query.path || '');
+        if (!filePath.startsWith(feedbackStoragePath)) return res.status(400).end();
+        if (!fs.existsSync(filePath)) return res.status(404).end();
+        res.sendFile(filePath);
+    } catch (error) {
+        res.status(500).end();
+    }
+});
+
+router.delete('/api/mod/feedback/:id(*)', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+    try {
+        const submissionPath = path.resolve(feedbackStoragePath, 'client-feedback', 'Fortnite', req.params.id);
+        if (!submissionPath.startsWith(feedbackStoragePath)) return res.status(400).end();
+        if (fs.existsSync(submissionPath)) {
+            fs.rmSync(submissionPath, { recursive: true, force: true });
+        }
+        res.json({ success: true });
+    } catch (error) {
+        LoggerService.log('error', `Delete feedback error: ${error.message}`);
         sendError(res, Errors.Internal.serverError());
     }
 });

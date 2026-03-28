@@ -15,7 +15,7 @@ class EXPService {
             LoggerService.log('success', 'EXP configuration loaded');
             return this.expConfig;
         } catch (error) {
-            LoggerService.log('warning', `Failed to load EXP.json: ${error.message}, using defaults`);
+            LoggerService.log('warn', `Failed to load EXP.json: ${error.message}, using defaults`);
             this.expConfig = {
                 maxLevel: 100,
                 xpPerLevel: 80000,

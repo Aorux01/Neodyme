@@ -51,7 +51,7 @@ class ConfigManager {
 
         try {
             if (!fsSync.existsSync(envPath)) {
-                LoggerService.log('warning', '.env file not found, creating one...');
+                LoggerService.log('warn', '.env file not found, creating one...');
 
                 const jwtSecret = crypto.randomBytes(32).toString('hex');
                 const gameServerSecret = crypto.randomBytes(32).toString('hex');

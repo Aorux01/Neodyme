@@ -40,7 +40,7 @@ function register(CM) {
             return;
         }
 
-        const direction = `${from} → ${to}`;
+        const direction = `${from} -> ${to}`;
 
         if (isDryRun) {
             LoggerService.log('info', `[DRY-RUN] Migration preview: ${colors.cyan(direction)}`);
@@ -115,7 +115,7 @@ function register(CM) {
             content = content.replace(/^databaseType=.*/m, `databaseType=${dbType}`);
             content = content.replace(/^databasePath=.*/m,  `databasePath=${dbPath}`);
             fs.writeFileSync(propFile, content, 'utf8');
-            LoggerService.log('success', `server.properties updated → databaseType=${dbType}. Restart to apply.`);
+            LoggerService.log('success', `server.properties updated -> databaseType=${dbType}. Restart to apply.`);
         }
 
         if (from === 'json' && to === 'mongodb') {

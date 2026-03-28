@@ -53,6 +53,11 @@ router.get("/fortnite/api/cloudstorage/system/:file", async (req, res) => {
     }
 });
 
+// Special case: the game requests /user/config which is not a real account
+router.get("/fortnite/api/cloudstorage/user/config", async (req, res) => {
+    res.json([]);
+});
+
 router.get("/fortnite/api/cloudstorage/user/:accountId", verifyToken, async (req, res) => {
     try {
         const version = VersionService.getVersionInfo(req);

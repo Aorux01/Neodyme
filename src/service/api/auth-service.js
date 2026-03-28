@@ -270,7 +270,7 @@ class AuthService {
 
     static async killToken(token) {
         await TokenService.removeToken(token);
-        LoggerService.log('info', `Token killed: ${token.substring(0, 20)}...`);
+        //LoggerService.log('info', `Token killed: ${token.substring(0, 20)}...`);
     }
 
     static async killOtherTokens(currentToken) {
@@ -287,7 +287,7 @@ class AuthService {
 
     static async killAllTokensForAccount(accountId) {
         await TokenService.removeAllTokensForAccount(accountId);
-        LoggerService.log('warning', `All tokens killed for account: ${accountId}`);
+        LoggerService.log('warn', `All tokens killed for account: ${accountId}`);
     }
 
     static async getActiveSessions(accountId) {

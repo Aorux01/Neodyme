@@ -19,6 +19,20 @@ class CloudStorageManager {
             LoggerService.log('info', '[CloudStorage] System directory created');
         }
 
+        // Copy any missing INI files from the bundled template directory
+        const templateDir = path.join(__dirname, '..', '..', 'content', 'cloudstorage');
+        if (fs.existsSync(templateDir)) {
+            fs.readdirSync(templateDir).forEach(file => {
+                if (file.toLowerCase().endsWith('.ini')) {
+                    const dest = path.join(this.SYSTEM_DIR, file);
+                    if (!fs.existsSync(dest)) {
+                        fs.copyFileSync(path.join(templateDir, file), dest);
+                        LoggerService.log('info', `[CloudStorage] Copied missing file: ${file}`);
+                    }
+                }
+            });
+        }
+
         // Always regenerate DefaultEngine.ini to reflect config changes (xmppPort, game servers, etc.)
         this.regenerateDefaultEngine();
 
@@ -27,16 +41,18 @@ class CloudStorageManager {
     
     static generateDefaultEngine() {
         const gameServersPath = path.join(__dirname, '..', '..', 'config', 'game-servers.json');
-        const xmppPort = ConfigManager.get('xmppPort');
+        const xmppPort = ConfigManager.get('xmppPort') || 8080;
         
+        const xmppHost = ConfigManager.get('xmppHost') || '127.0.0.1';
+
         let content = `[OnlineSubsystemMcp.Xmpp]
 bUseSSL=false
-ServerAddr="ws://127.0.0.1"
+ServerAddr="ws://${xmppHost}"
 ServerPort=${xmppPort}
 
 [OnlineSubsystemMcp.Xmpp Prod]
 bUseSSL=false
-ServerAddr="ws://127.0.0.1"
+ServerAddr="ws://${xmppHost}"
 ServerPort=${xmppPort}
 
 [OnlineSubsystemMcp.OnlineWaitingRoomMcp]
@@ -179,7 +195,7 @@ BasePath="/logout?redirectUrl=https%3A%2F%2Fwww.unrealengine.com%2Fid%2Flogout%3
         const dirFiles = fs.readdirSync(this.SYSTEM_DIR);
 
         dirFiles.forEach(fileName => {
-            if (fileName.toLowerCase().endsWith('.ini')) {
+            if (fileName.toLowerCase().endsWith('.ini') && !fileName.includes(' ')) {
                 const filePath = path.join(this.SYSTEM_DIR, fileName);
                 const content = fs.readFileSync(filePath, 'utf-8');
                 const stats = fs.statSync(filePath);
@@ -202,6 +218,39 @@ BasePath="/logout?redirectUrl=https%3A%2F%2Fwww.unrealengine.com%2Fid%2Flogout%3
         return files;
     }
 
+    static loadPlaylists() {
+        try {
+            const playlistsPath = path.join(__dirname, '..', '..', 'config', 'playlists.json');
+            if (!fs.existsSync(playlistsPath)) return null;
+            return JSON.parse(fs.readFileSync(playlistsPath, 'utf-8'));
+        } catch (e) {
+            LoggerService.log('warn', `[CloudStorage] Failed to load playlists.json: ${e.message}`);
+            return null;
+        }
+    }
+
+    static buildPlaylistIniLines(build) {
+        const config = this.loadPlaylists();
+        if (!config || !Array.isArray(config.playlists)) return null;
+
+        let lines = '!FrontEndPlaylistData=ClearArray\n';
+        for (const p of config.playlists) {
+            if (!p.enabled) continue;
+            if (p.minBuild > 0 && build < p.minBuild) continue;
+
+            const ini        = p.ini || {};
+            const bIsDefault = ini.bIsDefaultPlaylist   ? 'true' : 'false';
+            const bVisible   = ini.bVisibleWhenDisabled  ? 'true' : 'false';
+            const bNew       = ini.bDisplayAsNew         ? 'true' : 'false';
+            const bInvisible = ini.bInvisibleWhenEnabled ? 'true' : 'false';
+            const catIdx     = ini.categoryIndex   !== undefined ? ini.categoryIndex   : 0;
+            const dispPrio   = ini.displayPriority  !== undefined ? ini.displayPriority : 0;
+
+            lines += `+FrontEndPlaylistData=(PlaylistName=${p.name}, PlaylistAccess=(bEnabled=true, bIsDefaultPlaylist=${bIsDefault}, bVisibleWhenDisabled=${bVisible}, bDisplayAsNew=${bNew}, bInvisibleWhenEnabled=${bInvisible}, CategoryIndex=${catIdx}, bDisplayAsLimitedTime=false, DisplayPriority=${dispPrio}))\n`;
+        }
+        return lines;
+    }
+
     static getSystemFile(fileName, season, build = 0) {
         const filePath = path.join(this.SYSTEM_DIR, fileName);
 
@@ -217,8 +266,25 @@ BasePath="/logout?redirectUrl=https%3A%2F%2Fwww.unrealengine.com%2Fid%2Flogout%3
             }
         }
 
-        if (fileName === 'DefaultRuntimeOptions.ini' && build >= 17.50 && build <= 19.30) {
-            content += "\nbLoadDirectlyIntoLobby=false\n";
+        if (fileName === 'DefaultGame.ini') {
+            const playlistLines = this.buildPlaylistIniLines(build);
+            if (playlistLines) {
+                content = content.replace(
+                    /!FrontEndPlaylistData=ClearArray\n(?:[;\s]*[+]?FrontEndPlaylistData=[^\n]*\n)*/,
+                    playlistLines
+                );
+            }
+        }
+
+        if (fileName === 'DefaultRuntimeOptions.ini') {
+            if (build >= 17.50 && build < 19.30) {
+                content = content.replace('bLoadDirectlyIntoLobby=false', 'bLoadDirectlyIntoLobby=false');
+            }
+            if (build >= 19.30) {
+                content = content
+                    .replace('bForceBRMode=false', 'bForceBRMode=true')
+                    .replace('bSkipSubgameSelect=false', 'bSkipSubgameSelect=true');
+            }
         }
 
         return content;

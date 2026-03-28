@@ -20,6 +20,7 @@
                     <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
                     <li><a href="../updates.html">UPDATES</a></li>
                     <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="../status.html">STATUS</a></li>
                     <li><a href="index.html" class="active">DOCS</a></li>
                 </ul>
             </nav>
@@ -35,11 +36,13 @@
             <nav class="docs-nav">
                 <div class="docs-nav-section">Getting Started</div>
                 <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="configuration.html" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
                 <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
                 <div class="docs-nav-section">Features</div>
                 <a href="web-interface.html" class="docs-nav-link active"><i class="fas fa-globe"></i> Web Interface</a>
                 <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
                 <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
                 <div class="docs-nav-section">Development</div>
                 <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
                 <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
@@ -101,12 +104,13 @@
                 <li>View item details, prices, and "Already Owned" badge</li>
                 <li>Purchase items with V-Bucks (with confirmation dialogs)</li>
                 <li>Support a creator: enter a creator code in the sidebar - commission is automatically credited on purchase</li>
+                <li>"Shop Preview" button: opens the server-generated SVG shop image in a new tab - shareable and screenshot-ready <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></li>
             </ul>
 
             <h3>V-Bucks</h3>
             <ul>
                 <li>View current V-Bucks balance</li>
-                <li>Purchase V-Bucks via a multi-step flow: Package → Payment → Review → Done</li>
+                <li>Purchase V-Bucks via a multi-step flow: Package -> Payment -> Review -> Done</li>
                 <li>Enter a creator code during checkout to support a creator (step 2 of the flow)</li>
                 <li>View purchase history</li>
                 <li>Refund purchases</li>
@@ -156,7 +160,15 @@
                 <li>Creator code statistics (total codes, earnings, uses)</li>
             </ul>
 
-            <h3>Commands <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h3>
+            <h3>Reports <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.5</span></h3>
+            <ul>
+                <li>View all in-game toxicity reports submitted by players, grouped by reported player</li>
+                <li>Dismiss individual reports or bulk-dismiss all reports for a player</li>
+                <li>Quick-access ban button directly from the report view</li>
+                <li>Report statistics (total, by category, recent trend)</li>
+            </ul>
+
+            <h3>Commands</h3>
             <ul>
                 <li>Execute moderation commands directly from the panel (ban, unban, account lookup)</li>
                 <li>Only commands available to the Moderator role are shown</li>
@@ -179,7 +191,7 @@
                 <li>Audit log summary (action counts over 24h)</li>
             </ul>
 
-            <h3>Command Panel <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h3>
+            <h3>Command Panel</span></h3>
             <p>Execute common server commands with a single click:</p>
             <table>
                 <tr><th>Button</th><th>Command</th></tr>
@@ -219,15 +231,16 @@
                 <li>Certificate file status (exists, size, modification date)</li>
             </ul>
 
-            <h3>Live Monitor <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h3>
+            <h3>Live Monitor <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">UPDATED 1.2.5</span></h3>
             <ul>
                 <li>Real-time CPU usage chart (updated every 3 seconds)</li>
                 <li>Real-time RAM usage chart</li>
                 <li>Active player count chart</li>
                 <li>Start/stop polling from the dashboard</li>
+                <li>XMPP clients widget - live list of connected players, their online/away status, and active party rooms <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></li>
             </ul>
 
-            <h3>Console Logs <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h3>
+            <h3>Console Logs</span></h3>
             <ul>
                 <li>Read server log files directly in the browser</li>
                 <li>Filter by log level (INFO, WARN, ERROR, SUCCESS)</li>
@@ -235,7 +248,7 @@
                 <li>Color-coded log entries by severity</li>
             </ul>
 
-            <h3>Plugin Manager <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.4</span></h3>
+            <h3>Plugin Manager</span></h3>
             <ul>
                 <li>View all loaded plugins (name, version, author, description)</li>
                 <li>Load, unload, and reload individual plugins from the UI</li>

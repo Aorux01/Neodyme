@@ -19,7 +19,7 @@ class PagesService {
     }
 
     static generateShopSections() {
-        const shopConfigPath = path.join(process.cwd(), 'config', 'Shop.json');
+        const shopConfigPath = path.join(process.cwd(), 'config', 'shop.json');
         const shopConfig = this.loadJsonFile(shopConfigPath);
 
         if (!shopConfig || !shopConfig.shopCategories) {
@@ -57,8 +57,8 @@ class PagesService {
     }
 
     static getAllBattlepasses() {
-        const battlepassDir = path.join(process.cwd(), 'content', 'pages', 'battle-passes.json');
-        
+        const battlepassDir = path.join(process.cwd(), 'content', 'athena', 'battlepasses');
+
         try {
             if (!fs.existsSync(battlepassDir)) {
                 return [];
@@ -68,20 +68,18 @@ class PagesService {
             const battlepasses = [];
 
             files.forEach(file => {
-                if (file.endsWith('.json') && file.startsWith('Season')) {
+                if (file.endsWith('.json') && file.startsWith('season-')) {
                     const filePath = path.join(battlepassDir, file);
                     const data = this.loadJsonFile(filePath);
                     if (data) {
-                        battlepasses.push(data);
+                        // Extract season number from filename: season-10.json -> 10
+                        const seasonNumber = parseInt(file.replace('season-', '').replace('.json', ''), 10);
+                        battlepasses.push({ ...data, seasonNumber });
                     }
                 }
             });
 
-            battlepasses.sort((a, b) => {
-                const seasonA = parseInt(a.seasonNumber || 0);
-                const seasonB = parseInt(b.seasonNumber || 0);
-                return seasonB - seasonA;
-            });
+            battlepasses.sort((a, b) => (b.seasonNumber || 0) - (a.seasonNumber || 0));
 
             return battlepasses;
         } catch (error) {
@@ -151,7 +149,7 @@ class PagesService {
     }
 
     static getMotd() {
-        const motdPath = path.join(process.cwd(), 'config', 'MOTD.json');
+        const motdPath = path.join(process.cwd(), 'config', 'motd.json');
         const data = this.loadJsonFile(motdPath);
         
         return data;
@@ -198,7 +196,7 @@ class PagesService {
             LoggerService.log('error', `Failed to load config files: ${error.message}`);
         }
 
-        // Generate dynamic shopSections based on config/Shop.json
+        // Generate dynamic shopSections based on config/shop.json
         try {
             const dynamicShopSections = this.generateShopSections();
             if (dynamicShopSections.length > 0) {
@@ -375,6 +373,17 @@ class PagesService {
 
         chooseTranslationsInJSON(clonedObj);
         return clonedObj;
+    }
+
+    static getContentPage(pageName, req) {
+        const pagePath = path.join(process.cwd(), 'content', 'pages', `${pageName}.json`);
+        const data = this.loadJsonFile(pagePath);
+
+        if (data) {
+            return this.applyTranslations(data, req);
+        }
+
+        return null;
     }
 
     static clearCache() {

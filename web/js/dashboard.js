@@ -1795,6 +1795,58 @@ function closeConfigEditor() {
     currentEditingFile = null;
 }
 
+let currentEditingIniFile = null;
+
+async function loadIniFile(fileName) {
+    try {
+        const response = await fetch(`/api/dev/ini-files/${fileName}`, { credentials: 'include' });
+        const data = await response.json();
+
+        if (data.success) {
+            currentEditingIniFile = fileName;
+            document.getElementById('editing-ini-filename').textContent = fileName;
+            document.getElementById('ini-file-content').value = data.content;
+            document.getElementById('ini-file-editor').style.display = 'block';
+            document.getElementById('config-file-editor').style.display = 'none';
+        } else {
+            showAlert(data.error || 'Failed to load file', 'error');
+        }
+    } catch (error) {
+        console.error('Load INI file error:', error);
+        showAlert('An error occurred', 'error');
+    }
+}
+
+async function saveIniFile() {
+    if (!currentEditingIniFile) return;
+
+    try {
+        const content = document.getElementById('ini-file-content').value;
+
+        const response = await secureFetch(`/api/dev/ini-files/${currentEditingIniFile}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showAlert(`${currentEditingIniFile} saved successfully`, 'success');
+        } else {
+            showAlert(data.error || 'Failed to save file', 'error');
+        }
+    } catch (error) {
+        console.error('Save INI file error:', error);
+        showAlert('An error occurred', 'error');
+    }
+}
+
+function closeIniEditor() {
+    document.getElementById('ini-file-editor').style.display = 'none';
+    currentEditingIniFile = null;
+}
+
 async function loadDevStats() {
     try {
         const [serverRes, dbRes] = await Promise.all([
@@ -1859,7 +1911,7 @@ function formatAuditDetails(log) {
     if (d.reason)         parts.push(`<span style="color:#aaa;">Reason: <em>${escapeHtml(d.reason)}</em></span>`);
     if (d.duration)       parts.push(`<span style="color:#aaa;">Duration: ${escapeHtml(String(d.duration))}</span>`);
     if (d.oldRole != null && d.newRole != null)
-        parts.push(`<span style="color:#aaa;">${escapeHtml(String(d.oldRole))} → <strong>${escapeHtml(String(d.newRole))}</strong></span>`);
+        parts.push(`<span style="color:#aaa;">${escapeHtml(String(d.oldRole))} -> <strong>${escapeHtml(String(d.newRole))}</strong></span>`);
     if (d.configKey)      parts.push(`<code style="background:#1e1e1e;padding:1px 5px;border-radius:3px;font-size:11px;">${escapeHtml(d.configKey)}</code>`);
     if (d.note)           parts.push(`<span style="color:#aaa;"><em>${escapeHtml(d.note)}</em></span>`);
     return parts.length ? parts.join(' <span style="color:#444;">·</span> ') : '<span style="color:#555;">-</span>';
@@ -1945,7 +1997,7 @@ async function loadAuditLog() {
                         <span style="padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;
                                      ${auditBadgeColor(log.action)}">${meta.label}</span>
                         <span style="color:#ccc;font-size:13px;font-weight:600;">${escapeHtml(log.performedByName || '-')}</span>
-                        <span style="color:#555;font-size:12px;">→</span>
+                        <span style="color:#555;font-size:12px;">-></span>
                         <span style="font-size:12px;">${target}</span>
                         ${ipStr}
                     </div>
@@ -2229,6 +2281,8 @@ showModTab = function(tabName) {
 
     if (tabName === 'players') loadModPlayers();
     else if (tabName === 'tickets') loadModTickets();
+    else if (tabName === 'reports') loadModReports();
+    else if (tabName === 'feedback') loadModFeedback();
     else if (tabName === 'pending-codes') loadPendingRequests();
     else if (tabName === 'all-codes') loadAllCodes();
     else if (tabName === 'code-stats') loadModStats();
@@ -2276,6 +2330,245 @@ showSection = function(sectionName) {
     else if (sectionName === 'developer') { loadDevOverview(); loadDevConfig(); }
     else if (sectionName === 'admin') { loadAdminUsers(); loadAdminDetailedStats(); loadPlayerStatsChart('24h'); }
 };
+
+async function loadModReports() {
+    const search = document.getElementById('mod-report-search')?.value || '';
+    const container = document.getElementById('mod-reports-list');
+    const badge = document.getElementById('mod-reports-badge');
+    container.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading reports...</div>';
+
+    try {
+        const [reportsRes, statsRes] = await Promise.all([
+            fetch(`/api/mod/reports${search ? '?search=' + encodeURIComponent(search) : ''}`, { credentials: 'include' }),
+            fetch('/api/mod/reports/stats', { credentials: 'include' })
+        ]);
+
+        const reportsData = await reportsRes.json();
+        const statsData = await statsRes.json();
+
+        if (statsData.success) {
+            const s = statsData.stats;
+            const total = s.total || 0;
+            document.getElementById('mod-report-total').textContent = total;
+            document.getElementById('mod-report-targets').textContent = s.uniqueTargets || 0;
+            if (badge) {
+                badge.textContent = total;
+                badge.style.display = total > 0 ? 'inline' : 'none';
+            }
+        }
+
+        if (!reportsData.success || !reportsData.reports?.length) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-flag"></i><p>No reports found</p></div>';
+            return;
+        }
+
+        const reports = reportsData.reports;
+        const grouped = {};
+        for (const r of reports) {
+            if (!grouped[r.reportedAccountId]) {
+                grouped[r.reportedAccountId] = {
+                    displayName: r.reportedDisplayName,
+                    accountId: r.reportedAccountId,
+                    reports: []
+                };
+            }
+            grouped[r.reportedAccountId].reports.push(r);
+        }
+
+        let html = '';
+        for (const target of Object.values(grouped).sort((a, b) => b.reports.length - a.reports.length)) {
+            const initials = target.displayName.substring(0, 2).toUpperCase();
+            html += `
+            <div class="ticket-item" style="margin-bottom:12px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#f87171;flex-shrink:0;">${escapeHtml(initials)}</div>
+                    <div>
+                        <strong>${escapeHtml(target.displayName)}</strong>
+                        <span style="font-size:11px;background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);border-radius:3px;padding:1px 6px;margin-left:6px;">${target.reports.length} report${target.reports.length > 1 ? 's' : ''}</span>
+                    </div>
+                    <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="viewPlayerReports('${target.accountId}')">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                </div>
+                <div id="reports-for-${target.accountId}" style="display:none;padding-left:46px;">
+                    ${target.reports.map(r => `
+                    <div style="border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:10px;margin-bottom:8px;background:rgba(0,0,0,0.15);">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                            <div style="flex:1;">
+                                <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:4px;">
+                                    Reported by <strong>${escapeHtml(r.reporterDisplayName)}</strong> · ${new Date(r.createdAt).toLocaleString()}
+                                </div>
+                                <div style="font-size:13px;margin-bottom:2px;"><span style="color:rgba(255,255,255,0.6);">Reason:</span> ${escapeHtml(r.reason)}</div>
+                                ${r.details && r.details !== 'No details provided' ? `<div style="font-size:12px;color:rgba(255,255,255,0.5);">${escapeHtml(r.details)}</div>` : ''}
+                            </div>
+                            <button class="btn btn-danger btn-sm" onclick="dismissReport('${r.reportId}')" title="Dismiss report">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>`).join('')}
+                    <div style="display:flex;gap:8px;margin-top:4px;">
+                        <button class="btn btn-danger btn-sm" onclick="showBanModal('${target.accountId}', '${escapeHtml(target.displayName)}')">
+                            <i class="fas fa-ban"></i> Ban Player
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="dismissAllReportsForPlayer('${target.accountId}')">
+                            <i class="fas fa-check"></i> Dismiss All
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        container.innerHTML = html;
+    } catch (err) {
+        container.innerHTML = '<div class="error-message">Failed to load reports</div>';
+    }
+}
+
+function viewPlayerReports(accountId) {
+    const el = document.getElementById('reports-for-' + accountId);
+    if (!el) return;
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+async function dismissReport(reportId) {
+    if (!confirm('Dismiss this report?')) return;
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+        const res = await fetch(`/api/mod/reports/${reportId}`, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: { 'X-CSRF-Token': csrfToken }
+        });
+        const data = await res.json();
+        if (data.success) {
+            loadModReports();
+        } else {
+            showAlert(data.error || 'Failed to dismiss report', 'error');
+        }
+    } catch {
+        showAlert('Failed to dismiss report', 'error');
+    }
+}
+
+async function dismissAllReportsForPlayer(accountId) {
+    if (!confirm('Dismiss all reports for this player?')) return;
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+        const res = await fetch(`/api/mod/reports/player/${accountId}`, { credentials: 'include' });
+        const data = await res.json();
+        if (!data.success) return;
+
+        await Promise.all(data.reports.map(r =>
+            fetch(`/api/mod/reports/${r.reportId}`, {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: { 'X-CSRF-Token': csrfToken }
+            })
+        ));
+
+        loadModReports();
+    } catch {
+        showAlert('Failed to dismiss reports', 'error');
+    }
+}
+
+async function loadModFeedback() {
+    const search = (document.getElementById('mod-feedback-search')?.value || '').toLowerCase();
+    const container = document.getElementById('mod-feedback-list');
+    const badge = document.getElementById('mod-feedback-badge');
+    container.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading feedback...</div>';
+
+    try {
+        const res = await fetch('/api/mod/feedback', { credentials: 'include' });
+        const data = await res.json();
+        if (!data.success) throw new Error('Failed to fetch feedback');
+
+        let submissions = data.submissions || [];
+        if (search) {
+            submissions = submissions.filter(s =>
+                s.displayName.toLowerCase().includes(search) ||
+                s.type.toLowerCase().includes(search)
+            );
+        }
+
+        badge.textContent = submissions.length;
+        badge.style.display = submissions.length > 0 ? 'inline' : 'none';
+
+        if (submissions.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-bug" style="font-size:32px;margin-bottom:12px;opacity:0.3;display:block;"></i>No feedback received yet</div>';
+            return;
+        }
+
+        const typeColors = { Bug: '#ef4444', Suggestion: '#3b82f6', Complaint: '#f59e0b' };
+
+        let html = '';
+        for (const s of submissions) {
+            const color = typeColors[s.type] || '#8b5cf6';
+            const initials = (s.displayName || '?')[0].toUpperCase();
+            const safeId = CSS.escape(s.id.replace(/\//g, '__'));
+            const hasScreenshot = s.files.some(f => f.name.match(/\.(jpg|jpeg|png|gif|webp)$/i));
+            const screenshotFile = s.files.find(f => f.name.match(/\.(jpg|jpeg|png|gif|webp)$/i));
+
+            html += `
+<div class="ticket-item" style="margin-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#a78bfa;flex-shrink:0;">${escapeHtml(initials)}</div>
+        <div>
+            <strong>${escapeHtml(s.displayName)}</strong>
+            <span style="font-size:11px;background:${color}22;color:${color};border:1px solid ${color}44;border-radius:3px;padding:1px 6px;margin-left:6px;">${escapeHtml(s.type)}</span>
+        </div>
+        <span style="margin-left:auto;font-size:11px;color:rgba(255,255,255,0.4);">${escapeHtml(s.datetime)}</span>
+        <button class="btn btn-primary btn-sm" onclick="toggleFeedbackDetail('${safeId}')"><i class="fas fa-eye"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteFeedbackSubmission('${escapeHtml(s.id)}')" title="Delete"><i class="fas fa-trash"></i></button>
+    </div>
+    <div id="feedback-detail-${safeId}" style="display:none;padding-left:46px;">
+        ${hasScreenshot ? `
+        <div style="margin-bottom:10px;">
+            <img src="/api/mod/feedback/file?path=${encodeURIComponent(screenshotFile.relPath)}" alt="Screenshot"
+                 style="max-width:100%;max-height:300px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);cursor:pointer;"
+                 onclick="window.open(this.src,'_blank')">
+        </div>` : ''}
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            ${s.files.map(f => {
+                const isImg = f.name.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+                if (isImg) return '';
+                return `<a href="/api/mod/feedback/file?path=${encodeURIComponent(f.relPath)}" target="_blank"
+                    style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:4px;font-size:12px;color:rgba(255,255,255,0.7);text-decoration:none;">
+                    <i class="fas fa-file-download"></i> ${escapeHtml(f.name)}
+                </a>`;
+            }).join('')}
+        </div>
+    </div>
+</div>`;
+        }
+
+        container.innerHTML = html;
+    } catch (err) {
+        container.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Failed to load feedback</div>';
+    }
+}
+
+function toggleFeedbackDetail(safeId) {
+    const el = document.getElementById('feedback-detail-' + safeId);
+    if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+async function deleteFeedbackSubmission(submissionId) {
+    if (!confirm('Delete this feedback submission and all its files?')) return;
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+        const res = await fetch(`/api/mod/feedback/${encodeURIComponent(submissionId)}`, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: { 'X-CSRF-Token': csrfToken }
+        });
+        const data = await res.json();
+        if (data.success) loadModFeedback();
+        else showAlert('Failed to delete feedback', 'error');
+    } catch {
+        showAlert('Failed to delete feedback', 'error');
+    }
+}
 
 // Helper function
 function escapeHtml(text) {

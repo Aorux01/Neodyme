@@ -455,6 +455,8 @@
                 <div class="mod-tabs">
                     <button class="tab-btn active" onclick="showModTab('players')"><i class="fas fa-users"></i> Players</button>
                     <button class="tab-btn" onclick="showModTab('tickets')"><i class="fas fa-ticket-alt"></i> Tickets <span class="badge badge-warning" id="mod-tickets-badge" style="display:none;">0</span></button>
+                    <button class="tab-btn" onclick="showModTab('reports')"><i class="fas fa-flag"></i> Reports <span class="badge badge-danger" id="mod-reports-badge" style="display:none;">0</span></button>
+                    <button class="tab-btn" onclick="showModTab('feedback')"><i class="fas fa-bug"></i> Feedback <span class="badge badge-warning" id="mod-feedback-badge" style="display:none;">0</span></button>
                     <button class="tab-btn" onclick="showModTab('pending-codes')"><i class="fas fa-clock"></i> Pending</button>
                     <button class="tab-btn" onclick="showModTab('all-codes')"><i class="fas fa-code"></i> All Codes</button>
                     <button class="tab-btn" onclick="showModTab('code-stats')"><i class="fas fa-chart-bar"></i> Statistics</button>
@@ -515,6 +517,48 @@
                     </button>
                     <div id="ticket-detail-content" class="ticket-detail">
                         <!-- Ticket detail will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Reports Tab -->
+                <div id="mod-reports" class="mod-tab-content" style="display: none;">
+                    <div class="admin-search">
+                        <input type="text" id="mod-report-search" class="form-input" placeholder="Search by player name or reason...">
+                        <button class="btn btn-secondary" onclick="loadModReports()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="dashboard-grid" id="mod-report-stats" style="margin-bottom:16px;">
+                        <div class="dashboard-card">
+                            <div class="card-icon"><i class="fas fa-flag"></i></div>
+                            <div class="card-title">Total Reports</div>
+                            <div class="card-value" id="mod-report-total">0</div>
+                        </div>
+                        <div class="dashboard-card">
+                            <div class="card-icon"><i class="fas fa-user-slash"></i></div>
+                            <div class="card-title">Unique Targets</div>
+                            <div class="card-value" id="mod-report-targets">0</div>
+                        </div>
+                    </div>
+                    <div id="mod-reports-list" class="tickets-list">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i> Loading reports...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feedback Tab -->
+                <div id="mod-feedback" class="mod-tab-content" style="display: none;">
+                    <div class="admin-search">
+                        <input type="text" id="mod-feedback-search" class="form-input" placeholder="Search by player name or type...">
+                        <button class="btn btn-secondary" onclick="loadModFeedback()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                    <div id="mod-feedback-list" class="tickets-list">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i> Loading feedback...
+                        </div>
                     </div>
                 </div>
 
@@ -1025,6 +1069,43 @@
                             <span>motd.json</span>
                             <small>Message of the Day</small>
                         </div>
+                        <div class="config-file-item" onclick="loadConfigFile('playlists.json')">
+                            <i class="fas fa-gamepad"></i>
+                            <span>playlists.json</span>
+                            <small>Game modes visibility per version</small>
+                        </div>
+                    </div>
+
+                    <div class="content-header" style="margin-top: 1.5rem;">
+                        <h3><i class="fas fa-file-alt"></i> Cloud Storage INI Files</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0.25rem 0 0 0;">Served dynamically to Fortnite clients. Playlist section in DefaultGame.ini is auto-generated from playlists.json.</p>
+                    </div>
+                    <div class="config-files-list">
+                        <div class="config-file-item" onclick="loadIniFile('DefaultGame.ini')">
+                            <i class="fas fa-file-alt"></i>
+                            <span>DefaultGame.ini</span>
+                            <small>Playlists, chat, text replacements</small>
+                        </div>
+                        <div class="config-file-item" onclick="loadIniFile('DefaultRuntimeOptions.ini')">
+                            <i class="fas fa-file-alt"></i>
+                            <span>DefaultRuntimeOptions.ini</span>
+                            <small>Runtime flags (gifting, BR mode, subgame…)</small>
+                        </div>
+                    </div>
+
+                    <div id="ini-file-editor" style="display: none;">
+                        <div class="editor-header">
+                            <h4><i class="fas fa-edit"></i> Editing: <span id="editing-ini-filename"></span></h4>
+                            <div class="editor-actions">
+                                <button class="btn btn-primary" onclick="saveIniFile()">
+                                    <i class="fas fa-save"></i> Save
+                                </button>
+                                <button class="btn btn-secondary" onclick="closeIniEditor()">
+                                    <i class="fas fa-times"></i> Close
+                                </button>
+                            </div>
+                        </div>
+                        <textarea id="ini-file-content" class="config-editor" style="font-family: monospace; white-space: pre;"></textarea>
                     </div>
 
                     <div id="config-file-editor" style="display: none;">
@@ -1206,6 +1287,14 @@
                     <div style="background:#1e1e1e;border-radius:8px;padding:16px;border:1px solid #333;margin-top:24px;">
                         <h4 style="margin:0 0 12px;color:#8b5cf6;">Active Players (last 20 polls)</h4>
                         <canvas id="chart-players" height="80"></canvas>
+                    </div>
+
+                    <div style="background:#1e1e1e;border-radius:8px;padding:16px;border:1px solid #333;margin-top:24px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                            <h4 style="margin:0;color:#8b5cf6;"><i class="fas fa-comments" style="margin-right:8px;"></i>XMPP Connected Clients</h4>
+                            <button class="btn btn-sm btn-secondary" onclick="loadXmppClients()"><i class="fas fa-sync"></i> Refresh</button>
+                        </div>
+                        <div id="xmpp-clients-list"><span style="color:#6b7280;font-size:13px;">Click Start to begin monitoring.</span></div>
                     </div>
                 </div>
 

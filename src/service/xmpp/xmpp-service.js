@@ -6,13 +6,13 @@ class XmppService {
     static sendMessageToId(toAccountId, body) {
         try {
             if (!XMPPManager.clients) {
-                LoggerService.log('warn', `XMPP sendMessageToId: No clients array`);
+                //LoggerService.log('warn', `XMPP sendMessageToId: No clients array`);
                 return false;
             }
             if (typeof body === 'object') body = JSON.stringify(body);
 
-            LoggerService.log('info', `XMPP sendMessageToId: Looking for ${toAccountId} in ${XMPPManager.clients.length} clients`);
-            LoggerService.log('info', `XMPP connected clients: ${XMPPManager.clients.map(c => c.accountId).join(', ')}`);
+            //LoggerService.log('info', `XMPP sendMessageToId: Looking for ${toAccountId} in ${XMPPManager.clients.length} clients`);
+            //LoggerService.log('info', `XMPP connected clients: ${XMPPManager.clients.map(c => c.accountId).join(', ')}`);
 
             const receiver = XMPPManager.clients.find(c => c.accountId === toAccountId);
             if (!receiver) {
@@ -28,7 +28,7 @@ class XmppService {
                 .up()
                 .toString();
 
-            LoggerService.log('info', `XMPP sending to ${receiver.jid}: ${body.substring(0, 100)}...`);
+            //LoggerService.log('info', `XMPP sending to ${receiver.jid}: ${body.substring(0, 100)}...`);
             receiver.ws.send(xml);
 
             return true;

@@ -1,0 +1,79 @@
+{
+  "_comment": "Playlist/game mode configuration. Each entry controls visibility in the lobby and cloud storage. minBuild: minimum Fortnite build required (0 = always shown). Set enabled=false to globally hide a mode regardless of build.",
+  "playlists": [
+    {
+      "name": "Playlist_DefaultSolo",
+      "linkCode": "playlist_defaultsolo",
+      "enabled": true,
+      "minBuild": 0,
+      "ini": {
+        "bIsDefaultPlaylist": true,
+        "bVisibleWhenDisabled": true,
+        "categoryIndex": 0,
+        "displayPriority": 0
+      }
+    },
+    {
+      "name": "Playlist_DefaultDuo",
+      "linkCode": "playlist_defaultduo",
+      "enabled": true,
+      "minBuild": 0,
+      "ini": {
+        "bIsDefaultPlaylist": false,
+        "bVisibleWhenDisabled": true,
+        "categoryIndex": 0,
+        "displayPriority": 1
+      }
+    },
+    {
+      "name": "Playlist_DefaultTrios",
+      "linkCode": "playlist_defaulttrios",
+      "enabled": true,
+      "minBuild": 15.0,
+      "ini": {
+        "bIsDefaultPlaylist": false,
+        "bVisibleWhenDisabled": true,
+        "categoryIndex": 0,
+        "displayPriority": 2
+      }
+    },
+    {
+      "name": "Playlist_DefaultSquad",
+      "linkCode": "playlist_defaultsquad",
+      "enabled": true,
+      "minBuild": 0,
+      "ini": {
+        "bIsDefaultPlaylist": false,
+        "bVisibleWhenDisabled": true,
+        "categoryIndex": 0,
+        "displayPriority": 3
+      }
+    },
+    {
+      "name": "Playlist_Campaign",
+      "linkCode": "campaign",
+      "enabled": true,
+      "minBuild": 19.30,
+      "ini": {
+        "bIsDefaultPlaylist": false,
+        "bVisibleWhenDisabled": false,
+        "bInvisibleWhenEnabled": false,
+        "categoryIndex": 0,
+        "displayPriority": 4
+      }
+    },
+    {
+      "name": "Playlist_BattleLab",
+      "linkCode": "playlist_battlelab",
+      "enabled": false,
+      "minBuild": 0,
+      "ini": {
+        "bIsDefaultPlaylist": false,
+        "bVisibleWhenDisabled": true,
+        "bDisplayAsNew": true,
+        "categoryIndex": 1,
+        "displayPriority": 100
+      }
+    }
+  ]
+}

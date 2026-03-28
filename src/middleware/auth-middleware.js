@@ -49,7 +49,7 @@ async function verifyToken(req, res, next) {
 
         const requestedAccountId = req.params.accountId || req.body.accountId;
         if (requestedAccountId && requestedAccountId !== account.accountId) {
-            LoggerService.log('warning', `Account ownership violation: token=${account.accountId}, requested=${requestedAccountId}`);
+            LoggerService.log('warn', `Account ownership violation: token=${account.accountId}, requested=${requestedAccountId}`);
             throw Errors.Account.accountNotFound(requestedAccountId);
         }
 
@@ -127,20 +127,39 @@ async function verifyClient(req, res, next) {
 
 async function verifyServer(req, res, next) {
     try {
-        const account = req.user;
-        if (!account) {
-            const err = Errors.Authentication.invalidToken('authentication required');
-            return res.status(err.statusCode).json(err.toJSON());
+        const authHeader = req.headers['authorization'];
+        if (!authHeader || !authHeader.toLowerCase().startsWith('bearer eg1~')) {
+            throw Errors.Authentication.invalidHeader();
         }
 
+        const token = authHeader.substring(7);
+
+        const isValid = await TokenService.isValidAccessToken(token);
+        if (!isValid) throw Errors.Authentication.invalidToken(token);
+
+        const decoded = TokenService.verifyToken(token);
+        if (!decoded) throw Errors.Authentication.validationFailed(token);
+
+        const account = await DatabaseManager.getAccount(decoded.sub);
+        if (!account) {
+            await TokenService.removeToken(token);
+            throw Errors.Account.accountNotFound(decoded.sub);
+        }
+
+        // No account ownership check - server token belongs to a different account than the player
         const roleLevel = typeof account.clientType === 'number' ? account.clientType : 0;
         if (roleLevel !== ROLE_LEVELS.SERVER) {
             const err = Errors.Authentication.authenticationFailed('server');
             return res.status(403).json({ ...err.toJSON(), errorMessage: 'Server access required' });
         }
 
+        req.user = account;
+        req.token = decoded;
         next();
     } catch (error) {
+        if (error.statusCode) {
+            return res.status(error.statusCode).json(error.toJSON());
+        }
         LoggerService.log('error', `Server verification failed: ${error.message}`);
         const err = Errors.Authentication.authenticationFailed('server');
         return res.status(err.statusCode).json(err.toJSON());

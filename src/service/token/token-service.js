@@ -79,7 +79,7 @@ class TokenService {
             this.JWT_SECRET_CREATED = new Date().toISOString();
 
             if (this.accessTokens.size > 0 || this.refreshTokens.size > 0) {
-                LoggerService.log('warning', 'JWT secret rotated - existing tokens invalidated');
+                LoggerService.log('warn', 'JWT secret rotated - existing tokens invalidated');
                 await this.revokeAllTokens();
             } else {
                 LoggerService.log('success', 'JWT secret generated (256 bits)');
@@ -109,7 +109,8 @@ class TokenService {
         }
 
         const algorithm = 'aes-256-gcm';
-        const key = crypto.scryptSync(this.JWT_SECRET, 'salt', 32);
+        const salt = crypto.createHmac('sha256', this.JWT_SECRET).update('neodyme-aes-salt').digest().subarray(0, 16);
+        const key = crypto.scryptSync(this.JWT_SECRET, salt, 32);
         const iv = crypto.randomBytes(16);
         const cipher = crypto.createCipheriv(algorithm, key, iv);
 
@@ -132,7 +133,8 @@ class TokenService {
         }
 
         const algorithm = 'aes-256-gcm';
-        const key = crypto.scryptSync(this.JWT_SECRET, 'salt', 32);
+        const salt = crypto.createHmac('sha256', this.JWT_SECRET).update('neodyme-aes-salt').digest().subarray(0, 16);
+        const key = crypto.scryptSync(this.JWT_SECRET, salt, 32);
         const decipher = crypto.createDecipheriv(
             algorithm,
             key,
@@ -183,7 +185,7 @@ class TokenService {
                     try {
                         return token.encrypted ? this.decryptData(token) : token;
                     } catch (error) {
-                        LoggerService.log('warning', `Failed to decrypt token: ${error.message}`);
+                        LoggerService.log('warn', `Failed to decrypt token: ${error.message}`);
                         return null;
                     }
                 };
@@ -248,6 +250,17 @@ class TokenService {
 
     static generateRandomToken() {
         return crypto.randomBytes(32).toString('hex');
+    }
+
+    static async scanRedisKeys(pattern) {
+        const keys = [];
+        let cursor = '0';
+        do {
+            const [next, batch] = await RedisManager.client.scan(cursor, 'MATCH', pattern, 'COUNT', 100);
+            cursor = next;
+            keys.push(...batch);
+        } while (cursor !== '0');
+        return keys;
     }
 
     static async storeToken(type, hash, data, expiresInSeconds) {
@@ -393,13 +406,13 @@ class TokenService {
 
             const isExpired = new Date(decoded.creation_date).getTime() + (decoded.hours_expire * 3600000) <= Date.now();
             if (isExpired) {
-                this.removeToken(token);
+                this.removeToken(token).catch(() => {});
                 return null;
             }
 
             return decoded;
         } catch (error) {
-            this.removeToken(token);
+            this.removeToken(token).catch(() => {});
             return null;
         }
     }
@@ -444,8 +457,8 @@ class TokenService {
 
     static async removeAllTokensForAccount(accountId) {
         if (RedisManager.isEnabled()) {
-            const accessKeys = await RedisManager.client.keys('token:access:*');
-            const refreshKeys = await RedisManager.client.keys('token:refresh:*');
+            const accessKeys = await this.scanRedisKeys('token:access:*');
+            const refreshKeys = await this.scanRedisKeys('token:refresh:*');
 
             for (const key of [...accessKeys, ...refreshKeys]) {
                 const data = await RedisManager.client.get(key);
@@ -471,8 +484,8 @@ class TokenService {
         const currentHash = this.hashToken(currentToken);
 
         if (RedisManager.isEnabled()) {
-            const accessKeys = await RedisManager.client.keys('token:access:*');
-            const refreshKeys = await RedisManager.client.keys('token:refresh:*');
+            const accessKeys = await this.scanRedisKeys('token:access:*');
+            const refreshKeys = await this.scanRedisKeys('token:refresh:*');
 
             for (const key of [...accessKeys, ...refreshKeys]) {
                 const data = await RedisManager.client.get(key);
@@ -546,8 +559,8 @@ class TokenService {
         const refresh = [];
 
         if (RedisManager.isEnabled()) {
-            const accessKeys = await RedisManager.client.keys('token:access:*');
-            const refreshKeys = await RedisManager.client.keys('token:refresh:*');
+            const accessKeys = await this.scanRedisKeys('token:access:*');
+            const refreshKeys = await this.scanRedisKeys('token:refresh:*');
 
             for (const key of accessKeys) {
                 const data = await RedisManager.client.get(key);
@@ -577,7 +590,7 @@ class TokenService {
 
     static async revokeAllTokens() {
         if (RedisManager.isEnabled()) {
-            const keys = await RedisManager.client.keys('token:*');
+            const keys = await this.scanRedisKeys('token:*');
             if (keys.length > 0) {
                 await RedisManager.client.del(...keys);
             }
@@ -596,8 +609,8 @@ class TokenService {
         const sessions = new Map();
 
         if (RedisManager.isEnabled()) {
-            const accessKeys = await RedisManager.client.keys('token:access:*');
-            const refreshKeys = await RedisManager.client.keys('token:refresh:*');
+            const accessKeys = await this.scanRedisKeys('token:access:*');
+            const refreshKeys = await this.scanRedisKeys('token:refresh:*');
 
             for (const key of accessKeys) {
                 const data = await RedisManager.client.get(key);
@@ -689,8 +702,8 @@ class TokenService {
         let removed = false;
 
         if (RedisManager.isEnabled()) {
-            const accessKeys = await RedisManager.client.keys('token:access:*');
-            const refreshKeys = await RedisManager.client.keys('token:refresh:*');
+            const accessKeys = await this.scanRedisKeys('token:access:*');
+            const refreshKeys = await this.scanRedisKeys('token:refresh:*');
 
             for (const key of [...accessKeys, ...refreshKeys]) {
                 const data = await RedisManager.client.get(key);
@@ -732,7 +745,7 @@ class TokenService {
         if (tokenData.ipSubnet && requestIp) {
             const requestSubnet = this.getIpSubnet(requestIp);
             if (tokenData.ipSubnet !== requestSubnet) {
-                LoggerService.log('warning', `IP subnet mismatch for token: ${tokenData.ipSubnet} vs ${requestSubnet}`);
+                LoggerService.log('warn', `IP subnet mismatch for token: ${tokenData.ipSubnet} vs ${requestSubnet}`);
                 return false;
             }
         }

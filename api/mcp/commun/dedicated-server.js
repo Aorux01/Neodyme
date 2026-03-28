@@ -10,13 +10,14 @@ const ConfigManager = require('../../../src/manager/config-manager');
 const ShopService = require("../../../src/service/api/shop-service");
 const EXPService = require('../../../src/service/api/experience-service');
 const { Errors, sendError } = require('../../../src/service/error/errors-system');
+const { verifyServer } = require('../../../src/middleware/auth-middleware');
 const fs = require('fs').promises;
 const path = require('path');
 
 router.use(MCPMiddleware.validateProfileId);
 
 router.post("/fortnite/api/game/v2/profile/:accountId/dedicated_server/:operation",
-    MCPMiddleware.validateAccountOwnership,
+    verifyServer,
     MCPMiddleware.attachProfileInfo,
     async (req, res) => {
         try {

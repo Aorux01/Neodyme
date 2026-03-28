@@ -18,9 +18,11 @@ router.get('/api/sessions/active', verifyToken, async (req, res) => {
         const sessions = await AuthService.getActiveSessions(accountId);
 
         if (!sessions || !Array.isArray(sessions)) {
+            res.set('Cache-Control', 'no-store');
             return res.status(200).json({ success: true, sessions: [] });
         }
 
+        res.set('Cache-Control', 'no-store');
         res.status(200).json({
             success: true,
             sessions: sessions.map(session => ({

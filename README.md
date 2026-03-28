@@ -10,11 +10,10 @@ Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed t
 
 ### ⚠️ Still under development, may contain bugs ⚠️
 
-**Latest version: 1.2.4**
+**Latest version: 1.2.5**
 
-**Latest API version: 1.6**
+**Latest API version: 1.7**
 
-## [NEW]
 Join the **Discord** Server: https://discord.gg/gWpDVKR4nF
 
 ## 🎉 Main Features
@@ -41,21 +40,20 @@ Join the **Discord** Server: https://discord.gg/gWpDVKR4nF
 ## 🚧 To-Do List
 
 ### 📌 Major Upcoming Features
-- [ ] ☁️ Full **party system**
 - [ ] 📂 Finish and expand the website (leaderboards, 2FA setup, player stats, etc.)
-- [ ] ⚙️ Complete configuration implementation and management
-- [ ] 🧰 Create a full **Admin Panel** (moderation tools, real-time view, tokens, moderation, stats server, etc.)
-- [ ] 🧾 Add more commands (SAC, moderation, server control, etc.)
+- 🔄 🧰 **Admin Panel** - core features done (BETA), ongoing: shop editor, live config, events manager
+- [ ] 🧾 Add more commands - remaining: **SAC creator code management** (add/list/delete codes)
 - [ ] 💾 Implement all remaining storage systems (**SQLite, MySQL, PostgreSQL**)
 - [ ] 🔐 Finish **2FA setup**
 - [ ] 📘 Complete the **public API**
+- [ ] 🛡️ Implement **Aegis** (AntiCheat)
 
 ### 📌 Secondary Features:
 - [ ] 🎮 Add **Creative mode system**
 - [ ] 🎯 Add **Game Modes manager** (available modes rotation, queues, etc.)
-- [ ] 📡 Integrate **Vivox voice chat**
 - [ ] 🏁 Implement **queue system** for matchmaking / waitingroom
 - [ ] 🏆 Implement **leaderboard system**
+- [ ] 👢 **Member kick** from party (captain only)
 
 👉 **[See more - Full Roadmap & Features](ROADMAP.md)**
 
