@@ -2,7 +2,7 @@ const VERSIONS = [
     {
         version: '1.2.5',
         title: 'XMPP Overhaul & Shop Generator',
-        date: 'March 21, 2026',
+        date: 'March 28, 2026',
         type: 'feature',
         latest: true,
         lts: true,
