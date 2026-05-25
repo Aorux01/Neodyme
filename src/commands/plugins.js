@@ -98,16 +98,53 @@ function register(CM) {
                             const manifest = await PluginInstaller.fetchPluginManifest(pluginInfo.manifestUrl);
                             const installed = PluginInstaller.isPluginInstalled(pluginInfo.id);
 
+                            const backendVersion = PluginManager.getBackendVersion();
+
+                            // Build the list of available versions (new `versions` schema or legacy `files[].version`).
+                            const availableVersions = [];
+                            if (manifest.versions && typeof manifest.versions === 'object' && !Array.isArray(manifest.versions)) {
+                                for (const [v, payload] of Object.entries(manifest.versions)) {
+                                    availableVersions.push({
+                                        version: v,
+                                        minBackend: payload.minBackendVersion || manifest.minBackendVersion || '0.0.0'
+                                    });
+                                }
+                            } else if (Array.isArray(manifest.files)) {
+                                const seen = new Set();
+                                for (const f of manifest.files) {
+                                    const v = f.version || manifest.version || '1.0.0';
+                                    if (seen.has(v)) continue;
+                                    seen.add(v);
+                                    availableVersions.push({
+                                        version: v,
+                                        minBackend: f.minBackendVer || manifest.minBackendVersion || '0.0.0'
+                                    });
+                                }
+                            }
+                            availableVersions.sort((a, b) => PluginInstaller.compareVersions(b.version, a.version));
+
+                            const latestCompatible = availableVersions.find(v =>
+                                PluginInstaller.compareVersions(backendVersion, v.minBackend) >= 0
+                            );
+
                             LoggerService.log('info', `${colors.cyan(pluginInfo.name)} ${colors.gray('v' + pluginInfo.version)}`);
                             LoggerService.log('info', `Description:        ${pluginInfo.description}`);
                             LoggerService.log('info', `Author:             ${colors.yellow(pluginInfo.author)}`);
                             LoggerService.log('info', `Category:           ${colors.magenta(pluginInfo.category)}`);
-                            LoggerService.log('info', `Version:            ${colors.green(pluginInfo.version)}`);
-                            LoggerService.log('info', `Min Backend:        ${colors.yellow(manifest.minBackendVersion || 'Any')}`);
+                            LoggerService.log('info', `Latest:             ${colors.green(availableVersions[0]?.version || pluginInfo.version)}`);
+                            LoggerService.log('info', `Latest compatible:  ${latestCompatible ? colors.green(latestCompatible.version) : colors.red('none')} (backend ${backendVersion})`);
                             LoggerService.log('info', `License:            ${manifest.license || 'Unknown'}`);
                             LoggerService.log('info', `Downloads:          ${colors.green(pluginInfo.downloads)}`);
                             LoggerService.log('info', `Rating:             ${colors.yellow('★'.repeat(Math.round(pluginInfo.rating)))} ${pluginInfo.rating}/5`);
                             LoggerService.log('info', `Status:             ${installed ? colors.green('INSTALLED') : colors.gray('Not installed')}`);
+
+                            if (availableVersions.length > 0) {
+                                const formatted = availableVersions.map(v => {
+                                    const ok = PluginInstaller.compareVersions(backendVersion, v.minBackend) >= 0;
+                                    return `${ok ? colors.green(v.version) : colors.gray(v.version)} (>=${v.minBackend})`;
+                                }).join(', ');
+                                LoggerService.log('info', `Versions:           ${formatted}`);
+                            }
 
                             if (pluginInfo.tags && pluginInfo.tags.length > 0) {
                                 LoggerService.log('info', `Tags:               ${pluginInfo.tags.map(t => colors.cyan(t)).join(', ')}`);
@@ -117,29 +154,46 @@ function register(CM) {
                                 LoggerService.log('info', `NPM Dependencies:   ${manifest.dependencies.npm.join(', ')}`);
                             }
 
-                            LoggerService.log('info', `Files:              ${manifest.files.length} file(s)`);
+                            if (manifest.dependencies?.plugins && manifest.dependencies.plugins.length > 0) {
+                                const depsFmt = manifest.dependencies.plugins.map(d =>
+                                    typeof d === 'string' ? d : `${d.id}${d.version ? '@' + d.version : ''}`
+                                ).join(', ');
+                                LoggerService.log('info', `Plugin Dependencies: ${depsFmt}`);
+                            }
+
+                            const filesCount = (manifest.files && manifest.files.length) ||
+                                (latestCompatible && manifest.versions?.[latestCompatible.version]?.files?.length) || 0;
+                            LoggerService.log('info', `Files:              ${filesCount} file(s) ${availableVersions.length > 1 ? colors.gray('(per version)') : ''}`);
 
                             if (manifest.repository) {
                                 LoggerService.log('info', `Repository:         ${manifest.repository}`);
                             }
 
                             if (!installed) {
-                                LoggerService.log('info', `Install with: ${colors.cyan(`/plugins store install ${pluginInfo.id}`)}`);
+                                LoggerService.log('info', `Install with: ${colors.cyan(`/plugins store install ${pluginInfo.id}`)} (latest compatible)`);
+                                if (availableVersions.length > 1) {
+                                    LoggerService.log('info', `Or specific:  ${colors.cyan(`/plugins store install ${pluginInfo.id} <version>`)}`);
+                                }
                             } else {
-                                LoggerService.log('info', `Update with: ${colors.cyan(`/plugins store update ${pluginInfo.id}`)}`);
+                                LoggerService.log('info', `Update with: ${colors.cyan(`/plugins store update ${pluginInfo.id}`)} (latest compatible)`);
+                                if (availableVersions.length > 1) {
+                                    LoggerService.log('info', `Or specific: ${colors.cyan(`/plugins store update ${pluginInfo.id} <version>`)}`);
+                                }
                             }
                         } catch (error) {
                             LoggerService.log('error', `Failed to get plugin info: ${error.message}`);
                         }
                         break;
 
-                    case 'install':
+                    case 'install': {
                         if (!storeArg) {
-                            LoggerService.log('info', `Usage: ${colors.cyan('/plugins store install <plugin-id>')}`);
+                            LoggerService.log('info', `Usage: ${colors.cyan('/plugins store install <plugin-id> [version]')}`);
                             return;
                         }
-                        await PluginInstaller.installPlugin(storeArg, PluginManager);
+                        const version = args[3] || null;
+                        await PluginInstaller.installPlugin(storeArg, PluginManager, { version });
                         break;
+                    }
 
                     case 'uninstall':
                         if (!storeArg) {
@@ -149,13 +203,15 @@ function register(CM) {
                         await PluginInstaller.uninstallPlugin(storeArg, PluginManager);
                         break;
 
-                    case 'update':
+                    case 'update': {
                         if (!storeArg) {
-                            LoggerService.log('info', `Usage: ${colors.cyan('/plugins store update <plugin-id>')}`);
+                            LoggerService.log('info', `Usage: ${colors.cyan('/plugins store update <plugin-id> [version]')}`);
                             return;
                         }
-                        await PluginInstaller.updatePlugin(storeArg, PluginManager);
+                        const version = args[3] || null;
+                        await PluginInstaller.updatePlugin(storeArg, PluginManager, { version });
                         break;
+                    }
 
                     case 'refresh':
                         try {
@@ -173,9 +229,9 @@ function register(CM) {
                         LoggerService.log('info', `  ${colors.cyan('list [page]')}           - List available plugins from store`);
                         LoggerService.log('info', `  ${colors.cyan('search <query>')}        - Search plugins`);
                         LoggerService.log('info', `  ${colors.cyan('info <plugin-id>')}      - Show detailed plugin information`);
-                        LoggerService.log('info', `  ${colors.cyan('install <plugin-id>')}   - Download and install a plugin`);
-                        LoggerService.log('info', `  ${colors.cyan('uninstall <plugin-id>')} - Uninstall a plugin`);
-                        LoggerService.log('info', `  ${colors.cyan('update <plugin-id>')}    - Update an installed plugin`);
+                        LoggerService.log('info', `  ${colors.cyan('install <plugin-id> [version]')}   - Download and install a plugin (latest compatible by default)`);
+                        LoggerService.log('info', `  ${colors.cyan('uninstall <plugin-id>')}           - Uninstall a plugin`);
+                        LoggerService.log('info', `  ${colors.cyan('update <plugin-id> [version]')}    - Update an installed plugin (latest compatible by default)`);
                         LoggerService.log('info', `  ${colors.cyan('refresh')}               - Refresh store cache`);
                         break;
                 }

@@ -240,7 +240,7 @@ class ItemShop {
             });
         }
 
-        // Battle Bundle Offer (Battle Pass + 25 levels - 2800 V-Bucks, shown as 4700 → 2800)
+        // Battle Bundle Offer (Battle Pass + 25 levels - 2800 V-Bucks, shown as 4700 -> 2800)
         if (offers.battleBundleOfferId) {
             catalog.storefronts[seasonStorefrontIndex].catalogEntries.push({
                 offerId: offers.battleBundleOfferId,

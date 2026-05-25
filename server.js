@@ -24,6 +24,7 @@ const { CsrfTokenService } = require('./src/service/token/csrf-token-service');
 const CreatorCodeService = require('./src/service/api/creator-code-service');
 const TicketService = require('./src/service/api/ticket-service');
 const AuditService = require('./src/service/api/audit-service');
+const PlaylistRotationService = require('./src/service/playlist-rotation-service');
 
 const NEODYME_ASCII = `
 ${colors.cyan('███╗   ██╗███████╗ ██████╗ ██████╗ ██╗   ██╗███╗   ███╗███████╗')}
@@ -180,6 +181,13 @@ class Server {
 
             LoggerService.log('info', 'Initializing CloudStorage...');
             CloudStorageManager.initialize();
+
+            LoggerService.log('info', 'Initializing Playlist Rotation...');
+            try {
+                PlaylistRotationService.init();
+            } catch (error) {
+                LoggerService.log('warn', `Playlist rotation failed to start: ${error.message} - service disabled`);
+            }
 
             LoggerService.log('info', 'Backend version check...');
             await Server.checkVersion();

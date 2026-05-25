@@ -1,10 +1,29 @@
+const { type } = require("node:os");
+
 const VERSIONS = [
+    {
+        version: '1.2.6',
+        title: 'Dynamic Content (News, Modes, Events)',
+        date: 'May 3, 2026',
+        type: 'feature',
+        latest: true,
+        lts: false,
+        summary: 'Full in-game content control from the admin panel: live MOTD/news editor, game mode toggle and automatic rotation scheduling, and lobby subgame tab configuration. No server restart required for any of these changes.',
+        features: [
+            { label: 'Unified Download Progress', text: 'Plugin installs (and any future multi-file download such as the image bundles) now render a single global progress bar in the console instead of one bar per file. Total size is resolved up front from the manifest or via <code>HEAD</code> requests, and the bar grows gracefully when the total is unknown. New shared helper <code>PluginInstaller.downloadFilesWithGlobalProgress()</code> ready for the upcoming Image Pipeline.' },
+            { label: 'Versioned Plugin Manifests', text: 'Plugin manifests now support a grouped <code>versions</code> object (<code>{ "1.0.0": { minBackendVersion, files, totalSize }, "1.0.1": { ... } }</code>), letting a single plugin ship multiple versions side-by-side. The legacy flat <code>files[]</code> layout (with optional <code>version</code> / <code>minBackendVer</code> per file) is still accepted for backwards compatibility.' },
+            { label: 'Plugin Version Selection', text: '<code>/plugins store install &lt;plugin-id&gt; [version]</code> and <code>/plugins store update &lt;plugin-id&gt; [version]</code> now take an optional explicit version. Without one, the installer picks the latest version whose <code>minBackendVersion</code> is satisfied by the running backend. A non-existent or incompatible version yields a clear error listing what is available.' },
+            { label: 'Plugin-to-Plugin Dependencies', text: 'The installer now resolves <code>manifest.dependencies.plugins[]</code> recursively before downloading the plugin itself. Entries can be a plain id string or <code>{ id, version }</code>. Cycles are detected via an install-chain trail and short-circuited safely. (npm dependencies are still installed via <code>npm install --save</code> as before.)' },
+            { label: 'Store Info: Version Matrix', text: '<code>/plugins store info &lt;plugin-id&gt;</code> now lists every available version, highlights the latest version compatible with the current backend, and surfaces inter-plugin dependencies.' },
+            { label: 'Discord Plugin 1.0.1', text: 'Shop rotation webhook now attaches the rendered shop image (SVG) generated server-side instead of a truncated text list. If the image generator is unavailable (e.g. no shop data yet), the plugin transparently falls back to the legacy text summary. Requires Neodyme 1.2.5+.' },
+        ]
+    },
     {
         version: '1.2.5',
         title: 'XMPP Overhaul & Shop Generator',
         date: 'March 28, 2026',
         type: 'feature',
-        latest: true,
+        latest: false,
         lts: true,
         summary: 'Complete XMPP overhaul, full party system (pings, invites, promote, intentions, Vivox voice chat) with real-time XMPP notifications, SVG shop image generation with zero native dependencies, historical date-based shop rotation, real gift eligibility validation, player report system with moderation panel, improved item image quality, and optional HTTPS/SSL support. Known issues remain: Battle Pass on some seasons, and EOS on builds 19+.',
         features: [

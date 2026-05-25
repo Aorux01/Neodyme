@@ -267,4 +267,4 @@
 
 ---
 
-*Last updated: v1.2.5*
+*Last updated: v1.2.6*

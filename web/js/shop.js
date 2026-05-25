@@ -546,7 +546,7 @@ function showPurchaseVbucks() {
         const inp = document.getElementById('shop-creator-input');
         const fb  = document.getElementById('shop-creator-feedback');
         if (inp) inp.value = saved;
-        if (fb)  { fb.textContent = '✓ Code applied'; fb.className = 'creator-feedback valid'; }
+        if (fb)  { fb.textContent = 'Code applied'; fb.className = 'creator-feedback valid'; }
     }
 })();
 

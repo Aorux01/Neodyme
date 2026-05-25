@@ -1,5 +1,5 @@
 {
-  "_comment": "Playlist/game mode configuration. Each entry controls visibility in the lobby and cloud storage. minBuild: minimum Fortnite build required (0 = always shown). Set enabled=false to globally hide a mode regardless of build.",
+  "_comment": "Playlist/game mode configuration. Each entry controls visibility in the lobby and cloud storage. minBuild: minimum Fortnite build required (0 = always shown). Set enabled=false to globally hide a mode regardless of build. rotation: optional auto-scheduling (type: 'interval' toggles every intervalHours; type: 'scheduled' activates at scheduledTime and deactivates after activeDurationHours).",
   "playlists": [
     {
       "name": "Playlist_DefaultSolo",
@@ -11,6 +11,13 @@
         "bVisibleWhenDisabled": true,
         "categoryIndex": 0,
         "displayPriority": 0
+      },
+      "rotation": {
+        "enabled": false,
+        "type": "interval",
+        "intervalHours": 6,
+        "scheduledTime": "18:00",
+        "activeDurationHours": 3
       }
     },
     {
@@ -23,6 +30,13 @@
         "bVisibleWhenDisabled": true,
         "categoryIndex": 0,
         "displayPriority": 1
+      },
+      "rotation": {
+        "enabled": false,
+        "type": "interval",
+        "intervalHours": 6,
+        "scheduledTime": "18:00",
+        "activeDurationHours": 3
       }
     },
     {
@@ -35,6 +49,13 @@
         "bVisibleWhenDisabled": true,
         "categoryIndex": 0,
         "displayPriority": 2
+      },
+      "rotation": {
+        "enabled": false,
+        "type": "interval",
+        "intervalHours": 6,
+        "scheduledTime": "18:00",
+        "activeDurationHours": 3
       }
     },
     {
@@ -47,6 +68,13 @@
         "bVisibleWhenDisabled": true,
         "categoryIndex": 0,
         "displayPriority": 3
+      },
+      "rotation": {
+        "enabled": false,
+        "type": "interval",
+        "intervalHours": 6,
+        "scheduledTime": "18:00",
+        "activeDurationHours": 3
       }
     },
     {
@@ -60,6 +88,13 @@
         "bInvisibleWhenEnabled": false,
         "categoryIndex": 0,
         "displayPriority": 4
+      },
+      "rotation": {
+        "enabled": false,
+        "type": "interval",
+        "intervalHours": 6,
+        "scheduledTime": "18:00",
+        "activeDurationHours": 3
       }
     },
     {
@@ -73,6 +108,13 @@
         "bDisplayAsNew": true,
         "categoryIndex": 1,
         "displayPriority": 100
+      },
+      "rotation": {
+        "enabled": false,
+        "type": "interval",
+        "intervalHours": 6,
+        "scheduledTime": "18:00",
+        "activeDurationHours": 3
       }
     }
   ]

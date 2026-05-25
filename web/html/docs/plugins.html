@@ -214,14 +214,114 @@ module.exports = SchedulerPlugin;</code></pre>
 
             <h2>Plugin Store</h2>
             <p>Browse, install, and update plugins directly from the console:</p>
-            <pre><code>/plugins store list                      # Browse available plugins
-/plugins store search discord            # Search by keyword
-/plugins store install discord-integration   # Install a plugin
-/plugins store update discord-integration    # Update installed plugin
-/plugins store uninstall discord-integration # Uninstall plugin</code></pre>
+            <pre><code>/plugins store list                                # Browse available plugins
+/plugins store search discord                      # Search by keyword
+/plugins store info discord-integration            # Show details + version matrix
+/plugins store install discord-integration         # Install latest compatible version
+/plugins store install discord-integration 1.0.0   # Install a specific version
+/plugins store update discord-integration          # Update to latest compatible
+/plugins store update discord-integration 1.0.1    # Update to a specific version
+/plugins store uninstall discord-integration       # Uninstall plugin
+/plugins store refresh                             # Force-refresh the store cache</code></pre>
 
-            <p>When installing from the store, NPM dependencies are installed automatically. For manually placed plugins, install dependencies yourself:</p>
-            <pre><code>npm install axios moment</code></pre>
+            <p>Without an explicit version, the installer picks the highest version whose <code>minBackendVersion</code> is satisfied by the running backend. If you ask for a version that does not exist or that requires a newer backend, the installer aborts and prints the list of available versions.</p>
+
+            <h3>Download Progress</h3>
+            <p>Multi-file downloads (plugin install, future image bundles, etc.) render a <strong>single global progress bar</strong> rather than one bar per file. The total size is resolved up front from the manifest (<code>size</code> per file or <code>totalSize</code> per version) or via parallel <code>HEAD</code> probes, and the bar grows gracefully if the total is unknown.</p>
+
+            <h2>Manifest Format</h2>
+            <p>A plugin manifest is the JSON file referenced by <code>manifestUrl</code> in the global store list. Two layouts are accepted; the grouped <code>versions</code> object is recommended, the flat <code>files[]</code> layout is kept for backwards compatibility.</p>
+
+            <h3>Recommended: grouped <code>versions</code></h3>
+            <p>Lets you ship multiple versions of the same plugin side-by-side, each with its own <code>minBackendVersion</code>, file list, total size and (optionally) release date. The installer picks the right version for the running backend.</p>
+            <pre><code>{
+  "id": "discord-integration",
+  "name": "Discord Integration",
+  "description": "Enhanced Discord integration features",
+  "author": "Aorux - Neodyme Team",
+  "repository": "https://github.com/Aorux01/Neodyme-Plugins",
+  "license": "MIT",
+  "dependencies": {
+    "npm": ["discord.js"],
+    "plugins": []
+  },
+  "versions": {
+    "1.0.0": {
+      "minBackendVersion": "1.2.0",
+      "releaseDate": "2025-02-11",
+      "totalSize": 28412,
+      "files": [
+        { "path": "discord-integration/index.js",   "url": "https://.../1.0.0/index.js",   "type": "main",   "size": 24105 },
+        { "path": "discord-integration/config.json","url": "https://.../1.0.0/config.json","type": "config", "size": 1487 },
+        { "path": "discord-integration/README.md",  "url": "https://.../1.0.0/README.md",  "type": "doc",    "size": 2820 }
+      ]
+    },
+    "1.0.1": {
+      "minBackendVersion": "1.2.5",
+      "releaseDate": "2026-05-25",
+      "totalSize": 31200,
+      "files": [
+        { "path": "discord-integration/index.js",   "url": "https://.../1.0.1/index.js",   "type": "main",   "size": 26800 },
+        { "path": "discord-integration/config.json","url": "https://.../1.0.1/config.json","type": "config", "size": 1500 },
+        { "path": "discord-integration/README.md",  "url": "https://.../1.0.1/README.md",  "type": "doc",    "size": 2900 }
+      ]
+    }
+  },
+  "changelog": [
+    { "version": "1.0.1", "date": "2026-05-25", "changes": ["Shop image attachment", "Text fallback"] },
+    { "version": "1.0.0", "date": "2025-02-11", "changes": ["Initial release"] }
+  ]
+}</code></pre>
+
+            <h3>Legacy: flat <code>files[]</code></h3>
+            <p>Still supported. Tag each file with its own <code>version</code> and <code>minBackendVer</code>; the installer groups them automatically.</p>
+            <pre><code>{
+  "id": "discord-integration",
+  "minBackendVersion": "1.2.0",
+  "files": [
+    { "version": "1.0.0", "minBackendVer": "1.2.0", "path": "discord-integration/index.js",    "url": "..." },
+    { "version": "1.0.0", "minBackendVer": "1.2.0", "path": "discord-integration/config.json", "url": "..." },
+    { "version": "1.0.1", "minBackendVer": "1.2.5", "path": "discord-integration/index.js",    "url": "..." },
+    { "version": "1.0.1", "minBackendVer": "1.2.5", "path": "discord-integration/config.json", "url": "..." }
+  ]
+}</code></pre>
+
+            <h3>File Size Resolution</h3>
+            <p>The progress bar uses the first available source from this priority list:</p>
+            <ol>
+                <li><code>file.size</code> per entry (most precise)</li>
+                <li><code>versions[v].totalSize</code> for the resolved version</li>
+                <li><code>manifest.totalSize</code> at the root</li>
+                <li>Parallel <code>HEAD</code> probes on every URL</li>
+                <li>Unknown - the bar grows live with received bytes</li>
+            </ol>
+
+            <h2>Dependencies</h2>
+
+            <h3>NPM Dependencies</h3>
+            <p>Listed under <code>dependencies.npm</code>. When you install a plugin from the store, the installer runs <code>npm install --save &lt;packages&gt;</code> for you automatically &mdash; you do not need to install anything by hand. For manually placed plugins (drop-in <code>.js</code> files), install dependencies yourself:</p>
+            <pre><code>npm install discord.js axios moment</code></pre>
+
+            <h3>Plugin-to-Plugin Dependencies</h3>
+            <p>Listed under <code>dependencies.plugins</code>. Each entry is either a plain plugin id string or an object with an explicit target version:</p>
+            <pre><code>"dependencies": {
+  "npm": ["discord.js"],
+  "plugins": [
+    "logger-utils",
+    { "id": "shop-tools", "version": "2.1.0" }
+  ]
+}</code></pre>
+            <p>Before downloading the requested plugin, the installer resolves every plugin dependency <strong>recursively</strong>:</p>
+            <ul>
+                <li>If the dependency is already installed, it is skipped (no version downgrade or replacement).</li>
+                <li>Otherwise, <code>installPlugin()</code> is called for it, with the requested version (or latest compatible if none).</li>
+                <li>If any dependency fails to install, the whole install is aborted with an explicit error.</li>
+            </ul>
+
+            <h3>Cycle Detection</h3>
+            <p>The install chain is tracked through a <code>trail: Set&lt;string&gt;</code> shared across recursion. If a plugin re-appears in its own dependency chain (A &rarr; B &rarr; A), the second visit is short-circuited with a warning instead of looping forever:</p>
+            <pre><code>[warn] Skipping 'plugin-a' (already in install chain, possible dependency cycle)</code></pre>
+            <p>This keeps installs deterministic even with badly authored manifests, and lets you safely express bidirectional <em>"these two plugins know about each other"</em> relationships.</p>
 
             <h2>Best Practices</h2>
             <ul>

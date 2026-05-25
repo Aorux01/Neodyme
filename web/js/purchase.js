@@ -115,17 +115,17 @@ async function applyCreatorCode() {
         if (data.valid) {
             appliedCreatorCode = { code: code.toLowerCase(), creatorName: data.creatorName };
             localStorage.setItem('neodyme_creator_code', code.toLowerCase());
-            fb.textContent = `✓ Supporting ${data.creatorName}`;
+            fb.textContent = `Supporting ${data.creatorName}`;
             fb.className = 'creator-code-feedback valid';
         } else {
             appliedCreatorCode = null;
             localStorage.removeItem('neodyme_creator_code');
-            fb.textContent = '✗ Code not found or inactive';
+            fb.textContent = 'Code not found or inactive';
             fb.className = 'creator-code-feedback invalid';
         }
     } catch {
         appliedCreatorCode = null;
-        fb.textContent = '✗ Could not validate code';
+        fb.textContent = 'Could not validate code';
         fb.className = 'creator-code-feedback invalid';
     }
 }

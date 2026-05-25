@@ -102,6 +102,7 @@
                     <li><a href="#maintenance">20. Maintenance</a></li>
                     <li><a href="#ssl">21. SSL / HTTPS</a></li>
                     <li><a href="#shop-json">config/shop.json</a></li>
+                    <li><a href="#playlists-json">config/playlists.json</a></li>
                     <li><a href="#backendvalue">shopMaxSeason reference</a></li>
                     <li><a href="#feature-status">Feature status</a></li>
                 </ul>
@@ -114,8 +115,8 @@
             <table class="config-table">
                 <tr><th>Key</th><th>Default</th><th>Description</th></tr>
                 <tr><td><code>port</code></td><td><code>3551</code></td><td>TCP port the HTTP server listens on.</td></tr>
-                <tr><td><code>version</code></td><td><code>1.2.5</code></td><td>Backend version string exposed via API.</td></tr>
-                <tr><td><code>apiVersion</code></td><td><code>1.7</code></td><td>API version string exposed via API.</td></tr>
+                <tr><td><code>version</code></td><td><code>1.2.6</code></td><td>Backend version string exposed via API.</td></tr>
+                <tr><td><code>apiVersion</code></td><td><code>1.8</code></td><td>API version string exposed via API.</td></tr>
                 <tr><td><code>customVersion</code></td><td><code>true</code></td><td>When <code>true</code>, any Fortnite client version can connect and <code>shopMaxSeason</code> from <code>shop.json</code> controls the shop era. When <code>false</code>, only clients matching <code>fnVersion</code> can connect and the shop era is derived from <code>fnVersion</code> automatically.</td></tr>
                 <tr><td><code>fnVersion</code></td><td><code>3.50</code></td><td>Specific Fortnite version allowed when <code>customVersion=false</code>. Also used to derive the shop era when <code>customVersion=false</code> (major component = season number).</td></tr>
             </table>
@@ -296,7 +297,7 @@
 
             <table class="config-table">
                 <tr><th>Key</th><th>Default</th><th>Description</th></tr>
-                <tr><td><code>randomShop</code></td><td><code>false</code></td><td>When <code>true</code>, the shop is generated <strong>on-the-fly per request</strong> from the fortnite-api.com cosmetics cache - <code>data/shop.json</code> is never read or written. Chapter 1/2 layout is <strong>auto-detected from the connecting client's version</strong>: Season ≤ 10 → Ch1 (4 daily + 2 featured, <code>BRDailyStorefront</code> / <code>BRWeeklyStorefront</code>) ; Season &gt; 10 → Ch2+ (counts from <code>shopCategories</code>). Cosmetics are filtered to the client's own era (<code>backendValue ≤ season</code>), so a Season 5 client only sees Season 1–5 items while a Season 14 client sees Seasons 1–14 items. The shop is seeded on <em>season + date</em> - identical for the same client reconnecting the same day, automatically different the next day. <code>isChapter1</code>, <code>shopRotationTime</code>, and the rotation scheduler are all ignored when this mode is active.</td></tr>
+                <tr><td><code>randomShop</code></td><td><code>false</code></td><td>When <code>true</code>, the shop is generated <strong>on-the-fly per request</strong> from the fortnite-api.com cosmetics cache - <code>data/shop.json</code> is never read or written. Chapter 1/2 layout is <strong>auto-detected from the connecting client's version</strong>: Season ≤ 10 -> Ch1 (4 daily + 2 featured, <code>BRDailyStorefront</code> / <code>BRWeeklyStorefront</code>) ; Season &gt; 10 -> Ch2+ (counts from <code>shopCategories</code>). Cosmetics are filtered to the client's own era (<code>backendValue ≤ season</code>), so a Season 5 client only sees Season 1–5 items while a Season 14 client sees Seasons 1–14 items. The shop is seeded on <em>season + date</em> - identical for the same client reconnecting the same day, automatically different the next day. <code>isChapter1</code>, <code>shopRotationTime</code>, and the rotation scheduler are all ignored when this mode is active.</td></tr>
                 <tr><td><code>isChapter1</code></td><td><code>false</code></td><td>When <code>true</code>, forces Chapter 1 shop mode: the shop always uses exactly two fixed storefronts - <code>BRDailyStorefront</code> (4 small tiles, daily rotation) and <code>BRWeeklyStorefront</code> (2 normal tiles, weekly rotation). The <code>shopCategories</code> block is ignored in this mode. Set to <code>true</code> when hosting Chapter 1 builds (Seasons 1–10). Ignored when <code>randomShop: true</code> (Chapter detection is automatic).</td></tr>
                 <tr><td><code>shopRotationTime</code></td><td><code>"00:00"</code></td><td>Time of day (HH:MM, 24-hour) at which the daily rotation fires automatically. Requires <code>autoShopRotation=true</code> in <code>server.properties</code>. Unused when <code>randomShop: true</code>.</td></tr>
                 <tr><td><code>shopMaxSeason</code></td><td><code>32</code></td><td>Maximum <em>backendValue</em> of cosmetics to include in the shop. <code>0</code> = no limit (all seasons). See the <a href="#backendvalue">reference table</a> below for values per season. Ignored when <code>customVersion=false</code> (era is derived from <code>fnVersion</code> major component instead). In <code>randomShop</code> mode the client's own season is used as the ceiling - this setting is ignored.</td></tr>
@@ -346,7 +347,7 @@
             </div>
 
             <h2 id="feature-status" class="section-anchor">Feature Status</h2>
-            <p>What actually works in the current build (v1.2.5):</p>
+            <p>What actually works in the current build (v1.2.6):</p>
             <table class="config-table">
                 <tr><th>Feature</th><th>Status</th><th>Notes</th></tr>
                 <tr><td>Account registration &amp; login</td><td><span class="badge badge-yes">Working</span></td><td>Full auth flow with bcrypt + JWT.</td></tr>

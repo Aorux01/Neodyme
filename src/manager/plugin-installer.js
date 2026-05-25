@@ -33,9 +33,10 @@ class PluginInstaller {
                     chunks.push(chunk);
                     downloadedSize += chunk.length;
 
-                    if (onProgress && totalSize > 0) {
-                        const progress = Math.round((downloadedSize / totalSize) * 100);
-                        onProgress(progress, downloadedSize, totalSize);
+                    if (onProgress) {
+                        // Always emit chunk delta; totalSize may be 0 (unknown).
+                        // Callers handle global aggregation themselves.
+                        onProgress(chunk.length, downloadedSize, totalSize);
                     }
                 });
 
@@ -46,6 +47,24 @@ class PluginInstaller {
 
                 response.on('error', reject);
             }).on('error', reject);
+        });
+    }
+
+    static async headContentLength(url) {
+        return new Promise((resolve) => {
+            try {
+                const req = https.request(url, { method: 'HEAD' }, (response) => {
+                    if (response.statusCode === 301 || response.statusCode === 302) {
+                        return this.headContentLength(response.headers.location).then(resolve);
+                    }
+                    const len = parseInt(response.headers['content-length'] || '0', 10);
+                    resolve(Number.isFinite(len) ? len : 0);
+                });
+                req.on('error', () => resolve(0));
+                req.end();
+            } catch (_) {
+                resolve(0);
+            }
         });
     }
 
@@ -92,6 +111,123 @@ class PluginInstaller {
         }
     }
 
+    static compareVersions(a, b) {
+        const pa = String(a).split('.').map(n => parseInt(n, 10) || 0);
+        const pb = String(b).split('.').map(n => parseInt(n, 10) || 0);
+        for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+            const ai = pa[i] || 0, bi = pb[i] || 0;
+            if (ai > bi) return 1;
+            if (ai < bi) return -1;
+        }
+        return 0;
+    }
+
+    /**
+     * Resolve which version of a plugin to install given the manifest and the running backend.
+     *
+     * Supports two manifest layouts:
+     *  - New (grouped): { versions: { "1.0.0": { minBackendVersion, files: [...], totalSize? }, ... } }
+     *  - Legacy (flat): { version, files: [{ version?, minBackendVer?, ... }, ...], minBackendVersion? }
+     *
+     * If `requestedVersion` is provided, the function only returns that exact version,
+     * and errors with a clear message when it does not exist or is not compatible.
+     * Otherwise, the latest version whose `minBackendVersion <= backendVersion` is returned.
+     *
+     * Returns: { version, minBackendVersion, files, totalSize } or throws.
+     */
+    static resolveBestVersion(manifest, backendVersion, requestedVersion = null) {
+        // ---- 1) New schema: `versions` object ----
+        if (manifest.versions && typeof manifest.versions === 'object' && !Array.isArray(manifest.versions)) {
+            const all = Object.entries(manifest.versions)
+                .map(([v, payload]) => ({
+                    version: v,
+                    minBackendVersion: payload.minBackendVersion || manifest.minBackendVersion || '0.0.0',
+                    files: payload.files || [],
+                    totalSize: typeof payload.totalSize === 'number' ? payload.totalSize : 0
+                }))
+                .sort((a, b) => this.compareVersions(b.version, a.version)); // newest first
+
+            if (all.length === 0) {
+                throw new Error('Plugin manifest has no versions declared');
+            }
+
+            if (requestedVersion) {
+                const exact = all.find(v => v.version === requestedVersion);
+                if (!exact) {
+                    const available = all.map(v => v.version).join(', ');
+                    throw new Error(`Version '${requestedVersion}' does not exist. Available: ${available}`);
+                }
+                if (this.compareVersions(backendVersion, exact.minBackendVersion) < 0) {
+                    throw new Error(
+                        `Plugin version ${requestedVersion} requires backend ${exact.minBackendVersion} or higher (current: ${backendVersion})`
+                    );
+                }
+                return exact;
+            }
+
+            const compatible = all.find(v => this.compareVersions(backendVersion, v.minBackendVersion) >= 0);
+            if (!compatible) {
+                const newest = all[0];
+                throw new Error(
+                    `No plugin version compatible with backend ${backendVersion}. Newest version ${newest.version} requires ${newest.minBackendVersion}.`
+                );
+            }
+            return compatible;
+        }
+
+        // ---- 2) Legacy schema: flat `files[]` with optional per-file `version` ----
+        if (Array.isArray(manifest.files) && manifest.files.length > 0) {
+            // Group files by their `version` field (or by manifest.version if uniform).
+            const byVersion = new Map();
+            for (const f of manifest.files) {
+                const v = f.version || manifest.version || '1.0.0';
+                if (!byVersion.has(v)) byVersion.set(v, []);
+                byVersion.get(v).push(f);
+            }
+
+            // Pick the highest minBackendVer for each group as its requirement.
+            const all = Array.from(byVersion.entries())
+                .map(([version, files]) => {
+                    const minFromFiles = files.reduce((max, f) => {
+                        const cur = f.minBackendVer || manifest.minBackendVersion || '0.0.0';
+                        return this.compareVersions(cur, max) > 0 ? cur : max;
+                    }, '0.0.0');
+                    return {
+                        version,
+                        minBackendVersion: minFromFiles,
+                        files,
+                        totalSize: 0
+                    };
+                })
+                .sort((a, b) => this.compareVersions(b.version, a.version));
+
+            if (requestedVersion) {
+                const exact = all.find(v => v.version === requestedVersion);
+                if (!exact) {
+                    const available = all.map(v => v.version).join(', ');
+                    throw new Error(`Version '${requestedVersion}' does not exist. Available: ${available}`);
+                }
+                if (this.compareVersions(backendVersion, exact.minBackendVersion) < 0) {
+                    throw new Error(
+                        `Plugin version ${requestedVersion} requires backend ${exact.minBackendVersion} or higher (current: ${backendVersion})`
+                    );
+                }
+                return exact;
+            }
+
+            const compatible = all.find(v => this.compareVersions(backendVersion, v.minBackendVersion) >= 0);
+            if (!compatible) {
+                const newest = all[0];
+                throw new Error(
+                    `No plugin version compatible with backend ${backendVersion}. Newest version ${newest.version} requires ${newest.minBackendVersion}.`
+                );
+            }
+            return compatible;
+        }
+
+        throw new Error('Plugin manifest is missing `versions` or `files`');
+    }
+
     static async downloadFile(fileUrl, destinationPath, onProgress = null) {
         const dir = path.dirname(destinationPath);
         if (!fs.existsSync(dir)) {
@@ -100,6 +236,74 @@ class PluginInstaller {
 
         const content = await this.fetchWithProgress(fileUrl, onProgress);
         fs.writeFileSync(destinationPath, content, 'utf8');
+    }
+
+    /**
+     * Download N files sequentially with a single shared progress bar.
+     * Each entry: { url, dest, name, size? }.
+     * `knownTotal` is the sum of declared sizes (0 = unknown, bar then grows with bytes received).
+     * `label` is the line prefix shown in the console (e.g. "Plugin", "Images").
+     */
+    static async downloadFilesWithGlobalProgress(entries, knownTotal, label = 'Download') {
+        const totalFiles = entries.length;
+        if (totalFiles === 0) return;
+
+        let totalDownloaded = 0;
+        let projectedTotal = knownTotal; // grows if real bytes exceed our estimate
+        let currentIndex = 0;
+        let lastRender = 0;
+        const renderEveryMs = 100;
+
+        const render = (currentName, force = false) => {
+            const now = Date.now();
+            if (!force && now - lastRender < renderEveryMs) return;
+            lastRender = now;
+
+            // When total is unknown, show indeterminate "?" and only the downloaded count.
+            const hasTotal = projectedTotal > 0;
+            const pct = hasTotal
+                ? Math.min(100, Math.round((totalDownloaded / projectedTotal) * 100))
+                : 0;
+            const bar = this.createProgressBar(pct, 30);
+            const counter = colors.gray(`[${currentIndex}/${totalFiles}]`);
+            const sizeStr = hasTotal
+                ? `${this.formatBytes(totalDownloaded)} / ${this.formatBytes(projectedTotal)}`
+                : `${this.formatBytes(totalDownloaded)}`;
+            const pctStr = hasTotal ? `${pct}%`.padStart(4) : ' ...';
+            const nameStr = currentName ? colors.cyan(currentName) : '';
+
+            // Pad with spaces to overwrite any leftover characters from a longer previous line.
+            const line = `  ${label} ${counter} ${bar} ${pctStr} (${sizeStr})  ${nameStr}`;
+            process.stdout.write(`\r${line.padEnd(120, ' ')}`);
+        };
+
+        for (const entry of entries) {
+            currentIndex++;
+            render(entry.name, true);
+
+            await this.downloadFile(entry.url, entry.dest, (chunkBytes, _downloadedFile, totalFromHeader) => {
+                totalDownloaded += chunkBytes;
+
+                // If the actual bytes go past our estimate (e.g. HEAD lied or wasn't available),
+                // grow the projected total so the bar never goes above 100%.
+                if (projectedTotal > 0 && totalDownloaded > projectedTotal) {
+                    projectedTotal = totalDownloaded;
+                }
+                // Discover the total lazily when we had no estimate up front.
+                if (projectedTotal === 0 && totalFromHeader > 0) {
+                    // We don't know the other files' size, so just project on this one.
+                    projectedTotal = Math.max(totalDownloaded, totalFromHeader);
+                }
+
+                render(entry.name);
+            });
+        }
+
+        // Final 100% snapshot, then newline.
+        if (projectedTotal === 0) projectedTotal = totalDownloaded;
+        totalDownloaded = projectedTotal;
+        render('', true);
+        process.stdout.write('\n');
     }
 
     static async installNpmDependencies(dependencies) {
@@ -167,20 +371,30 @@ class PluginInstaller {
         return fs.existsSync(pluginDir);
     }
 
-    static async installPlugin(pluginId, PluginManager) {
+    /**
+     * Install a plugin from the store.
+     *
+     * @param {string} pluginId - The id of the plugin to install.
+     * @param {object} PluginManager - The PluginManager instance.
+     * @param {object} [opts]
+     * @param {string} [opts.version]      - Explicit plugin version (e.g. "1.0.1"). If omitted, picks the latest compatible.
+     * @param {Set<string>} [opts.trail]   - Internal: ids already being installed in this call chain (cycle guard).
+     * @param {boolean} [opts.asDependency] - Internal: true when installed as a dependency of another plugin.
+     */
+    static async installPlugin(pluginId, PluginManager, opts = {}) {
+        const requestedVersion = opts.version || null;
+        const trail = opts.trail || new Set();
+
+        if (trail.has(pluginId)) {
+            LoggerService.log('warn', `Skipping '${pluginId}' (already in install chain, possible dependency cycle)`);
+            return true;
+        }
+        trail.add(pluginId);
+
         try {
             const pluginInfo = await this.getPluginById(pluginId);
             if (!pluginInfo) {
                 throw new Error(`Plugin '${pluginId}' not found in store`);
-            }
-
-            LoggerService.log('info', `Installing plugin: ${colors.cyan(pluginInfo.name)} v${pluginInfo.version}`);
-            LoggerService.log('info', `Author: ${pluginInfo.author}`);
-            LoggerService.log('info', `Description: ${pluginInfo.description}`);
-
-            if (this.isPluginInstalled(pluginId)) {
-                LoggerService.log('warn', `Plugin '${pluginId}' is already installed. Use '/plugins store update ${pluginId}' to update.`);
-                return false;
             }
 
             // Fetch plugin manifest
@@ -188,37 +402,90 @@ class PluginInstaller {
             const manifest = await this.fetchPluginManifest(pluginInfo.manifestUrl);
 
             const backendVersion = PluginManager.getBackendVersion();
-            if (manifest.minBackendVersion) {
-                if (!PluginManager.isVersionCompatible(manifest.minBackendVersion, backendVersion)) {
-                    throw new Error(`Plugin requires backend version ${manifest.minBackendVersion} or higher (current: ${backendVersion})`);
+
+            // Pick the version (explicit or best-compatible).
+            const resolved = this.resolveBestVersion(manifest, backendVersion, requestedVersion);
+
+            LoggerService.log('info', `Installing plugin: ${colors.cyan(pluginInfo.name)} ${colors.gray('v' + resolved.version)}`);
+            LoggerService.log('info', `Author: ${pluginInfo.author}`);
+            LoggerService.log('info', `Description: ${pluginInfo.description}`);
+            LoggerService.log('info', `Requires backend: ${colors.yellow('>=' + resolved.minBackendVersion)} (current: ${backendVersion})`);
+
+            if (this.isPluginInstalled(pluginId)) {
+                LoggerService.log('warn', `Plugin '${pluginId}' is already installed. Use '/plugins store update ${pluginId}' to update.`);
+                return false;
+            }
+
+            // ---- Resolve plugin-to-plugin dependencies first ----
+            const pluginDeps = manifest.dependencies?.plugins || [];
+            if (pluginDeps.length > 0) {
+                LoggerService.log('info', `Resolving ${pluginDeps.length} plugin dependency(ies)...`);
+                for (const dep of pluginDeps) {
+                    // Accept either a plain id string or an object { id, version? }.
+                    const depId = typeof dep === 'string' ? dep : dep.id;
+                    const depVersion = typeof dep === 'object' ? (dep.version || null) : null;
+
+                    if (this.isPluginInstalled(depId)) {
+                        LoggerService.log('info', `Dependency '${depId}' already installed`);
+                        continue;
+                    }
+
+                    LoggerService.log('info', `Installing dependency '${depId}'${depVersion ? ' v' + depVersion : ''}`);
+                    const depOk = await this.installPlugin(depId, PluginManager, {
+                        version: depVersion,
+                        trail,
+                        asDependency: true
+                    });
+                    if (!depOk) {
+                        throw new Error(`Failed to install dependency '${depId}'`);
+                    }
                 }
             }
 
+            // ---- Download files for the resolved version ----
             const pluginsDir = path.join(process.cwd(), 'plugins');
-            const totalFiles = manifest.files.length;
-            let downloadedFiles = 0;
+            const totalFiles = resolved.files.length;
+
+            if (totalFiles === 0) {
+                throw new Error(`Plugin version ${resolved.version} has no files declared`);
+            }
 
             LoggerService.log('info', `Downloading ${totalFiles} file(s)...`);
 
-            // Download all files
-            for (const file of manifest.files) {
-                const destinationPath = path.join(pluginsDir, file.path);
-                const fileName = path.basename(file.path);
+            // Resolve total size up front so the global progress bar is accurate.
+            // Priority: per-file `size` > resolved.totalSize > manifest.totalSize > HEAD probe > unknown (bar grows live).
+            const fileSizes = resolved.files.map(file =>
+                (typeof file.size === 'number' && file.size > 0) ? file.size : 0
+            );
 
-                let lastProgress = 0;
-                await this.downloadFile(file.url, destinationPath, (progress, downloaded, total) => {
-                    if (progress >= lastProgress + 10 || progress === 100) {
-                        const bar = this.createProgressBar(progress, 30);
-                        const sizeStr = this.formatBytes(downloaded) + ' / ' + this.formatBytes(total);
-                        process.stdout.write(`\r  ${colors.cyan(fileName)}: ${bar} ${progress}% (${sizeStr})`);
-                        lastProgress = progress;
-                    }
-                });
+            let knownTotal = fileSizes.reduce((sum, s) => sum + s, 0);
 
-                downloadedFiles++;
-                process.stdout.write('\n');
-                LoggerService.log('success', `  ✓ Downloaded: ${fileName} (${downloadedFiles}/${totalFiles})`);
+            if (knownTotal === 0 && resolved.totalSize > 0) {
+                knownTotal = resolved.totalSize;
             }
+            if (knownTotal === 0 && typeof manifest.totalSize === 'number' && manifest.totalSize > 0) {
+                knownTotal = manifest.totalSize;
+            }
+
+            if (knownTotal === 0) {
+                // No size info in the manifest - probe each file with a HEAD in parallel.
+                const probed = await Promise.all(resolved.files.map(file => this.headContentLength(file.url)));
+                probed.forEach((size, i) => { if (size > 0) fileSizes[i] = size; });
+                knownTotal = probed.reduce((sum, s) => sum + s, 0);
+            }
+
+            await this.downloadFilesWithGlobalProgress(
+                resolved.files.map((file, i) => ({
+                    url: file.url,
+                    dest: path.join(pluginsDir, file.path),
+                    name: path.basename(file.path),
+                    size: fileSizes[i]
+                })),
+                knownTotal,
+                'Plugin'
+            );
+
+            LoggerService.log('success', `Downloaded ${totalFiles} file(s)`);
 
             // Install npm dependencies if any
             if (manifest.dependencies?.npm && manifest.dependencies.npm.length > 0) {
@@ -230,7 +497,7 @@ class PluginInstaller {
             const loadSuccess = await PluginManager.loadPlugin(pluginId);
 
             if (loadSuccess) {
-                LoggerService.log('success', `✓ Plugin '${colors.cyan(pluginInfo.name)}' installed and loaded successfully!`);
+                LoggerService.log('success', `Plugin '${colors.cyan(pluginInfo.name)}' v${resolved.version} installed and loaded successfully!`);
                 return true;
             } else {
                 LoggerService.log('error', `Plugin files downloaded but failed to load. Check the plugin structure.`);
@@ -297,18 +564,18 @@ class PluginInstaller {
         return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
     }
 
-    static async updatePlugin(pluginId, PluginManager) {
+    static async updatePlugin(pluginId, PluginManager, opts = {}) {
         try {
             if (!this.isPluginInstalled(pluginId)) {
                 LoggerService.log('error', `Plugin '${pluginId}' is not installed`);
                 return false;
             }
 
-            LoggerService.log('info', `Updating plugin: ${pluginId}`);
+            LoggerService.log('info', `Updating plugin: ${pluginId}${opts.version ? ' -> v' + opts.version : ''}`);
 
             await this.uninstallPlugin(pluginId, PluginManager);
 
-            return await this.installPlugin(pluginId, PluginManager);
+            return await this.installPlugin(pluginId, PluginManager, { version: opts.version || null });
 
         } catch (error) {
             LoggerService.log('error', `Failed to update plugin: ${error.message}`);
