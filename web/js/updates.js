@@ -3,19 +3,24 @@ const { type } = require("node:os");
 const VERSIONS = [
     {
         version: '1.2.6',
-        title: 'Dynamic Content (News, Modes, Events)',
-        date: 'May 3, 2026',
+        title: 'Asset Pipeline & Dynamic Content',
+        date: 'May 27, 2026',
         type: 'feature',
         latest: true,
         lts: false,
-        summary: 'Full in-game content control from the admin panel: live MOTD/news editor, game mode toggle and automatic rotation scheduling, and lobby subgame tab configuration. No server restart required for any of these changes.',
+        summary: 'New unified Asset Pipeline (online CDN-redirect or local serving with one command), full /assets toolset with verification and integrity checks, versioned plugin manifests with per-version dependencies, plugin install download progress unified into a single global bar, and Discord Integration 1.0.1.',
         features: [
+            { label: 'Asset Pipeline', text: 'New unified system controlling how Fortnite assets (images, banners, lobby art...) are served. Two modes: <code>online</code> (HTTP 302 redirects to the official Epic CDN listed in <code>content/assets-index.json</code>, zero disk usage) and <code>local</code> (serves from <code>public/images/</code>, automatic CDN fallback with a warning if a file is missing). Folders matching <code>alwaysLocal</code> globs (Neodyme branding, radio stations) are always served from disk regardless of the mode.' },
+            { label: 'First-Launch Asset Prompt', text: 'When <code>assetsMode</code> is empty in <code>server.properties</code>, an interactive prompt at startup asks <code>[O]nline</code> / <code>[L]ocal</code> and persists the choice. Non-interactive runs (CI, Docker) default to <code>online</code> silently.' },
+            { label: 'Asset Middleware', text: 'New <code>asset-middleware.js</code> intercepts <code>/images/*</code> requests before <code>express.static</code>, looks up the path in <code>assets-index.json</code>, then decides static / redirect / 404. Includes path-traversal protection and per-path warning deduplication.' },
+            { label: '/assets Console Commands', text: 'Full command set under <code>/assets</code>: <code>status</code>, <code>mode</code>, <code>list</code> (with <code>--tag</code> filter), <code>info</code>, <code>diagnose</code>, <code>install</code>, <code>uninstall</code>, <code>clean</code>, <code>verify</code>, <code>reload</code>, <code>refresh</code>. Destructive operations (<code>uninstall</code> bulk, <code>clean</code>) require <code>/confirm assets-uninstall</code> or <code>/confirm assets-clean</code>.' },
+            { label: 'Asset Auto-Download on Mode Switch', text: 'Switching from <code>online</code> to <code>local</code> via <code>/assets mode local</code> automatically downloads every missing indexed asset from the Neodyme-Plugins repository, using the global progress bar.' },
+            { label: 'Asset Integrity Validation', text: 'After each download batch the installer compares received file sizes against the manifest and surfaces a warning for zero-byte files and size mismatches > 1 KB. <code>/assets verify</code> runs the same audit on demand, plus orphan detection.' },
+            { label: 'AssetService Hot Reload', text: '<code>content/assets-index.json</code> is hot-reloaded on every mtime change - no server restart needed when you edit the index, and <code>/assets reload</code> forces an immediate refresh.' },
             { label: 'Unified Download Progress', text: 'Plugin installs (and any future multi-file download such as the image bundles) now render a single global progress bar in the console instead of one bar per file. Total size is resolved up front from the manifest or via <code>HEAD</code> requests, and the bar grows gracefully when the total is unknown. New shared helper <code>PluginInstaller.downloadFilesWithGlobalProgress()</code> ready for the upcoming Image Pipeline.' },
             { label: 'Versioned Plugin Manifests', text: 'Plugin manifests now support a grouped <code>versions</code> object (<code>{ "1.0.0": { minBackendVersion, files, totalSize }, "1.0.1": { ... } }</code>), letting a single plugin ship multiple versions side-by-side. The legacy flat <code>files[]</code> layout (with optional <code>version</code> / <code>minBackendVer</code> per file) is still accepted for backwards compatibility.' },
             { label: 'Plugin Version Selection', text: '<code>/plugins store install &lt;plugin-id&gt; [version]</code> and <code>/plugins store update &lt;plugin-id&gt; [version]</code> now take an optional explicit version. Without one, the installer picks the latest version whose <code>minBackendVersion</code> is satisfied by the running backend. A non-existent or incompatible version yields a clear error listing what is available.' },
             { label: 'Plugin-to-Plugin Dependencies', text: 'The installer now resolves <code>manifest.dependencies.plugins[]</code> recursively before downloading the plugin itself. Entries can be a plain id string or <code>{ id, version }</code>. Cycles are detected via an install-chain trail and short-circuited safely. (npm dependencies are still installed via <code>npm install --save</code> as before.)' },
-            { label: 'Store Info: Version Matrix', text: '<code>/plugins store info &lt;plugin-id&gt;</code> now lists every available version, highlights the latest version compatible with the current backend, and surfaces inter-plugin dependencies.' },
-            { label: 'Discord Plugin 1.0.1', text: 'Shop rotation webhook now attaches the rendered shop image (SVG) generated server-side instead of a truncated text list. If the image generator is unavailable (e.g. no shop data yet), the plugin transparently falls back to the legacy text summary. Requires Neodyme 1.2.5+.' },
         ]
     },
     {

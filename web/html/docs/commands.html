@@ -183,6 +183,23 @@
                 <tr><td><code>/plugins store refresh</code></td><td>Refresh store cache</td></tr>
             </table>
 
+            <h2>/assets</h2>
+            <p>Manage how Neodyme serves <code>/images/*</code> assets - see <a href="game-files.html#asset-pipeline">Game Files &rarr; Asset Pipeline</a> for the full guide.</p>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/assets status</code></td><td>Show current mode, index entries, missing assets, local disk usage</td></tr>
+                <tr><td><code>/assets mode &lt;online|local&gt;</code></td><td>Switch serving mode (online &rarr; local triggers automatic download of missing files)</td></tr>
+                <tr><td><code>/assets list [--tag &lt;tag&gt;]</code></td><td>List remote assets, filterable by tag</td></tr>
+                <tr><td><code>/assets info &lt;path&gt;</code></td><td>Show local + remote details for a specific asset</td></tr>
+                <tr><td><code>/assets diagnose &lt;path&gt;</code></td><td>Explain how a <code>/images/&lt;path&gt;</code> request resolves</td></tr>
+                <tr><td><code>/assets install [path]</code></td><td>Download all missing assets, or one specific asset (sizes validated post-download)</td></tr>
+                <tr><td><code>/assets uninstall [path]</code></td><td>Remove a single asset (or all managed assets, requires <code>/confirm assets-uninstall</code>)</td></tr>
+                <tr><td><code>/assets clean</code></td><td>Remove orphan local files no longer in the index (requires <code>/confirm assets-clean</code>)</td></tr>
+                <tr><td><code>/assets verify</code></td><td>Audit local files vs the index (missing, zero-byte, size mismatches, orphans)</td></tr>
+                <tr><td><code>/assets reload</code></td><td>Force-reload <code>content/assets-index.json</code> from disk</td></tr>
+                <tr><td><code>/assets refresh</code></td><td>Force-refresh the remote manifest cache</td></tr>
+            </table>
+
             <h2>/backup</h2>
             <table>
                 <tr><th>Command</th><th>Description</th></tr>
@@ -220,8 +237,8 @@
             <table>
                 <tr><th>Command</th><th>Description</th></tr>
                 <tr><td><code>/unlock &lt;username&gt;</code></td><td>Unlock account locked after failed login attempts</td></tr>
-                <tr><td><code>/confirm restore|delete</code></td><td>Confirm a destructive operation</td></tr>
-                <tr><td><code>/cancel</code></td><td>Cancel pending restore or delete operation</td></tr>
+                <tr><td><code>/confirm &lt;restore|delete|account-delete|account-reset|assets-uninstall|assets-clean&gt;</code></td><td>Confirm a pending destructive operation</td></tr>
+                <tr><td><code>/cancel</code></td><td>Cancel any pending operation</td></tr>
             </table>
         </main>
     </div>

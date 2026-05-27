@@ -106,7 +106,7 @@ async function applyCreatorCode() {
         return;
     }
 
-    fb.textContent = 'Checking…';
+    fb.textContent = 'Checking...';
     fb.className = 'creator-code-feedback';
 
     try {
@@ -182,7 +182,7 @@ async function confirmPurchase() {
 
     try {
         btn.disabled  = true;
-        btn.innerHTML = '<div class="loading-spinner" style="width:16px;height:16px;margin-right:8px;"></div> Processing…';
+        btn.innerHTML = '<div class="loading-spinner" style="width:16px;height:16px;margin-right:8px;"></div> Processing...';
 
         const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value || 'paypal';
 

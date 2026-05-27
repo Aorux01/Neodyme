@@ -11,6 +11,7 @@ const ConfigManager = require('./config-manager');
 const {ApiError, sendError, Errors} = require('../service/error/errors-system');
 const RateLimitManager = require('./rate-limit-manager');
 const { globalRateLimit } = require('../middleware/rate-limit-middleware');
+const { assetMiddleware } = require('../middleware/asset-middleware');
 
 class EndpointManager {
     static app = null;
@@ -105,7 +106,10 @@ class EndpointManager {
 
             this.app.use(express.json({ limit: limit_request }));
             this.app.use(express.urlencoded({ extended: true, limit: limit_request }));
-            this.app.use('/images', express.static(path.join(__dirname, '../../public/images')));
+            // Asset pipeline: the middleware decides static-vs-redirect-vs-404 based on
+            // assetsMode and content/assets-index.json. When it calls next(), express.static
+            // takes over and serves the file from public/images/.
+            this.app.use('/images', assetMiddleware('images'), express.static(path.join(__dirname, '../../public/images')));
             this.app.use(cookieParser());
 
             // Request tracking

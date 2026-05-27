@@ -1973,7 +1973,7 @@ async function loadAuditLog() {
         _auditLogsCache.forEach((log, idx) => {
             const meta   = auditActionMeta(log.action);
             const target = log.targetType && log.targetId
-                ? `<span style="color:#777;font-size:11px;">${escapeHtml(log.targetType)}</span>&nbsp;<code style="font-size:11px;color:#aaa;">${escapeHtml(log.targetId.slice(0, 24))}${log.targetId.length > 24 ? '…' : ''}</code>`
+                ? `<span style="color:#777;font-size:11px;">${escapeHtml(log.targetType)}</span>&nbsp;<code style="font-size:11px;color:#aaa;">${escapeHtml(log.targetId.slice(0, 24))}${log.targetId.length > 24 ? '...' : ''}</code>`
                 : '<span style="color:#444;">-</span>';
 
             const ts = new Date(log.timestamp);

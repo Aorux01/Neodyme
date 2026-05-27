@@ -19,6 +19,7 @@ const CMD_PERMISSIONS = [
     ['shop',           2],
     ['tokens',         2],
     ['plugins',        2],
+    ['assets',         2],
     ['test',           2],
     ['diagnostic',     2],
     ['data migrate',   2],

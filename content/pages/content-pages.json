@@ -306,7 +306,7 @@
       "messages": [
         {
           "layout": "Right Image",
-          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/unrealengine-cdn2/fortnite-game_battle-pass-about/Season_8/11BR_Launch_Upsell_HowDoesItWork.png",
+          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/unrealengine-cdn2/fortnite-game_battle-pass-about/Season_11/11BR_Launch_Upsell_HowDoesItWork.png",
           "hidden": false,
           "_type": "CommonUI Simple Message Base",
           "title": "HOW DOES IT WORK?",
@@ -328,7 +328,7 @@
         },
         {
           "layout": "Left Image",
-          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/unrealengine-cdn2/fortnite-game_battle-pass-about/Season_8/11BR_Launch_Upsell_WhatsInside.png",
+          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/unrealengine-cdn2/fortnite-game_battle-pass-about/Season_11/11BR_Launch_Upsell_WhatsInside.png",
           "hidden": false,
           "_type": "CommonUI Simple Message Base",
           "title": "WHAT’S INSIDE?",
@@ -349,7 +349,7 @@
           "spotlight": false
         },
         {
-          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/unrealengine-cdn2/fortnite-game_battle-pass-about/Season_8/11BR_Launch_Upsell_Badges.png",
+          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/unrealengine-cdn2/fortnite-game_battle-pass-about/Season_11/11BR_Launch_Upsell_Badges.png",
           "hidden": false,
           "_type": "CommonUI Simple Message Base",
           "title": "New This Season: Medals! ",
@@ -465,7 +465,7 @@
           "_type": "FortPlaylistInfo"
         },
         {
-          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/unrealengine-cdn2fortnite-game_playlisttiles/BR_LTM-Tile_Playground.jpg",
+          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/unrealengine-cdn2/fortnite-game_playlisttiles/BR_LTM-Tile_Playground.jpg",
           "playlist_name": "Playlist_Creative_PlayOnly_40",
           "special_border": "None",
           "_type": "FortPlaylistInfo"
@@ -625,7 +625,7 @@
           "_type": "FortPlaylistInfo"
         },
         {
-          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/unrealengine-cdn2/fortnite-game_playlistinformation14DaysofSummer/09BR_14DoS_LTM_PowerUp_ModeTile.jpg",
+          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/unrealengine-cdn2/fortnite-game_playlistinformation/14DaysofSummer/09BR_14DoS_LTM_PowerUp_ModeTile.jpg",
           "playlist_name": "Playlist_Pow_Solo",
           "_type": "FortPlaylistInfo"
         },
@@ -1190,7 +1190,7 @@
           "_type": "FortPlaylistInfo"
         },
         {
-          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/unrealengine-cdn2/fortnite-game_playlisttiles/BR04_LTM_BlitzShowdown.png",
+          "image": "https://fortnite-public-service-prod11.ol.epicgames.com/images/unrealengine-cdn2/fortnite-game_playlisttiles/BR04_LTM_Blitz.png",
           "playlist_name": "Playlist_Comp_Blitz_Solo",
           "_type": "FortPlaylistInfo"
         },

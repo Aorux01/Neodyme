@@ -25,6 +25,7 @@ const CreatorCodeService = require('./src/service/api/creator-code-service');
 const TicketService = require('./src/service/api/ticket-service');
 const AuditService = require('./src/service/api/audit-service');
 const PlaylistRotationService = require('./src/service/playlist-rotation-service');
+const FirstLaunchService = require('./src/service/setup/first-launch-service');
 
 const NEODYME_ASCII = `
 ${colors.cyan('███╗   ██╗███████╗ ██████╗ ██████╗ ██╗   ██╗███╗   ███╗███████╗')}
@@ -94,6 +95,10 @@ class Server {
     
             LoggerService.log('info', 'Loading configuration...');
             await ConfigManager.load();
+
+            // Run first-launch prompts (assetsMode, etc.) before any service init.
+            // Each prompt is a no-op if already configured.
+            await FirstLaunchService.run();
 
             if (ConfigManager.get('databaseBackup')) {
                 LoggerService.log('info', 'Initializing backup system...');

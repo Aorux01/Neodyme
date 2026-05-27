@@ -466,7 +466,7 @@ async function saveServerProperties() {
 }
 
 // ADMIN_COMMANDS contains ONLY level-3 admin-exclusive commands.
-// Dev-level commands (reload, shop, backup, tokens…) live in the Dev panel.
+// Dev-level commands (reload, shop, backup, tokens...) live in the Dev panel.
 
 const ADMIN_COMMANDS = [
     {
@@ -536,7 +536,7 @@ async function runPanelCmd(baseCmd, argIds) {
     const args    = (argIds || []).map(id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; });
     const command = [baseCmd, ...args.filter(Boolean)].join(' ');
 
-    showCmdToast(true, `Running: ${command}…`);
+    showCmdToast(true, `Running: ${command}...`);
 
     try {
         const csrf = await getCsrfToken();

@@ -94,6 +94,7 @@
                     <li><a href="#default-engine">DefaultEngine.ini</a></li>
                     <li><a href="#default-runtime">DefaultRuntimeOptions.ini</a></li>
                     <li><a href="#config-json">Other config/ JSON files</a></li>
+                    <li><a href="#asset-pipeline">Asset Pipeline (images & CDN)</a></li>
                 </ul>
             </div>
 
@@ -246,7 +247,7 @@
                 <tbody>
                     <tr>
                         <td><code>[/Script/FortniteGame.FortTextHotfixConfig]</code></td>
-                        <td>Text replacements shown in-game (e.g. "Logging Into Neodyme…")</td>
+                        <td>Text replacements shown in-game (e.g. "Logging Into Neodyme...")</td>
                     </tr>
                     <tr>
                         <td><code>[/Script/FortniteGame.FortChatManager]</code></td>
@@ -340,6 +341,102 @@
 
             <h3>config/motd.json</h3>
             <p>Message of the Day shown in the lobby news panel. Supports multiple entries with title, body, image, and tab name.</p>
+
+            <!-- Asset Pipeline -->
+            <h2 id="asset-pipeline" class="section-anchor">Asset Pipeline (images &amp; CDN) <span class="pill pill-json">1.2.6+</span></h2>
+            <p>Fortnite hard-codes asset URLs like <code>https://fortnite-public-service-prod11.ol.epicgames.com/images/&lt;path&gt;</code>. These requests hit Neodyme thanks to a DNS / hosts rewrite. The Asset Pipeline decides, per request, whether to serve the file from disk or redirect to the official Epic CDN.</p>
+
+            <h3>Two modes</h3>
+            <table class="config-table">
+                <thead>
+                    <tr><th>Mode</th><th>Behavior</th><th>Disk usage</th><th>Network</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>online</code> <span class="badge badge-auto">default</span></td>
+                        <td>Redirect (HTTP 302) to the official Epic CDN listed in <code>content/assets-index.json</code></td>
+                        <td>None (beyond <code>alwaysLocal</code>)</td>
+                        <td>Client fetches from Epic CDN directly. Zero backend bandwidth.</td>
+                    </tr>
+                    <tr>
+                        <td><code>local</code></td>
+                        <td>Serve the file from <code>public/images/&lt;path&gt;</code>. Missing files fall back to the CDN with a warning log.</td>
+                        <td>~36 MB of base assets, more depending on what you ship.</td>
+                        <td>None at runtime (after initial install).</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>First-launch prompt</h3>
+            <p>The first time Neodyme boots without an <code>assetsMode</code> in <code>server.properties</code>, an interactive prompt asks <code>[O]nline / [L]ocal</code> and persists the choice. In non-interactive environments (CI, Docker) the default is <code>online</code>.</p>
+            <pre class="ini-block"># server.properties (section [3b])
+assetsMode=online</pre>
+
+            <h3>Key files</h3>
+            <table class="config-table">
+                <thead>
+                    <tr><th>File</th><th>Purpose</th><th>Edited by</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>content/assets-index.json</code></td>
+                        <td>Source of truth mapping <code>public/</code> paths to their official Epic CDN origin. Used by both modes.</td>
+                        <td>Generated via maintenance script; manual edits possible.</td>
+                    </tr>
+                    <tr>
+                        <td><code>public/images/&lt;path&gt;</code></td>
+                        <td>Local copy of every served asset. Always required for <code>alwaysLocal</code> folders.</td>
+                        <td><code>/assets install</code> populates from the remote manifest.</td>
+                    </tr>
+                    <tr>
+                        <td>(remote) <code>Neodyme-Plugins/data/assets.json</code></td>
+                        <td>Manifest listing every downloadable asset with its <code>raw.githubusercontent.com</code> URL.</td>
+                        <td>Curated on the Neodyme-Plugins repository.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>alwaysLocal</h3>
+            <p>Folders matched by patterns under <code>alwaysLocal</code> in <code>content/assets-index.json</code> are <strong>never redirected</strong>, no matter the mode. They are part of Neodyme branding and ship with the codebase.</p>
+            <pre class="ini-block">"alwaysLocal": [
+  "images/neodyme-public-service/**",
+  "images/radios/**"
+]</pre>
+
+            <h3>How a request resolves</h3>
+            <pre class="ini-block">Client GET /images/unrealengine-cdn2/foo.png
+       │
+       ▼
+asset-middleware (before express.static)
+       │
+       ├─ alwaysLocal? ─── yes ──► serve from public/  (always)
+       │
+       ├─ mode = local? ──┬─ file present ──► serve from public/
+       │                  └─ file missing ──► 302 redirect + warn log
+       │
+       └─ mode = online? ─┬─ index has CDN ──► 302 redirect (no warn)
+                          └─ no CDN ──┬─ local present ─► serve from public/
+                                      └─ neither ──► 404</pre>
+
+            <div class="callout info">
+                <strong>Why both modes can fall back:</strong> some assets (your own banners, posters in <code>fortnite-public-service-prod11/</code>) have no Epic CDN equivalent - they exist only on your backend. In online mode, the middleware silently falls back to <code>express.static</code> for those. In local mode, the reverse is true: a missing local file falls back to the CDN.
+            </div>
+
+            <h3>Console commands</h3>
+            <p>See the full reference on the <a href="commands.html">Commands</a> page. The most useful ones:</p>
+            <table class="config-table">
+                <tbody>
+                    <tr><td><code>/assets status</code></td><td>Show current mode, indexed/missing counts, local disk usage.</td></tr>
+                    <tr><td><code>/assets mode &lt;online|local&gt;</code></td><td>Switch modes. <code>online -> local</code> triggers an automatic download of missing assets.</td></tr>
+                    <tr><td><code>/assets install [path]</code></td><td>Download all missing assets, or a single one. Sizes are validated post-download.</td></tr>
+                    <tr><td><code>/assets verify</code></td><td>Audit local files vs the index: detect missing, zero-byte, size mismatches, orphans.</td></tr>
+                    <tr><td><code>/assets diagnose &lt;path&gt;</code></td><td>Trace how a specific <code>/images/</code> request resolves.</td></tr>
+                </tbody>
+            </table>
+
+            <div class="callout tip">
+                Destructive commands (<code>/assets uninstall</code>, <code>/assets clean</code>) print a heads-up and require <code>/confirm assets-uninstall</code> or <code>/confirm assets-clean</code> to actually delete files.
+            </div>
 
         </main>
     </div>

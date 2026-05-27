@@ -563,7 +563,7 @@ async function shopApplyCreatorCode() {
         return;
     }
 
-    fb.textContent = 'Checking…';
+    fb.textContent = 'Checking...';
     fb.className = 'creator-feedback';
 
     try {

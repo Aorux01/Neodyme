@@ -41,13 +41,21 @@ class PluginInstaller {
                 });
 
                 response.on('end', () => {
-                    const data = Buffer.concat(chunks).toString('utf8');
-                    resolve(data);
+                    resolve(Buffer.concat(chunks));
                 });
 
                 response.on('error', reject);
             }).on('error', reject);
         });
+    }
+
+    /**
+     * Convenience wrapper for callers that want a UTF-8 string
+     * (e.g. JSON manifests). Don't use this for images / binaries.
+     */
+    static async fetchTextWithProgress(url, onProgress = null) {
+        const buf = await this.fetchWithProgress(url, onProgress);
+        return buf.toString('utf8');
     }
 
     static async headContentLength(url) {
@@ -76,7 +84,7 @@ class PluginInstaller {
         }
 
         try {
-            const data = await this.fetchWithProgress(this.PLUGINS_STORE_URL);
+            const data = await this.fetchTextWithProgress(this.PLUGINS_STORE_URL);
             this.pluginsCache = JSON.parse(data);
             this.lastCacheFetch = now;
             return this.pluginsCache;
@@ -104,7 +112,7 @@ class PluginInstaller {
 
     static async fetchPluginManifest(manifestUrl) {
         try {
-            const data = await this.fetchWithProgress(manifestUrl);
+            const data = await this.fetchTextWithProgress(manifestUrl);
             return JSON.parse(data);
         } catch (error) {
             throw new Error(`Failed to fetch plugin manifest: ${error.message}`);
@@ -122,19 +130,6 @@ class PluginInstaller {
         return 0;
     }
 
-    /**
-     * Resolve which version of a plugin to install given the manifest and the running backend.
-     *
-     * Supports two manifest layouts:
-     *  - New (grouped): { versions: { "1.0.0": { minBackendVersion, files: [...], totalSize? }, ... } }
-     *  - Legacy (flat): { version, files: [{ version?, minBackendVer?, ... }, ...], minBackendVersion? }
-     *
-     * If `requestedVersion` is provided, the function only returns that exact version,
-     * and errors with a clear message when it does not exist or is not compatible.
-     * Otherwise, the latest version whose `minBackendVersion <= backendVersion` is returned.
-     *
-     * Returns: { version, minBackendVersion, files, totalSize } or throws.
-     */
     static resolveBestVersion(manifest, backendVersion, requestedVersion = null) {
         // ---- 1) New schema: `versions` object ----
         if (manifest.versions && typeof manifest.versions === 'object' && !Array.isArray(manifest.versions)) {
@@ -234,16 +229,12 @@ class PluginInstaller {
             fs.mkdirSync(dir, { recursive: true });
         }
 
-        const content = await this.fetchWithProgress(fileUrl, onProgress);
-        fs.writeFileSync(destinationPath, content, 'utf8');
+        // Write raw bytes — binary-safe (jpg, png, otf, ...).
+        // Text files (json, js, md) are also fine: they end up byte-identical to the source.
+        const buffer = await this.fetchWithProgress(fileUrl, onProgress);
+        fs.writeFileSync(destinationPath, buffer);
     }
 
-    /**
-     * Download N files sequentially with a single shared progress bar.
-     * Each entry: { url, dest, name, size? }.
-     * `knownTotal` is the sum of declared sizes (0 = unknown, bar then grows with bytes received).
-     * `label` is the line prefix shown in the console (e.g. "Plugin", "Images").
-     */
     static async downloadFilesWithGlobalProgress(entries, knownTotal, label = 'Download') {
         const totalFiles = entries.length;
         if (totalFiles === 0) return;
@@ -253,6 +244,17 @@ class PluginInstaller {
         let currentIndex = 0;
         let lastRender = 0;
         const renderEveryMs = 100;
+
+        // Maximum width for the current-file name (basename only) shown after the bar.
+        // Long paths are truncated with an ellipsis prefix so the bar layout stays stable.
+        const MAX_NAME_LEN = 40;
+        const shortenName = (name) => {
+            if (!name) return '';
+            // Keep only the basename — full paths are noisy.
+            const base = name.split(/[\\/]/).pop() || name;
+            if (base.length <= MAX_NAME_LEN) return base;
+            return '…' + base.slice(-(MAX_NAME_LEN - 1));
+        };
 
         const render = (currentName, force = false) => {
             const now = Date.now();
@@ -270,11 +272,11 @@ class PluginInstaller {
                 ? `${this.formatBytes(totalDownloaded)} / ${this.formatBytes(projectedTotal)}`
                 : `${this.formatBytes(totalDownloaded)}`;
             const pctStr = hasTotal ? `${pct}%`.padStart(4) : ' ...';
-            const nameStr = currentName ? colors.cyan(currentName) : '';
+            const shortened = shortenName(currentName);
+            const nameStr = shortened ? colors.cyan(shortened.padEnd(MAX_NAME_LEN, ' ')) : ''.padEnd(MAX_NAME_LEN, ' ');
 
-            // Pad with spaces to overwrite any leftover characters from a longer previous line.
             const line = `  ${label} ${counter} ${bar} ${pctStr} (${sizeStr})  ${nameStr}`;
-            process.stdout.write(`\r${line.padEnd(120, ' ')}`);
+            process.stdout.write(`\r\x1b[2K${line}`);
         };
 
         for (const entry of entries) {
@@ -371,16 +373,6 @@ class PluginInstaller {
         return fs.existsSync(pluginDir);
     }
 
-    /**
-     * Install a plugin from the store.
-     *
-     * @param {string} pluginId - The id of the plugin to install.
-     * @param {object} PluginManager - The PluginManager instance.
-     * @param {object} [opts]
-     * @param {string} [opts.version]      - Explicit plugin version (e.g. "1.0.1"). If omitted, picks the latest compatible.
-     * @param {Set<string>} [opts.trail]   - Internal: ids already being installed in this call chain (cycle guard).
-     * @param {boolean} [opts.asDependency] - Internal: true when installed as a dependency of another plugin.
-     */
     static async installPlugin(pluginId, PluginManager, opts = {}) {
         const requestedVersion = opts.version || null;
         const trail = opts.trail || new Set();
