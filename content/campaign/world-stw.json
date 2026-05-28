@@ -16,7 +16,8 @@
         "ja": "ストーンウッド",
         "pl": "Kamienny Las",
         "es-419": "Bosque Pedregoso",
-        "tr": "Taşlıorman"
+        "tr": "Taşlıorman",
+        "pt-BR": "Bosque Pedregoso"
       },
       "uniqueId": "33A2311D4AE64B361CCE27BC9F313C8B",
       "theaterSlot": 0,
@@ -36,7 +37,8 @@
         "ja": "さあ始めよう。手強い敵と報酬が待っている。",
         "pl": "Zacznij tutaj. Wrogowie stanowiący wyzwanie oraz satysfakcjonująca rozgrywka.",
         "es-419": "Comienza aquí.  Enemigos difíciles y experiencia de juego gratificante.",
-        "tr": "Buradan başla. Zorlayıcı rakipler ve ödüllendirici oynanış."
+        "tr": "Buradan başla. Zorlayıcı rakipler ve ödüllendirici oynanış.",
+        "pt-BR": "Comece por aqui. Inimigos desafiadores e jogabilidade recompensadora."
       },
       "runtimeInfo": {
         "theaterType": "Standard",
@@ -3549,7 +3551,8 @@
         "ja": "プランカートン",
         "pl": "Deskogród",
         "es-419": "Ciudad Tablón",
-        "tr": "Kalaslıevler"
+        "tr": "Kalaslıevler",
+        "pt-BR": "Plankerton"
       },
       "uniqueId": "D477605B4FA48648107B649CE97FCF27",
       "theaterSlot": 0,
@@ -3569,7 +3572,8 @@
         "ja": "プランカートンで、より強力な敵とすばらしい報酬があなたを待っている。",
         "pl": "W Deskogrodzie czekają trudniejsi wrogowie i lepsze nagrody.",
         "es-419": "Esperan enemigos más fuertes y recompensas más grandes en Ciudad Tablón.",
-        "tr": "Daha güçlü rakipler ve daha büyük ödüller Kalaslıevler'de bekliyor."
+        "tr": "Daha güçlü rakipler ve daha büyük ödüller Kalaslıevler'de bekliyor.",
+        "pt-BR": "Inimigos mais difíceis e recompensas maiores aguardam em Plankerton."
       },
       "runtimeInfo": {
         "theaterType": "Standard",
@@ -9079,7 +9083,8 @@
         "ja": "キャニー・バレー",
         "pl": "Dolina Samowitości",
         "es-419": "Valle Latoso",
-        "tr": "Tekinli Vadi"
+        "tr": "Tekinli Vadi",
+        "pt-BR": "Vale Esperto"
       },
       "uniqueId": "E6ECBD064B153234656CB4BDE6743870",
       "theaterSlot": 0,
@@ -9099,7 +9104,8 @@
         "ja": "敵が強くなるが、報酬も良くなる。",
         "pl": "Jeszcze silniejsi wrogowie, jeszcze lepsze nagrody.",
         "es-419": "Enemigos aún más fuertes, con recompensas todavía mejores.",
-        "tr": "Çok daha güçlü rakipler, çok daha iyi ödüller."
+        "tr": "Çok daha güçlü rakipler, çok daha iyi ödüller.",
+        "pt-BR": "Inimigos ainda mais difíceis, com recompensas ainda melhores."
       },
       "runtimeInfo": {
         "theaterType": "Standard",
@@ -13875,7 +13881,8 @@
         "ja": "トワイン・ピークス",
         "pl": "Twine Peaks",
         "es-419": "Picos Trenzados",
-        "tr": "Dikiz Tepeler"
+        "tr": "Dikiz Tepeler",
+        "pt-BR": "Picos Retorcidos"
       },
       "uniqueId": "D9A801C5444D1C74D1B7DAB5C7C12C5B",
       "theaterSlot": 0,
@@ -13895,7 +13902,8 @@
         "ja": "暴風警報！ トップクラスのコマンダーでも困難なミッションです。",
         "pl": "Ostrzeżenie o pogodzie! Ta misja stanowi wyzwanie nawet dla najlepszych dowódców.",
         "es-419": "¡Alerta de mal tiempo! Estas misiones serán un desafío incluso para los mejores comandantes.",
-        "tr": "Hava durumu uyarısı! Bu görevler en iyi Komutanları bile zorlar."
+        "tr": "Hava durumu uyarısı! Bu görevler en iyi Komutanları bile zorlar.",
+        "pt-BR": "Alerta meteorológico! Estas missões vão desafiar até os melhores Comandantes."
       },
       "runtimeInfo": {
         "theaterType": "Standard",
@@ -18163,7 +18171,8 @@
         "ja": "ストーンウッド",
         "pl": "Kamienny Las",
         "es-419": "Bosque Pedregoso",
-        "tr": "Taşlıorman"
+        "tr": "Taşlıorman",
+        "pt-BR": "Bosque Pedregoso"
       },
       "uniqueId": "8633333E41A86F67F78EAEAF25BF4735",
       "theaterSlot": 0,
@@ -22713,7 +22722,8 @@
             "ja": "Visit the Crater",
             "pl": "Zbadaj krater",
             "es-419": "Visit the Crater",
-            "tr": "Visit the Crater"
+            "tr": "Visit the Crater",
+            "pt-BR": "Visite a Cratera"
           },
           "uniqueId": "322A87A340A50168BC74F4801F7B884A",
           "theaterSlot": 0,
@@ -22736,7 +22746,8 @@
             "ja": "There are rumors about something crashing down in this area.",
             "pl": "Doszły nas plotki o jakimś obiekcie, który rozbił się w okolicy.",
             "es-419": "There are rumors about something crashing down in this area.",
-            "tr": "There are rumors about something crashing down in this area."
+            "tr": "There are rumors about something crashing down in this area.",
+            "pt-BR": "Há rumores sobre algo que caiu nesta área."
           },
           "runtimeInfo": {
             "theaterType": "Standard",
@@ -27763,7 +27774,8 @@
             "ja": "大群",
             "pl": "Hordobicie",
             "es-419": "La horda",
-            "tr": "Sürü"
+            "tr": "Sürü",
+            "pt-BR": "A Horda"
           },
           "uniqueId": "V12RVJQ2FOT0FE3BVD7R0W3LNBUQC5B4",
           "author": "This theater zone was recreated by PRO100KatYT for LawinServer.",
@@ -27786,7 +27798,8 @@
             "ja": "ポータブルベースを建築し、大群と戦おう。",
             "pl": "Zbuduj przenośną bazę i staw czoła hordzie.",
             "es-419": "Construye una base portátil y enfrenta a la horda.",
-            "tr": "Taşınabilir bir üs inşa et ve sürüyle yüzleş."
+            "tr": "Taşınabilir bir üs inşa et ve sürüyle yüzleş.",
+            "pt-BR": "Construa uma base portátil e enfrente a horda."
           },
           "runtimeInfo": {
             "theaterType": "Standard",
@@ -29600,7 +29613,8 @@
             "ja": "フロストナイト",
             "pl": "Mróznite",
             "es-419": "Navidad descerebrada",
-            "tr": "Fortnite Soğukları"
+            "tr": "Fortnite Soğukları",
+            "pt-BR": "Frostnite"
           },
           "uniqueId": "FQ7DMNYZ6ZHTBAX2I5JGVZYUUMPGYX2M",
           "author": "This theater zone was recreated by PRO100KatYT for LawinServer.",
@@ -29623,7 +29637,8 @@
             "ja": "ほぼ明けない夜の中でチームと共にユールバーナーを守ろう！",
             "pl": "Wraz ze swoją drużyną będziecie bronić świątecznego spalacza w niemal niekończącą się noc!",
             "es-419": "¡Tú y tu equipo defenderán el quemador navideño durante una noche interminable!",
-            "tr": "Takım arkadaşlarınla sobayı bitmek bilmez bir gece boyunca savun!"
+            "tr": "Takım arkadaşlarınla sobayı bitmek bilmez bir gece boyunca savun!",
+            "pt-BR": "Você e sua equipe vão defender o Queimador Natalino por uma noite quase sem fim!"
           },
           "runtimeInfo": {
             "theaterType": "Standard",
@@ -31375,7 +31390,8 @@
             "ja": "The Spring Event",
             "pl": "Wiosenne wydarzenie",
             "es-419": "The Spring Event",
-            "tr": "The Spring Event"
+            "tr": "The Spring Event",
+            "pt-BR": "O Evento de Primavera"
           },
           "uniqueId": "BRKD1Q8ODLTWQMF2C39A6P58CV34P2EW",
           "author": "This theater zone was recreated by PRO100KatYT for LawinServer.",
@@ -31398,7 +31414,8 @@
             "ja": "There are rumors about something crashing down in this area.",
             "pl": "Doszły nas plotki o jakimś obiekcie, który rozbił się w okolicy.",
             "es-419": "There are rumors about something crashing down in this area.",
-            "tr": "There are rumors about something crashing down in this area."
+            "tr": "There are rumors about something crashing down in this area.",
+            "pt-BR": "Há rumores sobre algo que caiu nesta área."
           },
           "runtimeInfo": {
             "theaterType": "Standard",
@@ -34439,7 +34456,8 @@
             "ja": "نحو آفاق النجوم",
             "pl": "Za gwiezdnym horyzontem",
             "es-419": "Más allá del horizonte estelar",
-            "tr": "Yıldızlar Ufkunun Ötesinde"
+            "tr": "Yıldızlar Ufkunun Ötesinde",
+            "pt-BR": "Além do Horizonte Estelar"
           },
           "uniqueId": "BRKD1Q8ODLTWQMF2C39A6P58CV34P2EW",
           "author": "This theater zone was recreated by PRO100KatYT for LawinServer.",
@@ -37487,7 +37505,8 @@
             "ja": "出発！",
             "pl": "Pora ruszać w drogę",
             "es-419": "Ponte en marcha",
-            "tr": "Yola Çık"
+            "tr": "Yola Çık",
+            "pt-BR": "Pé na Estrada"
           },
           "uniqueId": "4FF9902F4E66D5754137B5B8A2C06CCE",
           "theaterSlot": 1,
@@ -37510,7 +37529,8 @@
             "ja": "乗り物をラジオ局まで守り抜こう！",
             "pl": "Eskortuj transport do stacji radiowej!",
             "es-419": "¡Escolta el transporte a la estación de radio!",
-            "tr": "Kamyoneti radyo istasyonuna götür!"
+            "tr": "Kamyoneti radyo istasyonuna götür!",
+            "pt-BR": "Escolte o transporte até a estação de rádio!"
           },
           "runtimeInfo": {
             "theaterType": "Standard",
@@ -38316,62 +38336,62 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Mayday.MissionGen_Mayday_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Start_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone3"
                   }
                 },
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Endgame_Zone5"
@@ -38408,62 +38428,62 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Mayday.MissionGen_Mayday_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Start_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone3"
                   }
                 },
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Endgame_Zone5"
@@ -38830,62 +38850,62 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Mayday.MissionGen_Mayday_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Start_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Endgame_Zone5"
@@ -39252,62 +39272,62 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Mayday.MissionGen_Mayday_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Start_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone5"
                   }
                 },
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Endgame_Zone5"
@@ -39344,62 +39364,62 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Mayday.MissionGen_Mayday_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Start_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone3"
                   }
                 },
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Endgame_Zone5"
@@ -39436,62 +39456,62 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Mayday.MissionGen_Mayday_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Start_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone5"
                   }
                 },
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Endgame_Zone5"
@@ -39528,62 +39548,62 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Mayday.MissionGen_Mayday_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Start_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone5"
                   }
                 },
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Endgame_Zone5"
@@ -39620,62 +39640,62 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Mayday.MissionGen_Mayday_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Start_Zone5"
                   }
                 },
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Normal_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Hard_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone3"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Nightmare_Zone5"
                   }
                 },
                 {
-                  "weight": 0.0,
+                  "weight": 0,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Mayday_Endgame_Zone5"
@@ -41226,7 +41246,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -41261,7 +41281,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -41296,7 +41316,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -41331,7 +41351,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -41366,7 +41386,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -41401,7 +41421,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -41436,7 +41456,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -41471,7 +41491,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -41506,7 +41526,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -41793,7 +41813,8 @@
             "ja": "ストームキングの支配領域",
             "pl": "Włości Króla Burzy",
             "es-419": "Dominio del Rey de la tormenta",
-            "tr": "Fırtına Kralı'nın Bölgesi"
+            "tr": "Fırtına Kralı'nın Bölgesi",
+            "pt-BR": "Domínio do Rei da Tempestade"
           },
           "uniqueId": "0C92E7904E00C6C93406BB9C26ACD2B0",
           "theaterSlot": 0,
@@ -41815,7 +41836,8 @@
             "ja": "究極のバトルでモンスターの王に挑め！",
             "pl": "Zmierz się z Królem Potworów w ostatecznej walce!",
             "es-419": "¡Enfrenta al Rey de los monstruos en la batalla definitiva!",
-            "tr": "Nihai savaşta Canavarlar Kralı'yla yüzleş!"
+            "tr": "Nihai savaşta Canavarlar Kralı'yla yüzleş!",
+            "pt-BR": "Enfrente o Rei dos Monstros na batalha definitiva!"
           },
           "runtimeInfo": {
             "theaterType": "Standard",
@@ -42316,13 +42338,13 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/TestMissionGens/MissionGen_DUDEBRO.MissionGen_DUDEBRO_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Dudebro_Landmark_Normal_Zone3"
@@ -42547,13 +42569,13 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/TestMissionGens/MissionGen_DUDEBRO.MissionGen_DUDEBRO_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Dudebro_Landmark_Hard_Zone1"
@@ -42598,13 +42620,13 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/TestMissionGens/MissionGen_DUDEBRO.MissionGen_DUDEBRO_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Dudebro_Landmark_Hard_Zone3"
@@ -42649,13 +42671,13 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/TestMissionGens/MissionGen_DUDEBRO.MissionGen_DUDEBRO_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Dudebro_Landmark_Normal_Zone5"
@@ -42730,13 +42752,13 @@
               "yCoordinate": 6,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/TestMissionGens/MissionGen_DUDEBRO.MissionGen_DUDEBRO_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Dudebro_Landmark_Nightmare_Zone7"
@@ -42781,13 +42803,13 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/TestMissionGens/MissionGen_DUDEBRO.MissionGen_DUDEBRO_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Dudebro_Landmark_Hard_Zone5"
@@ -42832,13 +42854,13 @@
               "yCoordinate": 6,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/TestMissionGens/MissionGen_DUDEBRO.MissionGen_DUDEBRO_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Dudebro_Landmark_Nightmare_Zone5"
@@ -43063,13 +43085,13 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/TestMissionGens/MissionGen_DUDEBRO.MissionGen_DUDEBRO_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Dudebro_Landmark_Nightmare_Zone3"
@@ -43114,13 +43136,13 @@
               "yCoordinate": 6,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/TestMissionGens/MissionGen_DUDEBRO.MissionGen_DUDEBRO_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Dudebro_Landmark_Nightmare_Zone1"
@@ -45565,13 +45587,13 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/TestMissionGens/MissionGen_DUDEBRO.MissionGen_DUDEBRO_C"
                 }
               ],
               "difficultyWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "difficultyInfo": {
                     "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                     "rowName": "Theater_Dudebro_Landmark_Normal_Zone1"
@@ -45694,7 +45716,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -45738,7 +45760,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -45776,7 +45798,8 @@
             "ja": "フロストナイト",
             "pl": "Mróznite",
             "es-419": "Navidad descerebrada",
-            "tr": "Fortnite Soğukları"
+            "tr": "Fortnite Soğukları",
+            "pt-BR": "Frostnite"
           },
           "uniqueId": "3CA185264CDD3256C140B8B19B1F50D2",
           "theaterSlot": 1,
@@ -45800,7 +45823,8 @@
             "ja": "ほぼ明けない夜の中でチームと共にユールバーナーを守ろう！",
             "pl": "Wraz ze swoją drużyną będziecie bronić świątecznego spalacza w niemal niekończącą się noc!",
             "es-419": "¡Tú y tu equipo defenderán el quemador navideño durante una noche interminable!",
-            "tr": "Takım arkadaşlarınla sobayı bitmek bilmez bir gece boyunca savun!"
+            "tr": "Takım arkadaşlarınla sobayı bitmek bilmez bir gece boyunca savun!",
+            "pt-BR": "Você e sua equipe vão defender o Queimador Natalino por uma noite quase sem fim!"
           },
           "runtimeInfo": {
             "theaterType": "Standard",
@@ -46411,7 +46435,7 @@
               "yCoordinate": 16,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_TopItOff2.MissionGen_Endless_Challenge_TopItOff2_C"
                 }
               ],
@@ -46480,7 +46504,7 @@
               "yCoordinate": 15,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FinalFrost.MissionGen_Endless_Challenge_FinalFrost_C"
                 }
               ],
@@ -46624,7 +46648,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FrostyTurf.MissionGen_Endless_Challenge_FrostyTurf_C"
                 }
               ],
@@ -46828,7 +46852,7 @@
               "yCoordinate": 16,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Runway.MissionGen_Endless_Challenge_Runway_C"
                 }
               ],
@@ -46942,7 +46966,7 @@
               "yCoordinate": 17,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Superheated.MissionGen_Endless_Challenge_Superheated_C"
                 }
               ],
@@ -47266,7 +47290,7 @@
               "yCoordinate": 11,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Superheated.MissionGen_Endless_Challenge_Superheated_C"
                 }
               ],
@@ -47320,7 +47344,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_NewWaveHoliday.MissionGen_Endless_Challenge_NewWaveHoliday_C"
                 }
               ],
@@ -47404,7 +47428,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_MerryMelee.MissionGen_Endless_Challenge_MerryMelee_C"
                 }
               ],
@@ -48298,7 +48322,7 @@
               "yCoordinate": 18,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_NewWaveHoliday.MissionGen_Endless_Challenge_NewWaveHoliday_C"
                 }
               ],
@@ -48352,7 +48376,7 @@
               "yCoordinate": 19,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_MerryMelee.MissionGen_Endless_Challenge_MerryMelee_C"
                 }
               ],
@@ -48406,7 +48430,7 @@
               "yCoordinate": 19,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FrostyTurf.MissionGen_Endless_Challenge_FrostyTurf_C"
                 }
               ],
@@ -48970,7 +48994,7 @@
               "yCoordinate": 19,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_MerryMelee.MissionGen_Endless_Challenge_MerryMelee_C"
                 }
               ],
@@ -49024,7 +49048,7 @@
               "yCoordinate": 19,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FrostyTurf.MissionGen_Endless_Challenge_FrostyTurf_C"
                 }
               ],
@@ -49198,7 +49222,7 @@
               "yCoordinate": 19,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_MerryMelee.MissionGen_Endless_Challenge_MerryMelee_C"
                 }
               ],
@@ -49252,7 +49276,7 @@
               "yCoordinate": 19,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FrostyTurf.MissionGen_Endless_Challenge_FrostyTurf_C"
                 }
               ],
@@ -49696,7 +49720,7 @@
               "yCoordinate": 17,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Superheated.MissionGen_Endless_Challenge_Superheated_C"
                 }
               ],
@@ -49750,7 +49774,7 @@
               "yCoordinate": 16,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Runway.MissionGen_Endless_Challenge_Runway_C"
                 }
               ],
@@ -49894,7 +49918,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_NewWaveHoliday.MissionGen_Endless_Challenge_NewWaveHoliday_C"
                 }
               ],
@@ -49948,7 +49972,7 @@
               "yCoordinate": 11,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Superheated.MissionGen_Endless_Challenge_Superheated_C"
                 }
               ],
@@ -50002,7 +50026,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Runway.MissionGen_Endless_Challenge_Runway_C"
                 }
               ],
@@ -50176,7 +50200,7 @@
               "yCoordinate": 16,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_TopItOff2.MissionGen_Endless_Challenge_TopItOff2_C"
                 }
               ],
@@ -50290,7 +50314,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_MerryMelee.MissionGen_Endless_Challenge_MerryMelee_C"
                 }
               ],
@@ -50404,7 +50428,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_TopItOff2.MissionGen_Endless_Challenge_TopItOff2_C"
                 }
               ],
@@ -50533,7 +50557,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FinalFrost.MissionGen_Endless_Challenge_FinalFrost_C"
                 }
               ],
@@ -50752,7 +50776,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FrostyTurf.MissionGen_Endless_Challenge_FrostyTurf_C"
                 }
               ],
@@ -50821,7 +50845,7 @@
               "yCoordinate": 15,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FinalFrost.MissionGen_Endless_Challenge_FinalFrost_C"
                 }
               ],
@@ -51610,7 +51634,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Runway.MissionGen_Endless_Challenge_Runway_C"
                 }
               ],
@@ -51664,7 +51688,7 @@
               "yCoordinate": 18,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_NewWaveHoliday.MissionGen_Endless_Challenge_NewWaveHoliday_C"
                 }
               ],
@@ -51718,7 +51742,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_TopItOff2.MissionGen_Endless_Challenge_TopItOff2_C"
                 }
               ],
@@ -51952,7 +51976,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Superheated.MissionGen_Endless_Challenge_Superheated_C"
                 }
               ],
@@ -52366,7 +52390,7 @@
               "yCoordinate": 15,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FinalFrost.MissionGen_Endless_Challenge_FinalFrost_C"
                 }
               ],
@@ -52675,7 +52699,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FinalFrost.MissionGen_Endless_Challenge_FinalFrost_C"
                 }
               ],
@@ -52894,7 +52918,7 @@
               "yCoordinate": 14,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FrostyTurf.MissionGen_Endless_Challenge_FrostyTurf_C"
                 }
               ],
@@ -52978,7 +53002,7 @@
               "yCoordinate": 16,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_TopItOff2.MissionGen_Endless_Challenge_TopItOff2_C"
                 }
               ],
@@ -53092,7 +53116,7 @@
               "yCoordinate": 18,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_NewWaveHoliday.MissionGen_Endless_Challenge_NewWaveHoliday_C"
                 }
               ],
@@ -53146,7 +53170,7 @@
               "yCoordinate": 17,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Superheated.MissionGen_Endless_Challenge_Superheated_C"
                 }
               ],
@@ -53200,7 +53224,7 @@
               "yCoordinate": 16,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Runway.MissionGen_Endless_Challenge_Runway_C"
                 }
               ],
@@ -53314,7 +53338,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_MerryMelee.MissionGen_Endless_Challenge_MerryMelee_C"
                 }
               ],
@@ -53428,7 +53452,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_TopItOff2.MissionGen_Endless_Challenge_TopItOff2_C"
                 }
               ],
@@ -53602,7 +53626,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_NewWaveHoliday.MissionGen_Endless_Challenge_NewWaveHoliday_C"
                 }
               ],
@@ -53656,7 +53680,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Superheated.MissionGen_Endless_Challenge_Superheated_C"
                 }
               ],
@@ -53710,7 +53734,7 @@
               "yCoordinate": 11,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Runway.MissionGen_Endless_Challenge_Runway_C"
                 }
               ],
@@ -54229,7 +54253,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FinalFrost.MissionGen_Endless_Challenge_FinalFrost_C"
                 }
               ],
@@ -54913,7 +54937,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_NewWaveHoliday.MissionGen_Endless_Challenge_NewWaveHoliday_C"
                 }
               ],
@@ -54967,7 +54991,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_NewWaveHoliday.MissionGen_Endless_Challenge_NewWaveHoliday_C"
                 }
               ],
@@ -55021,7 +55045,7 @@
               "yCoordinate": 11,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Superheated.MissionGen_Endless_Challenge_Superheated_C"
                 }
               ],
@@ -55075,7 +55099,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Runway.MissionGen_Endless_Challenge_Runway_C"
                 }
               ],
@@ -55114,7 +55138,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_Runway.MissionGen_Endless_Challenge_Runway_C"
                 }
               ],
@@ -55378,7 +55402,7 @@
               "yCoordinate": 14,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_MerryMelee.MissionGen_Endless_Challenge_MerryMelee_C"
                 }
               ],
@@ -55432,7 +55456,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_MerryMelee.MissionGen_Endless_Challenge_MerryMelee_C"
                 }
               ],
@@ -55546,7 +55570,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_TopItOff2.MissionGen_Endless_Challenge_TopItOff2_C"
                 }
               ],
@@ -55600,7 +55624,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_TopItOff2.MissionGen_Endless_Challenge_TopItOff2_C"
                 }
               ],
@@ -55864,7 +55888,7 @@
               "yCoordinate": 14,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FrostyTurf.MissionGen_Endless_Challenge_FrostyTurf_C"
                 }
               ],
@@ -55918,7 +55942,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FrostyTurf.MissionGen_Endless_Challenge_FrostyTurf_C"
                 }
               ],
@@ -56122,7 +56146,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FinalFrost.MissionGen_Endless_Challenge_FinalFrost_C"
                 }
               ],
@@ -56161,7 +56185,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/Game/World/MissionGens/MissionGen_Endless_Challenge_FinalFrost.MissionGen_Endless_Challenge_FinalFrost_C"
                 }
               ],
@@ -61405,7 +61429,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -61445,13 +61469,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_Endless.MissionGen_Endless_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_Endless_Normal_Zone3"
@@ -61460,7 +61484,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -61500,13 +61524,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_Endless.MissionGen_Endless_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_Endless_Hard_Zone5"
@@ -61515,7 +61539,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -61555,13 +61579,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_Endless.MissionGen_Endless_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_Endless_Start_Zone5"
@@ -61570,7 +61594,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -61610,13 +61634,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_Endless.MissionGen_Endless_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_Endless_Normal_Zone5"
@@ -61625,7 +61649,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -61665,13 +61689,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_Endless.MissionGen_Endless_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_Endless_Hard_Zone3"
@@ -61680,7 +61704,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -61720,13 +61744,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_Endless.MissionGen_Endless_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_Endless_Endgame_Zone5"
@@ -61735,7 +61759,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -61775,13 +61799,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_Endless.MissionGen_Endless_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_Endless_Nightmare_Zone3"
@@ -61790,7 +61814,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -61830,13 +61854,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/SaveTheWorld/World/MissionGens/MissionGen_Endless.MissionGen_Endless_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "/Script/Engine.DataTable'/SaveTheWorld/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_Endless_Nightmare_Zone5"
@@ -61845,7 +61869,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -63563,7 +63587,8 @@
             "ja": "大群から生き延びろ",
             "pl": "Przetrwaj Atak Hordy",
             "es-419": "Sobrevive a la horda",
-            "tr": "Sürüden Kurtul"
+            "tr": "Sürüden Kurtul",
+            "pt-BR": "Sobreviva à Horda"
           },
           "uniqueId": "DB73FE4C445040F5886B5FB337BC8C83",
           "theaterSlot": 1,
@@ -63586,7 +63611,8 @@
             "ja": "補給物資を集め、防衛設備を建築し、敵のウェーブを生き延びよう！",
             "pl": "Przechwyć zrzuty zaopatrzenia, zbuduj umocnienia i przetrwaj fale wrogów!",
             "es-419": "¡Reúne entregas de suministros, construye defensas y sobrevive a oleadas de enemigos!",
-            "tr": "Mühimmat desteklerini kap, savunmanı inşa et ve düşman dalgalarından kurtul!"
+            "tr": "Mühimmat desteklerini kap, savunmanı inşa et ve düşman dalgalarından kurtul!",
+            "pt-BR": "Pegue entregas de suprimentos, construa defesas e sobreviva a ondas de inimigos!"
           },
           "runtimeInfo": {
             "theaterType": "Standard",
@@ -64137,7 +64163,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -64210,7 +64236,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -64343,7 +64369,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -64386,7 +64412,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -64489,7 +64515,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -64622,7 +64648,7 @@
               "yCoordinate": 14,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -64837,7 +64863,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -64940,7 +64966,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -64983,7 +65009,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -65086,7 +65112,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -65241,7 +65267,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -65284,7 +65310,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -65447,7 +65473,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -65580,7 +65606,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -65623,7 +65649,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -65756,7 +65782,7 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -65941,7 +65967,7 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -66216,7 +66242,7 @@
               "yCoordinate": 14,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -66259,7 +66285,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -66422,7 +66448,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -66465,7 +66491,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -66568,7 +66594,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -66671,7 +66697,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -66804,7 +66830,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -66929,7 +66955,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -67002,7 +67028,7 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -67135,7 +67161,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -67178,7 +67204,7 @@
               "yCoordinate": 6,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -67311,7 +67337,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -67444,7 +67470,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -67487,7 +67513,7 @@
               "yCoordinate": 6,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -67530,7 +67556,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -67693,7 +67719,7 @@
               "yCoordinate": 3,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -67766,7 +67792,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -67891,7 +67917,7 @@
               "yCoordinate": 3,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -67934,7 +67960,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -68187,7 +68213,7 @@
               "yCoordinate": 1,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -68260,7 +68286,7 @@
               "yCoordinate": 1,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -68303,7 +68329,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -68428,7 +68454,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -68561,7 +68587,7 @@
               "yCoordinate": 1,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -68724,7 +68750,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -68767,7 +68793,7 @@
               "yCoordinate": 1,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -68862,7 +68888,7 @@
               "yCoordinate": 14,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -68905,7 +68931,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -68948,7 +68974,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -69095,7 +69121,7 @@
               "yCoordinate": 6,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -69138,7 +69164,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -69181,7 +69207,7 @@
               "yCoordinate": 3,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -69853,7 +69879,7 @@
               "yCoordinate": 1,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -70046,7 +70072,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -70449,7 +70475,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -70492,7 +70518,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -70685,7 +70711,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -70728,7 +70754,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -70921,7 +70947,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -70994,7 +71020,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -71127,7 +71153,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -71290,7 +71316,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -71333,7 +71359,7 @@
               "yCoordinate": 1,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -71368,13 +71394,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_07"
@@ -71383,7 +71409,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -71554,7 +71580,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -71596,13 +71622,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_08"
@@ -71611,7 +71637,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -71653,13 +71679,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_09"
@@ -71668,7 +71694,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -71710,13 +71736,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_01"
@@ -71725,7 +71751,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -71767,13 +71793,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_02"
@@ -71782,7 +71808,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -71824,13 +71850,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_06"
@@ -71839,7 +71865,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -71881,13 +71907,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_11"
@@ -71896,7 +71922,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -71938,13 +71964,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_03"
@@ -71953,7 +71979,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -71995,13 +72021,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_05"
@@ -72010,7 +72036,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -72052,13 +72078,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_04"
@@ -72067,7 +72093,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -72109,13 +72135,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_10"
@@ -72124,7 +72150,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -72166,13 +72192,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_12"
@@ -72181,7 +72207,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -73678,7 +73704,8 @@
             "ja": "大群から生き延びろ",
             "pl": "Przetrwaj Atak Hordy",
             "es-419": "Sobrevive a la horda",
-            "tr": "Sürüden Kurtul"
+            "tr": "Sürüden Kurtul",
+            "pt-BR": "Sobreviva à Horda"
           },
           "uniqueId": "DB73FE4C445040F5886B5FB337BC8C83",
           "theaterSlot": 1,
@@ -73701,7 +73728,8 @@
             "ja": "補給物資を集め、防衛設備を建築し、敵のウェーブを生き延びよう！",
             "pl": "Przechwyć zrzuty zaopatrzenia, zbuduj umocnienia i przetrwaj fale wrogów!",
             "es-419": "¡Reúne entregas de suministros, construye defensas y sobrevive a oleadas de enemigos!",
-            "tr": "Mühimmat desteklerini kap, savunmanı inşa et ve düşman dalgalarından kurtul!"
+            "tr": "Mühimmat desteklerini kap, savunmanı inşa et ve düşman dalgalarından kurtul!",
+            "pt-BR": "Pegue entregas de suprimentos, construa defesas e sobreviva a ondas de inimigos!"
           },
           "runtimeInfo": {
             "theaterType": "Standard",
@@ -74252,7 +74280,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -74325,7 +74353,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -74398,7 +74426,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week08/MissionGen_HordeV3_Mod_08_T1.MissionGen_HordeV3_Mod_08_T1_C"
                 }
               ],
@@ -74471,7 +74499,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -74514,7 +74542,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -74617,7 +74645,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -74690,7 +74718,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week08/MissionGen_HordeV3_Mod_08_T1.MissionGen_HordeV3_Mod_08_T1_C"
                 }
               ],
@@ -74763,7 +74791,7 @@
               "yCoordinate": 14,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -74888,7 +74916,7 @@
               "yCoordinate": 14,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week08/MissionGen_HordeV3_Mod_08_T1.MissionGen_HordeV3_Mod_08_T1_C"
                 }
               ],
@@ -74991,7 +75019,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -75034,7 +75062,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week07/MissionGen_HordeV3_Mod_07_T1.MissionGen_HordeV3_Mod_07_T1_C"
                 }
               ],
@@ -75107,7 +75135,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -75150,7 +75178,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -75193,7 +75221,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week07/MissionGen_HordeV3_Mod_07_T1.MissionGen_HordeV3_Mod_07_T1_C"
                 }
               ],
@@ -75266,7 +75294,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -75361,7 +75389,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week07/MissionGen_HordeV3_Mod_07_T1.MissionGen_HordeV3_Mod_07_T1_C"
                 }
               ],
@@ -75434,7 +75462,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -75477,7 +75505,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -75520,7 +75548,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week07/MissionGen_HordeV3_Mod_07_T1.MissionGen_HordeV3_Mod_07_T1_C"
                 }
               ],
@@ -75653,7 +75681,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -75756,7 +75784,7 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week08/MissionGen_HordeV3_Mod_08_T1.MissionGen_HordeV3_Mod_08_T1_C"
                 }
               ],
@@ -75799,7 +75827,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -75842,7 +75870,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -75975,7 +76003,7 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -76130,7 +76158,7 @@
               "yCoordinate": 14,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week08/MissionGen_HordeV3_Mod_08_T1.MissionGen_HordeV3_Mod_08_T1_C"
                 }
               ],
@@ -76173,7 +76201,7 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -76448,7 +76476,7 @@
               "yCoordinate": 14,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -76491,7 +76519,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -76654,7 +76682,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -76697,7 +76725,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -76800,7 +76828,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -76903,7 +76931,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -77036,7 +77064,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -77079,7 +77107,7 @@
               "yCoordinate": 6,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week07/MissionGen_HordeV3_Mod_07_T1.MissionGen_HordeV3_Mod_07_T1_C"
                 }
               ],
@@ -77174,7 +77202,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -77247,7 +77275,7 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -77380,7 +77408,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -77423,7 +77451,7 @@
               "yCoordinate": 6,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -77466,7 +77494,7 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week08/MissionGen_HordeV3_Mod_08_T1.MissionGen_HordeV3_Mod_08_T1_C"
                 }
               ],
@@ -77569,7 +77597,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -77672,7 +77700,7 @@
               "yCoordinate": 3,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week08/MissionGen_HordeV3_Mod_08_T1.MissionGen_HordeV3_Mod_08_T1_C"
                 }
               ],
@@ -77715,7 +77743,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -77758,7 +77786,7 @@
               "yCoordinate": 6,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -77801,7 +77829,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -77964,7 +77992,7 @@
               "yCoordinate": 3,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -78007,7 +78035,7 @@
               "yCoordinate": 6,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week07/MissionGen_HordeV3_Mod_07_T1.MissionGen_HordeV3_Mod_07_T1_C"
                 }
               ],
@@ -78050,7 +78078,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -78175,7 +78203,7 @@
               "yCoordinate": 3,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -78218,7 +78246,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -78471,7 +78499,7 @@
               "yCoordinate": 1,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -78544,7 +78572,7 @@
               "yCoordinate": 1,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -78587,7 +78615,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -78630,7 +78658,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week07/MissionGen_HordeV3_Mod_07_T1.MissionGen_HordeV3_Mod_07_T1_C"
                 }
               ],
@@ -78725,7 +78753,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -78858,7 +78886,7 @@
               "yCoordinate": 1,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -78931,7 +78959,7 @@
               "yCoordinate": 3,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week08/MissionGen_HordeV3_Mod_08_T1.MissionGen_HordeV3_Mod_08_T1_C"
                 }
               ],
@@ -79004,7 +79032,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week07/MissionGen_HordeV3_Mod_07_T1.MissionGen_HordeV3_Mod_07_T1_C"
                 }
               ],
@@ -79047,7 +79075,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -79090,7 +79118,7 @@
               "yCoordinate": 1,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -79185,7 +79213,7 @@
               "yCoordinate": 14,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -79228,7 +79256,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -79271,7 +79299,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -79418,7 +79446,7 @@
               "yCoordinate": 6,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -79461,7 +79489,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week03/MissionGen_HordeV3_Mod_03_T1.MissionGen_HordeV3_Mod_03_T1_C"
                 }
               ],
@@ -79504,7 +79532,7 @@
               "yCoordinate": 3,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week02/MissionGen_HordeV3_Mod_02_T1.MissionGen_HordeV3_Mod_02_T1_C"
                 }
               ],
@@ -80176,7 +80204,7 @@
               "yCoordinate": 1,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -80369,7 +80397,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -80682,7 +80710,7 @@
               "yCoordinate": 14,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week08/MissionGen_HordeV3_Mod_08_T1.MissionGen_HordeV3_Mod_08_T1_C"
                 }
               ],
@@ -80755,7 +80783,7 @@
               "yCoordinate": 13,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week07/MissionGen_HordeV3_Mod_07_T1.MissionGen_HordeV3_Mod_07_T1_C"
                 }
               ],
@@ -80798,7 +80826,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -80841,7 +80869,7 @@
               "yCoordinate": 12,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -80944,7 +80972,7 @@
               "yCoordinate": 10,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week08/MissionGen_HordeV3_Mod_08_T1.MissionGen_HordeV3_Mod_08_T1_C"
                 }
               ],
@@ -81017,7 +81045,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week07/MissionGen_HordeV3_Mod_07_T1.MissionGen_HordeV3_Mod_07_T1_C"
                 }
               ],
@@ -81060,7 +81088,7 @@
               "yCoordinate": 9,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -81103,7 +81131,7 @@
               "yCoordinate": 8,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -81206,7 +81234,7 @@
               "yCoordinate": 7,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week08/MissionGen_HordeV3_Mod_08_T1.MissionGen_HordeV3_Mod_08_T1_C"
                 }
               ],
@@ -81279,7 +81307,7 @@
               "yCoordinate": 6,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week07/MissionGen_HordeV3_Mod_07_T1.MissionGen_HordeV3_Mod_07_T1_C"
                 }
               ],
@@ -81322,7 +81350,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -81395,7 +81423,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -81528,7 +81556,7 @@
               "yCoordinate": 5,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week06/MissionGen_HordeV3_Mod_06_T1.MissionGen_HordeV3_Mod_06_T1_C"
                 }
               ],
@@ -81601,7 +81629,7 @@
               "yCoordinate": 3,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week08/MissionGen_HordeV3_Mod_08_T1.MissionGen_HordeV3_Mod_08_T1_C"
                 }
               ],
@@ -81674,7 +81702,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week07/MissionGen_HordeV3_Mod_07_T1.MissionGen_HordeV3_Mod_07_T1_C"
                 }
               ],
@@ -81717,7 +81745,7 @@
               "yCoordinate": 2,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week05/MissionGen_HordeV3_Mod_05_T1.MissionGen_HordeV3_Mod_05_T1_C"
                 }
               ],
@@ -81760,7 +81788,7 @@
               "yCoordinate": 1,
               "missionWeightOverrides": [
                 {
-                  "weight": 1.0,
+                  "weight": 1,
                   "missionGenerator": "/STW_Horde/Missions/WeeklyMods/Week04/MissionGen_HordeV3_Mod_04_T1.MissionGen_HordeV3_Mod_04_T1_C"
                 }
               ],
@@ -81797,13 +81825,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_07"
@@ -81812,7 +81840,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -81959,7 +81987,7 @@
                 "difficultyWeights": [],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -82003,13 +82031,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_08"
@@ -82018,7 +82046,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -82062,13 +82090,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_09"
@@ -82077,7 +82105,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -82121,13 +82149,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_02"
@@ -82136,7 +82164,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -82180,13 +82208,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_01"
@@ -82195,7 +82223,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -82239,13 +82267,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_06"
@@ -82254,7 +82282,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -82298,13 +82326,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_11"
@@ -82313,7 +82341,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -82357,13 +82385,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_03"
@@ -82372,7 +82400,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -82416,13 +82444,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_04"
@@ -82431,7 +82459,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -82475,13 +82503,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_05"
@@ -82490,7 +82518,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -82534,13 +82562,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_10"
@@ -82549,7 +82577,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,
@@ -82593,13 +82621,13 @@
               "missionData": {
                 "missionWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "missionGenerator": "/STW_Horde/World/MissionGens/MissionGen_HordeV3_T1.MissionGen_HordeV3_T1_C"
                   }
                 ],
                 "difficultyWeights": [
                   {
-                    "weight": 1.0,
+                    "weight": 1,
                     "difficultyInfo": {
                       "dataTable": "DataTable'/Game/Balance/DataTables/GameDifficultyGrowthBounds.GameDifficultyGrowthBounds'",
                       "rowName": "Theater_HV3_12"
@@ -82608,7 +82636,7 @@
                 ],
                 "numMissionsAvailable": 0,
                 "numMissionsToChange": 0,
-                "missionChangeFrequency": 0.0
+                "missionChangeFrequency": 0
               },
               "requirements": {
                 "commanderLevel": 0,

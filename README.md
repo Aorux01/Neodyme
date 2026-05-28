@@ -46,7 +46,7 @@ Join the **Discord** Server: https://discord.gg/gWpDVKR4nF
 - [ ] 💾 Implement all remaining storage systems (**SQLite, MySQL, PostgreSQL**)
 - [ ] 🔐 Finish **2FA setup**
 - [ ] 📘 Complete the **public API**
-- [ ] 🛡️ Implement **Aegis** (AntiCheat)
+- [ ] 🛡️ Implement **Ward** (AntiCheat)
 
 ### 📌 Secondary Features:
 - [ ] 🎮 Add **Creative mode system**

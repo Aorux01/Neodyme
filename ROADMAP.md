@@ -174,6 +174,20 @@
 - [x] **Upload/Download** - File management
 - [x] **ClientSettings** - Client settings persisted (JSON filesystem + MongoDB binary)
 
+### Asset Pipeline
+- [x] **Online / Local modes** - Serve `/images/*` via CDN redirect (online) or local files (local)
+- [x] **First-launch prompt** - Ask online/local on initial boot, persisted to `server.properties`
+- [x] **`content/assets-index.json`** - Path-to-CDN mapping, hot-reloaded on change
+- [x] **Asset middleware** - Resolves static / redirect / 404 before `express.static`, with path-traversal protection
+- [x] **`/assets` commands** - status, mode, list, info, diagnose, install, uninstall, clean, verify, reload, refresh
+- [x] **Auto-download on mode switch** - Downloads missing assets from the Plugins repo when switching to local
+- [x] **Integrity validation** - Post-download size check + `/assets verify` (missing, zero-byte, mismatch, orphans)
+
+### Internationalization
+- [x] **13-language support** - ar, en, de, es, es-419, fr, it, ja, ko, pl, pt-BR, ru, tr
+- [x] **Per-client language** - Resolved from each request's `Accept-Language` header
+- [x] **Full content coverage** - 100% across all localized `content/` files (motd, content-pages, catalog, season-passes, world-stw, discovery, radio-stations)
+
 ---
 
 ## Priority 4 - Low
@@ -212,13 +226,14 @@
 - [ ] **SQLite** - Local SQL database
 - [ ] **MySQL** - Network SQL database
 - [ ] **PostgreSQL** - Advanced SQL database
-- [ ] **Migration tools** - Database migration tools
+- [x] **Migration tools** - `/data migrate` JSON↔MongoDB with --dry-run
 - [x] **Automatic backup** - Scheduled backups
 
 ### Public API
 - [x] **Base API** - Main endpoints
 - [ ] **API documentation** - Swagger/OpenAPI
 - [ ] **Advanced rate limiting** - Per-endpoint quotas
+- [x] **Condensed rate-limit logs** - Aggregate repeated hits into one line per IP+route (configurable)
 - [ ] **API Keys** - External authentication
 - [ ] **Webhooks** - Outgoing notifications
 - [x] **API versioning** - Version management
@@ -256,7 +271,7 @@
 - [ ] **Push notifications** - Mobile notifications
 - [ ] **Animation** - Animations and videos
 - [ ] **EXP, V-BUCKS** - Game server connection
-- [ ] **Aegis Service** - Anti cheat
+- [ ] **Ward Service** - Anti cheat (planned for 1.3.0)
 
 ---
 

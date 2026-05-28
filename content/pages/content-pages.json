@@ -22,7 +22,8 @@
           "ja": "ラマサーバーへようこそ！\nごゆっくりお楽しみください。\nこのサーバーはEpic Games Inc.とは関係ありません。",
           "pl": "Witamy na Neodyme!\nMamy nadzieję, że będziesz zadowolony z wizyty.\nTen serwer nie jest powiązany z Epic Games Inc.",
           "es-419": "Bienvenido a Neodyme.\nEsperamos que disfrute de su visi\nEste servidor no está afiliado a Epic Games Inc.",
-          "tr": "Neodyme'a hoş geldiniz!\nUmarız ziyaretinizden keyif alırsınız.\nBu sunucu Epic Games Inc. ile bağlantılı değildir."
+          "tr": "Neodyme'a hoş geldiniz!\nUmarız ziyaretinizden keyif alırsınız.\nBu sunucu Epic Games Inc. ile bağlantılı değildir.",
+          "pt-BR": "Bem-vindo ao Neodyme!\nEsperamos que aproveite sua visita.\nEste servidor não é afiliado à Epic Games Inc."
         }
       }
     },
@@ -49,7 +50,8 @@
           "ja": "誓いを立てましょう：\n目標生存期間を3泊か7泊から選んでください。\n\nフィードバックを送る\nサバイヴ・ザ・ストームはまだ開発中です。ご意見をお聞かせください。",
           "pl": "Podejmij zobowiązanie:\nWybierz docelowy czas przetrwania wynoszący 3 lub 7 nocy.\nPrześlij opinię:\nSurvive the Storm jest wciąż w fazie rozwoju. Chętnie poznamy twoje zdanie.",
           "es-419": "Comprométete:\nSelecciona un objetivo de supervivencia de 3 o 7 noches.\nEnvía tus comentarios:\nSobrevive a la tormenta aún está en desarrollo. Nos encantaría conocer tu opinión.",
-          "tr": "Söz verin:\nHedef hayatta kalma süresini 3 veya 7 gece olarak seçin.\n\nGeri Bildirim Gönderin:\nFırtınada Hayatta Kal hala geliştirme aşamasındadır. Ne düşündüğünüzü duymak isteriz."
+          "tr": "Söz verin:\nHedef hayatta kalma süresini 3 veya 7 gece olarak seçin.\n\nGeri Bildirim Gönderin:\nFırtınada Hayatta Kal hala geliştirme aşamasındadır. Ne düşündüğünüzü duymak isteriz.",
+          "pt-BR": "Faça o juramento:\nSelecione um tempo de sobrevivência de 3 ou 7 noites.\n\nEnvie seu feedback:\nSobreviva à Tempestade ainda está em desenvolvimento. Adoraríamos saber sua opinião."
         }
       }
     },
@@ -92,7 +94,8 @@
           "ja": "協力PvE",
           "pl": "Kooperacyjny tryb PvE",
           "es-419": "JcE cooperativo",
-          "tr": "Oyuncularla Birlikte PvE"
+          "tr": "Oyuncularla Birlikte PvE",
+          "pt-BR": "PvE cooperativo"
         },
         "body": {
           "de": "PVE-Modus, in dem du den Sturm kooperativ bekämpfst!",
@@ -106,7 +109,8 @@
           "ja": "PvE協力プレイでストームに立ち向かえ！",
           "pl": "Kooperacyjne zmagania PvE z burzą i pustakami!",
           "es-419": "¡Aventura de lucha contra la tormenta en un JcE cooperativo!",
-          "tr": "Diğer oyuncularla birlikte PvE fırtınayla savaşma macerası!"
+          "tr": "Diğer oyuncularla birlikte PvE fırtınayla savaşma macerası!",
+          "pt-BR": "Aventura cooperativa PvE de luta contra a tempestade!"
         },
         "spotlight": false
       }
@@ -131,7 +135,8 @@
           "ja": "100人参加のPvP",
           "pl": "PvP dla 100 graczy",
           "es-419": "JcJ de 100 jugadores",
-          "tr": "100 Oyunculu PvP"
+          "tr": "100 Oyunculu PvP",
+          "pt-BR": "PvP de 100 jogadores"
         },
         "body": {
           "de": "Battle Royale, 100-Spieler-PvP.\n\nFortschritte im PvE haben keinen Einfluss auf Battle Royale.",
@@ -145,7 +150,8 @@
           "ja": "100人参加のPvPバトルロイヤル。\n\nPvEモードの進行状況はバトルロイヤルに影響しません。",
           "pl": "Battle Royale: PvP dla 100 graczy\n\nPostępy w kampanii nie wpływają na grę w Battle Royale.",
           "es-419": "Batalla campal JcJ de 100 jugadores.\n\nEl progreso de JcE no afecta Batalla campal.",
-          "tr": "100 Oyunculu PvP Battle Royale. PvE ilerlemesi Battle Royale'i etkilemez."
+          "tr": "100 Oyunculu PvP Battle Royale. PvE ilerlemesi Battle Royale'i etkilemez.",
+          "pt-BR": "Battle Royale PvP de 100 jogadores.\n\nO progresso no PvE não afeta o Battle Royale."
         },
         "spotlight": false
       }
@@ -169,7 +175,8 @@
           "ja": "新しいおすすめの島！",
           "pl": "Nowe wyróżnione wyspy!",
           "es-419": "¡Nuevas islas destacadas!",
-          "tr": "Yeni Öne Çıkan Adalar!"
+          "tr": "Yeni Öne Çıkan Adalar!",
+          "pt-BR": "Novas ilhas em destaque!"
         },
         "body": {
           "de": "Deine Insel. Deine Freunde. Deine Regeln. \n\nEntdecke neue Arten, Fortnite zu spielen. Zocke von der Community erstellte Spiele mit Freunden und erschaffe deine Trauminsel.",
@@ -183,7 +190,8 @@
           "ja": "コミュニティによって作られた島で遊んだり、夢に描いた自分に島を創り、フォートナイトの新しい楽しみ方を発掘しよう。",
           "pl": "Twoja wyspa. Twoi znajomi. Twoje zasady. \n\nPoznajcie nowe sposoby na zabawę w Fortnite, zagrajcie ze znajomymi w gry stworzone przez innych graczy i zbudujcie wyspę swoich marzeń.",
           "es-419": "Tu isla. Tus amigos. Tus reglas. \n\nDescubre nuevas maneras de jugar Fortnite: juega con tus amigos a juegos diseñados por la comunidad y construye la isla de tus sueños.",
-          "tr": "Fortnite’ı oynamanın yepyeni yollarını keşfet, topluluğun yaptığı oyunlarda arkadaşlarınla eğlen ve hayalindeki adayı inşa et."
+          "tr": "Fortnite’ı oynamanın yepyeni yollarını keşfet, topluluğun yaptığı oyunlarda arkadaşlarınla eğlen ve hayalindeki adayı inşa et.",
+          "pt-BR": "Sua ilha. Seus amigos. Suas regras.\n\nDescubra novas formas de jogar Fortnite, jogue criações da comunidade com amigos e construa a ilha dos seus sonhos."
         },
         "spotlight": false
       }
@@ -207,7 +215,8 @@
           "ja": "協力PvE",
           "pl": "Kooperacyjny tryb PvE",
           "es-419": "JcE cooperativo",
-          "tr": "Oyuncularla Birlikte PvE"
+          "tr": "Oyuncularla Birlikte PvE",
+          "pt-BR": "PvE cooperativo"
         },
         "body": {
           "de": "PVE-Modus, in dem du den Sturm kooperativ bekämpfst!",
@@ -221,7 +230,8 @@
           "ja": "PvE協力プレイでストームに立ち向かえ！",
           "pl": "Kooperacyjne zmagania PvE z burzą i pustakami!",
           "es-419": "¡Aventura de lucha contra la tormenta en un JcE cooperativo!",
-          "tr": "Diğer oyuncularla birlikte PvE fırtınayla savaşma macerası!"
+          "tr": "Diğer oyuncularla birlikte PvE fırtınayla savaşma macerası!",
+          "pt-BR": "Aventura cooperativa PvE de luta contra a tempestade!"
         },
         "spotlight": false
       }
@@ -251,7 +261,8 @@
             "ja": "Neodyme パッチノート",
             "pl": "Informacje o aktualizacji Neodyme",
             "es-419": "Notas del parche Neodyme",
-            "tr": "Neodyme yama notları"
+            "tr": "Neodyme yama notları",
+            "pt-BR": "Notas de atualização Neodyme"
           },
           "body": "https://fortnite-public-service-prod11.ol.epicgames.com/updates.html",
           "spotlight": false
@@ -273,7 +284,8 @@
             "ja": "新機能が利用可能になりました！",
             "pl": "Dostępne nowe funkcje!",
             "es-419": "¡Nuevas funciones disponibles!",
-            "tr": "Yeni özellikler mevcut!"
+            "tr": "Yeni özellikler mevcut!",
+            "pt-BR": "Novos recursos disponíveis!"
           },
           "body": {
             "de": "Entdecken Sie die neuesten Verbesserungen und Funktionen auf Neodyme! Besuchen Sie unsere Website für weitere Details.",
@@ -287,7 +299,8 @@
             "ja": "Neodymeの最新の改善と機能をご覧ください！詳細はウェブサイトをご覧ください。",
             "pl": "Odkryj najnowsze ulepszenia i funkcje Neodyme! Odwiedź naszą stronę internetową, aby uzyskać więcej informacji.",
             "es-419": "¡Descubre las últimas mejoras y características en Neodyme! Visita nuestro sitio web para más detalles.",
-            "tr": "Neodyme'daki en son iyileştirmeleri ve özellikleri keşfedin! Daha fazla ayrıntı için web sitemizi ziyaret edin."
+            "tr": "Neodyme'daki en son iyileştirmeleri ve özellikleri keşfedin! Daha fazla ayrıntı için web sitemizi ziyaret edin.",
+            "pt-BR": "Descubra as últimas melhorias e recursos no Neodyme! Visite nosso site para mais detalhes."
           },
           "spotlight": false
         }
@@ -322,7 +335,8 @@
             "ja": "誓いを立てましょう：\n目標生存期間を3泊か7泊から選んでください。\n\nフィードバックを送る\nサバイヴ・ザ・ストームはまだ開発中です。ご意見をお聞かせください。",
             "pl": "Podejmij zobowiązanie:\nWybierz docelowy czas przetrwania wynoszący 3 lub 7 nocy.\nPrześlij opinię:\nSurvive the Storm jest wciąż w fazie rozwoju. Chętnie poznamy twoje zdanie.",
             "es-419": "Comprométete:\nSelecciona un objetivo de supervivencia de 3 o 7 noches.\nEnvía tus comentarios:\nSobrevive a la tormenta aún está en desarrollo. Nos encantaría conocer tu opinión.",
-            "tr": "Söz verin:\nHedef hayatta kalma süresini 3 veya 7 gece olarak seçin.\n\nGeri Bildirim Gönderin:\nFırtınada Hayatta Kal hala geliştirme aşamasındadır. Ne düşündüğünüzü duymak isteriz."
+            "tr": "Söz verin:\nHedef hayatta kalma süresini 3 veya 7 gece olarak seçin.\n\nGeri Bildirim Gönderin:\nFırtınada Hayatta Kal hala geliştirme aşamasındadır. Ne düşündüğünüzü duymak isteriz.",
+            "pt-BR": "Jogue para subir de nível no seu Passe de Batalha. Ganhe XP em diversas atividades do jogo, como abrir baús, eliminar oponentes, completar desafios e muito mais! Suba de nível para desbloquear mais de 100 recompensas, incluindo 1500 V-Bucks! Você pode comprar o Passe de Batalha a qualquer momento durante a temporada por 950 V-Bucks e desbloquear retroativamente todas as recompensas até o seu nível atual."
           },
           "spotlight": false
         },
@@ -344,7 +358,8 @@
             "ja": "バトルパスを購入すると、即座に2つの限定衣装（タークとジャーニー）がもらえます！さらに、エモート、衣装、ラップ、つるはし、ローディング画面などの限定報酬を獲得できます。レベルアップするたびに報酬がもらえ、今回初めてレベル100を超えてもレベルアップし続けることができる！",
             "pl": "Kupując przepustkę bojową, natychmiast otrzymasz dwa ekskluzywne stroje - Turk i Journey! Możesz zdobyć więcej ekskluzywnych nagród, w tym emotki, stroje, okłady, kilofy, ekrany ładowania i nie tylko. Otrzymasz nagrodę za każdym razem, gdy awansujesz na wyższy poziom, a po raz pierwszy możesz awansować na wyższy poziom niż 100!",
             "es-419": "Al comprar el pase de batalla, recibirás al instante dos atuendos exclusivos: ¡Turk y Journey! Podrás ganar más recompensas exclusivas, como emblemas, atuendos, envoltorios, picos, pantallas de carga y mucho más. Recibirás una recompensa cada vez que subas de nivel y, por primera vez, ¡podrás seguir subiendo más allá del nivel 100!",
-            "tr": "Savaş Bileti satın aldığınızda, anında iki özel kıyafet kazanacaksınız - Turk ve Journey! İfadeler, Kıyafetler, Sargılar, Kazmalar, Yükleme Ekranları ve daha fazlası dahil olmak üzere daha fazla özel ödül kazanabilirsiniz. Her seviye atladığınızda bir ödül alacaksınız ve ilk kez 100. seviyenin ötesinde seviye atlamaya devam edebileceksiniz!"
+            "tr": "Savaş Bileti satın aldığınızda, anında iki özel kıyafet kazanacaksınız - Turk ve Journey! İfadeler, Kıyafetler, Sargılar, Kazmalar, Yükleme Ekranları ve daha fazlası dahil olmak üzere daha fazla özel ödül kazanabilirsiniz. Her seviye atladığınızda bir ödül alacaksınız ve ilk kez 100. seviyenin ötesinde seviye atlamaya devam edebileceksiniz!",
+            "pt-BR": "Ao comprar o Passe de Batalha, você receberá instantaneamente dois trajes exclusivos: Turk e Journey! Você pode ganhar mais recompensas exclusivas, incluindo gestos, trajes, envelopamentos, picaretas, telas de carregamento e muito mais. Você receberá uma recompensa cada vez que subir de nível e, pela primeira vez, poderá continuar subindo além do nível 100!"
           },
           "spotlight": false
         },
@@ -365,7 +380,8 @@
             "ja": "今シーズンからバトルパスの進行が全面的に見直されました。チャレンジを完了し、ゲーム内のメダルを獲得することで、バトルパスを進めることができます！毎日メダルを獲得し、パンチカードに記入してXPを最大化しよう。",
             "pl": "W tym sezonie postępy w ramach przepustki bojowej zostały całkowicie zmienione. Rozwijaj swoją przepustkę bojową, wykonując wyzwania i zdobywając medale w grze! Zdobywaj codzienne medale i wypełniaj kartę ciosów, aby zmaksymalizować swoje PD.",
             "es-419": "La progresión del Pase de Batalla se ha rediseñado por completo esta temporada. Avanza en tu Pase de Batalla completando desafíos y ganando medallas en el juego. Gana medallas diarias y rellena tu tarjeta de puntos para maximizar tu XP.",
-            "tr": "Savaş Bileti ilerlemesi bu Sezon tamamen yeniden düzenlendi. Mücadeleleri tamamlayarak ve oyun içi Madalyalar kazanarak Savaş Biletinizi ilerletin! Günlük madalyalar kazanın ve XP'nizi en üst düzeye çıkarmak için delikli kartınızı doldurun."
+            "tr": "Savaş Bileti ilerlemesi bu Sezon tamamen yeniden düzenlendi. Mücadeleleri tamamlayarak ve oyun içi Madalyalar kazanarak Savaş Biletinizi ilerletin! Günlük madalyalar kazanın ve XP'nizi en üst düzeye çıkarmak için delikli kartınızı doldurun.",
+            "pt-BR": "A progressão do Passe de Batalha foi totalmente reformulada nesta temporada. Avance no seu Passe de Batalha completando desafios e ganhando Medalhas no jogo! Ganhe medalhas diárias e preencha seu cartão de pontos para maximizar seu XP."
           },
           "spotlight": false
         }
@@ -1464,14 +1480,18 @@
           "_type": "Tournament Display Info",
           "pin_score_requirement": 420,
           "pin_earned_text": {
+            "ar": "Neodyme هو الفائز!",
             "de": "Neodyme ist der Gewinner!",
             "en": "Neodyme is the winner!",
             "es": "¡Neodyme es el ganador!",
             "es-419": "¡Neodyme es el ganador!",
             "fr": "Neodyme est le gagnant!",
             "it": "Neodyme è il vincitore!",
+            "ja": "Neodymeの勝利です！",
+            "ko": "Neodyme의 승리입니다!",
             "pl": "Neodyme jest zwycięzcą!",
             "pt-BR": "Neodyme é o vencedor!",
+            "ru": "Neodyme победитель!",
             "tr": "Kazanan Neodyme!",
             "zh-CN": "Neodyme 是赢家！",
             "zh-Hant": "Neodyme 是贏家！"
@@ -1601,7 +1621,8 @@
             "ja": "あなたは現在 Neodyme でプレイしています！\nこのサーバーは Epic Games Inc.",
             "pl": "Grasz obecnie na serwerze Neodyme!\nTen serwer nie jest powiązany z Epic Games Inc.",
             "es-419": "¡Estás jugando en Neodyme!\nEste servidor no está afiliado a Epic Games Inc.",
-            "tr": "Şu anda Neodyme'da oynuyorsun!\nBu sunucu Epic Games Inc. ile bağlantılı değildir."
+            "tr": "Şu anda Neodyme'da oynuyorsun!\nBu sunucu Epic Games Inc. ile bağlantılı değildir.",
+            "pt-BR": "Você está jogando no Neodyme!\nEste servidor não é afiliado à Epic Games Inc."
           },
           "spotlight": true
         }
@@ -1639,7 +1660,8 @@
             "ja": "あなたは現在 Neodyme でプレイしています！\nこのサーバーは Epic Games Inc.",
             "pl": "Grasz obecnie na serwerze Neodyme!\nTen serwer nie jest powiązany z Epic Games Inc.",
             "es-419": "¡Estás jugando en Neodyme!\nEste servidor no está afiliado a Epic Games Inc.",
-            "tr": "Şu anda Neodyme'da oynuyorsun!\nBu sunucu Epic Games Inc. ile bağlantılı değildir."
+            "tr": "Şu anda Neodyme'da oynuyorsun!\nBu sunucu Epic Games Inc. ile bağlantılı değildir.",
+            "pt-BR": "Você está jogando no Neodyme!\nEste servidor não é afiliado à Epic Games Inc."
           }
         }
       ]
@@ -6038,7 +6060,8 @@
         "ja": "プレイヤー100人によるPvP",
         "pl": "PvP dla 100 graczy",
         "es-419": "JcJ de 100 jugadores",
-        "tr": "100 Oyunculu PVP"
+        "tr": "100 Oyunculu PVP",
+        "pt-BR": "PvP de 100 jogadores"
       },
       "subgame": "battleroyale",
       "standardMessageLine2": "",
@@ -6054,7 +6077,8 @@
         "ja": "Battle Royale",
         "pl": "Battle Royale",
         "es-419": "Batalla campal",
-        "tr": "Battle Royale"
+        "tr": "Battle Royale",
+        "pt-BR": "Battle Royale"
       },
       "standardMessageLine1": ""
     },
@@ -6075,7 +6099,8 @@
         "ja": "協力プレイが楽しめるPvE！",
         "pl": "Kooperacyjne zmagania PvE z pustakami!",
         "es-419": "¡Aventura de JcE cooperativa!",
-        "tr": "Diğer oyuncularla birlikte PvE macerası!"
+        "tr": "Diğer oyuncularla birlikte PvE macerası!",
+        "pt-BR": "Aventura cooperativa PvE"
       },
       "subgame": "savetheworld",
       "title": {
@@ -6090,7 +6115,8 @@
         "ja": "世界を救え",
         "pl": "Ratowanie Świata",
         "es-419": "Salva el mundo",
-        "tr": "Dünyayı Kurtar"
+        "tr": "Dünyayı Kurtar",
+        "pt-BR": "Salve o Mundo"
       }
     },
     "_title": "SubgameInfo",
@@ -6111,7 +6137,8 @@
         "ja": "自分の島。自分のフレンド。自分のルール。",
         "pl": "Twoje wyspa, twoi znajomi, twoje zasady.",
         "es-419": "Tus islas. Tus amigos. Tus reglas.",
-        "tr": "Senin Adaların. Senin Dostların. Senin Kuralların."
+        "tr": "Senin Adaların. Senin Dostların. Senin Kuralların.",
+        "pt-BR": "Suas ilhas. Seus amigos. Suas regras."
       },
       "subgame": "creative",
       "title": {
@@ -6126,7 +6153,8 @@
         "ja": "クリエイティブ",
         "pl": "Tryb kreatywny",
         "es-419": "Modo Creativo",
-        "tr": "Kreatif"
+        "tr": "Kreatif",
+        "pt-BR": "Criativo"
       },
       "standardMessageLine1": ""
     },
@@ -6263,7 +6291,8 @@
             "ja": "Neodyme パッチノート",
             "pl": "Informacje o aktualizacji Neodyme",
             "es-419": "Notas del parche Neodyme",
-            "tr": "Neodyme yama notları"
+            "tr": "Neodyme yama notları",
+            "pt-BR": "Notas de atualização Neodyme"
           },
           "offerAction": "ShowOfferDetails",
           "videoLoop": false,
@@ -6295,7 +6324,8 @@
             "ja": "新機能が利用可能になりました！",
             "pl": "Dostępne nowe funkcje!",
             "es-419": "¡Nuevas funciones disponibles!",
-            "tr": "Yeni özellikler mevcut!"
+            "tr": "Yeni özellikler mevcut!",
+            "pt-BR": "Novos recursos disponíveis!"
           },
           "body": {
             "de": "Entdecken Sie die neuesten Verbesserungen und Funktionen auf Neodyme! Besuchen Sie unsere Website für weitere Details.",
@@ -6309,7 +6339,8 @@
             "ja": "Neodymeの最新の改善と機能をご覧ください！詳細はウェブサイトをご覧ください。",
             "pl": "Odkryj najnowsze ulepszenia i funkcje Neodyme! Odwiedź naszą stronę internetową, aby uzyskać więcej informacji.",
             "es-419": "¡Descubre las últimas mejoras y características en Neodyme! Visita nuestro sitio web para más detalles.",
-            "tr": "Neodyme'daki en son iyileştirmeleri ve özellikleri keşfedin! Daha fazla ayrıntı için web sitemizi ziyaret edin."
+            "tr": "Neodyme'daki en son iyileştirmeleri ve özellikleri keşfedin! Daha fazla ayrıntı için web sitemizi ziyaret edin.",
+            "pt-BR": "Descubra as últimas melhorias e recursos no Neodyme! Visite nosso site para mais detalhes."
           },
           "offerAction": "ShowOfferDetails",
           "videoLoop": false,
@@ -6411,7 +6442,8 @@
             "ja": "Neodyme パッチノート",
             "pl": "Informacje o aktualizacji Neodyme",
             "es-419": "Notas del parche Neodyme",
-            "tr": "Neodyme yama notları"
+            "tr": "Neodyme yama notları",
+            "pt-BR": "Notas de atualização Neodyme"
           },
           "body": "https://fortnite-public-service-prod11.ol.epicgames.com/updates.html",
           "spotlight": false
@@ -6433,7 +6465,8 @@
             "ja": "新機能が利用可能になりました！",
             "pl": "Dostępne nowe funkcje!",
             "es-419": "¡Nuevas funciones disponibles!",
-            "tr": "Yeni özellikler mevcut!"
+            "tr": "Yeni özellikler mevcut!",
+            "pt-BR": "Novos recursos disponíveis!"
           },
           "body": {
             "de": "Entdecken Sie die neuesten Verbesserungen und Funktionen auf Neodyme! Besuchen Sie unsere Website für weitere Details.",
@@ -6447,7 +6480,8 @@
             "ja": "Neodymeの最新の改善と機能をご覧ください！詳細はウェブサイトをご覧ください。",
             "pl": "Odkryj najnowsze ulepszenia i funkcje Neodyme! Odwiedź naszą stronę internetową, aby uzyskać więcej informacji.",
             "es-419": "¡Descubre las últimas mejoras y características en Neodyme! Visita nuestro sitio web para más detalles.",
-            "tr": "Neodyme'daki en son iyileştirmeleri ve özellikleri keşfedin! Daha fazla ayrıntı için web sitemizi ziyaret edin."
+            "tr": "Neodyme'daki en son iyileştirmeleri ve özellikleri keşfedin! Daha fazla ayrıntı için web sitemizi ziyaret edin.",
+            "pt-BR": "Descubra as últimas melhorias e recursos no Neodyme! Visite nosso site para mais detalhes."
           },
           "spotlight": false
         }
@@ -6583,7 +6617,8 @@
             "ja": "Neodyme パッチノート",
             "pl": "Informacje o aktualizacji Neodyme",
             "es-419": "Notas del parche Neodyme",
-            "tr": "Neodyme yama notları"
+            "tr": "Neodyme yama notları",
+            "pt-BR": "Notas de atualização Neodyme"
           },
           "offerAction": "ShowOfferDetails",
           "videoLoop": false,
@@ -6615,7 +6650,8 @@
             "ja": "新機能が利用可能になりました！",
             "pl": "Dostępne nowe funkcje!",
             "es-419": "¡Nuevas funciones disponibles!",
-            "tr": "Yeni özellikler mevcut!"
+            "tr": "Yeni özellikler mevcut!",
+            "pt-BR": "Novos recursos disponíveis!"
           },
           "body": {
             "de": "Entdecken Sie die neuesten Verbesserungen und Funktionen auf Neodyme! Besuchen Sie unsere Website für weitere Details.",
@@ -6629,7 +6665,8 @@
             "ja": "Neodymeの最新の改善と機能をご覧ください！詳細はウェブサイトをご覧ください。",
             "pl": "Odkryj najnowsze ulepszenia i funkcje Neodyme! Odwiedź naszą stronę internetową, aby uzyskać więcej informacji.",
             "es-419": "¡Descubre las últimas mejoras y características en Neodyme! Visita nuestro sitio web para más detalles.",
-            "tr": "Neodyme'daki en son iyileştirmeleri ve özellikleri keşfedin! Daha fazla ayrıntı için web sitemizi ziyaret edin."
+            "tr": "Neodyme'daki en son iyileştirmeleri ve özellikleri keşfedin! Daha fazla ayrıntı için web sitemizi ziyaret edin.",
+            "pt-BR": "Descubra as últimas melhorias e recursos no Neodyme! Visite nosso site para mais detalhes."
           },
           "offerAction": "ShowOfferDetails",
           "videoLoop": false,
@@ -6696,7 +6733,8 @@
             "ja": "Neodyme パッチノート",
             "pl": "Informacje o aktualizacji Neodyme",
             "es-419": "Notas del parche Neodyme",
-            "tr": "Neodyme yama notları"
+            "tr": "Neodyme yama notları",
+            "pt-BR": "Notas de atualização Neodyme"
           },
           "body": "https://fortnite-public-service-prod11.ol.epicgames.com/updates.html",
           "spotlight": false
@@ -6718,7 +6756,8 @@
             "ja": "新機能が利用可能になりました！",
             "pl": "Dostępne nowe funkcje!",
             "es-419": "¡Nuevas funciones disponibles!",
-            "tr": "Yeni özellikler mevcut!"
+            "tr": "Yeni özellikler mevcut!",
+            "pt-BR": "Novos recursos disponíveis!"
           },
           "body": {
             "de": "Entdecken Sie die neuesten Verbesserungen und Funktionen auf Neodyme! Besuchen Sie unsere Website für weitere Details.",
@@ -6732,7 +6771,8 @@
             "ja": "Neodymeの最新の改善と機能をご覧ください！詳細はウェブサイトをご覧ください。",
             "pl": "Odkryj najnowsze ulepszenia i funkcje Neodyme! Odwiedź naszą stronę internetową, aby uzyskać więcej informacji.",
             "es-419": "¡Descubre las últimas mejoras y características en Neodyme! Visita nuestro sitio web para más detalles.",
-            "tr": "Neodyme'daki en son iyileştirmeleri ve özellikleri keşfedin! Daha fazla ayrıntı için web sitemizi ziyaret edin."
+            "tr": "Neodyme'daki en son iyileştirmeleri ve özellikleri keşfedin! Daha fazla ayrıntı için web sitemizi ziyaret edin.",
+            "pt-BR": "Descubra as últimas melhorias e recursos no Neodyme! Visite nosso site para mais detalhes."
           },
           "spotlight": false
         }

@@ -11,6 +11,59 @@ class RateLimitManager {
 
     static isEnabled = false;
 
+    // ---- Condensed rate-limit logging ----
+    // Instead of logging one warning per blocked request (which floods the console when a
+    // client hammers a 429), we aggregate hits per (type|key|method|path) and flush a single
+    // condensed line after a short window of silence.
+    static hitBuckets = new Map();          // bucketKey -> { type, key, method, path, count, firstAt, lastAt, timer }
+
+    static getFlushDelayMs() {
+        // Configurable via server.properties (seconds). Default 5s. 0 disables condensing
+        // (back to one log line per hit).
+        const sec = ConfigManager.get('rateLimitLogCondenseSeconds', 5);
+        return Math.max(0, Number(sec) || 0) * 1000;
+    }
+
+    static recordHit(type, key, method, path) {
+        const delay = this.getFlushDelayMs();
+
+        // Condensing disabled → log immediately, one line per hit.
+        if (delay === 0) {
+            LoggerService.log('warn', `rate-limit (${type}) hit for ${key} on ${method} ${path}`);
+            return;
+        }
+
+        const bucketKey = `${type}|${key}|${method}|${path}`;
+        let bucket = this.hitBuckets.get(bucketKey);
+
+        if (!bucket) {
+            bucket = { type, key, method, path, count: 0, firstAt: Date.now(), lastAt: Date.now(), timer: null };
+            this.hitBuckets.set(bucketKey, bucket);
+        }
+
+        bucket.count++;
+        bucket.lastAt = Date.now();
+
+        // Reset the debounce timer: flush only once the burst stops.
+        if (bucket.timer) clearTimeout(bucket.timer);
+        bucket.timer = setTimeout(() => this.flushBucket(bucketKey), delay);
+        // Don't let the timer keep the process alive on shutdown.
+        if (bucket.timer.unref) bucket.timer.unref();
+    }
+
+    static flushBucket(bucketKey) {
+        const bucket = this.hitBuckets.get(bucketKey);
+        if (!bucket) return;
+        this.hitBuckets.delete(bucketKey);
+
+        const windowSec = Math.max(1, Math.round((bucket.lastAt - bucket.firstAt) / 1000));
+        const times = bucket.count === 1 ? '' : ` ×${bucket.count}`;
+        LoggerService.log('warn',
+            `rate-limit (${bucket.type}) hit${times} for ${bucket.key} on ${bucket.method} ${bucket.path}` +
+            (bucket.count > 1 ? ` (within ${windowSec}s)` : '')
+        );
+    }
+
     static async initialize() {
         this.isEnabled = ConfigManager.get('rateLimiting', true);
 
@@ -51,7 +104,7 @@ class RateLimitManager {
             trustProxy: trustProxy,
             handler: (req, res) => {
                 const clientIp = this.getClientIp(req);
-                LoggerService.log('warn', `Global rate limit exceeded for IP: ${clientIp} on ${req.method} ${req.path}`);
+                this.recordHit('global', `IP ${clientIp}`, req.method, req.path);
 
                 res.status(429).json({
                     errorCode: 'errors.com.epicgames.common.throttled',
@@ -88,7 +141,7 @@ class RateLimitManager {
             skipSuccessfulRequests: ConfigManager.get('authSkipSuccessfulRequests', false),
             handler: (req, res) => {
                 const clientIp = this.getClientIp(req);
-                LoggerService.log('warn', `Authentication rate limit exceeded for IP: ${clientIp} on ${req.method} ${req.path}`);
+                this.recordHit('auth', `IP ${clientIp}`, req.method, req.path);
 
                 res.status(429).json({
                     errorCode: 'errors.com.epicgames.account.auth_token.invalid_grant',
@@ -125,7 +178,8 @@ class RateLimitManager {
             handler: (req, res) => {
                 const clientIp = this.getClientIp(req);
                 const userId = req.user?.accountId || 'anonymous';
-                LoggerService.log('warn', `Expensive operation rate limit exceeded for IP: ${clientIp}, User: ${userId} on ${req.method} ${req.path}`);
+                const who = userId !== 'anonymous' ? `user ${userId} (IP ${clientIp})` : `IP ${clientIp}`;
+                this.recordHit('expensive', who, req.method, req.path);
 
                 res.status(429).json({
                     errorCode: 'errors.com.epicgames.common.throttled',

@@ -20,7 +20,8 @@
       "ja": "8種のフォートナイト スタイルのコスチューム、7種のレゴ スタイルのコスチューム、そして最大1,500 V-Bucksの返還を含む、160個以上の報酬をアンロックしよう！",
       "pl": "Odblokuj więcej niż 160 nagród, w tym 8 strojów w stylu Fortnite, 7 strojów w stylu LEGO i nawet 1500 V-dolców!",
       "es-419": "¡Desbloquea más de 160 recompensas que incluyen: 8 atuendos con estilo Fortnite, 7 atuendos con estilo LEGO y hasta 1500 monedas V de vuelta!",
-      "tr": "8 Fortnite tarzı kıyafet, 7 LEGO® tarzı kıyafet ve 1.500'e varan V-Papel içeren 160'dan fazla ödülü aç!"
+      "tr": "8 Fortnite tarzı kıyafet, 7 LEGO® tarzı kıyafet ve 1.500'e varan V-Papel içeren 160'dan fazla ödülü aç!",
+      "pt-BR": "Desbloqueie mais de 160 recompensas, incluindo: 8 trajes com estilo Fortnite, 7 trajes com estilo LEGO e até 1.500 V-Bucks de volta!"
     },
     "purchaseBackgroundURL": "https://cdn2.unrealengine.com/t-ui-battlepass-3300-5050-purchasebackground-948x780-fe5c1ce15004.png",
     "_title": "battlepassdata",
@@ -38,7 +39,8 @@
       "ja": "バトルパスの購入は「フォートナイトにおける購入キャンセル」または「返品チケット」による返品の対象外です。全ての体験で全てのコスチュームが使用できない場合があります。",
       "pl": "Zakupiony karnet bojowy nie podlega zwrotowi poprzez anulowanie zakupu w Fortnite ani użycie zgłoszeń zwrotu. Nie wszystkich elementów kosmetycznych można używać we wszystkich przygodach.",
       "es-419": "Las compras del pase de batalla no cumplen con los requisitos para ser devueltas con Cancelar compra de Fortnite ni con boletos de devolución. No todos los objetos de contenido estético se pueden usar en todas las experiencias.",
-      "tr": "Satın alınan Savaş Biletleri Fortnite üzerinden satın alım iptali veya iade biletleriyle iade için uygun değildir. Kozmetiklerin bazıları her deneyimde kullanılamaz."
+      "tr": "Satın alınan Savaş Biletleri Fortnite üzerinden satın alım iptali veya iade biletleriyle iade için uygun değildir. Kozmetiklerin bazıları her deneyimde kullanılamaz.",
+      "pt-BR": "As compras do Passe de Batalha não são elegíveis para devolução por meio do Cancelamento de Compra do Fortnite ou de cupons de devolução. Nem todos os cosméticos podem ser usados em todas as experiências."
     },
     "_noIndex": false,
     "levelPurchaseDisclaimer": {
@@ -55,7 +57,8 @@
       "ja": "合計で100個のバトルパス報酬を購入できます。バンドルはバトルパスごとに1つまで。バトルパスの報酬の購入は「フォートナイトにおける購入キャンセル」または「返品チケット」による返品の対象外です。全ての体験で全てのコスチュームが使用できない場合があります。",
       "pl": "Kupić można łącznie 100 nagród z karnetu bojowego. 1 zestaw na karnet bojowy. Zakupione nagrody z karnetu bojowego nie podlegają zwrotowi poprzez anulowanie zakupu w Fortnite ani użycie zgłoszeń zwrotu. Nie wszystkich elementów kosmetycznych można używać we wszystkich przygodach.",
       "es-419": "En total, pueden comprarse 100 recompensas del pase de batalla. 1 lote por pase de batalla. Las compras de recompensas del pase de batalla no cumplen con los requisitos para ser devueltas con Cancelar compra de Fortnite ni con boletos de devolución. No todos los objetos de contenido estético se pueden usar en todas las experiencias.",
-      "tr": "Toplamda 100 Savaş Bileti ödülü satın alınabilir. Savaş Bileti başına 1 paket. Satın alınan Savaş Bileti ödülleri, Fortnite üzerinden satın alım iptali veya iade biletleriyle iade için uygun değildir. Kozmetiklerin bazıları her deneyimde kullanılamaz."
+      "tr": "Toplamda 100 Savaş Bileti ödülü satın alınabilir. Savaş Bileti başına 1 paket. Satın alınan Savaş Bileti ödülleri, Fortnite üzerinden satın alım iptali veya iade biletleriyle iade için uygun değildir. Kozmetiklerin bazıları her deneyimde kullanılamaz.",
+      "pt-BR": "É possível comprar um total de 100 recompensas do Passe de Batalha. 1 pacote por Passe de Batalha. As compras de recompensas do Passe de Batalha não são elegíveis para devolução por meio do Cancelamento de Compra do Fortnite ou de cupons de devolução. Nem todos os cosméticos podem ser usados em todas as experiências."
     },
     "purchaseDescription": {
       "de": "Verdiene bis zu 1.500 V-Bucks\n\nVerdiene mindestens 100 Belohnungen",
@@ -71,7 +74,8 @@
       "ja": "最大で1,500 V-Bucksを獲得しよう\n\n最大で100個以上の報酬を獲得しよう",
       "pl": "Zarób nawet 1500 V-dolców\n\nZdobądź nawet 100+ nagród",
       "es-419": "Obtén hasta 1500 monedas V\n\nObtén hasta más de 100 recompensas",
-      "tr": "Toplamda 1.500 V-Papel kazan\n\nToplamda 100+ ödül kazan"
+      "tr": "Toplamda 1.500 V-Papel kazan\n\nToplamda 100+ ödül kazan",
+      "pt-BR": "Ganhe até 1.500 V-Bucks\n\nGanhe mais de 100 recompensas"
     },
     "seasonEndDateTime": "9999-12-31T23:59:59.999Z",
     "seasonEndDateText": {
@@ -88,7 +92,8 @@
       "ja": "{Date}まで利用可能",
       "pl": "Dostępne do {Date}",
       "es-419": "Disponible hasta el {Date}",
-      "tr": "{Date} tarihine kadar oyunda olacak"
+      "tr": "{Date} tarihine kadar oyunda olacak",
+      "pt-BR": "Disponível até {Date}"
     },
     "purchaseConfirmBackgroundURL": "https://cdn2.unrealengine.com/t-ui-battlepass-3300-purchaseconfirmbackground-1920x1080-535a851f43b0.png",
     "purchaseDisclaimer": {
@@ -105,7 +110,8 @@
       "ja": "バトルパスの購入は「フォートナイトにおける購入キャンセル」または「返品チケット」による返品の対象外です。全ての体験で全てのコスチュームが使用できない場合があります。ビジュアルアイテムのバリエーションと使用の制限についての詳細は、こちらをご確認ください: fn.gg/cosmetics",
       "pl": "Zakupiony karnet bojowy nie podlega zwrotowi poprzez anulowanie zakupu w Fortnite ani użycie zgłoszeń zwrotu. Nie wszystkich elementów kosmetycznych można używać we wszystkich przygodach. PRO100Kąt pozdrawia wszystkich Polaków. Więcej informacji o wariantach kosmetycznych i ograniczeniach użytkowania znajdziesz na stronie fn.gg/cosmetics",
       "es-419": "Las compras del pase de batalla no cumplen con los requisitos para ser devueltas con Cancelar compra de Fortnite ni con boletos de devolución. No todos los objetos de contenido estético se pueden usar en todas las experiencias. Para obtener más información sobre las variaciones de los objetos de contenido estético y los límites de uso, echa un vistazo a fn.gg/cosmetics.",
-      "tr": "Satın alınan Savaş Biletleri Fortnite üzerinden satın alım iptali veya iade biletleriyle iade için uygun değildir. Kozmetiklerin bazıları her deneyimde kullanılamaz. Kozmetik varyasyonları ve kullanım sınırlandırmaları hakkında daha fazla bilgi fn.gg/cosmetics adresinde."
+      "tr": "Satın alınan Savaş Biletleri Fortnite üzerinden satın alım iptali veya iade biletleriyle iade için uygun değildir. Kozmetiklerin bazıları her deneyimde kullanılamaz. Kozmetik varyasyonları ve kullanım sınırlandırmaları hakkında daha fazla bilgi fn.gg/cosmetics adresinde.",
+      "pt-BR": "As compras do Passe de Batalha não são elegíveis para devolução por meio do Cancelamento de Compra do Fortnite ou de cupons de devolução. Nem todos os cosméticos podem ser usados em todas as experiências. Para mais detalhes sobre variações e limitações de uso dos cosméticos, acesse fn.gg/cosmetics"
     },
     "_activeDate": "2024-12-01T06:30:00.000Z",
     "lastModified": "2024-11-26T19:12:47.571Z",
@@ -127,7 +133,8 @@
       "ja": "3種のフォートナイト スタイルのコスチューム、3種のレゴ スタイルのコスチュームを含む、45個の報酬をアンロックしよう！",
       "pl": "Odblokuj 45 nagród, w tym 3 stroje w stylu Fortnite i 3 stroje w stylu LEGO!",
       "es-419": "¡Desbloquea más de 45 recompensas que incluyen: 3 atuendos con estilo Fortnite y 3 atuendos con estilo LEGO!",
-      "tr": "3 Fortnite tarzı kıyafet ve 3 LEGO® tarzı kıyafet içeren 45 ödülü aç!"
+      "tr": "3 Fortnite tarzı kıyafet ve 3 LEGO® tarzı kıyafet içeren 45 ödülü aç!",
+      "pt-BR": "Desbloqueie 45 recompensas, incluindo: 3 trajes com estilo Fortnite e 3 trajes com estilo LEGO!"
     },
     "purchaseBackgroundURL": "https://cdn2.unrealengine.com/t-ui-figment-3300-5050-purchasebackground-948x780-e4263af86b47.png",
     "_title": "Figmentpassdata",
@@ -145,7 +152,8 @@
       "ja": "ORIGINパスの購入は「フォートナイトにおける購入キャンセル」または「返品チケット」による返品の対象外です。全ての体験で全てのコスチュームが使用できない場合があります。",
       "pl": "Zakupione klasyczne karnety bojowe nie podlegają zwrotowi poprzez anulowanie zakupu w Fortnite lub użycie zgłoszeń zwrotu. Nie wszystkich elementów kosmetycznych można używać we wszystkich przygodach.",
       "es-419": "Las compras del pase de Orígenes no cumplen con los requisitos para ser devueltas con Cancelar compra de Fortnite ni con boletos de devolución. No todos los objetos de contenido estético se pueden usar en todas las experiencias.",
-      "tr": "Satın alınan Mazi Biletleri Fortnite üzerinden satın alım iptali veya iade biletleriyle iade için uygun değildir. Kozmetiklerin bazıları her deneyimde kullanılamaz."
+      "tr": "Satın alınan Mazi Biletleri Fortnite üzerinden satın alım iptali veya iade biletleriyle iade için uygun değildir. Kozmetiklerin bazıları her deneyimde kullanılamaz.",
+      "pt-BR": "As compras do Passe OG não são elegíveis para devolução por meio do Cancelamento de Compra do Fortnite ou de cupons de devolução. Nem todos os cosméticos podem ser usados em todas as experiências."
     },
     "_noIndex": false,
     "levelPurchaseDisclaimer": {
@@ -162,7 +170,8 @@
       "ja": "合計で45個のORIGINパス報酬を購入できます。ORIGINパスの報酬の購入は「フォートナイトにおける購入キャンセル」または「返品チケット」による返品の対象外です。全ての体験で全てのコスチュームが使用できない場合があります。",
       "pl": "Kupić można łącznie 45 nagród z karnetu klasycznego. Zakupione nagrody z karnetu klasycznego nie podlegają zwrotowi poprzez anulowanie zakupu w Fortnite ani użycie zgłoszeń zwrotu. Nie wszystkich elementów kosmetycznych można używać we wszystkich przygodach.",
       "es-419": "En total, pueden comprarse 45 recompensas del pase de Orígenes. Las compras de recompensas del pase de Orígenes no cumplen con los requisitos para ser devueltas con Cancelar compra de Fortnite ni con boletos de devolución. No todos los objetos de contenido estético se pueden usar en todas las experiencias.",
-      "tr": "Toplamda 45 Mazi Bileti ödülü satın alınabilir. Satın alınan Mazi Bileti ödülleri, Fortnite üzerinden satın alım iptali veya iade biletleriyle iade için uygun değildir. Kozmetiklerin bazıları her deneyimde kullanılamaz."
+      "tr": "Toplamda 45 Mazi Bileti ödülü satın alınabilir. Satın alınan Mazi Bileti ödülleri, Fortnite üzerinden satın alım iptali veya iade biletleriyle iade için uygun değildir. Kozmetiklerin bazıları her deneyimde kullanılamaz.",
+      "pt-BR": "É possível comprar um total de 45 recompensas do Passe OG. As compras de recompensas do Passe OG não são elegíveis para devolução por meio do Cancelamento de Compra do Fortnite ou de cupons de devolução. Nem todos os cosméticos podem ser usados em todas as experiências."
     },
     "purchaseDescription": {
       "de": "3 Fortnite-Outfits\n45 kosmetische Gegenstände",
@@ -178,7 +187,8 @@
       "ja": "フォートナイト スタイルのコスチューム3個\n報酬45個",
       "pl": "3 stroje w stylu Fortnite\n45 nagród",
       "es-419": "3 atuendos con estilo Fortnite\n45 recompensas",
-      "tr": "3 Fortnite Tarzı Kıyafet\n45 Ödül"
+      "tr": "3 Fortnite Tarzı Kıyafet\n45 Ödül",
+      "pt-BR": "3 trajes com estilo Fortnite\n45 recompensas"
     },
     "seasonEndDateTime": "9999-12-31T23:59:59.999Z",
     "seasonEndDateText": {
@@ -195,7 +205,8 @@
       "ja": "{Date}まで利用可能",
       "pl": "Dostępne do {Date}",
       "es-419": "Disponible hasta el {Date}",
-      "tr": "{Date} tarihine kadar oyunda olacak"
+      "tr": "{Date} tarihine kadar oyunda olacak",
+      "pt-BR": "Disponível até {Date}"
     },
     "purchaseConfirmBackgroundURL": "https://cdn2.unrealengine.com/t-ui-figment-3300-purchaseconfirmbackground-1920x1080-f13105840971.png",
     "purchaseDisclaimer": {
@@ -212,7 +223,8 @@
       "ja": "ORIGINパスの購入は「フォートナイトにおける購入キャンセル」または「返品チケット」による返品の対象外です。全ての体験で全てのコスチュームが使用できない場合があります。ビジュアルアイテムのバリエーションと使用の制限についての詳細は、こちらをご確認ください: fn.gg/cosmetics",
       "pl": "Zakupione klasyczne karnety bojowe nie podlegają zwrotowi poprzez anulowanie zakupu w Fortnite lub użycie zgłoszeń zwrotu. Nie wszystkich elementów kosmetycznych można używać we wszystkich przygodach. PRO100Kąt pozdrawia wszystkich Polaków. Więcej informacji o wariantach kosmetycznych i ograniczeniach użytkowania znajdziesz na stronie fn.gg/cosmetics",
       "es-419": "Las compras del pase de Orígenes no cumplen con los requisitos para ser devueltas con Cancelar compra de Fortnite ni con boletos de devolución. No todos los objetos de contenido estético se pueden usar en todas las experiencias. Para obtener más información sobre las variaciones de los objetos de contenido estético y los límites de uso, echa un vistazo a fn.gg/cosmetics.",
-      "tr": "Satın alınan Mazi Biletleri Fortnite üzerinden satın alım iptali veya iade biletleriyle iade için uygun değildir. Kozmetiklerin bazıları her deneyimde kullanılamaz. Kozmetik varyasyonları ve kullanım sınırlandırmaları hakkında daha fazla bilgi fn.gg/cosmetics adresinde."
+      "tr": "Satın alınan Mazi Biletleri Fortnite üzerinden satın alım iptali veya iade biletleriyle iade için uygun değildir. Kozmetiklerin bazıları her deneyimde kullanılamaz. Kozmetik varyasyonları ve kullanım sınırlandırmaları hakkında daha fazla bilgi fn.gg/cosmetics adresinde.",
+      "pt-BR": "As compras do Passe OG não são elegíveis para devolução por meio do Cancelamento de Compra do Fortnite ou de cupons de devolução. Nem todos os cosméticos podem ser usados em todas as experiências. Para mais detalhes sobre variações e limitações de uso dos cosméticos, acesse fn.gg/cosmetics"
     },
     "_activeDate": "2024-12-01T06:30:00.000Z",
     "lastModified": "2024-11-26T19:12:47.491Z",

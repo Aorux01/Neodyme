@@ -229,7 +229,7 @@ class PluginInstaller {
             fs.mkdirSync(dir, { recursive: true });
         }
 
-        // Write raw bytes — binary-safe (jpg, png, otf, ...).
+        // Write raw bytes - binary-safe (jpg, png, otf, ...).
         // Text files (json, js, md) are also fine: they end up byte-identical to the source.
         const buffer = await this.fetchWithProgress(fileUrl, onProgress);
         fs.writeFileSync(destinationPath, buffer);
@@ -250,7 +250,7 @@ class PluginInstaller {
         const MAX_NAME_LEN = 40;
         const shortenName = (name) => {
             if (!name) return '';
-            // Keep only the basename — full paths are noisy.
+            // Keep only the basename - full paths are noisy.
             const base = name.split(/[\\/]/).pop() || name;
             if (base.length <= MAX_NAME_LEN) return base;
             return '…' + base.slice(-(MAX_NAME_LEN - 1));
