@@ -66,16 +66,12 @@ async function handleLogout(event) {
     event.preventDefault();
 
     try {
-        await fetch('/api/auth/logout', {
-            method: 'POST',
-            credentials: 'include'
-        });
-    } catch (error) {
-        console.error('Logout error:', error);
-    } finally {
-        sessionStorage.removeItem('neodyme_user');
-        window.location.href = '../index.html';
+        await fetch(`${API}/auth/logout`, { method: 'POST', credentials: 'include' });
+    } catch {
+        // best-effort
     }
+    sessionStorage.removeItem('neodyme_user');
+    window.location.href = '../index.html';
 }
 
 function addHeaderStyles() {

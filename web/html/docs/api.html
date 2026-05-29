@@ -66,7 +66,7 @@ Grant types:
   client_credentials (client authentication)</code></pre>
 
             <h3>Web Interface Authentication</h3>
-            <pre><code>POST /api/auth/login
+            <pre><code>POST /neodyme/api/auth/login
 Content-Type: application/json
 
 {
@@ -172,52 +172,58 @@ Content-Type: application/json
             <h3>Authentication</h3>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                <tr><td><code>POST</code></td><td><code>/api/auth/register</code></td><td>Register new account</td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/auth/login</code></td><td>Login</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/auth/verify</code></td><td>Verify token</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/auth/profile</code></td><td>Get profile</td></tr>
-                <tr><td><code>PUT</code></td><td><code>/api/auth/profile</code></td><td>Update profile</td></tr>
-                <tr><td><code>PUT</code></td><td><code>/api/auth/change-password</code></td><td>Change password</td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/auth/logout</code></td><td>Logout</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/auth/csrf-token</code></td><td>Get CSRF token</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/auth/register</code></td><td>Register new account</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/auth/login</code></td><td>Login</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/auth/verify</code></td><td>Verify token</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/auth/profile</code></td><td>Get profile</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/auth/profile</code></td><td>Update profile</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/auth/change-password</code></td><td>Change password</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/auth/logout</code></td><td>Logout</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/neodyme/api/auth/account</code></td><td>Delete own account (requires password) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.6</span></td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/auth/csrf-token</code></td><td>Get CSRF token</td></tr>
             </table>
 
             <h3>User</h3>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                <tr><td><code>GET</code></td><td><code>/api/user/vbucks</code></td><td>Get V-Bucks balance</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/user/friends</code></td><td>Get friends list</td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/user/friends/add</code></td><td>Add friend</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/user/role</code></td><td>Get user role</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/users/search?q=</code></td><td>Search users</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/user/vbucks</code></td><td>Get V-Bucks balance</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/user/purchases</code></td><td>Get purchase history</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/user/settings</code></td><td>Save user settings</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/user/role</code></td><td>Get user role &amp; accessible panels</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/users/search?q=</code></td><td>Search users</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/user/friends</code></td><td>Get friends, incoming &amp; outgoing requests</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/user/friends/add</code></td><td>Send friend request</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/user/friends/accept</code></td><td>Accept friend request</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/user/friends/reject</code></td><td>Reject / cancel friend request</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/neodyme/api/user/friends/:accountId</code></td><td>Remove friend</td></tr>
             </table>
 
             <h3>Shop</h3>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                <tr><td><code>GET</code></td><td><code>/api/shop</code></td><td>Get shop data</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/shop/status</code></td><td>Shop rotation status</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/shop/items</code></td><td>Shop items list</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/shop/image</code></td><td>Generated SVG shop image (<code>Content-Type: image/svg+xml</code>, 10-min cache) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/shop/config</code></td><td>Shop category configuration <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/shop/rotate</code></td><td>Force shop rotation (requires auth) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/shop</code></td><td>Get shop data</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/shop/status</code></td><td>Shop rotation status</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/shop/items</code></td><td>Shop items list</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/shop/image</code></td><td>Generated SVG shop image (<code>Content-Type: image/svg+xml</code>, 10-min cache) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/shop/config</code></td><td>Shop category configuration <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/shop/rotate</code></td><td>Force shop rotation (requires auth) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
             </table>
 
             <h3>Sessions</h3>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                <tr><td><code>GET</code></td><td><code>/api/sessions/active</code></td><td>Get active sessions</td></tr>
-                <tr><td><code>DELETE</code></td><td><code>/api/sessions/:sessionId</code></td><td>Terminate session</td></tr>
-                <tr><td><code>DELETE</code></td><td><code>/api/sessions/all</code></td><td>Terminate all sessions</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/sessions/active</code></td><td>Get active sessions</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/neodyme/api/sessions/:sessionId</code></td><td>Terminate session</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/neodyme/api/sessions/all</code></td><td>Terminate all sessions</td></tr>
             </table>
 
             <h3>Support Tickets</h3>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                <tr><td><code>POST</code></td><td><code>/api/tickets</code></td><td>Create ticket</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/tickets/my</code></td><td>Get my tickets</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/tickets/:ticketId</code></td><td>Get ticket details</td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/tickets/:ticketId/messages</code></td><td>Add message</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/tickets</code></td><td>Create ticket</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/tickets/my</code></td><td>Get my tickets</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/tickets/:ticketId</code></td><td>Get ticket details</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/tickets/:ticketId/messages</code></td><td>Add message</td></tr>
             </table>
 
             <h2>Moderator API</h2>
@@ -226,28 +232,28 @@ Content-Type: application/json
             <h3>Player Management</h3>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                <tr><td><code>GET</code></td><td><code>/api/mod/players</code></td><td>List players</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/mod/players/:accountId/bans</code></td><td>Get ban info</td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/mod/players/:accountId/ban</code></td><td>Ban player</td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/mod/players/:accountId/unban</code></td><td>Unban player</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/mod/players</code></td><td>List players</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/mod/players/:accountId/bans</code></td><td>Get ban info</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/mod/players/:accountId/ban</code></td><td>Ban player</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/mod/players/:accountId/unban</code></td><td>Unban player</td></tr>
             </table>
 
             <h3>Ticket Management</h3>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                <tr><td><code>GET</code></td><td><code>/api/mod/tickets</code></td><td>Get all tickets</td></tr>
-                <tr><td><code>PUT</code></td><td><code>/api/mod/tickets/:id/assign</code></td><td>Assign ticket</td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/mod/tickets/:id/reply</code></td><td>Reply as mod</td></tr>
-                <tr><td><code>PUT</code></td><td><code>/api/mod/tickets/:id/status</code></td><td>Change status</td></tr>
-                <tr><td><code>DELETE</code></td><td><code>/api/mod/tickets/:id</code></td><td>Delete ticket</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/mod/tickets</code></td><td>Get all tickets</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/mod/tickets/:id/assign</code></td><td>Assign ticket</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/mod/tickets/:id/reply</code></td><td>Reply as mod</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/mod/tickets/:id/status</code></td><td>Change status</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/neodyme/api/mod/tickets/:id</code></td><td>Delete ticket</td></tr>
             </table>
 
             <h3>Reports <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.5</span></h3>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                <tr><td><code>GET</code></td><td><code>/api/mod/reports</code></td><td>Get all player reports (grouped by reported player)</td></tr>
-                <tr><td><code>DELETE</code></td><td><code>/api/mod/reports/:reportId</code></td><td>Dismiss a report</td></tr>
-                <tr><td><code>DELETE</code></td><td><code>/api/mod/reports/player/:accountId</code></td><td>Dismiss all reports for a player</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/mod/reports</code></td><td>Get all player reports (grouped by reported player)</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/neodyme/api/mod/reports/:reportId</code></td><td>Dismiss a report</td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/neodyme/api/mod/reports/player/:accountId</code></td><td>Dismiss all reports for a player</td></tr>
             </table>
 
             <h2>Admin API</h2>
@@ -255,34 +261,34 @@ Content-Type: application/json
 
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                <tr><td><code>GET</code></td><td><code>/api/admin/users</code></td><td>List all users</td></tr>
-                <tr><td><code>PUT</code></td><td><code>/api/admin/users/:accountId/role</code></td><td>Change user role</td></tr>
-                <tr><td><code>PUT</code></td><td><code>/api/admin/users/:accountId/ban</code></td><td>Ban user</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/admin/stats</code></td><td>Server statistics</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/admin/audit-log</code></td><td>Get audit logs</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/admin/console-logs</code></td><td>Get server console logs</tr>
-                <tr><td><code>GET</code></td><td><code>/api/admin/live-stats</code></td><td>CPU, RAM, player count (real-time)</tr>
-                <tr><td><code>GET</code></td><td><code>/api/admin/server-properties</code></td><td>Read server.properties</tr>
-                <tr><td><code>PUT</code></td><td><code>/api/admin/server-properties</code></td><td>Write server.properties</tr>
-                <tr><td><code>GET</code></td><td><code>/api/admin/plugins</code></td><td>List loaded plugins</tr>
-                <tr><td><code>POST</code></td><td><code>/api/admin/plugins/:name/load</code></td><td>Load a plugin</tr>
-                <tr><td><code>POST</code></td><td><code>/api/admin/plugins/:name/unload</code></td><td>Unload a plugin</tr>
-                <tr><td><code>POST</code></td><td><code>/api/admin/plugins/:name/reload</code></td><td>Reload a plugin</tr>
-                <tr><td><code>POST</code></td><td><code>/api/admin/command</code></td><td>Execute an admin command</tr>
-                <tr><td><code>GET</code></td><td><code>/api/admin/xmpp-clients</code></td><td>List connected XMPP clients (display name, JID, away status, rooms) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
-                <tr><td><code>POST</code></td><td><code>/api/admin/shop/rotate-date</code></td><td>Rotate shop to a historical date - body: <code>{ "date": "YYYY-MM-DD" }</code> <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/users</code></td><td>List all users</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/admin/users/:accountId/role</code></td><td>Change user role</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/admin/users/:accountId/ban</code></td><td>Ban user</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/stats</code></td><td>Server statistics</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/audit-log</code></td><td>Get audit logs</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/console-logs</code></td><td>Get server console logs</tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/live-stats</code></td><td>CPU, RAM, player count (real-time)</tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/server-properties</code></td><td>Read server.properties</tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/admin/server-properties</code></td><td>Write server.properties</tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/plugins</code></td><td>List loaded plugins</tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/admin/plugins/:name/load</code></td><td>Load a plugin</tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/admin/plugins/:name/unload</code></td><td>Unload a plugin</tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/admin/plugins/:name/reload</code></td><td>Reload a plugin</tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/admin/command</code></td><td>Execute an admin command</tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/xmpp-clients</code></td><td>List connected XMPP clients (display name, JID, away status, rooms) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/admin/shop/rotate-date</code></td><td>Rotate shop to a historical date - body: <code>{ "date": "YYYY-MM-DD" }</code> <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.5</span></td></tr>
             </table>
 
             <h2>Developer API</h2>
             <p>Requires Developer role.</p>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                <tr><td><code>GET</code></td><td><code>/api/dev/config</code></td><td>Get all config values</td></tr>
-                <tr><td><code>PUT</code></td><td><code>/api/dev/config/:key</code></td><td>Update config value</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/dev/config/files</code></td><td>List config files</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/dev/stats/server</code></td><td>Server statistics</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/dev/stats/database</code></td><td>Database statistics</td></tr>
-                <tr><td><code>GET</code></td><td><code>/api/dev/ssl/status</code></td><td>SSL certificate status</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/config</code></td><td>Get all config values</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/dev/config/:key</code></td><td>Update config value</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/config/files</code></td><td>List config files</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/stats/server</code></td><td>Server statistics</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/stats/database</code></td><td>Database statistics</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/ssl/status</code></td><td>SSL certificate status</td></tr>
             </table>
 
             <h2>Purchase Error Codes <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.5</span></h2>

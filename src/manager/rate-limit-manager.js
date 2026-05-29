@@ -6,7 +6,8 @@ class RateLimitManager {
     static limiters = {
         global: null,
         auth: null,
-        expensive: null
+        expensive: null,
+        web: null
     };
 
     static isEnabled = false;
@@ -27,7 +28,7 @@ class RateLimitManager {
     static recordHit(type, key, method, path) {
         const delay = this.getFlushDelayMs();
 
-        // Condensing disabled → log immediately, one line per hit.
+        // Condensing disabled -> log immediately, one line per hit.
         if (delay === 0) {
             LoggerService.log('warn', `rate-limit (${type}) hit for ${key} on ${method} ${path}`);
             return;
@@ -102,6 +103,9 @@ class RateLimitManager {
             standardHeaders: true,
             legacyHeaders: false,
             trustProxy: trustProxy,
+            // Website routes have their own per-user limiter; don't double-count them
+            // against the global IP quota (that was throttling busy panels).
+            skip: (req) => req.path.startsWith('/neodyme/api/'),
             handler: (req, res) => {
                 const clientIp = this.getClientIp(req);
                 this.recordHit('global', `IP ${clientIp}`, req.method, req.path);
@@ -199,10 +203,45 @@ class RateLimitManager {
             }
         });
 
+        // Website Rate Limiter - Applied to /neodyme/api/* routes.
+        // Keyed by accountId when authenticated (so one user behind a busy NAT can't be
+        // throttled by another's traffic) and falls back to IP otherwise. The quota is
+        // generous because legitimate panels fire many calls in quick bursts; abuse-sensitive
+        // routes (auth, purchases) keep their own dedicated limiters on top of this one.
+        const webMaxRequests = ConfigManager.get('webMaxRequests', 600);
+        const webWindowMinutes = ConfigManager.get('webWindowMinutes', 1);
+
+        this.limiters.web = rateLimit({
+            windowMs: webWindowMinutes * 60 * 1000,
+            max: webMaxRequests,
+            standardHeaders: true,
+            legacyHeaders: false,
+            trustProxy: trustProxy,
+            handler: (req, res) => {
+                const clientIp = this.getClientIp(req);
+                const userId = req.user?.accountId;
+                const who = userId ? `user ${userId} (IP ${clientIp})` : `IP ${clientIp}`;
+                this.recordHit('web', who, req.method, req.path);
+
+                res.status(429).json({
+                    success: false,
+                    error: 'RATE_LIMITED',
+                    message: 'Too many requests. Please slow down.'
+                });
+            },
+            keyGenerator: (req) => {
+                if (req.user && req.user.accountId) {
+                    return `web-user:${req.user.accountId}`;
+                }
+                return `web-ip:${this.getClientIp(req)}`;
+            }
+        });
+
         LoggerService.log('info', `Rate limiters configured:`);
         LoggerService.log('info', `  - Global: ${globalMaxRequests} requests per ${globalWindowMinutes} minute(s)`);
         LoggerService.log('info', `  - Authentication: ${authMaxAttempts} attempts per ${authWindowMinutes} minute(s)`);
         LoggerService.log('info', `  - Expensive Operations: ${expensiveMaxRequests} requests per ${expensiveWindowMinutes} minute(s)`);
+        LoggerService.log('info', `  - Website: ${webMaxRequests} requests per ${webWindowMinutes} minute(s) (per user)`);
     }
 
     static getGlobalLimiter() {
@@ -224,6 +263,13 @@ class RateLimitManager {
             return (req, res, next) => next();
         }
         return this.limiters.expensive;
+    }
+
+    static getWebLimiter() {
+        if (!this.isEnabled) {
+            return (req, res, next) => next();
+        }
+        return this.limiters.web;
     }
 
     static getClientIp(req) {

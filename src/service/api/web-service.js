@@ -2,9 +2,8 @@ const LoggerService = require('../logger/logger-service');
 const DatabaseManager = require('../../manager/database-manager');
 const TokenService = require('../token/web-token-service');
 const ConfigManager = require('../../manager/config-manager');
-const { Errors } = require('../error/errors-system');
-const { sendError } = require('../error/errors-system');
 const { ROLE_LEVELS } = require('./role-middleware-service');
+const WebResponse = require('./web-response-service');
 
 const CMD_PERMISSIONS = [
     ['account info',   1],
@@ -50,50 +49,49 @@ class WebService {
         res.clearCookie('neodyme_auth', this.getCookieOptions());
     };
     
+    // Auth middleware for /neodyme/api/* routes. Reads the bearer header first,
+    // then the HttpOnly cookie. On any failure it returns the unified 401 web shape
+    // and clears stale cookies so the frontend can react to a single, predictable code.
     verifyToken = async (req, res, next) => {
         try {
             let token = null;
-    
+
             const authHeader = req.headers.authorization;
             if (authHeader) {
                 token = TokenService.extractTokenFromHeader(authHeader);
             }
-    
+
             if (!token && req.cookies?.neodyme_auth) {
                 token = req.cookies.neodyme_auth;
             }
-    
+
             if (!token) {
-                return sendError(res, Errors.Authentication.invalidHeader());
+                return WebResponse.unauthorized(res);
             }
-    
+
             const verification = await TokenService.verifyToken(token);
-    
+
             if (!verification.valid) {
                 this.clearAuthCookies(res);
-                return sendError(res, Errors.Authentication.invalidToken(verification.error));
+                return WebResponse.unauthorized(res, 'Session expired. Please sign in again.');
             }
-    
+
             const accountId = verification.payload.accountId || verification.payload.account_id;
-    
-            if (!accountId) {
-                return sendError(res, Errors.Authentication.invalidToken('missing account id'));
-            }
-    
-            const account = await DatabaseManager.getAccount(accountId);
+            const account = accountId ? await DatabaseManager.getAccount(accountId) : null;
+
             if (!account) {
                 this.clearAuthCookies(res);
-                return sendError(res, Errors.Authentication.invalidToken('account not found'));
+                return WebResponse.unauthorized(res, 'Session expired. Please sign in again.');
             }
-    
+
             req.user = {
                 accountId: account.accountId,
                 displayName: account.displayName,
                 email: account.email
             };
             next();
-        } catch {
-            return sendError(res, Errors.Authentication.invalidToken());
+        } catch (error) {
+            return WebResponse.serverError(res, 'verifyToken', error);
         }
     }
 

@@ -12,8 +12,13 @@ const expensiveRateLimit = () => {
     return RateLimitManager.getExpensiveLimiter();
 };
 
+const webRateLimit = () => {
+    return RateLimitManager.getWebLimiter();
+};
+
 module.exports = {
     globalRateLimit,
     authRateLimit,
-    expensiveRateLimit
+    expensiveRateLimit,
+    webRateLimit
 };

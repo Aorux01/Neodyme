@@ -5,6 +5,7 @@ const path = require('path');
 const ConfigManager = require('../../manager/config-manager');
 const RedisManager = require('../../manager/redis-manager');
 const LoggerService = require('../logger/logger-service');
+const WebResponse = require('../api/web-response-service');
 
 class CsrfTokenService {
     static tokens = new Map();
@@ -200,20 +201,12 @@ async function csrfProtection(req, res, next) {
     const csrfToken = req.headers['x-csrf-token'] || req.body?._csrf;
 
     if (!sessionId || !csrfToken) {
-        return res.status(403).json({
-            success: false,
-            error: 'CSRF validation failed',
-            message: 'Missing security token'
-        });
+        return WebResponse.forbidden(res, 'Missing security token.');
     }
 
     const isValid = await CsrfTokenService.validateToken(csrfToken, sessionId);
     if (!isValid) {
-        return res.status(403).json({
-            success: false,
-            error: 'CSRF validation failed',
-            message: 'Invalid or expired security token'
-        });
+        return WebResponse.forbidden(res, 'Invalid or expired security token.');
     }
 
     next();

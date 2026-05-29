@@ -1372,6 +1372,7 @@ class JsonDatabase {
         const searchLower = query.toLowerCase();
         return clients
             .filter(c => c.displayName && c.displayName.toLowerCase().includes(searchLower))
+            .filter(c => c.clientType !== 5) // exclude SERVER accounts from user search
             .slice(0, limit)
             .map(c => ({
                 accountId: c.accountId,

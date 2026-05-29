@@ -9,7 +9,7 @@ const SERVICE_ICONS = {
 async function fetchStatus() {
     document.getElementById('refresh-spin').classList.add('fa-spin');
     try {
-        const res  = await fetch('/api/public/status');
+        const res  = await fetch('/neodyme/api/status/services');
         const data = await res.json();
 
         // Banner

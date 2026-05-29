@@ -3,121 +3,105 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 const DatabaseManager = require('../../src/manager/database-manager');
-const { Errors, sendError } = require('../../src/service/error/errors-system');
 const LoggerService = require('../../src/service/logger/logger-service');
 const CreatorCodeService = require('../../src/service/api/creator-code-service');
 const TicketService = require('../../src/service/api/ticket-service');
 const ReportService = require('../../src/service/api/report-service');
 const AuditService = require('../../src/service/api/audit-service');
-const { csrfProtection } = require('../../src/service/token/csrf-token-service');
+const WebResponse = require('../../src/service/api/web-response-service');
 const WebService = require('../../src/service/api/web-service');
+const { csrfProtection } = require('../../src/service/token/csrf-token-service');
 const { ROLE_LEVELS, requireModerator } = require('../../src/service/api/role-middleware-service');
 
 const verifyToken = WebService.verifyToken;
+const mod = [verifyToken, requireModerator];
+const modWrite = [verifyToken, requireModerator, csrfProtection];
 
+// ---- Creator codes ----
 
-router.get('/api/mod/creator-codes/requests', verifyToken, requireModerator, async (req, res) => {
+router.get('/neodyme/api/mod/creator-codes/requests', ...mod, async (req, res) => {
     try {
-        const requests = await CreatorCodeService.getPendingRequests();
-        res.json({ success: true, requests });
+        return WebResponse.ok(res, { requests: await CreatorCodeService.getPendingRequests() });
     } catch (error) {
-        LoggerService.log('error', `Get creator code requests error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get creator code requests', error);
     }
 });
 
-router.get('/api/mod/creator-codes/requests/all', verifyToken, requireModerator, async (req, res) => {
+router.get('/neodyme/api/mod/creator-codes/requests/all', ...mod, async (req, res) => {
     try {
-        const requests = await CreatorCodeService.getAllRequests();
-        res.json({ success: true, requests });
+        return WebResponse.ok(res, { requests: await CreatorCodeService.getAllRequests() });
     } catch (error) {
-        LoggerService.log('error', `Get all creator code requests error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get all creator code requests', error);
     }
 });
 
-router.post('/api/mod/creator-codes/approve/:requestId', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.post('/neodyme/api/mod/creator-codes/approve/:requestId', ...modWrite, async (req, res) => {
     try {
-        const { requestId } = req.params;
-        const { note } = req.body;
         const result = await CreatorCodeService.approveRequest(
-            requestId,
-            req.user.accountId,
-            req.user.displayName,
-            note
+            req.params.requestId, req.user.accountId, req.user.displayName, req.body.note
         );
-        res.json(result);
+        return res.json(result);
     } catch (error) {
-        LoggerService.log('error', `Approve creator code error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'approve creator code', error);
     }
 });
 
-router.post('/api/mod/creator-codes/reject/:requestId', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.post('/neodyme/api/mod/creator-codes/reject/:requestId', ...modWrite, async (req, res) => {
     try {
-        const { requestId } = req.params;
-        const { note } = req.body;
         const result = await CreatorCodeService.rejectRequest(
-            requestId,
-            req.user.accountId,
-            req.user.displayName,
-            note
+            req.params.requestId, req.user.accountId, req.user.displayName, req.body.note
         );
-        res.json(result);
+        return res.json(result);
     } catch (error) {
-        LoggerService.log('error', `Reject creator code error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'reject creator code', error);
     }
 });
 
-router.get('/api/mod/creator-codes', verifyToken, requireModerator, async (req, res) => {
+router.get('/neodyme/api/mod/creator-codes/stats', ...mod, async (req, res) => {
     try {
-        const codes = await CreatorCodeService.getAllCodes();
-        res.json({ success: true, codes });
+        return WebResponse.ok(res, { stats: await CreatorCodeService.getStats() });
     } catch (error) {
-        LoggerService.log('error', `Get all creator codes error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get creator code stats', error);
     }
 });
 
-router.delete('/api/mod/creator-codes/:code', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.get('/neodyme/api/mod/creator-codes', ...mod, async (req, res) => {
     try {
-        const { code } = req.params;
-        const result = await CreatorCodeService.deleteCode(
-            code,
-            req.user.accountId,
-            req.user.displayName
-        );
-        res.json(result);
+        return WebResponse.ok(res, { codes: await CreatorCodeService.getAllCodes() });
     } catch (error) {
-        LoggerService.log('error', `Delete creator code error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get all creator codes', error);
     }
 });
 
-router.put('/api/mod/creator-codes/:code/toggle', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.delete('/neodyme/api/mod/creator-codes/:code', ...modWrite, async (req, res) => {
     try {
-        const { code } = req.params;
-        const { isActive } = req.body;
-        const result = await CreatorCodeService.toggleCodeStatus(code, isActive);
-        res.json(result);
+        const result = await CreatorCodeService.deleteCode(req.params.code, req.user.accountId, req.user.displayName);
+        return res.json(result);
     } catch (error) {
-        LoggerService.log('error', `Toggle creator code error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'delete creator code', error);
     }
 });
 
-router.get('/api/mod/creator-codes/stats', verifyToken, requireModerator, async (req, res) => {
+router.put('/neodyme/api/mod/creator-codes/:code/toggle', ...modWrite, async (req, res) => {
     try {
-        const stats = await CreatorCodeService.getStats();
-        res.json({ success: true, stats });
+        const result = await CreatorCodeService.toggleCodeStatus(req.params.code, req.body.isActive);
+        return res.json(result);
     } catch (error) {
-        LoggerService.log('error', `Get creator code stats error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'toggle creator code', error);
     }
 });
 
-router.get('/api/mod/tickets', verifyToken, requireModerator, async (req, res) => {
+// ---- Tickets ----
+
+router.get('/neodyme/api/mod/tickets/stats', ...mod, async (req, res) => {
+    try {
+        return WebResponse.ok(res, { stats: await TicketService.getStats() });
+    } catch (error) {
+        return WebResponse.serverError(res, 'get ticket stats', error);
+    }
+});
+
+router.get('/neodyme/api/mod/tickets', ...mod, async (req, res) => {
     try {
         const { status, priority, assignedTo, unassigned } = req.query;
         const filters = {};
@@ -126,152 +110,101 @@ router.get('/api/mod/tickets', verifyToken, requireModerator, async (req, res) =
         if (assignedTo) filters.assignedTo = assignedTo;
         if (unassigned === 'true') filters.unassigned = true;
 
-        const tickets = await TicketService.getAllTickets(filters);
-        res.json({ success: true, tickets });
+        return WebResponse.ok(res, { tickets: await TicketService.getAllTickets(filters) });
     } catch (error) {
-        LoggerService.log('error', `Get all tickets error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get all tickets', error);
     }
 });
 
-router.get('/api/mod/tickets/stats', verifyToken, requireModerator, async (req, res) => {
+router.put('/neodyme/api/mod/tickets/:ticketId/assign', ...modWrite, async (req, res) => {
     try {
-        const stats = await TicketService.getStats();
-        res.json({ success: true, stats });
+        const result = await TicketService.assignTicket(req.params.ticketId, req.user.accountId, req.user.displayName);
+        return res.json(result);
     } catch (error) {
-        LoggerService.log('error', `Get ticket stats error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'assign ticket', error);
     }
 });
 
-router.put('/api/mod/tickets/:ticketId/assign', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.put('/neodyme/api/mod/tickets/:ticketId/unassign', ...modWrite, async (req, res) => {
     try {
-        const result = await TicketService.assignTicket(
-            req.params.ticketId,
-            req.user.accountId,
-            req.user.displayName
-        );
-        res.json(result);
+        return res.json(await TicketService.unassignTicket(req.params.ticketId));
     } catch (error) {
-        LoggerService.log('error', `Assign ticket error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'unassign ticket', error);
     }
 });
 
-router.put('/api/mod/tickets/:ticketId/unassign', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.post('/neodyme/api/mod/tickets/:ticketId/reply', ...modWrite, async (req, res) => {
     try {
-        const result = await TicketService.unassignTicket(req.params.ticketId);
-        res.json(result);
-    } catch (error) {
-        LoggerService.log('error', `Unassign ticket error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
-    }
-});
-
-router.post('/api/mod/tickets/:ticketId/reply', verifyToken, requireModerator, csrfProtection, async (req, res) => {
-    try {
-        const { content } = req.body;
         const result = await TicketService.addModeratorReply(
-            req.params.ticketId,
-            req.user.accountId,
-            req.user.displayName,
-            content
+            req.params.ticketId, req.user.accountId, req.user.displayName, req.body.content
         );
-        res.json(result);
+        return res.json(result);
     } catch (error) {
-        LoggerService.log('error', `Moderator reply error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'moderator reply', error);
     }
 });
 
-router.put('/api/mod/tickets/:ticketId/status', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.put('/neodyme/api/mod/tickets/:ticketId/status', ...modWrite, async (req, res) => {
     try {
         const { status } = req.body;
-        const result = await TicketService.updateTicketStatus(
-            req.params.ticketId,
-            status,
-            req.user.displayName
-        );
+        const result = await TicketService.updateTicketStatus(req.params.ticketId, status, req.user.displayName);
 
         if (status === 'closed') {
             await AuditService.logTicketAction(
-                req.user.accountId,
-                req.user.displayName,
-                AuditService.ACTIONS.CLOSE_TICKET,
-                req.params.ticketId,
-                {},
-                req.ip
+                req.user.accountId, req.user.displayName,
+                AuditService.ACTIONS.CLOSE_TICKET, req.params.ticketId, {}, req.ip
             );
         }
-
-        res.json(result);
+        return res.json(result);
     } catch (error) {
-        LoggerService.log('error', `Update ticket status error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'update ticket status', error);
     }
 });
 
-router.put('/api/mod/tickets/:ticketId/priority', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.put('/neodyme/api/mod/tickets/:ticketId/priority', ...modWrite, async (req, res) => {
     try {
-        const { priority } = req.body;
-        const result = await TicketService.updateTicketPriority(
-            req.params.ticketId,
-            priority,
-            req.user.displayName
-        );
-        res.json(result);
+        const result = await TicketService.updateTicketPriority(req.params.ticketId, req.body.priority, req.user.displayName);
+        return res.json(result);
     } catch (error) {
-        LoggerService.log('error', `Update ticket priority error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'update ticket priority', error);
     }
 });
 
-router.delete('/api/mod/tickets/:ticketId', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.delete('/neodyme/api/mod/tickets/:ticketId', ...modWrite, async (req, res) => {
     try {
         const result = await TicketService.deleteTicket(req.params.ticketId, req.user.displayName);
-
         if (result.success) {
             await AuditService.logTicketAction(
-                req.user.accountId,
-                req.user.displayName,
-                AuditService.ACTIONS.DELETE_TICKET,
-                req.params.ticketId,
-                {},
-                req.ip
+                req.user.accountId, req.user.displayName,
+                AuditService.ACTIONS.DELETE_TICKET, req.params.ticketId, {}, req.ip
             );
         }
-
-        res.json(result);
+        return res.json(result);
     } catch (error) {
-        LoggerService.log('error', `Delete ticket error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'delete ticket', error);
     }
 });
 
-router.get('/api/mod/players', verifyToken, requireModerator, async (req, res) => {
+// ---- Players / bans ----
+
+router.get('/neodyme/api/mod/players', ...mod, async (req, res) => {
     try {
         const { search, banned } = req.query;
         let users = await DatabaseManager.getAllAccounts();
-
         users = users.filter(u => (u.clientType || 0) < ROLE_LEVELS.MODERATOR);
 
         if (search) {
-            const searchLower = search.toLowerCase();
+            const q = search.toLowerCase();
             users = users.filter(u =>
-                u.displayName.toLowerCase().includes(searchLower) ||
-                u.email.toLowerCase().includes(searchLower) ||
-                u.accountId.toLowerCase().includes(searchLower)
+                u.displayName.toLowerCase().includes(q) ||
+                u.email.toLowerCase().includes(q) ||
+                u.accountId.toLowerCase().includes(q)
             );
         }
+        if (banned === 'true') users = users.filter(u => u.banned);
+        else if (banned === 'false') users = users.filter(u => !u.banned);
 
-        if (banned === 'true') {
-            users = users.filter(u => u.banned);
-        } else if (banned === 'false') {
-            users = users.filter(u => !u.banned);
-        }
-
-        res.json({
-            success: true,
+        return WebResponse.ok(res, {
             players: users.map(u => ({
                 accountId: u.accountId,
                 displayName: u.displayName,
@@ -283,109 +216,93 @@ router.get('/api/mod/players', verifyToken, requireModerator, async (req, res) =
             }))
         });
     } catch (error) {
-        LoggerService.log('error', `Get players error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get players', error);
     }
 });
 
-router.get('/api/mod/players/:accountId/bans', verifyToken, requireModerator, async (req, res) => {
+router.get('/neodyme/api/mod/players/:accountId/bans', ...mod, async (req, res) => {
     try {
-        const { accountId } = req.params;
-
-        const history = await AuditService.getTargetHistory('user', accountId, 50);
+        const history = await AuditService.getTargetHistory('user', req.params.accountId, 50);
         const banHistory = history.filter(l =>
-            l.action === AuditService.ACTIONS.BAN_USER ||
-            l.action === AuditService.ACTIONS.UNBAN_USER
+            l.action === AuditService.ACTIONS.BAN_USER || l.action === AuditService.ACTIONS.UNBAN_USER
         );
-
-        res.json({ success: true, history: banHistory });
+        return WebResponse.ok(res, { history: banHistory });
     } catch (error) {
-        LoggerService.log('error', `Get ban history error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get ban history', error);
     }
 });
 
-router.post('/api/mod/players/:accountId/ban', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.post('/neodyme/api/mod/players/:accountId/ban', ...modWrite, async (req, res) => {
     try {
         const { accountId } = req.params;
         const { reason, duration } = req.body;
 
         if (!reason || reason.trim().length < 3) {
-            return res.status(400).json({ success: false, error: 'Ban reason is required (min 3 characters)' });
+            return WebResponse.badRequest(res, 'Ban reason is required (min 3 characters).');
         }
 
-        const targetAccount = await DatabaseManager.getAccount(accountId);
-        if (!targetAccount) {
-            return res.status(404).json({ success: false, error: 'Player not found' });
+        const target = await DatabaseManager.getAccount(accountId);
+        if (!target) {
+            return WebResponse.notFound(res, 'Player not found.');
+        }
+        if ((target.clientType || 0) >= ROLE_LEVELS.MODERATOR) {
+            return WebResponse.forbidden(res, 'Cannot ban staff members.');
         }
 
-        const targetRoleLevel = targetAccount.clientType || 0;
-        if (targetRoleLevel >= ROLE_LEVELS.MODERATOR) {
-            return res.status(403).json({ success: false, error: 'Cannot ban staff members' });
-        }
-
-        let banExpires = null;
-        if (duration && duration > 0) {
-            banExpires = new Date(Date.now() + duration * 60 * 60 * 1000).toISOString();
-        }
+        const banExpires = duration && duration > 0
+            ? new Date(Date.now() + duration * 60 * 60 * 1000).toISOString()
+            : null;
 
         await DatabaseManager.banAccount(accountId, [reason], banExpires);
-
         await AuditService.logBan(
-            req.user.accountId,
-            req.user.displayName,
-            accountId,
-            targetAccount.displayName,
-            reason,
-            duration ? `${duration} hours` : 'permanent',
-            req.ip
+            req.user.accountId, req.user.displayName, accountId, target.displayName,
+            reason, duration ? `${duration} hours` : 'permanent', req.ip
         );
+        LoggerService.log('info', `Player ${target.displayName} banned by ${req.user.displayName}: ${reason}`);
 
-        LoggerService.log('info', `Player ${targetAccount.displayName} banned by ${req.user.displayName}: ${reason}`);
-
-        res.json({
-            success: true,
-            message: `Player ${targetAccount.displayName} has been banned`,
-            banExpires
-        });
+        return WebResponse.ok(res, { message: `Player ${target.displayName} has been banned.`, banExpires });
     } catch (error) {
-        LoggerService.log('error', `Ban player error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'ban player', error);
     }
 });
 
-router.post('/api/mod/players/:accountId/unban', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.post('/neodyme/api/mod/players/:accountId/unban', ...modWrite, async (req, res) => {
     try {
         const { accountId } = req.params;
-
-        const targetAccount = await DatabaseManager.getAccount(accountId);
-        if (!targetAccount) {
-            return res.status(404).json({ success: false, error: 'Player not found' });
+        const target = await DatabaseManager.getAccount(accountId);
+        if (!target) {
+            return WebResponse.notFound(res, 'Player not found.');
         }
 
         await DatabaseManager.unbanAccount(accountId);
+        await AuditService.logUnban(req.user.accountId, req.user.displayName, accountId, target.displayName, req.ip);
+        LoggerService.log('info', `Player ${target.displayName} unbanned by ${req.user.displayName}`);
 
-        await AuditService.logUnban(
-            req.user.accountId,
-            req.user.displayName,
-            accountId,
-            targetAccount.displayName,
-            req.ip
-        );
-
-        LoggerService.log('info', `Player ${targetAccount.displayName} unbanned by ${req.user.displayName}`);
-
-        res.json({
-            success: true,
-            message: `Player ${targetAccount.displayName} has been unbanned`
-        });
+        return WebResponse.ok(res, { message: `Player ${target.displayName} has been unbanned.` });
     } catch (error) {
-        LoggerService.log('error', `Unban player error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'unban player', error);
     }
 });
 
-router.get('/api/mod/reports', verifyToken, requireModerator, async (req, res) => {
+// ---- Reports ----
+
+router.get('/neodyme/api/mod/reports/stats', ...mod, async (req, res) => {
+    try {
+        return WebResponse.ok(res, { stats: await ReportService.getStats() });
+    } catch (error) {
+        return WebResponse.serverError(res, 'get report stats', error);
+    }
+});
+
+router.get('/neodyme/api/mod/reports/player/:accountId', ...mod, async (req, res) => {
+    try {
+        return WebResponse.ok(res, { reports: await ReportService.getReportsByTarget(req.params.accountId) });
+    } catch (error) {
+        return WebResponse.serverError(res, 'get player reports', error);
+    }
+});
+
+router.get('/neodyme/api/mod/reports', ...mod, async (req, res) => {
     try {
         const { search, reportedAccountId, reporterAccountId } = req.query;
         const filters = {};
@@ -393,54 +310,44 @@ router.get('/api/mod/reports', verifyToken, requireModerator, async (req, res) =
         if (reportedAccountId) filters.reportedAccountId = reportedAccountId;
         if (reporterAccountId) filters.reporterAccountId = reporterAccountId;
 
-        const reports = await ReportService.getAllReports(filters);
-        res.json({ success: true, reports });
+        return WebResponse.ok(res, { reports: await ReportService.getAllReports(filters) });
     } catch (error) {
-        LoggerService.log('error', `Get reports error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get reports', error);
     }
 });
 
-router.get('/api/mod/reports/stats', verifyToken, requireModerator, async (req, res) => {
-    try {
-        const stats = await ReportService.getStats();
-        res.json({ success: true, stats });
-    } catch (error) {
-        LoggerService.log('error', `Get report stats error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
-    }
-});
-
-router.get('/api/mod/reports/player/:accountId', verifyToken, requireModerator, async (req, res) => {
-    try {
-        const reports = await ReportService.getReportsByTarget(req.params.accountId);
-        res.json({ success: true, reports });
-    } catch (error) {
-        LoggerService.log('error', `Get player reports error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
-    }
-});
-
-router.delete('/api/mod/reports/:reportId', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.delete('/neodyme/api/mod/reports/:reportId', ...modWrite, async (req, res) => {
     try {
         const result = await ReportService.deleteReport(req.params.reportId);
         if (!result.success) {
-            return res.status(404).json(result);
+            return WebResponse.notFound(res, result.message || 'Report not found.');
         }
         LoggerService.log('info', `Report ${req.params.reportId} dismissed by ${req.user.displayName}`);
-        res.json(result);
+        return res.json(result);
     } catch (error) {
-        LoggerService.log('error', `Delete report error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'delete report', error);
     }
 });
 
+// ---- Client feedback ----
+
 const feedbackStoragePath = path.join(process.cwd(), 'data', 'feedback');
 
-router.get('/api/mod/feedback', verifyToken, requireModerator, async (req, res) => {
+router.get('/neodyme/api/mod/feedback/file', ...mod, async (req, res) => {
+    try {
+        const filePath = path.resolve(feedbackStoragePath, req.query.path || '');
+        if (!filePath.startsWith(feedbackStoragePath)) return WebResponse.badRequest(res, 'Invalid path.');
+        if (!fs.existsSync(filePath)) return WebResponse.notFound(res, 'File not found.');
+        return res.sendFile(filePath);
+    } catch (error) {
+        return WebResponse.serverError(res, 'get feedback file', error);
+    }
+});
+
+router.get('/neodyme/api/mod/feedback', ...mod, async (req, res) => {
     try {
         const basePath = path.join(feedbackStoragePath, 'client-feedback', 'Fortnite');
-        if (!fs.existsSync(basePath)) return res.json({ success: true, submissions: [] });
+        if (!fs.existsSync(basePath)) return WebResponse.ok(res, { submissions: [] });
 
         const submissions = [];
         for (const accountId of fs.readdirSync(basePath)) {
@@ -478,35 +385,22 @@ router.get('/api/mod/feedback', verifyToken, requireModerator, async (req, res) 
         }
 
         submissions.sort((a, b) => b.datetime.localeCompare(a.datetime));
-        res.json({ success: true, submissions });
+        return WebResponse.ok(res, { submissions });
     } catch (error) {
-        LoggerService.log('error', `Get feedback list error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get feedback list', error);
     }
 });
 
-router.get('/api/mod/feedback/file', verifyToken, requireModerator, async (req, res) => {
-    try {
-        const filePath = path.resolve(feedbackStoragePath, req.query.path || '');
-        if (!filePath.startsWith(feedbackStoragePath)) return res.status(400).end();
-        if (!fs.existsSync(filePath)) return res.status(404).end();
-        res.sendFile(filePath);
-    } catch (error) {
-        res.status(500).end();
-    }
-});
-
-router.delete('/api/mod/feedback/:id(*)', verifyToken, requireModerator, csrfProtection, async (req, res) => {
+router.delete('/neodyme/api/mod/feedback/:id(*)', ...modWrite, async (req, res) => {
     try {
         const submissionPath = path.resolve(feedbackStoragePath, 'client-feedback', 'Fortnite', req.params.id);
-        if (!submissionPath.startsWith(feedbackStoragePath)) return res.status(400).end();
+        if (!submissionPath.startsWith(feedbackStoragePath)) return WebResponse.badRequest(res, 'Invalid path.');
         if (fs.existsSync(submissionPath)) {
             fs.rmSync(submissionPath, { recursive: true, force: true });
         }
-        res.json({ success: true });
+        return WebResponse.ok(res, {});
     } catch (error) {
-        LoggerService.log('error', `Delete feedback error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'delete feedback', error);
     }
 });
 

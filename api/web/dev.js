@@ -1,20 +1,63 @@
 const express = require('express');
 const router = express.Router();
-const ConfigManager = require('../../src/manager/config-manager');
-const DatabaseManager = require('../../src/manager/database-manager');
-const { Errors, sendError } = require('../../src/service/error/errors-system');
-const LoggerService = require('../../src/service/logger/logger-service');
-const AuditService = require('../../src/service/api/audit-service');
-const { csrfProtection } = require('../../src/service/token/csrf-token-service');
-const WebService = require('../../src/service/api/web-service');
-const { requireDeveloper } = require('../../src/service/api/role-middleware-service');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
+const ConfigManager = require('../../src/manager/config-manager');
+const DatabaseManager = require('../../src/manager/database-manager');
+const LoggerService = require('../../src/service/logger/logger-service');
+const AuditService = require('../../src/service/api/audit-service');
+const WebResponse = require('../../src/service/api/web-response-service');
+const WebService = require('../../src/service/api/web-service');
+const { csrfProtection } = require('../../src/service/token/csrf-token-service');
+const { requireDeveloper } = require('../../src/service/api/role-middleware-service');
 
 const verifyToken = WebService.verifyToken;
+const dev = [verifyToken, requireDeveloper];
+const devWrite = [verifyToken, requireDeveloper, csrfProtection];
 
-router.get('/api/dev/config', verifyToken, requireDeveloper, async (req, res) => {
+const CONFIG_DIR = path.join(__dirname, '../../config');
+const PLUGINS_DIR = path.join(__dirname, '../../plugins');
+const CLOUDSTORAGE_SYSTEM_DIR = path.join(__dirname, '../../data/cloudstorage/system');
+
+const EDITABLE_CONFIG_FILES = ['experience.json', 'game-servers.json', 'shop.json', 'motd.json', 'playlists.json'];
+const EDITABLE_INI_FILES = ['DefaultGame.ini', 'DefaultRuntimeOptions.ini'];
+
+const EDITABLE_CONFIG_KEYS = new Set([
+    'globalDebug', 'debug', 'debugRequests', 'debugResponses', 'debugIps', 'databaseLogging',
+    'maintenanceMode', 'maintenanceMessage', 'maintenanceEstimatedDowntime',
+    'rateLimiting', 'maxRequestsPerMinute', 'rateLimitWindowMinutes',
+    'authMaxAttempts', 'authWindowMinutes', 'authSkipSuccessfulRequests',
+    'expensiveMaxRequests', 'expensiveWindowMinutes', 'webMaxRequests', 'webWindowMinutes',
+    'plugins', 'autoShopRotation', 'xmppEnable', 'xmppPort', 'xmppDomain', 'webInterface',
+    'bEnableAllEvents', 'bAllSTWEventsActivated',
+    'bEnableGeodeEvent', 'geodeEventStartDate',
+    'bEnableCrackInTheSky',
+    'bEnableS4OddityPrecursor', 'bEnableS4OddityExecution', 'S4OddityEventStartDate', 'S4OddityEventsInterval',
+    'bEnableS5OddityPrecursor', 'S5OddityPrecursorDate', 'bEnableS5OddityExecution', 'S5OddityExecutionDate',
+    'bEnableCubeLightning', 'cubeSpawnDate',
+    'bEnableBlockbusterRiskyEvent',
+    'bEnableCubeLake', 'cubeLakeDate',
+    'databaseBackup', 'databaseBackupInterval', 'databaseBackupExpiryDays', 'performInitialBackup', 'getJsonSpacing',
+    'bGrantFoundersPacks', 'bCompletedSeasonalQuests',
+    'accessTokenExpiryHours', 'refreshTokenExpiryDays',
+    'bcryptWorkFactor', 'passwordMinLength', 'authTimingDelayMin', 'authTimingDelayMax', 'tokenEncryptionEnabled',
+    'creatorCodeCommissionPercent',
+    'gameServerHeartbeatInterval', 'gameServerTimeout',
+    'corsEnable', 'compressionEnable', 'helmetEnable', 'trustProxy',
+    'protocol', 'sslCertPath', 'sslKeyPath', 'secureCookies'
+]);
+
+// Atomic write: write to a temp file then rename so a crash can't leave a half-written file.
+const writeFileAtomic = (filePath, data) => {
+    const tempPath = filePath + '.tmp';
+    fs.writeFileSync(tempPath, data, 'utf8');
+    fs.renameSync(tempPath, filePath);
+};
+
+// ---- Live config (server.properties keys) ----
+
+router.get('/neodyme/api/dev/config', ...dev, async (req, res) => {
     try {
         const config = {
             debug: {
@@ -38,7 +81,9 @@ router.get('/api/dev/config', verifyToken, requireDeveloper, async (req, res) =>
                 authWindowMinutes: ConfigManager.get('authWindowMinutes', 15),
                 authSkipSuccessfulRequests: ConfigManager.get('authSkipSuccessfulRequests', false),
                 expensiveMaxRequests: ConfigManager.get('expensiveMaxRequests', 10),
-                expensiveWindowMinutes: ConfigManager.get('expensiveWindowMinutes', 5)
+                expensiveWindowMinutes: ConfigManager.get('expensiveWindowMinutes', 5),
+                webMaxRequests: ConfigManager.get('webMaxRequests', 600),
+                webWindowMinutes: ConfigManager.get('webWindowMinutes', 1)
             },
             features: {
                 plugins: ConfigManager.get('plugins', true),
@@ -108,213 +153,140 @@ router.get('/api/dev/config', verifyToken, requireDeveloper, async (req, res) =>
                 secureCookies: ConfigManager.get('secureCookies', false)
             }
         };
-
-        res.json({ success: true, config });
+        return WebResponse.ok(res, { config });
     } catch (error) {
-        LoggerService.log('error', `Get config error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get config', error);
     }
 });
 
-router.put('/api/dev/config/:key', verifyToken, requireDeveloper, csrfProtection, async (req, res) => {
+router.put('/neodyme/api/dev/config/:key', ...devWrite, async (req, res) => {
     try {
         const { key } = req.params;
         const { value } = req.body;
 
-        const allowedKeys = [
-            'globalDebug', 'debug', 'debugRequests', 'debugResponses', 'debugIps', 'databaseLogging',
-            'maintenanceMode', 'maintenanceMessage', 'maintenanceEstimatedDowntime',
-            'rateLimiting', 'maxRequestsPerMinute', 'rateLimitWindowMinutes',
-            'authMaxAttempts', 'authWindowMinutes', 'authSkipSuccessfulRequests',
-            'expensiveMaxRequests', 'expensiveWindowMinutes',
-            'plugins', 'autoShopRotation', 'xmppEnable', 'xmppPort', 'xmppDomain', 'webInterface',
-            'bEnableAllEvents', 'bAllSTWEventsActivated',
-            'bEnableGeodeEvent', 'geodeEventStartDate',
-            'bEnableCrackInTheSky',
-            'bEnableS4OddityPrecursor', 'bEnableS4OddityExecution', 'S4OddityEventStartDate', 'S4OddityEventsInterval',
-            'bEnableS5OddityPrecursor', 'S5OddityPrecursorDate', 'bEnableS5OddityExecution', 'S5OddityExecutionDate',
-            'bEnableCubeLightning', 'cubeSpawnDate',
-            'bEnableBlockbusterRiskyEvent',
-            'bEnableCubeLake', 'cubeLakeDate',
-            'databaseBackup', 'databaseBackupInterval', 'databaseBackupExpiryDays', 'performInitialBackup', 'getJsonSpacing',
-            'bGrantFoundersPacks', 'bCompletedSeasonalQuests',
-            'accessTokenExpiryHours', 'refreshTokenExpiryDays',
-            'bcryptWorkFactor', 'passwordMinLength', 'authTimingDelayMin', 'authTimingDelayMax', 'tokenEncryptionEnabled',
-            'creatorCodeCommissionPercent',
-            'gameServerHeartbeatInterval', 'gameServerTimeout',
-            'corsEnable', 'compressionEnable', 'helmetEnable', 'trustProxy',
-            'protocol', 'sslCertPath', 'sslKeyPath', 'secureCookies'
-        ];
-
-        if (!allowedKeys.includes(key)) {
-            return res.status(403).json({ success: false, error: 'This configuration key cannot be modified' });
+        if (!EDITABLE_CONFIG_KEYS.has(key)) {
+            return WebResponse.forbidden(res, 'This configuration key cannot be modified.');
         }
 
         const oldValue = ConfigManager.get(key);
         const saved = await ConfigManager.save(key, value);
 
-        await AuditService.logConfigChange(
-            req.user.accountId,
-            req.user.displayName,
-            key,
-            oldValue,
-            value,
-            req.ip
-        );
-
+        await AuditService.logConfigChange(req.user.accountId, req.user.displayName, key, oldValue, value, req.ip);
         LoggerService.log('info', `Config ${key} changed from ${oldValue} to ${value} by ${req.user.displayName}`);
 
-        res.json({
-            success: true,
-            message: `Configuration ${key} updated`,
+        return WebResponse.ok(res, {
+            message: `Configuration ${key} updated.`,
             saved,
-            warning: saved ? null : 'Failed to persist to server.properties'
+            warning: saved ? null : 'Failed to persist to server.properties.'
         });
     } catch (error) {
-        LoggerService.log('error', `Update config error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'update config', error);
     }
 });
 
-router.get('/api/dev/config/files', verifyToken, requireDeveloper, async (req, res) => {
+// ---- Editable JSON config files ----
+
+router.get('/neodyme/api/dev/config/files', ...dev, async (req, res) => {
     try {
-        const configDir = path.join(__dirname, '../../config');
-        const files = fs.readdirSync(configDir)
+        const files = fs.readdirSync(CONFIG_DIR)
             .filter(f => f.endsWith('.json'))
             .map(f => ({
                 name: f,
-                path: path.join(configDir, f),
-                size: fs.statSync(path.join(configDir, f)).size
+                path: path.join(CONFIG_DIR, f),
+                size: fs.statSync(path.join(CONFIG_DIR, f)).size
             }));
-
-        res.json({ success: true, files });
+        return WebResponse.ok(res, { files });
     } catch (error) {
-        LoggerService.log('error', `Get config files error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get config files', error);
     }
 });
 
-router.get('/api/dev/config/files/:fileName', verifyToken, requireDeveloper, async (req, res) => {
+router.get('/neodyme/api/dev/config/files/:fileName', ...dev, async (req, res) => {
     try {
         const { fileName } = req.params;
-
-        const allowedFiles = ['experience.json', 'game-servers.json', 'shop.json', 'motd.json', 'playlists.json'];
-        if (!allowedFiles.includes(fileName)) {
-            return res.status(403).json({ success: false, error: 'Access to this file is not allowed' });
+        if (!EDITABLE_CONFIG_FILES.includes(fileName)) {
+            return WebResponse.forbidden(res, 'Access to this file is not allowed.');
         }
 
-        const filePath = path.join(__dirname, '../../config', fileName);
+        const filePath = path.join(CONFIG_DIR, fileName);
         if (!fs.existsSync(filePath)) {
-            return res.status(404).json({ success: false, error: 'File not found' });
+            return WebResponse.notFound(res, 'File not found.');
         }
-
-        const content = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-        res.json({ success: true, fileName, content });
+        return WebResponse.ok(res, { fileName, content: JSON.parse(fs.readFileSync(filePath, 'utf8')) });
     } catch (error) {
-        LoggerService.log('error', `Get config file error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get config file', error);
     }
 });
 
-router.put('/api/dev/config/files/:fileName', verifyToken, requireDeveloper, csrfProtection, async (req, res) => {
+router.put('/neodyme/api/dev/config/files/:fileName', ...devWrite, async (req, res) => {
     try {
         const { fileName } = req.params;
         const { content } = req.body;
 
-        const allowedFiles = ['experience.json', 'game-servers.json', 'shop.json', 'motd.json', 'playlists.json'];
-        if (!allowedFiles.includes(fileName)) {
-            return res.status(403).json({ success: false, error: 'Access to this file is not allowed' });
+        if (!EDITABLE_CONFIG_FILES.includes(fileName)) {
+            return WebResponse.forbidden(res, 'Access to this file is not allowed.');
+        }
+        if (typeof content !== 'object' || content === null) {
+            return WebResponse.badRequest(res, 'Content must be a valid JSON object.');
         }
 
-        if (typeof content !== 'object') {
-            return res.status(400).json({ success: false, error: 'Content must be a valid JSON object' });
-        }
-
-        const filePath = path.join(__dirname, '../../config', fileName);
-        const tempPath = filePath + '.tmp';
-
-        fs.writeFileSync(tempPath, JSON.stringify(content, null, 2), 'utf8');
-        fs.renameSync(tempPath, filePath);
-
-        await AuditService.logConfigFileChange(
-            req.user.accountId,
-            req.user.displayName,
-            fileName,
-            req.ip
-        );
-
+        writeFileAtomic(path.join(CONFIG_DIR, fileName), JSON.stringify(content, null, 2));
+        await AuditService.logConfigFileChange(req.user.accountId, req.user.displayName, fileName, req.ip);
         LoggerService.log('info', `Config file ${fileName} updated by ${req.user.displayName}`);
 
-        res.json({ success: true, message: `${fileName} updated successfully` });
+        return WebResponse.ok(res, { message: `${fileName} updated successfully.` });
     } catch (error) {
-        LoggerService.log('error', `Update config file error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'update config file', error);
     }
 });
 
-// INI file endpoints (cloud storage system files - plain text)
-const ALLOWED_INI_FILES = ['DefaultGame.ini', 'DefaultRuntimeOptions.ini'];
+// ---- Editable cloud-storage INI files ----
 
-router.get('/api/dev/ini-files/:fileName', verifyToken, requireDeveloper, async (req, res) => {
+router.get('/neodyme/api/dev/ini-files/:fileName', ...dev, async (req, res) => {
     try {
         const { fileName } = req.params;
-        if (!ALLOWED_INI_FILES.includes(fileName)) {
-            return res.status(403).json({ success: false, error: 'Access to this file is not allowed' });
+        if (!EDITABLE_INI_FILES.includes(fileName)) {
+            return WebResponse.forbidden(res, 'Access to this file is not allowed.');
         }
 
-        const filePath = path.join(__dirname, '../../data/cloudstorage/system', fileName);
+        const filePath = path.join(CLOUDSTORAGE_SYSTEM_DIR, fileName);
         if (!fs.existsSync(filePath)) {
-            return res.status(404).json({ success: false, error: 'File not found' });
+            return WebResponse.notFound(res, 'File not found.');
         }
-
-        const content = fs.readFileSync(filePath, 'utf8');
-        res.json({ success: true, fileName, content });
+        return WebResponse.ok(res, { fileName, content: fs.readFileSync(filePath, 'utf8') });
     } catch (error) {
-        LoggerService.log('error', `Get ini file error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get ini file', error);
     }
 });
 
-router.put('/api/dev/ini-files/:fileName', verifyToken, requireDeveloper, csrfProtection, async (req, res) => {
+router.put('/neodyme/api/dev/ini-files/:fileName', ...devWrite, async (req, res) => {
     try {
         const { fileName } = req.params;
         const { content } = req.body;
 
-        if (!ALLOWED_INI_FILES.includes(fileName)) {
-            return res.status(403).json({ success: false, error: 'Access to this file is not allowed' });
+        if (!EDITABLE_INI_FILES.includes(fileName)) {
+            return WebResponse.forbidden(res, 'Access to this file is not allowed.');
         }
-
         if (typeof content !== 'string') {
-            return res.status(400).json({ success: false, error: 'Content must be a string' });
+            return WebResponse.badRequest(res, 'Content must be a string.');
         }
 
-        const filePath = path.join(__dirname, '../../data/cloudstorage/system', fileName);
-        const tempPath = filePath + '.tmp';
-
-        fs.writeFileSync(tempPath, content, 'utf8');
-        fs.renameSync(tempPath, filePath);
-
-        await AuditService.logConfigFileChange(
-            req.user.accountId,
-            req.user.displayName,
-            fileName,
-            req.ip
-        );
-
+        writeFileAtomic(path.join(CLOUDSTORAGE_SYSTEM_DIR, fileName), content);
+        await AuditService.logConfigFileChange(req.user.accountId, req.user.displayName, fileName, req.ip);
         LoggerService.log('info', `INI file ${fileName} updated by ${req.user.displayName}`);
-        res.json({ success: true, message: `${fileName} updated successfully` });
+
+        return WebResponse.ok(res, { message: `${fileName} updated successfully.` });
     } catch (error) {
-        LoggerService.log('error', `Update ini file error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'update ini file', error);
     }
 });
 
-router.get('/api/dev/stats/server', verifyToken, requireDeveloper, async (req, res) => {
-    try {
-        const memUsage = process.memoryUsage();
+// ---- Server / database stats ----
 
-        res.json({
-            success: true,
+router.get('/neodyme/api/dev/stats/server', ...dev, async (req, res) => {
+    try {
+        const mem = process.memoryUsage();
+        return WebResponse.ok(res, {
             stats: {
                 version: ConfigManager.get('version', '1.0.0'),
                 apiVersion: ConfigManager.get('apiVersion', '1.0'),
@@ -324,10 +296,10 @@ router.get('/api/dev/stats/server', verifyToken, requireDeveloper, async (req, r
                 uptime: Math.floor(process.uptime()),
                 uptimeFormatted: WebService.formatUptime(process.uptime()),
                 memory: {
-                    heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024),
-                    heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024),
-                    rss: Math.round(memUsage.rss / 1024 / 1024),
-                    external: Math.round(memUsage.external / 1024 / 1024)
+                    heapUsed: Math.round(mem.heapUsed / 1024 / 1024),
+                    heapTotal: Math.round(mem.heapTotal / 1024 / 1024),
+                    rss: Math.round(mem.rss / 1024 / 1024),
+                    external: Math.round(mem.external / 1024 / 1024)
                 },
                 system: {
                     totalMem: Math.round(os.totalmem() / 1024 / 1024),
@@ -338,30 +310,25 @@ router.get('/api/dev/stats/server', verifyToken, requireDeveloper, async (req, r
             }
         });
     } catch (error) {
-        LoggerService.log('error', `Get server stats error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get server stats', error);
     }
 });
 
-router.get('/api/dev/stats/database', verifyToken, requireDeveloper, async (req, res) => {
+router.get('/neodyme/api/dev/stats/database', ...dev, async (req, res) => {
     try {
         const dataDir = path.join(__dirname, '../../data');
         const users = await DatabaseManager.getAllAccounts();
 
         const files = {};
-        const dataFiles = ['clients.json', 'tickets.json', 'creator-codes.json', 'audit-log.json'];
-        for (const file of dataFiles) {
+        for (const file of ['clients.json', 'tickets.json', 'creator-codes.json', 'audit-log.json']) {
             const filePath = path.join(dataDir, file);
             if (fs.existsSync(filePath)) {
-                files[file] = {
-                    size: fs.statSync(filePath).size,
-                    sizeFormatted: WebService.formatBytes(fs.statSync(filePath).size)
-                };
+                const size = fs.statSync(filePath).size;
+                files[file] = { size, sizeFormatted: WebService.formatBytes(size) };
             }
         }
 
-        res.json({
-            success: true,
+        return WebResponse.ok(res, {
             stats: {
                 type: ConfigManager.get('databaseType', 'json'),
                 backupEnabled: ConfigManager.get('databaseBackup', true),
@@ -371,32 +338,18 @@ router.get('/api/dev/stats/database', verifyToken, requireDeveloper, async (req,
             }
         });
     } catch (error) {
-        LoggerService.log('error', `Get database stats error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get database stats', error);
     }
 });
 
-router.get('/api/dev/ssl/status', verifyToken, requireDeveloper, async (req, res) => {
+router.get('/neodyme/api/dev/ssl/status', ...dev, async (req, res) => {
     try {
         const protocol = ConfigManager.get('protocol', 'http');
         const certPath = path.resolve(ConfigManager.get('sslCertPath', 'config/ssl/cert.pem'));
         const keyPath = path.resolve(ConfigManager.get('sslKeyPath', 'config/ssl/key.pem'));
-
         const certExists = fs.existsSync(certPath);
-        const keyExists = fs.existsSync(keyPath);
 
-        let certInfo = null;
-        if (certExists) {
-            const certStat = fs.statSync(certPath);
-            certInfo = {
-                path: certPath,
-                size: certStat.size,
-                modified: certStat.mtime.toISOString()
-            };
-        }
-
-        res.json({
-            success: true,
+        return WebResponse.ok(res, {
             ssl: {
                 protocol,
                 httpsActive: protocol === 'https',
@@ -404,128 +357,110 @@ router.get('/api/dev/ssl/status', verifyToken, requireDeveloper, async (req, res
                 certificate: {
                     path: certPath,
                     exists: certExists,
-                    info: certInfo
+                    info: certExists ? {
+                        path: certPath,
+                        size: fs.statSync(certPath).size,
+                        modified: fs.statSync(certPath).mtime.toISOString()
+                    } : null
                 },
-                key: {
-                    path: keyPath,
-                    exists: keyExists
-                }
+                key: { path: keyPath, exists: fs.existsSync(keyPath) }
             }
         });
     } catch (error) {
-        LoggerService.log('error', `Get SSL status error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get ssl status', error);
     }
 });
 
-router.get('/api/dev/plugins/:pluginName/files', verifyToken, requireDeveloper, async (req, res) => {
+// ---- Plugin config files ----
+
+router.get('/neodyme/api/dev/plugins/:pluginName/files', ...dev, async (req, res) => {
     try {
         const { pluginName } = req.params;
-
-        // Security: only alphanumeric + dash/underscore plugin names
         if (!/^[\w-]+$/.test(pluginName)) {
-            return res.status(400).json({ success: false, error: 'Invalid plugin name' });
+            return WebResponse.badRequest(res, 'Invalid plugin name.');
         }
 
-        const pluginDir = path.join(__dirname, '../../plugins', pluginName);
+        const pluginDir = path.join(PLUGINS_DIR, pluginName);
         if (!fs.existsSync(pluginDir)) {
-            return res.status(404).json({ success: false, error: 'Plugin directory not found' });
+            return WebResponse.notFound(res, 'Plugin directory not found.');
         }
 
-        // Only expose JSON config files
-        const files = fs.readdirSync(pluginDir)
-            .filter(f => f.endsWith('.json') && !f.startsWith('.'));
-
-        res.json({ success: true, pluginName, files });
+        const files = fs.readdirSync(pluginDir).filter(f => f.endsWith('.json') && !f.startsWith('.'));
+        return WebResponse.ok(res, { pluginName, files });
     } catch (error) {
-        LoggerService.log('error', `Get plugin files error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get plugin files', error);
     }
 });
 
-router.get('/api/dev/plugins/:pluginName/files/:fileName', verifyToken, requireDeveloper, async (req, res) => {
+router.get('/neodyme/api/dev/plugins/:pluginName/files/:fileName', ...dev, async (req, res) => {
     try {
         const { pluginName, fileName } = req.params;
-
         if (!/^[\w-]+$/.test(pluginName) || !/^[\w.-]+\.json$/.test(fileName)) {
-            return res.status(400).json({ success: false, error: 'Invalid plugin name or file name' });
+            return WebResponse.badRequest(res, 'Invalid plugin name or file name.');
         }
 
-        const filePath = path.join(__dirname, '../../plugins', pluginName, fileName);
-
-        // Prevent path traversal
-        const resolved = path.resolve(filePath);
-        const pluginDir = path.resolve(path.join(__dirname, '../../plugins', pluginName));
-        if (!resolved.startsWith(pluginDir)) {
-            return res.status(403).json({ success: false, error: 'Access denied' });
+        const pluginDir = path.resolve(path.join(PLUGINS_DIR, pluginName));
+        const filePath = path.resolve(path.join(pluginDir, fileName));
+        if (!filePath.startsWith(pluginDir)) {
+            return WebResponse.forbidden(res, 'Access denied.');
         }
-
         if (!fs.existsSync(filePath)) {
-            return res.status(404).json({ success: false, error: 'File not found' });
+            return WebResponse.notFound(res, 'File not found.');
         }
-
-        const content = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-        res.json({ success: true, pluginName, fileName, content });
+        return WebResponse.ok(res, { pluginName, fileName, content: JSON.parse(fs.readFileSync(filePath, 'utf8')) });
     } catch (error) {
-        LoggerService.log('error', `Get plugin file error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get plugin file', error);
     }
 });
 
-router.put('/api/dev/plugins/:pluginName/files/:fileName', verifyToken, requireDeveloper, csrfProtection, async (req, res) => {
+router.put('/neodyme/api/dev/plugins/:pluginName/files/:fileName', ...devWrite, async (req, res) => {
     try {
         const { pluginName, fileName } = req.params;
         const { content } = req.body;
 
         if (!/^[\w-]+$/.test(pluginName) || !/^[\w.-]+\.json$/.test(fileName)) {
-            return res.status(400).json({ success: false, error: 'Invalid plugin name or file name' });
+            return WebResponse.badRequest(res, 'Invalid plugin name or file name.');
+        }
+        if (typeof content !== 'object' || content === null) {
+            return WebResponse.badRequest(res, 'Content must be a valid JSON object.');
         }
 
-        if (typeof content !== 'object') {
-            return res.status(400).json({ success: false, error: 'Content must be a valid JSON object' });
+        const pluginDir = path.resolve(path.join(PLUGINS_DIR, pluginName));
+        const filePath = path.resolve(path.join(pluginDir, fileName));
+        if (!filePath.startsWith(pluginDir)) {
+            return WebResponse.forbidden(res, 'Access denied.');
         }
-
-        const filePath = path.join(__dirname, '../../plugins', pluginName, fileName);
-        const resolved = path.resolve(filePath);
-        const pluginDir = path.resolve(path.join(__dirname, '../../plugins', pluginName));
-        if (!resolved.startsWith(pluginDir)) {
-            return res.status(403).json({ success: false, error: 'Access denied' });
-        }
-
         if (!fs.existsSync(filePath)) {
-            return res.status(404).json({ success: false, error: 'File not found' });
+            return WebResponse.notFound(res, 'File not found.');
         }
 
-        const tempPath = filePath + '.tmp';
-        fs.writeFileSync(tempPath, JSON.stringify(content, null, 2), 'utf8');
-        fs.renameSync(tempPath, filePath);
-
+        writeFileAtomic(filePath, JSON.stringify(content, null, 2));
         LoggerService.log('info', `Plugin config ${pluginName}/${fileName} updated by ${req.user.displayName}`);
-        res.json({ success: true, message: `${fileName} saved successfully` });
+
+        return WebResponse.ok(res, { message: `${fileName} saved successfully.` });
     } catch (error) {
-        LoggerService.log('error', `Save plugin file error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'save plugin file', error);
     }
 });
 
-router.get('/api/dev/system/tests', verifyToken, requireDeveloper, async (req, res) => {
+// ---- System self-tests ----
+
+router.get('/neodyme/api/dev/system/tests', ...dev, async (req, res) => {
     try {
-        const XmppManager       = require('../../src/manager/xmpp-manager');
+        const XmppManager = require('../../src/manager/xmpp-manager');
         const MatchmakerManager = require('../../src/manager/matchmaker-manager');
-        const ShopManager       = require('../../src/manager/shop-manager');
-        const PluginManager     = require('../../src/manager/plugin-manager');
-        const RedisManager      = require('../../src/manager/redis-manager');
+        const ShopManager = require('../../src/manager/shop-manager');
+        const PluginManager = require('../../src/manager/plugin-manager');
+        const RedisManager = require('../../src/manager/redis-manager');
         const PlayerStatsService = require('../../src/service/api/player-stats-service');
 
         const runCheck = async (id, name, fn) => {
             const t0 = performance.now();
             try {
                 const result = await fn();
-                const ms = Math.round(performance.now() - t0);
-                return { id, name, status: result.status || 'ok', ms, message: result.message || 'Operational' };
+                return { id, name, status: result.status || 'ok', ms: Math.round(performance.now() - t0), message: result.message || 'Operational' };
             } catch (err) {
-                const ms = Math.round(performance.now() - t0);
-                return { id, name, status: 'error', ms, message: err.message };
+                return { id, name, status: 'error', ms: Math.round(performance.now() - t0), message: err.message };
             }
         };
 
@@ -540,8 +475,7 @@ router.get('/api/dev/system/tests', verifyToken, requireDeveloper, async (req, r
                 if (!ConfigManager.get('xmppEnable')) return { status: 'disabled', message: 'Disabled in config' };
                 if (XmppManager.startError) return { status: 'error', message: XmppManager.startError };
                 if (!XmppManager.wss) return { status: 'error', message: 'Not running' };
-                const count = (XmppManager.clients || []).length;
-                return { status: 'ok', message: `${count} connected` };
+                return { status: 'ok', message: `${(XmppManager.clients || []).length} connected` };
             }),
             runCheck('matchmaking', 'Matchmaking', () => {
                 if (!ConfigManager.get('xmppEnable')) return { status: 'disabled', message: 'Disabled in config' };
@@ -567,30 +501,26 @@ router.get('/api/dev/system/tests', verifyToken, requireDeveloper, async (req, r
             runCheck('auth', 'Auth Service', () => ({ status: 'ok', message: 'Token valid' })),
         ]);
 
-        const passing  = checks.filter(c => c.status === 'ok').length;
+        const passing = checks.filter(c => c.status === 'ok').length;
         const disabled = checks.filter(c => c.status === 'disabled').length;
-        const failing  = checks.filter(c => c.status === 'error').length;
-        const total    = checks.length;
+        const failing = checks.filter(c => c.status === 'error').length;
+        const total = checks.length;
 
-        // Record system check result for history
         PlayerStatsService.record(0, 0, 0, { passing, total: total - disabled }).catch(() => {});
 
-        res.json({ success: true, checks, summary: { total, passing, disabled, failing } });
+        return WebResponse.ok(res, { checks, summary: { total, passing, disabled, failing } });
     } catch (error) {
-        LoggerService.log('error', `System tests error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'system tests', error);
     }
 });
 
-router.get('/api/dev/system/history', verifyToken, requireDeveloper, async (req, res) => {
+router.get('/neodyme/api/dev/system/history', ...dev, async (req, res) => {
     try {
         const PlayerStatsService = require('../../src/service/api/player-stats-service');
-        const hours = Math.min(72, parseInt(req.query.hours) || 24);
-        const history = await PlayerStatsService.getSystemHistory(hours);
-        res.json({ success: true, history });
+        const hours = Math.min(72, parseInt(req.query.hours, 10) || 24);
+        return WebResponse.ok(res, { history: await PlayerStatsService.getSystemHistory(hours) });
     } catch (error) {
-        LoggerService.log('error', `System history error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'system history', error);
     }
 });
 

@@ -10,7 +10,7 @@ const LoggerService = require('../service/logger/logger-service');
 const ConfigManager = require('./config-manager');
 const {ApiError, sendError, Errors} = require('../service/error/errors-system');
 const RateLimitManager = require('./rate-limit-manager');
-const { globalRateLimit } = require('../middleware/rate-limit-middleware');
+const { globalRateLimit, webRateLimit } = require('../middleware/rate-limit-middleware');
 const { assetMiddleware } = require('../middleware/asset-middleware');
 
 class EndpointManager {
@@ -120,9 +120,11 @@ class EndpointManager {
                 next();
             });
 
-            // Global rate limiter - Applied to all requests
+            // Global rate limiter - Applied to all requests except /neodyme/api/*
+            // (those are covered by the dedicated, more generous website limiter below).
             if (ConfigManager.get('rateLimiting', true)) {
                 this.app.use(globalRateLimit());
+                this.app.use('/neodyme/api', webRateLimit());
                 LoggerService.log('info', 'Global rate limiting enabled');
             }
     

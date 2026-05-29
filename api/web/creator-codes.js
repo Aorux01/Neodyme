@@ -1,85 +1,65 @@
 const express = require('express');
 const router = express.Router();
-const { Errors, sendError } = require('../../src/service/error/errors-system');
-const LoggerService = require('../../src/service/logger/logger-service');
 const CreatorCodeService = require('../../src/service/api/creator-code-service');
-const { csrfProtection } = require('../../src/service/token/csrf-token-service');
+const WebResponse = require('../../src/service/api/web-response-service');
 const WebService = require('../../src/service/api/web-service');
+const { csrfProtection } = require('../../src/service/token/csrf-token-service');
 
 const verifyToken = WebService.verifyToken;
 
-router.get('/api/creator-code/me', verifyToken, async (req, res) => {
+router.get('/neodyme/api/creator-code/me', verifyToken, async (req, res) => {
     try {
-        const accountId = req.user.accountId;
-        const code = await CreatorCodeService.getUserCode(accountId);
-        const request = await CreatorCodeService.getUserRequest(accountId);
+        const code = await CreatorCodeService.getUserCode(req.user.accountId);
+        const request = await CreatorCodeService.getUserRequest(req.user.accountId);
 
-        res.json({
-            success: true,
+        return WebResponse.ok(res, {
             hasCode: !!code,
-            code: code,
+            code,
             pendingRequest: request && request.status === 'pending' ? request : null,
             lastRequest: request
         });
     } catch (error) {
-        LoggerService.log('error', `Get creator code error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get creator code', error);
     }
 });
 
-router.post('/api/creator-code/request', verifyToken, csrfProtection, async (req, res) => {
+router.post('/neodyme/api/creator-code/request', verifyToken, csrfProtection, async (req, res) => {
     try {
         const { code, reason } = req.body;
-        const accountId = req.user.accountId;
-        const displayName = req.user.displayName;
-
         if (!code) {
-            return res.status(400).json({ success: false, error: 'Code is required' });
+            return WebResponse.badRequest(res, 'Code is required.');
         }
 
-        const result = await CreatorCodeService.requestCode(accountId, displayName, code, reason);
-        res.json(result);
+        const result = await CreatorCodeService.requestCode(req.user.accountId, req.user.displayName, code, reason);
+        return res.json(result);
     } catch (error) {
-        LoggerService.log('error', `Request creator code error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'request creator code', error);
     }
 });
 
-router.get('/api/creator-code/validate/:code', async (req, res) => {
+router.get('/neodyme/api/creator-code/validate/:code', async (req, res) => {
     try {
-        const code = req.params.code;
-        const codeData = await CreatorCodeService.validateCode(code);
-
+        const codeData = await CreatorCodeService.validateCode(req.params.code);
         if (!codeData) {
-            return res.json({ success: false, valid: false, error: 'Code not found or inactive' });
+            return WebResponse.ok(res, { valid: false, message: 'Code not found or inactive.' });
         }
-
-        res.json({
-            success: true,
-            valid: true,
-            creatorName: codeData.displayName
-        });
+        return WebResponse.ok(res, { valid: true, creatorName: codeData.displayName });
     } catch (error) {
-        LoggerService.log('error', `Validate creator code error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'validate creator code', error);
     }
 });
 
-router.delete('/api/creator-code/me', verifyToken, csrfProtection, async (req, res) => {
+router.delete('/neodyme/api/creator-code/me', verifyToken, csrfProtection, async (req, res) => {
     try {
-        const accountId = req.user.accountId;
-        const displayName = req.user.displayName;
-        const code = await CreatorCodeService.getUserCode(accountId);
-
+        const code = await CreatorCodeService.getUserCode(req.user.accountId);
         if (!code) {
-            return res.status(404).json({ success: false, error: 'You do not have a creator code' });
+            return WebResponse.notFound(res, 'You do not have a creator code.');
         }
 
-        const result = await CreatorCodeService.deleteCode(code.code, accountId, displayName);
-        res.json(result);
+        const result = await CreatorCodeService.deleteCode(code.code, req.user.accountId, req.user.displayName);
+        return res.json(result);
     } catch (error) {
-        LoggerService.log('error', `Delete creator code error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'delete creator code', error);
     }
 });
 

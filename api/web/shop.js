@@ -1,159 +1,126 @@
 const express = require('express');
 const router = express.Router();
-const { Errors, sendError } = require('../../src/service/error/errors-system');
-const LoggerService = require('../../src/service/logger/logger-service');
 const ShopManager = require('../../src/manager/shop-manager');
+const ShopImageGenerator = require('../../src/service/shop/shop-image-generator');
+const LoggerService = require('../../src/service/logger/logger-service');
+const WebResponse = require('../../src/service/api/web-response-service');
+const WebService = require('../../src/service/api/web-service');
 const { expensiveRateLimit } = require('../../src/middleware/rate-limit-middleware');
 const { csrfProtection } = require('../../src/service/token/csrf-token-service');
-const ShopImageGenerator = require('../../src/service/shop/shop-image-generator');
+const { requireAdmin } = require('../../src/service/api/role-middleware-service');
 
-router.get('/*shop/image', async (req, res) => {
+const verifyToken = WebService.verifyToken;
+
+// Reduces category rotation timestamps to the most recent and the soonest upcoming.
+const getRotationWindow = (state) => {
+    const categories = Object.values(state.categories || {});
+    const lastRotation = categories.reduce((latest, cat) =>
+        cat.lastRotation && (!latest || cat.lastRotation > latest) ? cat.lastRotation : latest, null);
+    const nextRotation = categories.reduce((soonest, cat) =>
+        cat.nextRotation && (!soonest || cat.nextRotation < soonest) ? cat.nextRotation : soonest, null);
+    return { lastRotation, nextRotation };
+};
+
+router.get('/neodyme/api/shop/image', async (req, res) => {
     try {
         const image = await ShopImageGenerator.generateShopImage();
         if (!image) {
-            return res.status(404).json({ success: false, message: 'No shop data available' });
+            return WebResponse.notFound(res, 'No shop data available.');
         }
-
         res.setHeader('Content-Type', 'image/svg+xml');
         res.setHeader('Cache-Control', 'public, max-age=600');
         res.setHeader('Content-Disposition', 'inline; filename="shop.svg"');
-        res.send(image);
+        return res.send(image);
     } catch (error) {
-        LoggerService.log('error', 'Shop image generation error:', { error: error.message });
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'shop image', error);
     }
 });
 
-router.get('/*shop', async (req, res) => {
+router.get('/neodyme/api/shop/status', async (req, res) => {
+    try {
+        const state = await ShopManager.getShopState();
+        return WebResponse.ok(res, getRotationWindow(state));
+    } catch (error) {
+        return WebResponse.serverError(res, 'shop status', error);
+    }
+});
+
+router.get('/neodyme/api/shop/config', async (req, res) => {
+    try {
+        const shopConfig = ShopManager.getShopConfig();
+        return WebResponse.ok(res, {
+            shopCategories: shopConfig.shopCategories || { daily: {}, featured: {} }
+        });
+    } catch (error) {
+        return WebResponse.serverError(res, 'shop config', error);
+    }
+});
+
+router.get('/neodyme/api/shop/items', async (req, res) => {
+    try {
+        const shopData = await ShopManager.getShopData();
+        const items = Object.keys(shopData)
+            .filter(key => !key.startsWith('//'))
+            .map(key => {
+                const item = shopData[key];
+                const [type, id] = item.itemGrants?.[0]?.split(':') || ['Unknown', 'Unknown'];
+                return {
+                    key,
+                    id,
+                    type,
+                    price: item.price,
+                    category: key.startsWith('daily') ? 'daily' : 'featured'
+                };
+            });
+        return WebResponse.ok(res, { items, count: items.length });
+    } catch (error) {
+        return WebResponse.serverError(res, 'shop items', error);
+    }
+});
+
+router.post('/neodyme/api/shop/rotate', verifyToken, requireAdmin, expensiveRateLimit(), csrfProtection, async (req, res) => {
+    try {
+        await ShopManager.forceRotation();
+        LoggerService.log('info', `Shop manually rotated by ${req.user.displayName}`);
+        return WebResponse.ok(res, { message: 'Shop rotated successfully.' });
+    } catch (error) {
+        return WebResponse.serverError(res, 'shop rotate', error);
+    }
+});
+
+router.get('/neodyme/api/shop', async (req, res) => {
     try {
         const shopData = await ShopManager.getShopData();
         const state = await ShopManager.getShopState();
 
-        // Enrich items with image URLs from shop_state.json (state[key] = imageUrl)
+        // Enrich items with image URLs from shop state (state[key] = imageUrl).
         const enrichedShop = {};
         for (const [key, val] of Object.entries(shopData)) {
             if (key.startsWith('//') || !val || typeof val !== 'object') {
                 enrichedShop[key] = val;
                 continue;
             }
-            const stateImage = state[key];
             enrichedShop[key] = {
                 ...val,
-                meta: {
-                    ...(val.meta || {}),
-                    image: val.meta?.image || stateImage || null
-                }
+                meta: { ...(val.meta || {}), image: val.meta?.image || state[key] || null }
             };
         }
 
         const items = Object.keys(shopData).filter(key => !key.startsWith('//'));
-        const dailyItems = items.filter(key => key.startsWith('daily'));
-        const featuredItems = items.filter(key => key.startsWith('featured'));
+        const { lastRotation, nextRotation } = getRotationWindow(state);
 
-        // Calculate lastRotation/nextRotation from categories
-        const categoryStates = Object.values(state.categories || {});
-        const lastRotation = categoryStates.reduce((latest, cat) => {
-            if (!cat.lastRotation) return latest;
-            return !latest || cat.lastRotation > latest ? cat.lastRotation : latest;
-        }, null);
-        const nextRotation = categoryStates.reduce((earliest, cat) => {
-            if (!cat.nextRotation) return earliest;
-            return !earliest || cat.nextRotation < earliest ? cat.nextRotation : earliest;
-        }, null);
-
-        res.json({
-            success: true,
+        return WebResponse.ok(res, {
             shop: enrichedShop,
             metadata: {
                 totalItems: items.length,
-                dailyCount: dailyItems.length,
-                featuredCount: featuredItems.length,
+                dailyCount: items.filter(key => key.startsWith('daily')).length,
+                featuredCount: items.filter(key => key.startsWith('featured')).length,
                 lastRotation,
                 nextRotation
             }
         });
     } catch (error) {
-        LoggerService.log('error', 'Shop API error:', { error: error.message });
-        sendError(res, Errors.Internal.serverError());
-    }
-});
-
-router.get('/*shop/status', async (req, res) => {
-    try {
-        const state = await ShopManager.getShopState();
-        const categoryStates = Object.values(state.categories || {});
-        const lastRotation = categoryStates.reduce((latest, cat) => {
-            if (!cat.lastRotation) return latest;
-            return !latest || cat.lastRotation > latest ? cat.lastRotation : latest;
-        }, null);
-        const nextRotation = categoryStates.reduce((earliest, cat) => {
-            if (!cat.nextRotation) return earliest;
-            return !earliest || cat.nextRotation < earliest ? cat.nextRotation : earliest;
-        }, null);
-        res.json({
-            success: true,
-            lastRotation,
-            nextRotation
-        });
-    } catch (error) {
-        LoggerService.log('error', 'Shop status API error:', { error: error.message });
-        sendError(res, Errors.Internal.serverError());
-    }
-});
-
-router.get('/*shop/config', async (req, res) => {
-    try {
-        const shopConfig = ShopManager.getShopConfig();
-        res.json({
-            success: true,
-            shopCategories: shopConfig.shopCategories || { daily: {}, featured: {} }
-        });
-    } catch (error) {
-        LoggerService.log('error', 'Shop config API error:', { error: error.message });
-        sendError(res, Errors.Internal.serverError());
-    }
-});
-
-router.get('/*shop/items', async (req, res) => {
-    try {
-        const shopData = await ShopManager.getShopData();
-
-        const items = Object.keys(shopData)
-            .filter(key => !key.startsWith('//'))
-            .map(key => {
-                const item = shopData[key];
-                const [type, id] = item.itemGrants[0]?.split(':') || ['Unknown', 'Unknown'];
-                return {
-                    key: key,
-                    id: id,
-                    type: type,
-                    price: item.price,
-                    category: key.startsWith('daily') ? 'daily' : 'featured'
-                };
-            });
-
-        res.json({ success: true, items, count: items.length });
-    } catch (error) {
-        LoggerService.log('error', 'Shop items API error:', { error: error.message });
-        sendError(res, Errors.Internal.serverError());
-    }
-});
-
-router.post('/*shop/rotate', expensiveRateLimit(), csrfProtection, async (req, res) => {
-    try {
-        const authHeader = req.headers.authorization;
-
-        if (!authHeader) {
-            return sendError(res, Errors.Authentication.invalidHeader());
-        }
-
-        await ShopManager.forceRotation();
-        LoggerService.log('info', 'Shop manually rotated via API');
-
-        res.json({ success: true, message: 'Shop rotated successfully' });
-    } catch (error) {
-        LoggerService.log('error', 'Shop rotation API error:', { error: error.message });
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'shop', error);
     }
 });
 

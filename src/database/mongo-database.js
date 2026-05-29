@@ -1147,7 +1147,8 @@ class MongoDatabase {
     static async searchUsers(query, limit = 10) {
         const searchLower = query.toLowerCase();
         const users = await User.find({
-            displayName_lower: { $regex: searchLower, $options: 'i' }
+            displayName_lower: { $regex: searchLower, $options: 'i' },
+            clientType: { $ne: 5 } // exclude SERVER accounts from user search
         }).limit(limit).lean();
 
         return users.map(u => ({

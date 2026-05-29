@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 async function loadVbucksBalance() {
     try {
-        const response = await fetch('/api/user/vbucks', { credentials: 'include' });
+        const response = await fetch(`${API}/user/vbucks`, { credentials: 'include' });
         if (response.ok) {
             const data = await response.json();
             document.getElementById('current-vbucks').textContent = data.balance.toLocaleString();
@@ -110,7 +110,7 @@ async function applyCreatorCode() {
     fb.className = 'creator-code-feedback';
 
     try {
-        const res  = await fetch(`/api/creator-code/validate/${encodeURIComponent(code)}`);
+        const res  = await fetch(`${API}/creator-code/validate/${encodeURIComponent(code)}`);
         const data = await res.json();
         if (data.valid) {
             appliedCreatorCode = { code: code.toLowerCase(), creatorName: data.creatorName };
@@ -193,7 +193,7 @@ async function confirmPurchase() {
         };
         if (appliedCreatorCode) body.creatorCode = appliedCreatorCode.code;
 
-        const response = await secureFetch('/api/purchase/vbucks', {
+        const response = await secureFetch(`${API}/purchase/vbucks`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)

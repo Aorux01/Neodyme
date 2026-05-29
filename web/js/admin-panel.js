@@ -160,7 +160,7 @@ function pushPoint(cpuSys, cpuProc, ramProc, ramSys, players) {
 
 async function fetchLiveStats() {
     try {
-        const res  = await fetch('/api/admin/live-stats', { credentials: 'include' });
+        const res  = await fetch('/neodyme/api/admin/live-stats', { credentials: 'include' });
         const data = await res.json();
         if (!data.success) return;
 
@@ -227,9 +227,7 @@ function colorizeLog(line) {
     return `<span style="color:#d4d4d4;">${escHtml(clean)}</span>`;
 }
 
-function escHtml(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
+// escHtml moved to common.js (shared helper)
 
 async function loadConsoleLogs(outputId) {
     const id     = outputId || 'console-logs-output';
@@ -239,11 +237,11 @@ async function loadConsoleLogs(outputId) {
     if (!output) return;
 
     try {
-        const res  = await fetch(`/api/admin/console-logs?lines=${lines}`, { credentials: 'include' });
+        const res  = await fetch(`/neodyme/api/admin/console-logs?lines=${lines}`, { credentials: 'include' });
         const data = await res.json();
 
-        if (!data.success) {
-            output.innerHTML = `<span style="color:#ef4444;">Error: ${escHtml(data.error || 'Failed to load logs')}</span>`;
+        if (!res.ok) {
+            output.innerHTML = `<span style="color:#ef4444;">Error: ${escHtml(apiError(data, 'Failed to load logs'))}</span>`;
             return;
         }
 
@@ -278,9 +276,9 @@ async function loadAdminPlugins(containerId) {
     container.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
 
     try {
-        const res  = await fetch('/api/admin/plugins', { credentials: 'include' });
+        const res  = await fetch('/neodyme/api/admin/plugins', { credentials: 'include' });
         const data = await res.json();
-        if (!data.success) throw new Error(data.error);
+        if (!res.ok) throw new Error(apiError(data, 'Failed to load plugins'));
 
         const loaded    = data.loaded;
         const installed = data.installed;
@@ -320,14 +318,12 @@ async function loadAdminPlugins(containerId) {
 
 async function adminPluginAction(name, action, containerId) {
     try {
-        const csrf = await getCsrfToken();
-        const res  = await fetch(`/api/admin/plugins/${encodeURIComponent(name)}/${action}`, {
+        const res  = await secureFetch(`/neodyme/api/admin/plugins/${encodeURIComponent(name)}/${action}`, {
             method: 'POST',
-            credentials: 'include',
-            headers: { 'X-CSRF-Token': csrf, 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' }
         });
         const data = await res.json();
-        showAdminCmdResult(data.success, data.message || data.error);
+        showAdminCmdResult(res.ok, apiError(data, res.ok ? 'Done.' : 'Action failed.'));
         await loadAdminPlugins(containerId);
     } catch (err) {
         showAdminCmdResult(false, err.message);
@@ -344,11 +340,11 @@ async function openPluginConfig(pluginName, containerId) {
     if (existing) { existing.remove(); return; }
 
     try {
-        const res  = await fetch(`/api/dev/plugins/${encodeURIComponent(pluginName)}/files`, { credentials: 'include' });
+        const res  = await fetch(`/neodyme/api/dev/plugins/${encodeURIComponent(pluginName)}/files`, { credentials: 'include' });
         const data = await res.json();
 
-        if (!data.success || !data.files || data.files.length === 0) {
-            showAdminCmdResult(false, data.error || `No JSON config files found for '${pluginName}'`);
+        if (!res.ok || !data.files || data.files.length === 0) {
+            showAdminCmdResult(false, apiError(data, `No JSON config files found for '${pluginName}'`));
             return;
         }
 
@@ -396,9 +392,9 @@ async function openPluginConfig(pluginName, containerId) {
 
 async function loadPluginConfigFile(pluginName, fileName, panelId) {
     try {
-        const res  = await fetch(`/api/dev/plugins/${encodeURIComponent(pluginName)}/files/${encodeURIComponent(fileName)}`, { credentials: 'include' });
+        const res  = await fetch(`/neodyme/api/dev/plugins/${encodeURIComponent(pluginName)}/files/${encodeURIComponent(fileName)}`, { credentials: 'include' });
         const data = await res.json();
-        if (!data.success) { showAdminCmdResult(false, data.error); return; }
+        if (!res.ok) { showAdminCmdResult(false, apiError(data, 'Failed to load file.')); return; }
 
         const editorDiv = document.getElementById(`${panelId}-editor`);
         const fnameEl   = document.getElementById(`${panelId}-fname`);
@@ -419,15 +415,13 @@ async function savePluginConfigFile(pluginName, panelId) {
     const fileName = contentEl.dataset.file;
     try {
         const content = JSON.parse(contentEl.value);
-        const csrf    = await getCsrfToken();
-        const res     = await fetch(`/api/dev/plugins/${encodeURIComponent(pluginName)}/files/${encodeURIComponent(fileName)}`, {
+        const res     = await secureFetch(`/neodyme/api/dev/plugins/${encodeURIComponent(pluginName)}/files/${encodeURIComponent(fileName)}`, {
             method: 'PUT',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ content })
         });
         const data = await res.json();
-        showAdminCmdResult(data.success, data.message || data.error);
+        showAdminCmdResult(res.ok, apiError(data, res.ok ? 'Saved.' : 'Failed to save.'));
     } catch (err) {
         showAdminCmdResult(false, err.message.includes('JSON') ? 'Invalid JSON - check syntax' : err.message);
     }
@@ -438,9 +432,9 @@ async function loadServerProperties() {
     if (!editor) return;
     editor.value = 'Loading...';
     try {
-        const res  = await fetch('/api/admin/server-properties', { credentials: 'include' });
+        const res  = await fetch('/neodyme/api/admin/server-properties', { credentials: 'include' });
         const data = await res.json();
-        if (!data.success) throw new Error(data.error);
+        if (!res.ok) throw new Error(apiError(data, 'Failed to load'));
         editor.value = data.content;
     } catch (err) {
         editor.value = `# Error loading server.properties: ${err.message}`;
@@ -451,15 +445,13 @@ async function saveServerProperties() {
     const editor = document.getElementById('server-properties-editor');
     if (!editor) return;
     try {
-        const csrf = await getCsrfToken();
-        const res  = await fetch('/api/admin/server-properties', {
+        const res  = await secureFetch('/neodyme/api/admin/server-properties', {
             method: 'PUT',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ content: editor.value })
         });
         const data = await res.json();
-        showAdminCmdResult(data.success, data.message || data.error);
+        showAdminCmdResult(res.ok, apiError(data, res.ok ? 'Saved.' : 'Failed to save.'));
     } catch (err) {
         showAdminCmdResult(false, err.message);
     }
@@ -539,16 +531,14 @@ async function runPanelCmd(baseCmd, argIds) {
     showCmdToast(true, `Running: ${command}...`);
 
     try {
-        const csrf = await getCsrfToken();
-        const res  = await fetch('/api/admin/command', {
+        const res  = await secureFetch('/neodyme/api/admin/command', {
             method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ command })
         });
         const data = await res.json();
-        const msg  = data.message || data.error || (data.success ? 'Done.' : 'Failed.');
-        showCmdToast(data.success, msg);
+        const ok   = res.ok && data.success !== false;
+        showCmdToast(ok, data.message || (ok ? 'Done.' : 'Failed.'));
     } catch (err) {
         showCmdToast(false, err.message);
     }
@@ -627,16 +617,7 @@ function showAdminCmdResult(success, message) {
     setTimeout(() => { el.style.display = 'none'; }, 8000);
 }
 
-async function getCsrfToken() {
-    try {
-        const res  = await fetch('/api/auth/csrf-token', { credentials: 'include' });
-        const data = await res.json();
-        return data.csrfToken || '';
-    } catch (_) { return ''; }
-}
-
-const _origShowAdminTab = typeof showAdminTab === 'function' ? showAdminTab : null;
-
+// Full admin tab router (handles audit / stats / settings / commands).
 function showAdminTab(tab) {
     document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.admin-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -648,16 +629,16 @@ function showAdminTab(tab) {
         if (btn.getAttribute('onclick')?.includes(`'${tab}'`)) btn.classList.add('active');
     });
 
+    if (tab === 'users')    loadAdminUsers();
     if (tab === 'audit')    { auditCurrentPage = 1; loadAuditLog(); }
-    if (tab === 'stats')    loadAdminWebSettings();
+    if (tab === 'stats')    { loadAdminDetailedStats(); loadPlayerStatsChart('24h'); loadAdminWebSettings(); }
     if (tab === 'settings') loadAdminWebSettings();
     if (tab === 'commands') loadAdminCommands();
 
     if (logsAutoRunning) toggleLogsAuto();
 }
 
-const _origShowDevTab = typeof showDevTab === 'function' ? showDevTab : null;
-
+// Full dev tab router (handles overview / config / stats / logs / plugins / commands / system / monitor).
 function showDevTab(tab) {
     document.querySelectorAll('.dev-tab-content').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.dev-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -695,7 +676,7 @@ if (_origShowSection) {
 
 async function loadAdminWebSettings() {
     try {
-        const res  = await fetch('/api/dev/config', { credentials: 'include' });
+        const res  = await fetch('/neodyme/api/dev/config', { credentials: 'include' });
         const data = await res.json();
         if (!data.config) return;
         const rl  = data.config.rateLimiting || {};
@@ -733,16 +714,14 @@ async function saveAdminWebSetting(key, valueOrInputId, castFn) {
         } else {
             value = valueOrInputId;
         }
-        const csrf = await getCsrfToken();
-        const res  = await fetch(`/api/dev/config/${encodeURIComponent(key)}`, {
+        const res  = await secureFetch(`/neodyme/api/dev/config/${encodeURIComponent(key)}`, {
             method: 'PUT',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ value })
         });
         const data = await res.json();
-        showAdminCmdResult(data.success, data.message || (data.success ? 'Saved' : data.error));
-        if (data.success) loadAdminWebSettings();
+        showAdminCmdResult(res.ok, apiError(data, res.ok ? 'Saved' : 'Failed to save'));
+        if (res.ok) loadAdminWebSettings();
     } catch (err) {
         showAdminCmdResult(false, err.message);
     }
@@ -849,9 +828,9 @@ async function loadSystemTests() {
     if (!checksEl) return;
 
     try {
-        const res  = await fetch('/api/dev/system/tests', { credentials: 'include' });
+        const res  = await fetch('/neodyme/api/dev/system/tests', { credentials: 'include' });
         const data = await res.json();
-        if (!data.success) throw new Error(data.error || 'Failed');
+        if (!res.ok) throw new Error(apiError(data, 'Failed'));
 
         const { checks, summary } = data;
 
@@ -918,11 +897,11 @@ async function loadXmppClients() {
     if (!container) return;
 
     try {
-        const res  = await fetch('/api/admin/xmpp-clients', { credentials: 'include' });
+        const res  = await fetch('/neodyme/api/admin/xmpp-clients', { credentials: 'include' });
         const data = await res.json();
 
-        if (!data.success) {
-            container.innerHTML = `<span style="color:#ef4444;font-size:13px;">Error: ${escHtml(data.error || 'Failed to load')}</span>`;
+        if (!res.ok) {
+            container.innerHTML = `<span style="color:#ef4444;font-size:13px;">Error: ${escHtml(apiError(data, 'Failed to load'))}</span>`;
             return;
         }
 
@@ -973,7 +952,7 @@ async function loadSystemChart(hours) {
     });
 
     try {
-        const res  = await fetch(`/api/dev/system/history?hours=${hours}`, { credentials: 'include' });
+        const res  = await fetch(`/neodyme/api/dev/system/history?hours=${hours}`, { credentials: 'include' });
         const data = await res.json();
         if (!data.success) return;
 

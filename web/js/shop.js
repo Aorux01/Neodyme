@@ -1,5 +1,5 @@
-const API_ENDPOINT = '/api/shop';
-const SHOP_CONFIG_ENDPOINT = '/api/shop/config';
+const API_ENDPOINT = `${API}/shop`;
+const SHOP_CONFIG_ENDPOINT = `${API}/shop/config`;
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 
 const DOM = {
@@ -115,7 +115,7 @@ async function loadUserOwnedItems() {
     }
 
     try {
-        const response = await fetch('/api/user/purchases', {
+        const response = await fetch(`${API}/user/purchases`, {
             credentials: 'include'
         });
 
@@ -163,7 +163,7 @@ async function loadShopData() {
             shopData = data;
 
             try {
-                const stateResponse = await fetch('/api/shop/status');
+                const stateResponse = await fetch(`${API}/shop/status`);
                 if (stateResponse.ok) {
                     const stateData = await stateResponse.json();
                     shopState = stateData;
@@ -368,7 +368,7 @@ async function loadVbucksBalance() {
             return;
         }
 
-        const response = await fetch('/api/user/vbucks', {
+        const response = await fetch(`${API}/user/vbucks`, {
             credentials: 'include'
         });
 
@@ -471,7 +471,7 @@ async function purchaseItem(itemKey) {
     try {
         const creatorCode = localStorage.getItem('neodyme_creator_code') || undefined;
 
-        const response = await secureFetch('/api/purchase/item', {
+        const response = await secureFetch(`${API}/purchase/item`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ itemKey, creatorCode })
@@ -567,7 +567,7 @@ async function shopApplyCreatorCode() {
     fb.className = 'creator-feedback';
 
     try {
-        const res  = await fetch(`/api/creator-code/validate/${encodeURIComponent(code)}`);
+        const res  = await fetch(`${API}/creator-code/validate/${encodeURIComponent(code)}`);
         const data = await res.json();
         if (data.valid) {
             localStorage.setItem('neodyme_creator_code', code.toLowerCase());

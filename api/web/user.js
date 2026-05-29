@@ -1,288 +1,205 @@
 const express = require('express');
 const router = express.Router();
 const DatabaseManager = require('../../src/manager/database-manager');
-const { Errors, sendError } = require('../../src/service/error/errors-system');
-const LoggerService = require('../../src/service/logger/logger-service');
 const ShopManager = require('../../src/manager/shop-manager');
 const CreatorCodeService = require('../../src/service/api/creator-code-service');
+const LoggerService = require('../../src/service/logger/logger-service');
+const WebResponse = require('../../src/service/api/web-response-service');
+const WebService = require('../../src/service/api/web-service');
 const { expensiveRateLimit } = require('../../src/middleware/rate-limit-middleware');
 const { csrfProtection } = require('../../src/service/token/csrf-token-service');
-const WebService = require('../../src/service/api/web-service');
 const { ROLE_LEVELS, getUserRoleLevel } = require('../../src/service/api/role-middleware-service');
 
 const verifyToken = WebService.verifyToken;
 
-router.get('*user/vbucks', verifyToken, csrfProtection, async (req, res) => {
+const VBUCKS_PACKAGES = [1000, 2800, 5000, 13500];
+
+// Records a creator-code commission for a purchase, crediting the creator.
+// Returns a summary for the response, or null when no (valid) code was supplied.
+const applyCreatorCommission = async (creatorCode, amount, buyerName) => {
+    if (!creatorCode) return null;
+
+    const result = await CreatorCodeService.recordUsage(creatorCode, amount);
+    if (!result.success || !(result.commission > 0)) return null;
+
+    await DatabaseManager.addVbucks(result.creatorAccountId, result.commission);
+    LoggerService.log('info', `Creator code commission: ${result.creatorDisplayName} earned ${result.commission} V-Bucks from ${buyerName}'s purchase`);
+
+    return { code: creatorCode, creatorName: result.creatorDisplayName, amount: result.commission };
+};
+
+router.get('/neodyme/api/user/role', verifyToken, async (req, res) => {
     try {
-        const accountId = req.user.accountId;
+        const account = await DatabaseManager.getAccount(req.user.accountId);
+        const roleLevel = getUserRoleLevel(account);
 
-        const balance = await DatabaseManager.getVbucksBalance(accountId);
-
-        res.json({
-            success: true,
-            balance: balance,
-            currency: 'V-Bucks'
-        });
-    } catch (error) {
-        LoggerService.log('error', `Get V-Bucks balance error: ${error}`);
-        sendError(res, Errors.Internal.serverError());
-    }
-});
-
-router.post('*purchase/vbucks', expensiveRateLimit(), verifyToken, csrfProtection, async (req, res) => {
-    try {
-        const { packageAmount, price, paymentMethod, creatorCode } = req.body;
-        const accountId = req.user.accountId;
-
-        if (!packageAmount || !price) {
-            return sendError(res, Errors.Basic.badRequest());
-        }
-
-        const validPackages = [1000, 2800, 5000, 13500];
-        if (!validPackages.includes(packageAmount)) {
-            return sendError(res, Errors.Basic.badRequest());
-        }
-
-        let bonus = 0;
-        switch(packageAmount) {
-            case 1000: bonus = 0; break;
-            case 2800: bonus = 300; break;
-            case 5000: bonus = 800; break;
-            case 13500: bonus = 1500; break;
-        }
-
-        const totalVbucks = packageAmount;
-
-        await DatabaseManager.processVbucksPurchase(accountId, totalVbucks, price, paymentMethod);
-
-        let creatorCommission = null;
-        if (creatorCode) {
-            const commissionResult = await CreatorCodeService.recordUsage(creatorCode, packageAmount);
-            if (commissionResult.success && commissionResult.commission > 0) {
-                await DatabaseManager.addVbucks(commissionResult.creatorAccountId, commissionResult.commission);
-                creatorCommission = {
-                    code: creatorCode,
-                    creatorName: commissionResult.creatorDisplayName,
-                    amount: commissionResult.commission
-                };
-                LoggerService.log('info', `Creator code commission: ${commissionResult.creatorDisplayName} earned ${commissionResult.commission} V-Bucks from ${req.user.displayName}'s purchase`);
+        return WebResponse.ok(res, {
+            role: DatabaseManager.getRoleName(roleLevel),
+            roleLevel,
+            panels: {
+                moderation: roleLevel >= ROLE_LEVELS.MODERATOR,
+                developer: roleLevel >= ROLE_LEVELS.DEVELOPER,
+                admin: roleLevel >= ROLE_LEVELS.ADMIN
             }
-        }
-
-        LoggerService.log('info', `V-Bucks purchase: ${accountId} purchased ${totalVbucks} V-Bucks for $${price}`);
-
-        res.json({
-            success: true,
-            message: 'Purchase successful',
-            vbucksAdded: totalVbucks,
-            baseAmount: packageAmount,
-            bonusAmount: bonus,
-            totalPaid: price,
-            creatorSupported: creatorCommission
         });
-
     } catch (error) {
-        LoggerService.log('error', `V-Bucks purchase error: ${error}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get user role', error);
     }
 });
 
-router.post('*purchase/item', expensiveRateLimit(), verifyToken, csrfProtection, async (req, res) => {
+router.get('/neodyme/api/user/vbucks', verifyToken, async (req, res) => {
     try {
-        const { itemKey, creatorCode } = req.body;
-        const accountId = req.user.accountId;
-
-        if (!itemKey) {
-            return sendError(res, Errors.Basic.badRequest());
-        }
-
-        const shopData = await ShopManager.getShopData();
-        const item = shopData[itemKey];
-
-        if (!item) {
-            return sendError(res, Errors.Basic.badRequest());
-        }
-
-        const itemPrice = item.price || 0;
-
-        const userBalance = await DatabaseManager.getVbucksBalance(accountId);
-        if (userBalance < itemPrice) {
-            return sendError(res, Errors.Economy.insufficientFunds());
-        }
-
-        const purchaseResult = await DatabaseManager.processItemPurchase(accountId, itemKey, item);
-
-        if (!purchaseResult.success) {
-            return sendError(res, Errors.Economy.purchaseFailed());
-        }
-
-        let creatorCommission = null;
-        if (creatorCode) {
-            const commissionResult = await CreatorCodeService.recordUsage(creatorCode, itemPrice);
-            if (commissionResult.success && commissionResult.commission > 0) {
-                await DatabaseManager.addVbucks(commissionResult.creatorAccountId, commissionResult.commission);
-                creatorCommission = {
-                    code: creatorCode,
-                    creatorName: commissionResult.creatorDisplayName,
-                    amount: commissionResult.commission
-                };
-                LoggerService.log('info', `Creator code commission: ${commissionResult.creatorDisplayName} earned ${commissionResult.commission} V-Bucks from ${req.user.displayName}'s item purchase`);
-            }
-        }
-
-        LoggerService.log('info', `Item purchase: ${accountId} purchased ${itemKey} for ${itemPrice} V-Bucks`);
-
-        res.json({
-            success: true,
-            message: 'Item purchased successfully',
-            item: itemKey,
-            price: itemPrice,
-            newBalance: purchaseResult.newBalance,
-            purchaseId: purchaseResult.purchaseId,
-            creatorSupported: creatorCommission
-        });
-
+        const balance = await DatabaseManager.getVbucksBalance(req.user.accountId);
+        return WebResponse.ok(res, { balance, currency: 'V-Bucks' });
     } catch (error) {
-        LoggerService.log('error', `Item purchase error: ${error}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get vbucks balance', error);
     }
 });
 
-router.post('*purchase/refund', expensiveRateLimit(), verifyToken, csrfProtection, async (req, res) => {
+router.get('/neodyme/api/user/purchases', verifyToken, async (req, res) => {
     try {
-        const { purchaseId } = req.body;
-        const accountId = req.user.accountId;
-
-        if (!purchaseId) {
-            return sendError(res, Errors.Basic.badRequest());
-        }
-
-        const refundResult = await DatabaseManager.processPurchaseRefund(accountId, purchaseId);
-
-        if (!refundResult.success) {
-            return sendError(res, Errors.Economy.refundFailed());
-        }
-
-        LoggerService.log('info', `Purchase refund: ${accountId} refunded purchase ${purchaseId}`);
-
-        res.json({
-            success: true,
-            message: 'Refund processed successfully',
-            vbucksRefunded: refundResult.refundAmount,
-            newBalance: refundResult.newBalance
-        });
-
+        const purchases = await DatabaseManager.getUserPurchaseHistory(req.user.accountId);
+        return WebResponse.ok(res, { purchases });
     } catch (error) {
-        LoggerService.log('error', `Refund error: ${error}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get purchases', error);
     }
 });
 
-router.get('*user/purchases', verifyToken, csrfProtection, async (req, res) => {
-    try {
-        const accountId = req.user.accountId;
-        const purchases = await DatabaseManager.getUserPurchaseHistory(accountId);
-
-        res.json({
-            success: true,
-            purchases: purchases
-        });
-
-    } catch (error) {
-        LoggerService.log('error', `Get purchases error: ${error}`);
-        sendError(res, Errors.Internal.serverError());
-    }
-});
-
-router.get('*users/search', verifyToken, async (req, res) => {
-    try {
-        const { q, limit = 10 } = req.query;
-
-        if (!q || q.length < 2) {
-            return res.status(400).json({ success: false, message: 'Search query must be at least 2 characters' });
-        }
-
-        const users = await DatabaseManager.searchUsers(q, parseInt(limit));
-
-        res.json({
-            success: true,
-            users: users.filter(u => u.accountId !== req.user.accountId)
-        });
-
-    } catch (error) {
-        LoggerService.log('error', `Search users error: ${error}`);
-        sendError(res, Errors.Internal.serverError());
-    }
-});
-
-router.put('*user/settings', verifyToken, csrfProtection, async (req, res) => {
+router.put('/neodyme/api/user/settings', verifyToken, csrfProtection, async (req, res) => {
     try {
         const { language, region, privacy } = req.body;
+        const current = await DatabaseManager.getUserSettings(req.user.accountId);
 
-        const currentSettings = await DatabaseManager.getUserSettings(req.user.accountId);
-        const newSettings = {
-            language: language || currentSettings.language,
-            region: region || currentSettings.region,
-            privacy: privacy ? { ...currentSettings.privacy, ...privacy } : currentSettings.privacy
+        const settings = {
+            language: language || current.language,
+            region: region || current.region,
+            privacy: privacy ? { ...current.privacy, ...privacy } : current.privacy
         };
 
-        await DatabaseManager.saveUserSettings(req.user.accountId, newSettings);
-
-        res.json({ success: true, message: 'Settings saved successfully', settings: newSettings });
+        await DatabaseManager.saveUserSettings(req.user.accountId, settings);
+        return WebResponse.ok(res, { message: 'Settings saved successfully.', settings });
     } catch (error) {
-        LoggerService.log('error', `Save settings error: ${error}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'save settings', error);
     }
 });
 
-router.get('*users/:accountId', verifyToken, csrfProtection, async (req, res) => {
+router.get('/neodyme/api/users/search', verifyToken, async (req, res) => {
     try {
-        const { accountId } = req.params;
-
-        const account = await DatabaseManager.getAccount(accountId);
-
-        if (!account) {
-            return sendError(res, Errors.Account.accountNotFound(accountId));
+        const { q, limit = 10 } = req.query;
+        if (!q || q.length < 2) {
+            return WebResponse.badRequest(res, 'Search query must be at least 2 characters.');
         }
 
-        res.json({
-            success: true,
+        const users = await DatabaseManager.searchUsers(q, parseInt(limit, 10));
+        return WebResponse.ok(res, { users: users.filter(u => u.accountId !== req.user.accountId) });
+    } catch (error) {
+        return WebResponse.serverError(res, 'search users', error);
+    }
+});
+
+router.get('/neodyme/api/users/:accountId', verifyToken, async (req, res) => {
+    try {
+        const account = await DatabaseManager.getAccount(req.params.accountId);
+        if (!account) {
+            return WebResponse.notFound(res, 'Account not found.');
+        }
+
+        return WebResponse.ok(res, {
             user: {
                 accountId: account.accountId,
                 displayName: account.displayName,
-                email: `${account.displayName}@neodyme.local`,
                 lastLogin: account.lastLogin,
                 created: account.created
             }
         });
-
     } catch (error) {
-        LoggerService.log('error', `Get user error: ${error}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'get user', error);
     }
 });
 
-router.get('/api/user/role', verifyToken, async (req, res) => {
+router.post('/neodyme/api/purchase/vbucks', expensiveRateLimit(), verifyToken, csrfProtection, async (req, res) => {
     try {
-        const account = await DatabaseManager.getAccount(req.user.accountId);
-        const roleLevel = getUserRoleLevel(account);
-        const roleName = DatabaseManager.getRoleName(roleLevel);
+        const { packageAmount, price, paymentMethod, creatorCode } = req.body;
 
-        const panels = {
-            moderation: roleLevel === ROLE_LEVELS.MODERATOR || roleLevel >= ROLE_LEVELS.ADMIN,
-            developer: roleLevel === ROLE_LEVELS.DEVELOPER || roleLevel >= ROLE_LEVELS.ADMIN,
-            admin: roleLevel >= ROLE_LEVELS.ADMIN
-        };
+        if (!packageAmount || !price || !VBUCKS_PACKAGES.includes(packageAmount)) {
+            return WebResponse.badRequest(res, 'Invalid V-Bucks package.');
+        }
 
-        res.json({
-            success: true,
-            role: roleName,
-            roleLevel: roleLevel,
-            panels
+        await DatabaseManager.processVbucksPurchase(req.user.accountId, packageAmount, price, paymentMethod);
+        const commission = await applyCreatorCommission(creatorCode, packageAmount, req.user.displayName);
+
+        LoggerService.log('info', `V-Bucks purchase: ${req.user.accountId} purchased ${packageAmount} V-Bucks for $${price}`);
+        return WebResponse.ok(res, {
+            message: 'Purchase successful.',
+            vbucksAdded: packageAmount,
+            totalPaid: price,
+            creatorSupported: commission
         });
     } catch (error) {
-        LoggerService.log('error', `Get user role error: ${error.message}`);
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, 'vbucks purchase', error);
+    }
+});
+
+router.post('/neodyme/api/purchase/item', expensiveRateLimit(), verifyToken, csrfProtection, async (req, res) => {
+    try {
+        const { itemKey, creatorCode } = req.body;
+        if (!itemKey) {
+            return WebResponse.badRequest(res, 'Item key is required.');
+        }
+
+        const shopData = await ShopManager.getShopData();
+        const item = shopData[itemKey];
+        if (!item) {
+            return WebResponse.badRequest(res, 'Item not found in the current shop.');
+        }
+
+        const itemPrice = item.price || 0;
+        const balance = await DatabaseManager.getVbucksBalance(req.user.accountId);
+        if (balance < itemPrice) {
+            return WebResponse.conflict(res, 'Insufficient V-Bucks.');
+        }
+
+        const purchase = await DatabaseManager.processItemPurchase(req.user.accountId, itemKey, item);
+        if (!purchase.success) {
+            return WebResponse.serverError(res, 'item purchase', new Error('processItemPurchase failed'));
+        }
+
+        const commission = await applyCreatorCommission(creatorCode, itemPrice, req.user.displayName);
+
+        LoggerService.log('info', `Item purchase: ${req.user.accountId} purchased ${itemKey} for ${itemPrice} V-Bucks`);
+        return WebResponse.ok(res, {
+            message: 'Item purchased successfully.',
+            item: itemKey,
+            price: itemPrice,
+            newBalance: purchase.newBalance,
+            purchaseId: purchase.purchaseId,
+            creatorSupported: commission
+        });
+    } catch (error) {
+        return WebResponse.serverError(res, 'item purchase', error);
+    }
+});
+
+router.post('/neodyme/api/purchase/refund', expensiveRateLimit(), verifyToken, csrfProtection, async (req, res) => {
+    try {
+        const { purchaseId } = req.body;
+        if (!purchaseId) {
+            return WebResponse.badRequest(res, 'Purchase id is required.');
+        }
+
+        const refund = await DatabaseManager.processPurchaseRefund(req.user.accountId, purchaseId);
+        if (!refund.success) {
+            return WebResponse.conflict(res, refund.message || 'Refund could not be processed.');
+        }
+
+        LoggerService.log('info', `Purchase refund: ${req.user.accountId} refunded purchase ${purchaseId}`);
+        return WebResponse.ok(res, {
+            message: 'Refund processed successfully.',
+            vbucksRefunded: refund.refundAmount,
+            newBalance: refund.newBalance
+        });
+    } catch (error) {
+        return WebResponse.serverError(res, 'refund', error);
     }
 });
 

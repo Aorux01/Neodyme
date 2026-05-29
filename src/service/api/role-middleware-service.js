@@ -1,5 +1,5 @@
 const DatabaseManager = require('../../manager/database-manager');
-const { Errors, sendError } = require('../error/errors-system');
+const WebResponse = require('./web-response-service');
 
 const ROLE_LEVELS = {
     PLAYER: 0,
@@ -17,103 +17,35 @@ const getUserRoleLevel = (account) => {
     return DatabaseManager.getRoleLevel(account.clientType || account.role || 'player');
 };
 
-const requireModerator = async (req, res, next) => {
+// Builds a role-gate middleware for /neodyme/api/* routes. Always runs after
+// verifyToken (so req.user exists). Re-reads the account to get the live role,
+// attaches role info to req, and returns the unified web error shape on failure.
+//   `check` decides if the resolved level is allowed; `label` names the requirement.
+const roleGate = (check, label) => async (req, res, next) => {
     try {
         const account = await DatabaseManager.getAccount(req.user.accountId);
         if (!account) {
-            return sendError(res, Errors.Authentication.invalidToken());
+            return WebResponse.unauthorized(res, 'Session expired. Please sign in again.');
         }
 
         const roleLevel = getUserRoleLevel(account);
-        if (roleLevel < ROLE_LEVELS.MODERATOR) {
-            return res.status(403).json({ success: false, error: 'Moderator access required' });
+        if (!check(roleLevel)) {
+            return WebResponse.forbidden(res, `${label} access required.`);
         }
 
         req.userRole = DatabaseManager.getRoleName(roleLevel);
         req.userRoleLevel = roleLevel;
         next();
     } catch (error) {
-        sendError(res, Errors.Internal.serverError());
+        return WebResponse.serverError(res, `roleGate (${label})`, error);
     }
 };
 
-const requireAdmin = async (req, res, next) => {
-    try {
-        const account = await DatabaseManager.getAccount(req.user.accountId);
-        if (!account) {
-            return sendError(res, Errors.Authentication.invalidToken());
-        }
-
-        const roleLevel = getUserRoleLevel(account);
-        if (roleLevel < ROLE_LEVELS.ADMIN) {
-            return res.status(403).json({ success: false, error: 'Admin access required' });
-        }
-
-        req.userRole = DatabaseManager.getRoleName(roleLevel);
-        req.userRoleLevel = roleLevel;
-        next();
-    } catch (error) {
-        sendError(res, Errors.Internal.serverError());
-    }
-};
-
-const requireDeveloper = async (req, res, next) => {
-    try {
-        const account = await DatabaseManager.getAccount(req.user.accountId);
-        if (!account) {
-            return sendError(res, Errors.Authentication.invalidToken());
-        }
-
-        const roleLevel = getUserRoleLevel(account);
-        if (roleLevel < ROLE_LEVELS.DEVELOPER) {
-            return res.status(403).json({ success: false, error: 'Developer access required' });
-        }
-
-        req.userRole = DatabaseManager.getRoleName(roleLevel);
-        req.userRoleLevel = roleLevel;
-        next();
-    } catch (error) {
-        sendError(res, Errors.Internal.serverError());
-    }
-};
-
-const requireOwner = async (req, res, next) => {
-    try {
-        const account = await DatabaseManager.getAccount(req.user.accountId);
-        if (!account) {
-            return sendError(res, Errors.Authentication.invalidToken());
-        }
-
-        const roleLevel = getUserRoleLevel(account);
-        if (roleLevel < ROLE_LEVELS.OWNER) {
-            return res.status(403).json({ success: false, error: 'Owner access required' });
-        }
-
-        req.userRole = DatabaseManager.getRoleName(roleLevel);
-        req.userRoleLevel = roleLevel;
-        next();
-    } catch (error) {
-        sendError(res, Errors.Internal.serverError());
-    }
-};
-
-const verifyServer = async (req, res, next) => {
-    try {
-        const account = await DatabaseManager.getAccount(req.user.accountId);
-        if (!account) {
-            return sendError(res, Errors.Authentication.invalidToken());
-        }
-
-        const roleLevel = getUserRoleLevel(account);
-        if (roleLevel !== ROLE_LEVELS.SERVER) {
-            return res.status(403).json({ success: false, error: 'Server access required' });
-        }
-
-        next();
-    } catch (error) {
-        sendError(res, Errors.Internal.serverError());
-    }
-};
+const requireModerator = roleGate(lvl => lvl >= ROLE_LEVELS.MODERATOR, 'Moderator');
+const requireAdmin     = roleGate(lvl => lvl >= ROLE_LEVELS.ADMIN, 'Admin');
+const requireDeveloper = roleGate(lvl => lvl >= ROLE_LEVELS.DEVELOPER, 'Developer');
+const requireOwner     = roleGate(lvl => lvl >= ROLE_LEVELS.OWNER, 'Owner');
+const verifyServer     = roleGate(lvl => lvl === ROLE_LEVELS.SERVER, 'Server');
 
 module.exports = {
     ROLE_LEVELS,
