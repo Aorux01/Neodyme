@@ -126,7 +126,7 @@ class AuthService {
         }
 
         const TokenWebService = require('../token/web-token-service');
-        const accountId = TokenWebService.consumeExchangeCode(exchangeCode);
+        const accountId = await TokenWebService.consumeExchangeCode(exchangeCode);
 
         if (!accountId) {
             throw Errors.Authentication.OAuth.invalidExchange(exchangeCode);

@@ -2,6 +2,8 @@ const readline = require('readline');
 const ConfigManager = require('../../manager/config-manager');
 const LoggerService = require('../logger/logger-service');
 const colors = require('../../utils/colors');
+const AssetService = require('../api/asset-service');
+const AssetInstaller = require('../../manager/asset-installer');
 
 class FirstLaunchService {
     static async run() {
@@ -47,8 +49,37 @@ class FirstLaunchService {
         await ConfigManager.save('assetsMode', mode);
         console.log('');
         LoggerService.log('success', `Asset mode set to ${colors.cyan(mode)} - change later with '/assets mode <online|local>'`);
+
+        if (mode === 'local') {
+            await this.downloadLocalAssets();
+        }
+
         console.log(colors.gray('─'.repeat(65)));
         console.log('');
+    }
+
+    static async downloadLocalAssets() {
+        let missing;
+        try {
+            missing = AssetService.getMissingAssets();
+        } catch (error) {
+            LoggerService.log('warn', `Could not determine missing assets: ${error.message}`);
+            LoggerService.log('info', `You can download them later with ${colors.cyan('/assets install')}`);
+            return;
+        }
+
+        if (!missing || missing.length === 0) {
+            LoggerService.log('success', 'All indexed assets are already present locally.');
+            return;
+        }
+
+        LoggerService.log('info', `${missing.length} asset(s) missing locally. Auto-downloading...`);
+        try {
+            await AssetInstaller.installAllMissing();
+        } catch (error) {
+            LoggerService.log('error', `Auto-download failed: ${error.message}`);
+            LoggerService.log('info', `You can retry later with ${colors.cyan('/assets install')}`);
+        }
     }
 
     static ask(question) {

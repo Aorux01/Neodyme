@@ -9,6 +9,7 @@ const FunctionsService = require('../../../src/service/api/functions-service');
 const ConfigManager = require('../../../src/manager/config-manager');
 const ShopService = require("../../../src/service/api/shop-service");
 const EXPService = require('../../../src/service/api/experience-service');
+const CosmeticSyncService = require('../../../src/service/api/cosmetic-sync-service');
 const { Errors, sendError } = require('../../../src/service/error/errors-system');
 const fs = require('fs').promises;
 const path = require('path');
@@ -26,11 +27,13 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/SetCosmeticLockerSl
             const { category, lockerItem, itemToSlot, variantUpdates, slotIndex } = req.body;
 
             const profile = await DatabaseManager.getProfile(accountId, profileId);
-            
+
             if (!profile) {
                 const err = Errors.MCP.profileNotFound(accountId);
                 return res.status(err.statusCode).json(err.toJSON());
             }
+
+            const baseRevision = profile.rvn || 0;
 
             const changes = [];
 
@@ -152,16 +155,28 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/SetCosmeticLockerSl
                     attributeValue: profile.items[lockerItem].attributes.locker_slots_data
                 });
 
+                // Le serveur de jeu (ex. Project Reboot) habille le joueur depuis les stats
+                // favorite_* (via le CosmeticLoadoutPC repique par le client), pas depuis
+                // locker_slots_data (qui ne sert qu'a l'apercu du casier). On resynchronise
+                // donc les favorite_* sur le casier qu'on vient de modifier, sinon l'apparence
+                // in-game retombe sur un skin par defaut.
+                if (profileId === "athena") {
+                    const sync = CosmeticSyncService.reconcileFavorites(profile);
+                    for (const statName of sync.fixedStats) {
+                        changes.push(MCPResponseBuilder.createStatChange(statName, profile.stats.attributes[statName]));
+                    }
+                }
+
                 profile.rvn += 1;
                 profile.commandRevision += 1;
 
                 await DatabaseManager.saveProfile(accountId, profileId, profile);
             }
 
-            if (queryRevision != profile.rvn - 1 && changes.length === 0) {
+            if (changes.length === 0) {
                 MCPResponseBuilder.sendFullProfileUpdate(res, profile, queryRevision);
             } else {
-                MCPResponseBuilder.sendResponse(res, profile, changes);
+                MCPResponseBuilder.sendResponse(res, profile, changes, baseRevision);
             }
         } catch (error) {
             LoggerService.log('error', `SetCosmeticLockerSlot error: ${error.message}`);

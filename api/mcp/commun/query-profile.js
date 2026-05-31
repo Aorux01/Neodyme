@@ -5,6 +5,7 @@ const MCPResponseBuilder = require('../../../src/utils/mcp-response-builder');
 const DatabaseManager = require('../../../src/manager/database-manager');
 const VersionService = require('../../../src/service/api/version-service');
 const LoggerService = require('../../../src/service/logger/logger-service');
+const CosmeticSyncService = require('../../../src/service/api/cosmetic-sync-service');
 const { Errors, sendError } = require('../../../src/service/error/errors-system');
 
 router.use(MCPMiddleware.validateProfileId);
@@ -39,6 +40,14 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/QueryProfile",
                 } else {
                     profile.stats.attributes.book_purchased = false;
                     profile.stats.attributes.book_level = 1;
+                }
+
+                const sync = CosmeticSyncService.reconcileFavorites(profile);
+                if (sync.changed) {
+                    profile.rvn = (profile.rvn || 0) + 1;
+                    profile.commandRevision = (profile.commandRevision || 0) + 1;
+                    await DatabaseManager.saveProfile(accountId, profileId, profile);
+                    LoggerService.log('info', `[CosmeticSync] ${accountId}: favoris resynchronises (${sync.fixedStats.join(', ')})`);
                 }
             }
 

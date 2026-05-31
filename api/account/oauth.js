@@ -56,15 +56,42 @@ router.post('/account/api/oauth/token', async (req, res) => {
 
         res.json(response);
     } catch (error) {
+        const grant = req.body?.grant_type || 'none';
+        const userHint = req.body?.username ? String(req.body.username).slice(0, 64) : '';
+        //LoggerService.log('warn', `OAuth /token failed: grant=${grant}${userHint ? ` user=${userHint}` : ''} reason=${error.message}`);
         if (error.statusCode) {
             return res.status(error.statusCode).json(error.toJSON());
         }
-        
-        LoggerService.log('error', `OAuth token error: ${error.message}`);
         const err = Errors.Authentication.OAuth.invalidBody();
         return res.status(err.statusCode).json(err.toJSON());
     }
 });
+
+
+const handleExchange = async (req, res) => {
+    try {
+        const authHeader = req.headers['authorization'];
+        if (authHeader && authHeader.toLowerCase().startsWith('bearer eg1~')) {
+            const token = authHeader.substring(7);
+            const tokenData = await AuthService.verifyToken(token).catch(() => null);
+            if (tokenData && tokenData.account_id) {
+                const TokenWebService = require('../../src/service/token/web-token-service');
+                const code = await TokenWebService.generateExchangeCode(tokenData.account_id);
+                return res.json({
+                    expiresInSeconds: 300,
+                    code,
+                    creatingClientId: tokenData.client_id || 'ec684b8c687f479fadea3cb2ad83f5c6'
+                });
+            }
+        }
+        res.json({});
+    } catch (error) {
+        LoggerService.log('error', `OAuth exchange error: ${error.message}`);
+        res.json({});
+    }
+};
+router.get('/account/api/oauth/exchange', handleExchange);
+router.post('/account/api/oauth/exchange', handleExchange);
 
 router.delete('/account/api/oauth/sessions/kill', async (req, res) => {
     try {

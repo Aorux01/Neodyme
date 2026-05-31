@@ -337,7 +337,7 @@
             <p>XP requirements per level and season XP multipliers.</p>
 
             <h3>config/game-servers.json</h3>
-            <p>Matchmaking regions and dedicated game server addresses. Changes here are reflected in the next <code>DefaultEngine.ini</code> regeneration (server restart).</p>
+            <p>Matchmaking regions and dedicated game server addresses. Changes here are reflected in the next <code>DefaultEngine.ini</code> regeneration (server restart). See the <a href="#matchmaking">Matchmaking</a> section below for the full configuration walkthrough.</p>
 
             <h3>config/motd.json</h3>
             <p>Message of the Day shown in the lobby news panel. Supports multiple entries with title, body, image, and tab name.</p>
@@ -437,6 +437,127 @@ asset-middleware (before express.static)
             <div class="callout tip">
                 Destructive commands (<code>/assets uninstall</code>, <code>/assets clean</code>) print a heads-up and require <code>/confirm assets-uninstall</code> or <code>/confirm assets-clean</code> to actually delete files.
             </div>
+
+            <!-- Matchmaking -->
+            <h2 id="matchmaking" class="section-anchor">Matchmaking &amp; dedicated servers <span class="pill pill-json">1.2.6+</span></h2>
+            <p>Matchmaking is fully functional and routes players to the dedicated server that matches their <strong>region</strong> and <strong>game mode</strong>. There is no in-game UI to set this up - everything happens in <code>config/game-servers.json</code> plus a host account with the <code>server</code> role. The whole file is cached at startup, so <strong>changes to <code>config/game-servers.json</code> require a Neodyme restart</strong> (or <code>/reload config</code>) to take effect.</p>
+
+            <h3>How it works</h3>
+            <pre class="ini-block">1. Game sends GET /fortnite/api/game/v2/matchmakingservice/ticket/player/&lt;accountId&gt;
+   ?bucketId=&lt;buildId&gt;:&lt;unknown&gt;:&lt;region&gt;:&lt;playlist&gt;
+
+2. Neodyme parses bucketId -> { buildId, region, playlist }
+   Looks up the playlist in game_modes (by playlist_id, legacy_id, or playlist).
+   Resolves the matching gamemode (BR_Solo, BR_Duos, ...).
+
+3. findAvailableServer(gamemode, region) iterates config.regions[region].servers
+   Picks the first server with status == "online" and matching gamemode that
+   is not currently assigned. Falls back to ANY region if the requested region
+   has none available - this is the normal behaviour when the client sends
+   region "NONE".
+
+4. The Dedicated Server then queries the joining player's profile through
+   POST /fortnite/api/game/v2/profile/&lt;playerAccountId&gt;/dedicated_server/QueryProfile
+   using the bearer token of its OWN host account. That host account MUST have
+   the "server" role - see Step 0 below.
+
+5. The chosen server.ip and server.port are sent back to the client as the
+   session address. The client connects directly to that dedicated server.</pre>
+
+            <h3>Step 0 - create a host account with the <code>server</code> role</h3>
+            <p>The Dedicated Server (RebootDS, custom DS, ...) signs in as a regular Fortnite account and uses its bearer token to query joining players' profiles. That account <strong>must have the <code>server</code> role</strong> - otherwise <code>POST .../dedicated_server/QueryProfile</code> returns <code>403</code> and the DS falls back to random cosmetics (or refuses the player entirely, depending on the DS build).</p>
+            <p>Register the host account from the website (e.g. <code>Host0001</code> / <code>host@…</code>), then from the Neodyme console:</p>
+            <pre class="ini-block">/account role Host0001 server         # promote the account to the "server" role
+/account info Host0001                # confirm: role = server (clientType = 5)</pre>
+            <p>Available roles (lowest to highest): <code>player</code>, <code>mod</code>/<code>moderator</code>, <code>dev</code>/<code>developer</code>, <code>admin</code>, <code>owner</code>, <code>server</code>. Only <code>server</code> unlocks the <code>dedicated_server/*</code> MCP routes. You can also promote via the Admin Panel &rarr; Users &rarr; role dropdown.</p>
+            <div class="callout warning">
+                Keep host-account credentials private and never reuse them as a player account. The <code>server</code> role bypasses the player-ownership check on every MCP route under <code>dedicated_server/*</code>.
+            </div>
+
+            <h3>Step 1 - declare your dedicated server</h3>
+            <p>Open <code>config/game-servers.json</code> and add one entry under the region you want, in the <code>servers</code> array. The minimum fields needed are:</p>
+            <pre class="ini-block">"EU": {
+  "name": "Europe West",
+  "code": "EU",
+  "servers": [
+    {
+      "id": "eu-local-01",                 // any unique string
+      "name": "[DS]neodyme-eu-local-01",   // display name, free-form
+      "ip": "127.0.0.1",                   // where RebootDS / your DS listens
+      "port": 7777,                        // your DS UDP port
+      "status": "online",                  // must be "online" to be picked
+      "gamemode": "BR_Solo",               // must match a key in game_modes
+      "region": "EU"
+    }
+  ]
+}</pre>
+            <p>Important: <strong>one server entry = one playlist</strong>. If you want Solo and Duos available, declare two entries (same IP, different ports) or two separate dedicated server instances.</p>
+
+            <h3>Step 2 - check the game_modes section</h3>
+            <p>The <code>game_modes</code> object maps your <code>server.gamemode</code> to the playlist Fortnite expects. The default file already ships with <code>BR_Solo</code>, <code>BR_Duos</code>, <code>BR_Squads</code>, <code>Creative</code> and the two <code>Arena_*</code> modes. Each entry must have:</p>
+            <ul>
+                <li><code>playlist</code> - the in-game playlist name (e.g. <code>Playlist_DefaultSolo</code>).</li>
+                <li><code>playlist_id</code> - the lower-case id used in matchmaking buckets (e.g. <code>playlist_defaultsolo</code>).</li>
+                <li><code>legacy_id</code> - the numeric or legacy string id the client sometimes sends instead of the playlist_id.</li>
+                <li><code>time_between_games</code> - minutes before a server is recycled and made available again after a match (default 25).</li>
+            </ul>
+
+            <h3>Step 3 - allowed client build versions</h3>
+            <p>Two different version controls exist, and it is worth knowing what each one actually does today:</p>
+            <ul>
+                <li><strong>Backend gate</strong> (<code>server.properties</code>): <code>customVersion=true</code> (default) accepts any Fortnite version that contacts the backend; <code>customVersion=false</code> + <code>fnVersion=&lt;X.YY&gt;</code> rejects everything else (and derives the shop era from <code>fnVersion</code>). This is the only check that currently filters by version.</li>
+                <li><strong>Per-server <code>version</code> field</strong> in <code>config/game-servers.json</code>: present on every entry (e.g. <code>"version": "20.00"</code>), but <strong>currently not honoured</strong> by the matchmaker. <code>findAvailableServer</code> only matches on <code>gamemode</code> + <code>status</code>, so a 15.30 client and a 20.00 client both land on the same server if the playlist matches. This is on the roadmap (planned for 1.2.8) - until then, fill the field for documentation only and rely on the backend gate, or run a separate Neodyme instance per build.</li>
+            </ul>
+
+            <h3>Step 4 - <code>matchmaking_settings</code></h3>
+            <p>Tuning knobs at the bottom of <code>config/game-servers.json</code>. The two most useful for local testing:</p>
+            <ul>
+                <li><code>min_players_to_start</code> - default <code>2</code>. The flow waits until that many players are queued before assigning a server. Set to <code>1</code> for solo testing. <strong>Requires a restart</strong> - the value is cached at startup.</li>
+                <li><code>queue_timeout_seconds</code> - default <code>300</code>. After this delay an idle queue is dropped.</li>
+            </ul>
+
+            <h3>Step 5 - hosts/DNS rewrite (one-time)</h3>
+            <p>The client only contacts the backend if the Epic domains are rewritten. The launcher DLL (RebootLauncher, NeoniteV2, ...) handles this for you. If you run a custom client, edit <code>%WINDIR%\System32\drivers\etc\hosts</code> to point <code>*.ol.epicgames.com</code> and <code>account-public-service-prod03.ol.epicgames.com</code> to your Neodyme host. Restart Fortnite.</p>
+
+            <h3>Quick checklist when matchmaking does not start</h3>
+            <table class="config-table">
+                <thead>
+                    <tr><th>Symptom in the lobby</th><th>What to check in Neodyme logs</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"Connecting..." forever, no log line on the backend</td>
+                        <td>The launcher / hosts file is not rewriting matchmaking traffic to Neodyme. Check the launcher's redirect rules.</td>
+                    </tr>
+                    <tr>
+                        <td><code>No available server for &lt;gamemode&gt; in &lt;region&gt;</code></td>
+                        <td>No entry in <code>game-servers.json</code> matches that <code>gamemode</code> with <code>status: "online"</code> in the requested region OR in any fallback region. Add or fix the entry and restart.</td>
+                    </tr>
+                    <tr>
+                        <td>Server is picked but the player joins and sees random cosmetics</td>
+                        <td>The host account does not have the <code>server</code> role. Look for <code>403</code> on <code>dedicated_server/QueryProfile</code> in the logs. Run <code>/account role &lt;host&gt; server</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><code>Invalid bucketId format</code> or <code>Unknown playlist</code></td>
+                        <td>The playlist sent by the client is not declared in <code>game_modes</code>. Add it (use any of the existing entries as template) and restart.</td>
+                    </tr>
+                    <tr>
+                        <td>Server is picked but the client never joins</td>
+                        <td>The <code>ip</code> + <code>port</code> in the entry must be reachable from the client machine (not just from the Neodyme host). On a single PC, <code>127.0.0.1</code> is fine; on LAN, use the host LAN IP. Open the UDP port in the firewall.</td>
+                    </tr>
+                    <tr>
+                        <td>Same server keeps being assigned and locks out further matches</td>
+                        <td>Recycled every <code>game_modes[mode].time_between_games</code> minutes (default 25). Use <code>/diagnostic</code> or the dev panel to see assignment state, or lower the value for testing.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout tip">
+                The matchmaker does <strong>not</strong> currently health-check your dedicated server. The <code>status</code> field is honoured as-is - if you set <code>"status": "online"</code> on a server that is actually down, players will be routed to it and get a connection error. Keep that field in sync manually for now.
+            </div>
+
+            <h3>Defaults shipped in <code>config/game-servers.json</code></h3>
+            <p>The repository ships with placeholder entries for NAW / NAE / EU / ASIA / OCE / BR / ME on <code>127.0.0.1:777x</code>. These are <strong>not real production servers</strong> - they exist so the file is well-formed out of the box. Replace them with your own server addresses before opening matchmaking to players.</p>
 
         </main>
     </div>

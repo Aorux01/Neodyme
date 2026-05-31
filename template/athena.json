@@ -106,136 +106,176 @@
       "quantity": 1
     },
     "AthenaCharacter:cid_001_athena_commando_f_default": {
-        "templateId": "AthenaCharacter:cid_001_athena_commando_f_default",
-        "attributes": {
-            "max_level_bonus": 0,
-            "level": 1,
-            "item_seen": true,
-            "xp": 0,
-            "variants": [],
-            "favorite": false
-        },
-        "quantity": 1
+      "templateId": "AthenaCharacter:cid_001_athena_commando_f_default",
+      "attributes": {
+        "max_level_bonus": 0,
+        "level": 1,
+        "item_seen": true,
+        "xp": 0,
+        "variants": [],
+        "favorite": false
+      },
+      "quantity": 1
     },
     "AthenaCharacter:cid_002_athena_commando_f_default": {
-        "templateId": "AthenaCharacter:cid_002_athena_commando_f_default",
-        "attributes": {
-            "max_level_bonus": 0,
-            "level": 1,
-            "item_seen": true,
-            "xp": 0,
-            "variants": [],
-            "favorite": false
-        },
-        "quantity": 1
+      "templateId": "AthenaCharacter:cid_002_athena_commando_f_default",
+      "attributes": {
+        "max_level_bonus": 0,
+        "level": 1,
+        "item_seen": true,
+        "xp": 0,
+        "variants": [],
+        "favorite": false
+      },
+      "quantity": 1
     },
     "AthenaCharacter:cid_003_athena_commando_f_default": {
-        "templateId": "AthenaCharacter:cid_003_athena_commando_f_default",
-        "attributes": {
-            "max_level_bonus": 0,
-            "level": 1,
-            "item_seen": true,
-            "xp": 0,
-            "variants": [],
-            "favorite": false
-        },
-        "quantity": 1
+      "templateId": "AthenaCharacter:cid_003_athena_commando_f_default",
+      "attributes": {
+        "max_level_bonus": 0,
+        "level": 1,
+        "item_seen": true,
+        "xp": 0,
+        "variants": [],
+        "favorite": false
+      },
+      "quantity": 1
     },
     "AthenaCharacter:cid_004_athena_commando_f_default": {
-        "templateId": "AthenaCharacter:cid_004_athena_commando_f_default",
-        "attributes": {
-            "max_level_bonus": 0,
-            "level": 1,
-            "item_seen": true,
-            "xp": 0,
-            "variants": [],
-            "favorite": false
-        },
-        "quantity": 1
+      "templateId": "AthenaCharacter:cid_004_athena_commando_f_default",
+      "attributes": {
+        "max_level_bonus": 0,
+        "level": 1,
+        "item_seen": true,
+        "xp": 0,
+        "variants": [],
+        "favorite": false
+      },
+      "quantity": 1
     },
     "AthenaCharacter:cid_005_athena_commando_m_default": {
-        "templateId": "AthenaCharacter:cid_005_athena_commando_m_default",
-        "attributes": {
-            "max_level_bonus": 0,
-            "level": 1,
-            "item_seen": true,
-            "xp": 0,
-            "variants": [],
-            "favorite": false
-        },
-        "quantity": 1
+      "templateId": "AthenaCharacter:cid_005_athena_commando_m_default",
+      "attributes": {
+        "max_level_bonus": 0,
+        "level": 1,
+        "item_seen": true,
+        "xp": 0,
+        "variants": [],
+        "favorite": false
+      },
+      "quantity": 1
     },
     "AthenaCharacter:cid_006_athena_commando_m_default": {
-        "templateId": "AthenaCharacter:cid_006_athena_commando_m_default",
-        "attributes": {
-            "max_level_bonus": 0,
-            "level": 1,
-            "item_seen": true,
-            "xp": 0,
-            "variants": [],
-            "favorite": false
-        },
-        "quantity": 1
+      "templateId": "AthenaCharacter:cid_006_athena_commando_m_default",
+      "attributes": {
+        "max_level_bonus": 0,
+        "level": 1,
+        "item_seen": true,
+        "xp": 0,
+        "variants": [],
+        "favorite": false
+      },
+      "quantity": 1
     },
     "AthenaCharacter:cid_007_athena_commando_m_default": {
-        "templateId": "AthenaCharacter:cid_007_athena_commando_m_default",
-        "attributes": {
-            "max_level_bonus": 0,
-            "level": 1,
-            "item_seen": true,
-            "xp": 0,
-            "variants": [],
-            "favorite": false
-        },
-        "quantity": 1
+      "templateId": "AthenaCharacter:cid_007_athena_commando_m_default",
+      "attributes": {
+        "max_level_bonus": 0,
+        "level": 1,
+        "item_seen": true,
+        "xp": 0,
+        "variants": [],
+        "favorite": false
+      },
+      "quantity": 1
     },
     "AthenaCharacter:cid_008_athena_commando_m_default": {
-        "templateId": "AthenaCharacter:cid_008_athena_commando_m_default",
-        "attributes": {
-            "max_level_bonus": 0,
-            "level": 1,
-            "item_seen": true,
-            "xp": 0,
-            "variants": [],
-            "favorite": false
-        },
-        "quantity": 1
+      "templateId": "AthenaCharacter:cid_008_athena_commando_m_default",
+      "attributes": {
+        "max_level_bonus": 0,
+        "level": 1,
+        "item_seen": true,
+        "xp": 0,
+        "variants": [],
+        "favorite": false
+      },
+      "quantity": 1
     },
     "AthenaPickaxe:DefaultPickaxe": {
-        "templateId": "AthenaPickaxe:DefaultPickaxe",
-        "attributes": {
-            "max_level_bonus": 0,
-            "level": 1,
-            "item_seen": true,
-            "xp": 0,
-            "variants": [],
-            "favorite": false
-        },
-        "quantity": 1
+      "templateId": "AthenaPickaxe:DefaultPickaxe",
+      "attributes": {
+        "max_level_bonus": 0,
+        "level": 1,
+        "item_seen": true,
+        "xp": 0,
+        "variants": [],
+        "favorite": false
+      },
+      "quantity": 1
     },
     "AthenaGlider:DefaultGlider": {
-        "templateId": "AthenaGlider:DefaultGlider",
-        "attributes": {
-            "max_level_bonus": 0,
-            "level": 1,
-            "item_seen": true,
-            "xp": 0,
-            "variants": [],
-            "favorite": false
-        },
-        "quantity": 1
+      "templateId": "AthenaGlider:DefaultGlider",
+      "attributes": {
+        "max_level_bonus": 0,
+        "level": 1,
+        "item_seen": true,
+        "xp": 0,
+        "variants": [],
+        "favorite": false
+      },
+      "quantity": 1
     },
     "AthenaDance:eid_dancemoves": {
-        "templateId": "AthenaDance:eid_dancemoves",
-        "attributes": {
-            "max_level_bonus": 0,
-            "level": 1,
-            "item_seen": true,
-            "xp": 0,
-            "variants": [],
-            "favorite": false
-        },
-        "quantity": 1
+      "templateId": "AthenaDance:eid_dancemoves",
+      "attributes": {
+        "max_level_bonus": 0,
+        "level": 1,
+        "item_seen": true,
+        "xp": 0,
+        "variants": [],
+        "favorite": false
+      },
+      "quantity": 1
+    },
+    "neodyme-characterloadout": {
+      "templateId": "CosmeticLoadout:LoadoutSchema_Character",
+      "attributes": {
+        "slots": [],
+        "display_name": "Neodyme"
+      },
+      "quantity": 1
+    },
+    "neodyme-emotesloadout": {
+      "templateId": "CosmeticLoadout:LoadoutSchema_Emotes",
+      "attributes": {
+        "slots": [],
+        "display_name": "Neodyme"
+      },
+      "quantity": 1
+    },
+    "neodyme-platformloadout": {
+      "templateId": "CosmeticLoadout:LoadoutSchema_Platform",
+      "attributes": {
+        "slots": [],
+        "display_name": "Neodyme"
+      },
+      "quantity": 1
+    },
+    "neodyme-wrapsloadout": {
+      "templateId": "CosmeticLoadout:LoadoutSchema_Wraps",
+      "attributes": {
+        "slots": [],
+        "display_name": "Neodyme"
+      },
+      "quantity": 1
+    },
+    "neodyme-vehicleloadout": {
+      "templateId": "CosmeticLoadout:LoadoutSchema_Vehicle",
+      "attributes": {
+        "slots": [],
+        "display_name": "Neodyme"
+      },
+      "quantity": 1
     }
   },
   "stats": {
@@ -306,7 +346,24 @@
         "",
         "",
         ""
-      ]
+      ],
+      "loadout_presets": {
+        "CosmeticLoadout:LoadoutSchema_Character": {
+          "0": "neodyme-characterloadout"
+        },
+        "CosmeticLoadout:LoadoutSchema_Emotes": {
+          "0": "neodyme-emotesloadout"
+        },
+        "CosmeticLoadout:LoadoutSchema_Platform": {
+          "0": "neodyme-platformloadout"
+        },
+        "CosmeticLoadout:LoadoutSchema_Wraps": {
+          "0": "neodyme-wrapsloadout"
+        },
+        "CosmeticLoadout:LoadoutSchema_Vehicle": {
+          "0": "neodyme-vehicleloadout"
+        }
+      }
     }
   },
   "commandRevision": 7

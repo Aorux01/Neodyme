@@ -1,11 +1,15 @@
 class McpResponseBuilder {
-    static sendResponse(res, profile, changes = []) {
-        const baseRevision = profile.rvn || 0;
-        
+    static sendResponse(res, profile, changes = [], baseRevision = undefined) {
+        const currentRevision = profile.rvn || 0;
+
+        const resolvedBase = (baseRevision !== undefined)
+            ? baseRevision
+            : (changes.length > 0 ? Math.max(0, currentRevision - 1) : currentRevision);
+
         res.json({
-            profileRevision: profile.rvn || 0,
+            profileRevision: currentRevision,
             profileId: profile.profileId,
-            profileChangesBaseRevision: baseRevision,
+            profileChangesBaseRevision: resolvedBase,
             profileChanges: changes,
             profileCommandRevision: profile.commandRevision || 0,
             serverTime: new Date().toISOString(),
@@ -14,17 +18,22 @@ class McpResponseBuilder {
     }
 
     static sendFullProfileUpdate(res, profile, queryRevision) {
-        const baseRevision = profile.rvn || 0;
-        let changes = [];
+        const currentRevision = profile.rvn || 0;
+        const qr = parseInt(queryRevision, 10);
 
-        if (queryRevision != baseRevision) {
+        const clientIsSynced =
+            Number.isFinite(qr) && qr !== -1 &&
+            (qr === currentRevision || qr === currentRevision - 1);
+
+        let changes = [];
+        if (!clientIsSynced) {
             changes = [{
                 changeType: 'fullProfileUpdate',
                 profile: profile
             }];
         }
 
-        this.sendResponse(res, profile, changes);
+        this.sendResponse(res, profile, changes, currentRevision);
     }
 
     static createStatChange(name, value) {

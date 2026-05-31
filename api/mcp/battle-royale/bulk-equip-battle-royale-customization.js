@@ -23,6 +23,8 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/BulkEquipBattleRoya
                 return res.status(err.statusCode).json(err.toJSON());
             }
 
+            const baseRevision = profile.rvn || 0;
+
             if (!profile.stats.attributes.favorite_dance) {
                 profile.stats.attributes.favorite_dance = ["", "", "", "", "", ""];
             }
@@ -122,10 +124,10 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/BulkEquipBattleRoya
                 await DatabaseManager.saveProfile(accountId, 'athena', profile);
             }
 
-            if (queryRevision != profile.rvn - 1 && changes.length === 0) {
+            if (changes.length === 0) {
                 MCPResponseBuilder.sendFullProfileUpdate(res, profile, queryRevision);
             } else {
-                MCPResponseBuilder.sendResponse(res, profile, changes);
+                MCPResponseBuilder.sendResponse(res, profile, changes, baseRevision);
             }
         } catch (error) {
             const LoggerService = require('../../../src/service/logger/logger-service');
