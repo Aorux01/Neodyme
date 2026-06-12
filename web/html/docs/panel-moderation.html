@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderation Panel - Neodyme Docs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="../status.html">STATUS</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="configuration.html" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
+                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="panel-moderation.html" class="docs-nav-link active"><i class="fas fa-gavel"></i> Moderation Panel</a>
+                <a href="panel-developer.html" class="docs-nav-link"><i class="fas fa-code-branch"></i> Developer Panel</a>
+                <a href="panel-admin.html" class="docs-nav-link"><i class="fas fa-user-shield"></i> Admin Panel</a>
+                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+        <main class="docs-content">
+            <h1><i class="fas fa-gavel"></i> Moderation Panel</h1>
+            <p>The Moderation Panel is the day-to-day workspace for the support team. It handles support tickets, in-game player reports, bans, account lookups, and creator-code approvals. Access requires the <code>moderator</code>, <code>admin</code>, or <code>owner</code> role.</p>
+
+            <div class="alert alert-info" style="background:rgba(59,130,246,0.1);border-left:3px solid #3b82f6;padding:12px 16px;border-radius:6px;margin:16px 0;">
+                <strong><i class="fas fa-info-circle"></i> Heads up</strong> &mdash; The Moderation, Developer and Admin panels are all hosted on a single page (<code>web/html/admin.html</code>) reached via the dashboard's "Staff Panel" link. The page only renders the sections your role is authorized to see; non-staff are redirected to the regular dashboard.
+            </div>
+
+            <h2>Accessing the panel</h2>
+            <ol>
+                <li>Sign in on the dashboard at <code>https://your-server.tld/</code></li>
+                <li>If your role allows it, a "Staff Panel" link appears in the dashboard header</li>
+                <li>The page route is <code>/admin.html</code> &mdash; bookmarkable</li>
+                <li>The page checks your role via <code>GET /neodyme/api/user/role</code> on load; if you are not staff, you are redirected back to the dashboard</li>
+            </ol>
+
+            <h2>Panel layout</h2>
+            <p>The Moderation Panel groups its features into 5 tabs:</p>
+            <table>
+                <thead><tr><th>Tab</th><th>What it does</th><th>Backend</th></tr></thead>
+                <tbody>
+                    <tr><td><i class="fas fa-ticket-alt"></i> Tickets</td><td>Support tickets opened by players from the dashboard</td><td><code>/neodyme/api/mod/tickets/*</code></td></tr>
+                    <tr><td><i class="fas fa-flag"></i> Reports</td><td>In-game player reports raised through Fortnite&#39;s native UI</td><td><code>/neodyme/api/mod/reports/*</code></td></tr>
+                    <tr><td><i class="fas fa-user-slash"></i> Players</td><td>Search a player, see their sessions, ban/unban</td><td><code>/neodyme/api/mod/players/*</code></td></tr>
+                    <tr><td><i class="fas fa-code-branch"></i> Creator Codes</td><td>Review SAC requests, approve/reject/toggle/delete</td><td><code>/neodyme/api/mod/creator-codes/*</code></td></tr>
+                    <tr><td><i class="fas fa-comments"></i> Feedback</td><td>Read &amp; dismiss player feedback submissions</td><td><code>/neodyme/api/mod/feedback/*</code></td></tr>
+                </tbody>
+            </table>
+
+            <h2>1. Tickets</h2>
+            <p>Players open tickets from their dashboard ("Help &amp; Support"). Each ticket carries a category, a message, an optional attachment, and a status (<code>open</code>, <code>in_progress</code>, <code>closed</code>).</p>
+            <h3>Typical workflow</h3>
+            <ol>
+                <li>A new ticket arrives in <em>Open</em> &mdash; it&#39;s highlighted</li>
+                <li>You can <strong>assign yourself</strong> (<code>POST /tickets/:id/assign</code>) so other staff see who owns it</li>
+                <li>Add internal notes &mdash; only staff see them</li>
+                <li>Send replies &mdash; the player gets a dashboard notification</li>
+                <li><strong>Close</strong> when resolved (<code>POST /tickets/:id/close</code>) or <strong>delete</strong> for spam (<code>DELETE /tickets/:id</code>, admin-only)</li>
+            </ol>
+            <h3>Audit trail</h3>
+            <p>Every ticket action you take is recorded in the <a href="panel-admin.html#audit">Audit Log</a> with the ticket ID and the action (<code>assign_ticket</code>, <code>close_ticket</code>, <code>delete_ticket</code>).</p>
+
+            <h2>2. Player Reports</h2>
+            <p>When a player uses Fortnite&#39;s in-game report UI (right-click on a player, "Report"), the data is forwarded to the Reports tab. Each entry shows the reporter, the target, the category (cheating, toxicity, exploit&hellip;), and the in-game context where it happened.</p>
+            <h3>Actions per report</h3>
+            <ul>
+                <li><strong>Open a ticket from the report</strong> &mdash; opens a pre-filled ticket targeted at the reported player, useful if a real investigation is needed</li>
+                <li><strong>Quick ban</strong> &mdash; opens the ban modal with the target pre-filled</li>
+                <li><strong>Dismiss</strong> &mdash; mark as not actionable; the entry stays in the audit log</li>
+                <li><strong>Dismiss all</strong> &mdash; bulk-clear if a wave of false reports comes in</li>
+            </ul>
+            <h3>Note on duplicates</h3>
+            <p>Reports are not deduplicated server-side &mdash; if 5 players report the same target you&#39;ll see 5 entries. The reporter column lets you filter and triage quickly.</p>
+
+            <h2>3. Player Search &amp; Ban</h2>
+            <p>The Players tab lets you search a player by display name, email or account ID and see:</p>
+            <ul>
+                <li>Account creation date, last login, last IP</li>
+                <li>Current role (<code>player</code> / <code>founder</code> / <code>helper</code> / <code>moderator</code> / <code>developer</code> / <code>admin</code> / <code>owner</code> / <code>server</code>)</li>
+                <li>Current ban status &mdash; if banned, reason, duration and the moderator who banned them</li>
+                <li>Active sessions (live access tokens; revoking them logs the player out everywhere)</li>
+            </ul>
+
+            <h3>Ban modal</h3>
+            <p>Triggered via the <strong>Ban</strong> button on a player row or from a report. Fields:</p>
+            <table>
+                <thead><tr><th>Field</th><th>Required</th><th>Notes</th></tr></thead>
+                <tbody>
+                    <tr><td>Reason</td><td>Yes</td><td>Stored verbatim in the audit log and shown to the player on next login</td></tr>
+                    <tr><td>Duration</td><td>Yes</td><td>Pick a preset (1h / 1d / 7d / 30d / Permanent) or a custom duration. Permanent never auto-expires.</td></tr>
+                    <tr><td>Invalidate sessions</td><td>No (default ON)</td><td>Force-revokes every active token so the player can&#39;t finish their current match</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Unban</h3>
+            <p>Click <strong>Unban</strong> on a banned player. You&#39;ll be asked for a justification (also logged). Players are not notified that they were unbanned; they just succeed at their next login.</p>
+
+            <h2>4. Creator Codes</h2>
+            <p>Players can request a SAC code from their dashboard. Requests appear in this tab.</p>
+            <h3>Per-request actions</h3>
+            <ul>
+                <li><strong>Approve</strong> &mdash; activates the code; the player now earns the configured commission (<code>creatorCodeCommissionPercent</code>) on every shop purchase that uses it</li>
+                <li><strong>Reject</strong> &mdash; refused with no commission. The player can request again with a new code string after.</li>
+                <li><strong>Toggle</strong> &mdash; temporarily disable an already-approved code (e.g. ToS violation under investigation)</li>
+                <li><strong>Delete</strong> &mdash; remove permanently. The player can then request a new code.</li>
+            </ul>
+            <h3>Naming rules</h3>
+            <p>Codes are case-insensitive, A&ndash;Z and 0&ndash;9 only, 3&ndash;16 characters. Profanity filtering is not built-in &mdash; staff must review manually before approving.</p>
+
+            <h2>5. Feedback</h2>
+            <p>Players can submit free-form feedback (one-shot, not a ticket) via their dashboard. This tab is a flat list with timestamp, account ID and content.</p>
+            <ul>
+                <li><strong>Mark as read</strong> &mdash; visual only, doesn&#39;t remove the entry</li>
+                <li><strong>Delete</strong> &mdash; permanently remove. Logged in audit.</li>
+            </ul>
+
+            <h2>Audit log</h2>
+            <p>All moderation actions are recorded server-side. Moderators see their own actions in the Admin Panel&#39;s <a href="panel-admin.html#audit">Audit Log</a>; admins see everyone&#39;s. Each row contains:</p>
+            <ul>
+                <li>Action type (<code>ban_user</code>, <code>unban_user</code>, <code>close_ticket</code>, <code>approve_code</code>&hellip;)</li>
+                <li>Who performed it (display name + account ID + IP)</li>
+                <li>Target (user, ticket, code&hellip;)</li>
+                <li>Detailed payload: ban reason, ticket message, before/after values, etc.</li>
+            </ul>
+
+            <h2>Common pitfalls</h2>
+            <ul>
+                <li><strong>Don&#39;t change your own role</strong> &mdash; the API will refuse, but if you somehow end up role-less you lose panel access</li>
+                <li><strong>Permanent bans without a clear reason</strong> &mdash; the reason field is shown to the player and stored forever; write it as if it were public</li>
+                <li><strong>Quick-banning from a report without checking sessions</strong> &mdash; the player can finish the match if you forget to invalidate sessions</li>
+                <li><strong>Deleting a ticket</strong> &mdash; loses the message history. Prefer <strong>close</strong> unless it&#39;s outright spam.</li>
+            </ul>
+
+            <h2>Frontend &amp; backend reference</h2>
+            <table>
+                <thead><tr><th>Page / Script</th><th>What it does</th></tr></thead>
+                <tbody>
+                    <tr><td><code>web/html/admin.html</code></td><td>Single host page for Moderation, Developer and Admin panels</td></tr>
+                    <tr><td><code>web/js/staff-panel.js</code></td><td>Logic for all staff sections (tickets, reports, players, codes, feedback)</td></tr>
+                    <tr><td><code>api/web/mod.js</code></td><td>Backend routes &mdash; all under <code>/neodyme/api/mod/*</code>, guarded by <code>requireModerator</code></td></tr>
+                    <tr><td><code>src/service/api/audit-service.js</code></td><td>Audit log helpers (<code>logBan</code>, <code>logUnban</code>, <code>logTicketAction</code>&hellip;)</td></tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+</html>

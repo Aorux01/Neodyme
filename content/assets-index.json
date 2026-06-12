@@ -3,7 +3,8 @@
   "_generatedAt": "2026-05-27T17:06:43.048Z",
   "alwaysLocal": [
     "images/neodyme-public-service/**",
-    "images/radios/**"
+    "images/radios/**",
+    "images/uploaded-images/**"
   ],
   "assets": {
     "images/fortnite-public-service-prod11/28comp-fncs-communitycup-in-game-poster-front.jpg": {

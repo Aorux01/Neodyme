@@ -241,6 +241,9 @@
                     <button class="tab-btn active" onclick="showDevTab('overview')"><i class="fas fa-tachometer-alt"></i> Overview</button>
                     <button class="tab-btn" onclick="showDevTab('config')"><i class="fas fa-sliders-h"></i> Configuration</button>
                     <button class="tab-btn" onclick="showDevTab('config-files')"><i class="fas fa-file-code"></i> Config Files</button>
+                    <button class="tab-btn" onclick="showDevTab('content')"><i class="fas fa-newspaper"></i> Content</button>
+                    <button class="tab-btn" onclick="showDevTab('assets')"><i class="fas fa-images"></i> Assets</button>
+                    <button class="tab-btn" onclick="showDevTab('shop')"><i class="fas fa-shopping-cart"></i> Shop <span class="tag-beta">BETA</span></button>
                     <button class="tab-btn" onclick="showDevTab('stats')"><i class="fas fa-chart-bar"></i> Statistics</button>
                     <button class="tab-btn" onclick="showDevTab('logs')"><i class="fas fa-terminal"></i> Logs</button>
                     <button class="tab-btn" onclick="showDevTab('plugins')"><i class="fas fa-plug"></i> Plugins</button>
@@ -742,6 +745,85 @@
                     </div>
                 </div>
 
+                <!-- Content Editor Tab -->
+                <div id="dev-content" class="dev-tab-content" style="display: none;">
+                    <div class="content-editor-shell">
+                        <aside class="content-editor-nav">
+                            <div class="content-cat-title"><i class="fas fa-globe"></i> Global</div>
+                            <button class="content-nav-item" data-scope="pages" data-section="loginmessage" onclick="openContentEditor('pages','loginmessage')"><i class="fas fa-sign-in-alt"></i> Login Message</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="emergencynotice" onclick="openContentEditor('pages','emergencynotice')"><i class="fas fa-bell"></i> Emergency Notice</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="emergencynoticev2" onclick="openContentEditor('pages','emergencynoticev2')"><i class="fas fa-bell"></i> Emergency Notice v2</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="lobby" onclick="openContentEditor('pages','lobby')"><i class="fas fa-home"></i> Lobby</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="specialoffervideo" onclick="openContentEditor('pages','specialoffervideo')"><i class="fas fa-video"></i> Special Offer Video</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="subgameselectdata" onclick="openContentEditor('pages','subgameselectdata')"><i class="fas fa-th-large"></i> Subgame Select</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="subgameinfo" onclick="openContentEditor('pages','subgameinfo')"><i class="fas fa-info-circle"></i> Subgame Info</button>
+
+                            <div class="content-cat-title"><i class="fas fa-bullseye"></i> Battle Royale</div>
+                            <button class="content-nav-item" data-scope="motd" data-section="root" onclick="openContentEditor('motd','root')"><i class="fas fa-star"></i> MOTD (modern)</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="battleroyalenews" onclick="openContentEditor('pages','battleroyalenews')"><i class="fas fa-newspaper"></i> BR News (legacy)</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="battleroyalenewsv2" onclick="openContentEditor('pages','battleroyalenewsv2')"><i class="fas fa-newspaper"></i> BR News v2 (legacy)</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="battlepassaboutmessages" onclick="openContentEditor('pages','battlepassaboutmessages')"><i class="fas fa-id-card"></i> Battle Pass About</button>
+
+                            <div class="content-cat-title"><i class="fas fa-paint-brush"></i> Creative</div>
+                            <button class="content-nav-item" data-scope="pages" data-section="creativenews" onclick="openContentEditor('pages','creativenews')"><i class="fas fa-newspaper"></i> Creative News</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="creativeAds" onclick="openContentEditor('pages','creativeAds')"><i class="fas fa-bullhorn"></i> Creative Ads</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="creativeFeatures" onclick="openContentEditor('pages','creativeFeatures')"><i class="fas fa-star"></i> Creative Features</button>
+
+                            <div class="content-cat-title"><i class="fas fa-hammer"></i> Save the World</div>
+                            <button class="content-nav-item" data-scope="pages" data-section="savetheworldnews" onclick="openContentEditor('pages','savetheworldnews')"><i class="fas fa-newspaper"></i> STW News</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="athenamessage" onclick="openContentEditor('pages','athenamessage')"><i class="fas fa-comment-alt"></i> Athena Message</button>
+                            <button class="content-nav-item" data-scope="pages" data-section="survivalmessage" onclick="openContentEditor('pages','survivalmessage')"><i class="fas fa-comment-alt"></i> Survival Message</button>
+
+                            <div class="content-cat-title content-cat-danger"><i class="fas fa-undo"></i> Danger zone</div>
+                            <button class="content-nav-item content-nav-danger" onclick="resetAllContent()"><i class="fas fa-cloud-download-alt"></i> Reset all content</button>
+                        </aside>
+
+                        <main class="content-editor-main">
+                            <div id="content-editor-placeholder" class="content-editor-placeholder">
+                                <i class="fas fa-newspaper" style="font-size:3rem;opacity:0.3;"></i>
+                                <h3>Content Editor</h3>
+                                <p>Select a section on the left to start editing.<br>All editors support the 13 official Fortnite languages.</p>
+                            </div>
+                            <div id="content-editor-body" style="display:none;"></div>
+                        </main>
+                    </div>
+                </div>
+
+                <!-- Assets Tab -->
+                <div id="dev-assets" class="dev-tab-content" style="display: none;">
+                    <div class="content-editor-shell">
+                        <aside class="content-editor-nav">
+                            <div class="content-cat-title"><i class="fas fa-cloud-upload-alt"></i> Manage</div>
+                            <button class="content-nav-item assets-nav-item active" data-assets-view="upload" onclick="showAssetsView('upload')"><i class="fas fa-upload"></i> Upload</button>
+
+                            <div class="content-cat-title"><i class="fas fa-folder-open"></i> Library</div>
+                            <button class="content-nav-item assets-nav-item" data-assets-view="local" onclick="showAssetsView('local')"><i class="fas fa-hdd"></i> Browse local</button>
+                            <button class="content-nav-item assets-nav-item" data-assets-view="online" onclick="showAssetsView('online')"><i class="fas fa-globe"></i> Browse online</button>
+                        </aside>
+
+                        <main class="content-editor-main">
+                            <div id="assets-view-body"></div>
+                        </main>
+                    </div>
+                </div>
+
+                <!-- Shop Editor Tab (BETA) -->
+                <div id="dev-shop" class="dev-tab-content" style="display: none;">
+                    <header class="shop-editor-header">
+                        <div>
+                            <h3><i class="fas fa-shopping-cart"></i> Shop Editor <span class="tag-beta">BETA</span></h3>
+                            <p class="muted">Hand-pick items in each slot. Cosmetics are pulled from <code>fortnite-api.com</code>. The next auto-rotation will overwrite manual picks unless you disable <code>autoShopRotation</code>.</p>
+                        </div>
+                        <div class="shop-editor-actions">
+                            <button class="btn btn-secondary" onclick="shopEditorRefresh()"><i class="fas fa-sync"></i> Refresh</button>
+                            <button class="btn btn-primary" onclick="shopEditorRandomizeAll()"><i class="fas fa-dice"></i> Randomize all empty</button>
+                        </div>
+                    </header>
+                    <div id="shop-editor-grid" class="shop-editor-grid">
+                        <div class="asset-grid-loading"><i class="fas fa-spinner fa-spin"></i> Loading shop layout...</div>
+                    </div>
+                </div>
+
                 <!-- Statistics Tab -->
                 <div id="dev-stats" class="dev-tab-content" style="display: none;">
                     <div class="dashboard-grid">
@@ -1201,6 +1283,9 @@
     <script src="../js/staff-panel.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="../js/admin-panel.js"></script>
+    <script src="../js/assets-manager.js"></script>
+    <script src="../js/content-editor.js"></script>
+    <script src="../js/shop-editor.js"></script>
     <script>
         // Staff Panel gate: only moderation/developer/admin staff may view this page.
         // Reuses the same /neodyme/api/user/role endpoint as the dashboard.

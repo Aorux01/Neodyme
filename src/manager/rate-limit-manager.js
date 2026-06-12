@@ -12,7 +12,6 @@ class RateLimitManager {
 
     static isEnabled = false;
 
-    // ---- Condensed rate-limit logging ----
     // Instead of logging one warning per blocked request (which floods the console when a
     // client hammers a 429), we aggregate hits per (type|key|method|path) and flush a single
     // condensed line after a short window of silence.

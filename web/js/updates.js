@@ -2,7 +2,7 @@ const VERSIONS = [
     {
         version: '1.2.6',
         title: 'Asset Pipeline, Web Rebuild & Locker Sync',
-        date: 'May 30, 2026',
+        date: 'June 12, 2026',
         type: 'feature',
         latest: true,
         lts: false,
@@ -23,6 +23,9 @@ const VERSIONS = [
             { label: 'Fix: dedicated_server Access', text: 'Dedicated game servers (RebootDS, custom DS) now reach <code>POST /fortnite/api/game/v2/profile/:accountId/dedicated_server/QueryProfile</code> without hitting 403. The route requires the caller account to have the <code>server</code> role - this is now documented in the Matchmaking guide so DS host accounts (e.g. <code>Host0001</code>) are set up correctly from the start.' },
             { label: 'Matchmaking Guide', text: 'New <a href="docs/game-files.html#matchmaking">Matchmaking &amp; dedicated servers</a> section in the docs walks through configuring <code>config/game-servers.json</code>: declaring a server entry per region+gamemode, mapping playlists in <code>game_modes</code>, hosts/DNS rewrite for the launcher, and a checklist for the five most common matchmaking failures (with the exact log line each one produces). Also clarifies that the matchmaker does not health-check servers - the <code>status</code> field is honoured as-is.' },
             { label: 'OAuth Diagnostics & Exchange Endpoint', text: 'Failed <code>POST /account/api/oauth/token</code> now logs the grant type and username (no password) so launcher/DLL auth failures are diagnosable from server logs. New <code>GET /account/api/oauth/exchange</code> endpoint matches the Epic flow (returns an exchange code for the bearer\'s account, falls through to <code>{}</code> without one for launcher parity). Also fixed a missing <code>await</code> in the existing exchange-code grant path that made the consumed accountId a Promise.' },
+            { label: 'Content Editor (Dev Panel)', text: 'New typed editors in the Dev Panel for 17 in-game content sections - no more raw JSON editing for MOTD, news, lobby messages or BR/Creative/STW content. Each section has a schema-driven form with per-field <strong>i18n toggle</strong> (string vs 13-locale object), live coverage badge (<code>13/13</code> green / <code>7/13</code> orange / <code>0/13</code> red), a locale switcher bar that re-renders every field at once, draggable/duplicatable/deletable list entries, and a "Reset file" action that re-downloads the canonical file from the GitHub repo. Backed by <code>GET/PUT /neodyme/api/dev/content/:scope/:section</code> with an allowlist and automatic pages-cache invalidation. Covers <em>login message, emergency notice v1/v2, lobby, special offer video, subgame select/info, MOTD modern (config/motd.json), BR News v1/v2, battle pass about, creative news, creative ads, creative features, STW news, athena message, survival message</em>.' },
+            { label: 'Assets Manager (Dev Panel)', text: 'New <strong>Assets</strong> tab with three sub-views: <code>Upload</code> (drag-and-drop or file picker, max 5MB, magic-byte validation for PNG/JPEG/WebP/GIF - a renamed script is rejected), <code>Browse local</code> (grid of every image in <code>public/images/</code> grouped by folder, with copy-URL and delete on uploaded entries), <code>Browse online</code> (CDN-only entries from <code>assets-index.json</code>). Uploaded files land in <code>public/images/uploaded-images/</code> with timestamped names, get registered in <code>assets-index.json</code> with metadata (<code>originalName</code>, <code>uploadedBy</code>, <code>uploadedAt</code>), and are forced <code>alwaysLocal</code> so the public URL <code>https://&lt;your-host&gt;/images/uploaded-images/&lt;file&gt;</code> always resolves to disk. The Content Editor\'s image fields now have inline <strong>Upload</strong> and <strong>Browse</strong> buttons that open the same library and auto-fill the URL.' },
+            { label: 'Shop Editor BETA (Dev Panel)', text: 'New <strong>Shop</strong> tab to hand-pick what fills each slot of <code>data/shop.json</code>. Slots come from <code>config/shop.json -> shopCategories[].count</code> and are grouped by category (Daily, Featured...). Each card supports: <strong>pick</strong> (opens a searchable cosmetic grid backed by <code>fortnite-api.com</code> with rarity-coloured borders), <strong>random</strong> (single-slot reroll), <strong>edit</strong> (manual grant/price), <strong>clear</strong>, plus a <strong>Randomize all empty</strong> bulk action. Prices default sensibly by rarity (legendary 2000, epic 1500, rare 1200, uncommon 800, common 200). Catalog is cached server-side for 1h to stay friendly to the API.' },
         ]
     },
     {
@@ -293,9 +296,9 @@ const VERSIONS = [
         ]
     },
     {
-        version: '1.0.1 – 1.0.9',
+        version: '1.0.1 - 1.0.9',
         title: 'Early Hotfixes',
-        date: 'Aug 28, 2024 – Sep 12, 2025',
+        date: 'Aug 28, 2024 - Sep 12, 2025',
         type: 'hotfix',
         latest: false,
         lts: false,

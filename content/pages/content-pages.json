@@ -6894,7 +6894,7 @@
             {
               "_type": "Event Screen More Info Group",
               "header": "THE REWARD TRACK",
-              "body": "Complete <text color=\"F9FE49\">quests</> to increase your <text color=\"F9FE49\">CURSED ENERGY</>. Claim rewards when you fill each section on the track!\n\n<img id=\"LockIcon\"/> <text color=\"FFFFFF\">Premium Reward Track</>\nYou can unlock the bottom reward track at any time for <text color=\"F9FE49\">1,000 V–Bucks</>. You'll automatically claim the rewards you've earned up to that point.\n\nPlease note that all in-game rewards are not exclusive to Break the Curse! and may be available later in the Item Shop for purchase at a potentially higher price."
+              "body": "Complete <text color=\"F9FE49\">quests</> to increase your <text color=\"F9FE49\">CURSED ENERGY</>. Claim rewards when you fill each section on the track!\n\n<img id=\"LockIcon\"/> <text color=\"FFFFFF\">Premium Reward Track</>\nYou can unlock the bottom reward track at any time for <text color=\"F9FE49\">1,000 V-Bucks</>. You'll automatically claim the rewards you've earned up to that point.\n\nPlease note that all in-game rewards are not exclusive to Break the Curse! and may be available later in the Item Shop for purchase at a potentially higher price."
             },
             {
               "_type": "Event Screen More Info Group",
@@ -6909,7 +6909,7 @@
           ],
           "starterHeader": "Complete quests to earn CURSED ENERGY!",
           "moreInfoSubHeader": "BREAK THE CURSE! runs from Aug 8 to Aug 25 at 2:00am ET",
-          "premiumUpsellUnownedBody": "<text color=\"7E51FF\">Includes the</> STREETWEAR YUJI ITADORI Outfit <text color=\"7E51FF\">and access to the bottom track for 1,000 V–Bucks</>",
+          "premiumUpsellUnownedBody": "<text color=\"7E51FF\">Includes the</> STREETWEAR YUJI ITADORI Outfit <text color=\"7E51FF\">and access to the bottom track for 1,000 V-Bucks</>",
           "purchasePremiumTrackBodyList": [
             "Instantly <text color=\"7E51FF\">claim the</> STREETWEAR YUJI ITADORI Outfit!",
             "<text color=\"7E51FF\">Access the bottom reward track and</> earn more rewards!",
@@ -6955,7 +6955,7 @@
           ],
           "starterHeader": "Complete quests to earn GALACTIC REPUTATION!",
           "moreInfoSubHeader": "FIND THE FORCE runs from May 2 to May 23 at 9:00am ET",
-          "premiumUpsellUnownedBody": "<text color=\"FF7070\">Includes the</> CORUSCANT GUARD Outfit <text color=\"FF7070\">and access to the bottom track for 1,000 V–Bucks</>",
+          "premiumUpsellUnownedBody": "<text color=\"FF7070\">Includes the</> CORUSCANT GUARD Outfit <text color=\"FF7070\">and access to the bottom track for 1,000 V-Bucks</>",
           "purchasePremiumTrackBodyList": [
             "Instantly <text color=\"FF7070\">claim the</> CORUSCANT GUARD Outfit!",
             "<text color=\"FF7070\">Access the bottom reward track and</> earn more rewards!",

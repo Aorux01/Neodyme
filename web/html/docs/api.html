@@ -40,6 +40,9 @@
                 <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
                 <div class="docs-nav-section">Features</div>
                 <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="panel-moderation.html" class="docs-nav-link"><i class="fas fa-gavel"></i> Moderation Panel</a>
+                <a href="panel-developer.html" class="docs-nav-link"><i class="fas fa-code-branch"></i> Developer Panel</a>
+                <a href="panel-admin.html" class="docs-nav-link"><i class="fas fa-user-shield"></i> Admin Panel</a>
                 <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
                 <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
                 <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
@@ -265,7 +268,8 @@ Content-Type: application/json
                 <tr><td><code>PUT</code></td><td><code>/neodyme/api/admin/users/:accountId/role</code></td><td>Change user role</td></tr>
                 <tr><td><code>PUT</code></td><td><code>/neodyme/api/admin/users/:accountId/ban</code></td><td>Ban user</td></tr>
                 <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/stats</code></td><td>Server statistics</td></tr>
-                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/audit-log</code></td><td>Get audit logs</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/audit-log</code></td><td>Get audit logs (filter by <code>action</code>, <code>search</code>, <code>from</code>, <code>to</code>, paginated)</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/audit-log/summary?hours=</code></td><td>Action-type counts over the last N hours <span style="background:rgba(245,158,11,0.18);color:#fbbf24;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.6</span></td></tr>
                 <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/console-logs</code></td><td>Get server console logs</tr>
                 <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/live-stats</code></td><td>CPU, RAM, player count (real-time)</tr>
                 <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/server-properties</code></td><td>Read server.properties</tr>
@@ -280,15 +284,71 @@ Content-Type: application/json
             </table>
 
             <h2>Developer API</h2>
-            <p>Requires Developer role.</p>
+            <p>Requires Developer role. Writes additionally require CSRF (cookie <code>neodyme_session</code> + header <code>X-CSRF-Token</code>).</p>
+
+            <h3>Live configuration</h3>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/config</code></td><td>Get all config values</td></tr>
-                <tr><td><code>PUT</code></td><td><code>/neodyme/api/dev/config/:key</code></td><td>Update config value</td></tr>
-                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/config/files</code></td><td>List config files</td></tr>
-                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/stats/server</code></td><td>Server statistics</td></tr>
-                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/stats/database</code></td><td>Database statistics</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/config</code></td><td>Get all config values (grouped by category)</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/dev/config/:key</code></td><td>Update one config value (allowlist enforced)</td></tr>
+            </table>
+
+            <h3>Config &amp; INI files</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/config/files</code></td><td>List editable JSON config files</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/config/files/:fileName</code></td><td>Read a config file (allowlist: experience/game-servers/shop/motd/playlists)</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/dev/config/files/:fileName</code></td><td>Replace a config file (atomic write)</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/ini-files/:fileName</code></td><td>Read a cloud-storage INI file</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/dev/ini-files/:fileName</code></td><td>Replace a cloud-storage INI file</td></tr>
+            </table>
+
+            <h3>Content Editor <span style="background:rgba(245,158,11,0.18);color:#fbbf24;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.6</span></h3>
+            <p>Typed editors for <code>config/motd.json</code> and 16 sections of <code>content/pages/content-pages.json</code> (login, news, notices, lobby, &hellip;).</p>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/content/:scope/:section</code></td><td>Read a content section. <code>scope</code> = <code>motd</code> or <code>pages</code>.</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/dev/content/:scope/:section</code></td><td>Replace a content section (atomic write + auto pages-cache invalidation)</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/dev/content/reset</code></td><td>Re-download <code>motd.json</code> and/or <code>content-pages.json</code> from the upstream GitHub repo. Body: <code>{scopes: ['motd','pages']}</code></td></tr>
+            </table>
+
+            <h3>Assets Manager <span style="background:rgba(245,158,11,0.18);color:#fbbf24;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.6</span></h3>
+            <p>Image upload + library browse. Uploads are validated against magic bytes (PNG/JPEG/WebP/GIF), max 5 MB.</p>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/assets/local</code></td><td>Scan <code>public/images/</code> recursively, returned grouped by folder</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/assets/online</code></td><td>Entries from <code>assets-index.json</code> with a CDN URL and not present on disk</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/dev/assets/upload</code></td><td>Multipart upload. Writes to <code>public/images/uploaded-images/</code> and registers in <code>assets-index.json</code></td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/neodyme/api/dev/assets/uploaded/:filename</code></td><td>Delete an uploaded image (only files under <code>uploaded-images/</code>)</td></tr>
+            </table>
+
+            <h3>Shop Editor (BETA) <span style="background:rgba(245,158,11,0.18);color:#fbbf24;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.6</span></h3>
+            <p>Hand-pick what fills each slot of <code>data/shop.json</code>. Cosmetic catalog proxied from <code>fortnite-api.com</code> with 1h server-side cache.</p>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/shop/layout</code></td><td>Get every slot (from <code>shopCategories[].count</code>) with its current entry</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/shop/cosmetics?q=&amp;limit=</code></td><td>Search cosmetics by name or CID</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/dev/shop/slot/:slot</code></td><td>Set a slot manually. Body: <code>{itemGrants: ['Type:id'], price}</code></td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/neodyme/api/dev/shop/slot/:slot</code></td><td>Clear a slot (next rotation will refill)</td></tr>
+                <tr><td><code>POST</code></td><td><code>/neodyme/api/dev/shop/randomize/:slot</code></td><td>Reroll one slot from the eligible pool</td></tr>
+            </table>
+
+            <h3>Plugins</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/plugins/:pluginName/files</code></td><td>List a plugin&#39;s JSON config files</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/plugins/:pluginName/files/:fileName</code></td><td>Read a plugin config file</td></tr>
+                <tr><td><code>PUT</code></td><td><code>/neodyme/api/dev/plugins/:pluginName/files/:fileName</code></td><td>Replace a plugin config file</td></tr>
+            </table>
+
+            <h3>Statistics &amp; system</h3>
+            <table>
+                <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/stats/server</code></td><td>Node version, memory, CPU, uptime</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/stats/database</code></td><td>Database stats (type, file sizes, accounts count)</td></tr>
                 <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/ssl/status</code></td><td>SSL certificate status</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/system/tests</code></td><td>Run 8 health checks (HTTP, DB, XMPP, matchmaking, shop, plugins, redis, auth)</td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/dev/system/history?hours=</code></td><td>Historical pass rate of the system tests</td></tr>
             </table>
 
             <h2>Purchase Error Codes <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.5</span></h2>

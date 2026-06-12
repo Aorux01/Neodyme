@@ -72,6 +72,9 @@
                 <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
                 <div class="docs-nav-section">Features</div>
                 <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="panel-moderation.html" class="docs-nav-link"><i class="fas fa-gavel"></i> Moderation Panel</a>
+                <a href="panel-developer.html" class="docs-nav-link"><i class="fas fa-code-branch"></i> Developer Panel</a>
+                <a href="panel-admin.html" class="docs-nav-link"><i class="fas fa-user-shield"></i> Admin Panel</a>
                 <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
                 <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
                 <a href="game-files.html" class="docs-nav-link active"><i class="fas fa-gamepad"></i> Game Files</a>
@@ -466,7 +469,7 @@ asset-middleware (before express.static)
 
             <h3>Step 0 - create a host account with the <code>server</code> role</h3>
             <p>The Dedicated Server (RebootDS, custom DS, ...) signs in as a regular Fortnite account and uses its bearer token to query joining players' profiles. That account <strong>must have the <code>server</code> role</strong> - otherwise <code>POST .../dedicated_server/QueryProfile</code> returns <code>403</code> and the DS falls back to random cosmetics (or refuses the player entirely, depending on the DS build).</p>
-            <p>Register the host account from the website (e.g. <code>Host0001</code> / <code>host@…</code>), then from the Neodyme console:</p>
+            <p>Register the host account from the website (e.g. <code>Host0001</code> / <code>host@...</code>), then from the Neodyme console:</p>
             <pre class="ini-block">/account role Host0001 server         # promote the account to the "server" role
 /account info Host0001                # confirm: role = server (clientType = 5)</pre>
             <p>Available roles (lowest to highest): <code>player</code>, <code>mod</code>/<code>moderator</code>, <code>dev</code>/<code>developer</code>, <code>admin</code>, <code>owner</code>, <code>server</code>. Only <code>server</code> unlocks the <code>dedicated_server/*</code> MCP routes. You can also promote via the Admin Panel &rarr; Users &rarr; role dropdown.</p>

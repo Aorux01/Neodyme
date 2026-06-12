@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Panel - Neodyme Docs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="../status.html">STATUS</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="configuration.html" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
+                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="panel-moderation.html" class="docs-nav-link"><i class="fas fa-gavel"></i> Moderation Panel</a>
+                <a href="panel-developer.html" class="docs-nav-link active"><i class="fas fa-code-branch"></i> Developer Panel</a>
+                <a href="panel-admin.html" class="docs-nav-link"><i class="fas fa-user-shield"></i> Admin Panel</a>
+                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+        <main class="docs-content">
+            <h1><i class="fas fa-code-branch"></i> Developer Panel</h1>
+            <p>The Developer Panel is the technical control surface of the backend. It exposes 11 specialized tabs covering live configuration, file editing, content editing, asset management, the shop editor, statistics, console logs, plugin management, command shortcuts, system health checks and a real-time WebSocket monitor.</p>
+            <p>Access requires the <code>developer</code> or <code>owner</code> role. All writes are CSRF-protected and audit-logged.</p>
+
+            <div class="alert alert-info" style="background:rgba(59,130,246,0.1);border-left:3px solid #3b82f6;padding:12px 16px;border-radius:6px;margin:16px 0;">
+                <strong><i class="fas fa-lightbulb"></i> Quick navigation</strong> &mdash;
+                <a href="#overview">Overview</a> &middot;
+                <a href="#config">Configuration</a> &middot;
+                <a href="#config-files">Config Files</a> &middot;
+                <a href="#content">Content Editor</a> &middot;
+                <a href="#assets">Assets</a> &middot;
+                <a href="#shop">Shop Editor</a> &middot;
+                <a href="#stats">Stats</a> &middot;
+                <a href="#logs">Logs</a> &middot;
+                <a href="#plugins">Plugins</a> &middot;
+                <a href="#commands">Commands</a> &middot;
+                <a href="#system">System</a> &middot;
+                <a href="#monitor">Live Monitor</a>
+            </div>
+
+            <h2 id="overview">1. Overview</h2>
+            <p>Landing tab with at-a-glance KPIs:</p>
+            <ul>
+                <li><strong>Server Status</strong>, <strong>Uptime</strong>, <strong>Heap Memory</strong>, <strong>Version</strong> (build number from <code>server.properties</code>)</li>
+                <li><strong>Quick Actions</strong>: Force Shop Rotation, Refresh Status, Toggle Maintenance</li>
+            </ul>
+            <p>Maintenance mode flips <code>maintenanceMode</code> server-side. While on, the lightswitch endpoint returns <code>DOWN</code> and players get the maintenance message you configured.</p>
+
+            <h2 id="config">2. Configuration</h2>
+            <p>Live editor for the keys of <code>server.properties</code>. Each change is persisted to disk immediately, no restart required for most keys.</p>
+            <p>The editor is grouped into 11 collapsible categories:</p>
+            <table>
+                <thead><tr><th>Category</th><th>Examples</th></tr></thead>
+                <tbody>
+                    <tr><td>Debug &amp; Logging</td><td><code>debug</code>, <code>debugRequests</code>, <code>debugResponses</code>, <code>databaseLogging</code></td></tr>
+                    <tr><td>Maintenance</td><td><code>maintenanceMode</code>, <code>maintenanceMessage</code>, <code>maintenanceEstimatedDowntime</code></td></tr>
+                    <tr><td>Rate Limiting</td><td><code>rateLimiting</code>, <code>maxRequestsPerMinute</code>, <code>authMaxAttempts</code>, <code>webMaxRequests</code></td></tr>
+                    <tr><td>Features</td><td><code>plugins</code>, <code>autoShopRotation</code>, <code>xmppEnable</code>, <code>xmppDomain</code>, <code>webInterface</code></td></tr>
+                    <tr><td>Events</td><td><code>bEnableAllEvents</code>, <code>bEnableGeodeEvent</code>, <code>bEnableCrackInTheSky</code>, <code>bEnableS4OddityPrecursor</code>, &hellip;</td></tr>
+                    <tr><td>Database</td><td><code>databaseBackup</code>, <code>databaseBackupInterval</code>, <code>databaseBackupExpiryDays</code></td></tr>
+                    <tr><td>Game Defaults</td><td><code>bGrantFoundersPacks</code>, <code>bCompletedSeasonalQuests</code></td></tr>
+                    <tr><td>Tokens</td><td><code>accessTokenExpiryHours</code>, <code>refreshTokenExpiryDays</code>, <code>bcryptWorkFactor</code></td></tr>
+                    <tr><td>Creator Code</td><td><code>creatorCodeCommissionPercent</code></td></tr>
+                    <tr><td>Game Server</td><td><code>gameServerHeartbeatInterval</code>, <code>gameServerTimeout</code></td></tr>
+                    <tr><td>Security &amp; SSL</td><td><code>corsEnable</code>, <code>helmetEnable</code>, <code>trustProxy</code>, <code>protocol</code>, <code>sslCertPath</code>, <code>secureCookies</code></td></tr>
+                </tbody>
+            </table>
+            <p>Only keys on the allowlist (<code>EDITABLE_CONFIG_KEYS</code> in <code>api/web/dev.js</code>) are editable. Everything else stays read-only. Each change is logged with old &rarr; new value in the audit log.</p>
+
+            <h2 id="config-files">3. Config Files</h2>
+            <p>Direct JSON editor for the 5 large config files plus the cloud-storage INI files. Edits are saved atomically (temp file + rename) so a crash mid-write cannot corrupt the file.</p>
+            <table>
+                <thead><tr><th>File</th><th>What it controls</th></tr></thead>
+                <tbody>
+                    <tr><td><code>config/experience.json</code></td><td>XP curves &amp; level rewards</td></tr>
+                    <tr><td><code>config/game-servers.json</code></td><td>Matchmaking server pool per region+gamemode</td></tr>
+                    <tr><td><code>config/shop.json</code></td><td>Shop rotation rules &amp; category layout</td></tr>
+                    <tr><td><code>config/motd.json</code></td><td>Modern MOTD (chapter 2+)</td></tr>
+                    <tr><td><code>config/playlists.json</code></td><td>Visible playlists per build</td></tr>
+                    <tr><td><code>data/cloudstorage/system/DefaultGame.ini</code></td><td>Playlists, chat, text replacements served to clients</td></tr>
+                    <tr><td><code>data/cloudstorage/system/DefaultRuntimeOptions.ini</code></td><td>Gifting, BR mode, subgame toggles</td></tr>
+                </tbody>
+            </table>
+            <p>For <code>motd.json</code> and the news/content files, prefer the <a href="#content">Content Editor</a> &mdash; it knows the schema and validates everything.</p>
+
+            <h2 id="content">4. Content Editor <span style="background:rgba(245,158,11,0.18);color:#fbbf24;font-size:0.65rem;padding:1px 6px;border-radius:8px;letter-spacing:0.05em;font-weight:700;">NEW</span></h2>
+            <p>Typed editors for 17 in-game content sections &mdash; <strong>no more raw JSON editing</strong> for MOTD, news, login messages, BR/Creative/STW content. Each section has a schema-driven form with locale switching, list reordering, duplication, deletion, and an upstream-reset button.</p>
+
+            <h3>Layout</h3>
+            <p>A left sidebar groups every editable section by domain:</p>
+            <ul>
+                <li><strong>Global</strong>: Login Message, Emergency Notice v1/v2, Lobby, Special Offer Video, Subgame Select, Subgame Info</li>
+                <li><strong>Battle Royale</strong>: MOTD modern, BR News (legacy), BR News v2 (legacy), Battle Pass About</li>
+                <li><strong>Creative</strong>: Creative News, Creative Ads, Creative Features</li>
+                <li><strong>Save the World</strong>: STW News, Athena Message, Survival Message</li>
+                <li><strong>Danger zone</strong>: <em>Reset all content</em> (re-downloads both <code>motd.json</code> and <code>content-pages.json</code> from the GitHub repo)</li>
+            </ul>
+
+            <h3>The 13-locale switcher</h3>
+            <p>Above every editor, a row of 13 locale buttons (EN / AR / DE / ES / ES-419 / FR / IT / JA / KO / PL / PT-BR / RU / TR) controls what locale i18n fields display. Clicking another locale instantly re-renders every i18n field at that locale. Edits are scoped to the current locale.</p>
+
+            <h3>i18n field toggle</h3>
+            <p>Each translatable field has a checkbox labeled <strong>i18n</strong>:</p>
+            <ul>
+                <li><strong>OFF</strong> &mdash; the field is a plain string (useful for things like <code>title: "v1.2.6"</code>). The "plain string" badge shows in grey.</li>
+                <li><strong>ON</strong> &mdash; the field is a 13-locale object. A coverage badge shows next to the label: <span style="color:#4ade80;">13/13 translations</span> (green), <span style="color:#fbbf24;">7/13</span> (orange), <span style="color:#f87171;">0/13</span> (red).</li>
+            </ul>
+            <p>Toggling preserves what you had: switching ON converts the string to <code>{ en: "..." }</code>, switching OFF takes the current locale&#39;s value back as a plain string.</p>
+
+            <h3>List sections (cards)</h3>
+            <p>Sections like MOTD modern, BR News, Battle Pass About show their entries as collapsible cards. Each card has <strong>Move up / Move down / Duplicate / Delete</strong> in the header. Duplicating a MOTD modern entry auto-regenerates its <code>contentId</code>, <code>tcId</code> and <code>contentHash</code> to avoid collisions.</p>
+
+            <h3>Image fields</h3>
+            <p>Each image URL field includes:</p>
+            <ul>
+                <li>The URL input itself</li>
+                <li>An <strong>Upload</strong> button (file picker &rarr; uploads via the Assets pipeline &rarr; URL auto-filled)</li>
+                <li>A <strong>Browse</strong> button (opens the image picker modal with search and folder grouping)</li>
+                <li>A live thumbnail at the right; broken URLs show <em>"image not loading"</em> with the full URL in a tooltip</li>
+            </ul>
+
+            <h3>Unsaved-changes safety</h3>
+            <ul>
+                <li>A pulsing orange dot appears on the Save button as soon as you change anything</li>
+                <li>Switching to another section asks for confirmation if you have unsaved edits</li>
+                <li>Closing the browser tab triggers the native "leave site?" prompt</li>
+            </ul>
+
+            <h3>Reset</h3>
+            <ul>
+                <li><strong>Reset file</strong> (red button in the editor header) &mdash; re-downloads only the file behind the current editor from <code>https://raw.githubusercontent.com/Aorux01/Neodyme/refs/heads/main/&hellip;</code>. Confirmation required.</li>
+                <li><strong>Reset all content</strong> (danger zone in sidebar) &mdash; re-downloads both <code>motd.json</code> and <code>content-pages.json</code> at once. Local edits are lost.</li>
+            </ul>
+
+            <h3>Validation</h3>
+            <ul>
+                <li>MOTD modern: <strong>contentId is required</strong> and must be unique across entries. Duplicates are refused at save time with the row numbers pointed out.</li>
+                <li>Locale codes are normalized; case mismatches (<code>pt-br</code> vs <code>pt-BR</code>) are caught.</li>
+            </ul>
+
+            <h2 id="assets">5. Assets <span style="background:rgba(245,158,11,0.18);color:#fbbf24;font-size:0.65rem;padding:1px 6px;border-radius:8px;letter-spacing:0.05em;font-weight:700;">NEW</span></h2>
+            <p>Manage every image served at <code>/images/*</code>. Three sub-views:</p>
+
+            <h3>Upload</h3>
+            <ul>
+                <li><strong>Drag-and-drop</strong> or click the dropzone to pick a file</li>
+                <li>Allowed types: PNG, JPEG, WebP, GIF &mdash; max 5 MB</li>
+                <li>Validation is done with <strong>magic-byte sniffing</strong>: a renamed <code>.js</code> file claiming to be a PNG is rejected</li>
+                <li>The file is written to <code>public/images/uploaded-images/&lt;timestamp&gt;-&lt;rand&gt;.&lt;ext&gt;</code></li>
+                <li>It is registered in <code>content/assets-index.json</code> with metadata: <code>originalName</code>, <code>uploadedBy</code>, <code>uploadedAt</code>, <code>size</code>, <code>tags: ["uploaded"]</code></li>
+                <li>The folder <code>images/uploaded-images/**</code> is added to <code>alwaysLocal</code> automatically, so the file is always served from disk &mdash; never redirected to a CDN</li>
+                <li>Result card includes the public URL and a one-click Copy button</li>
+                <li>"Recently uploaded" grid at the bottom shows the last 12 uploads</li>
+            </ul>
+
+            <h3>Browse local</h3>
+            <p>Recursive scan of <code>public/images/</code>, grouped by top-level folder (<code>uploaded-images/</code>, <code>neodyme-public-service/</code>, <code>radios/</code>, &hellip;). For every file:</p>
+            <ul>
+                <li>Thumbnail (lazy-loaded)</li>
+                <li>Filename, size, extension</li>
+                <li><strong>Copy URL</strong> &mdash; copies the public URL to clipboard</li>
+                <li><strong>Delete</strong> &mdash; only on <code>uploaded-images/</code>; staff-installed assets cannot be deleted from the panel</li>
+            </ul>
+
+            <h3>Browse online</h3>
+            <p>Lists every entry in <code>assets-index.json</code> that has a CDN URL and is not present on disk &mdash; these are served by 302 redirect in online mode. Useful to know what the server <em>could</em> serve locally if you switch to local mode.</p>
+
+            <h2 id="shop">6. Shop Editor <span style="background:rgba(245,158,11,0.18);color:#fbbf24;font-size:0.65rem;padding:1px 6px;border-radius:8px;letter-spacing:0.05em;font-weight:700;">BETA</span></h2>
+            <p>Hand-pick what fills each slot of <code>data/shop.json</code>. The slot layout (6 Daily + 8 Featured by default) comes from <code>config/shop.json &rarr; shopCategories[].count</code>.</p>
+
+            <h3>Per-slot actions</h3>
+            <ul>
+                <li><strong>Pick</strong> &mdash; opens a searchable cosmetic picker backed by <code>fortnite-api.com/v2/cosmetics/br</code>. Filter by name or CID, rarity-coloured borders. Pick &rarr; suggested price by rarity (legendary 2000, epic 1500, rare 1200, uncommon 800, common 200) &rarr; confirm</li>
+                <li><strong>Random</strong> &mdash; rerolls just this slot from the eligible pool (rarity filter + <code>shopExcludedItems</code>)</li>
+                <li><strong>Edit</strong> &mdash; manually tweak the grant string and price</li>
+                <li><strong>Clear</strong> &mdash; remove the entry; next auto-rotation will refill</li>
+            </ul>
+
+            <h3>Bulk action</h3>
+            <p><strong>Randomize all empty</strong> rerolls every unset slot in one go.</p>
+
+            <h3>Important caveat</h3>
+            <p>The auto shop rotation (<code>autoShopRotation</code>) <strong>will overwrite</strong> manual picks at the next rotation. To keep a fixed shop, disable auto rotation in Configuration &rarr; Features.</p>
+
+            <h2 id="stats">7. Statistics</h2>
+            <p>Detailed runtime stats:</p>
+            <ul>
+                <li>Node.js version, platform, architecture, CPU count</li>
+                <li>Memory: heap used / heap total / RSS / external</li>
+                <li>System memory: total / free</li>
+                <li>Database type (JSON or MongoDB), accounts count, file sizes on disk</li>
+                <li>SSL status: protocol, certificate path &amp; modification date</li>
+            </ul>
+
+            <h2 id="logs">8. Logs</h2>
+            <p>Streaming view of the server&#39;s console output. Filter by level (info / warn / error / debug). The auto-refresh toggle re-fetches every second; switching tabs auto-pauses it.</p>
+            <p>If <code>debugRequests</code> or <code>debugResponses</code> is on (Configuration &rarr; Debug), expect a flood &mdash; turn them off when not actively debugging.</p>
+
+            <h2 id="plugins">9. Plugins</h2>
+            <p>The plugin manager. List installed plugins, browse the remote store, install / update / uninstall by version, edit per-plugin config files (each plugin can ship its own JSON configs under <code>plugins/&lt;name&gt;/*.json</code>).</p>
+            <p>See the dedicated <a href="plugins.html">Plugins documentation</a> for the manifest format and dependency rules.</p>
+
+            <h2 id="commands">10. Commands</h2>
+            <p>Click-to-run shortcuts for the most frequent dev console commands, grouped by category:</p>
+            <ul>
+                <li><strong>Server</strong>: reload, reload config, reload plugins, reload shop, diagnostic</li>
+                <li><strong>Data</strong>: backup now, migrate JSON&harr;Mongo (with dry-run)</li>
+                <li><strong>Shop</strong>: rotate now, featured override</li>
+                <li><strong>Players</strong>: lookup, sessions, give item / V-Bucks / XP</li>
+            </ul>
+            <p>The output is streamed back into the panel so you don&#39;t need a terminal session.</p>
+
+            <h2 id="system">11. System</h2>
+            <p>Live health checks of the 8 critical subsystems &mdash; HTTP server, database, XMPP, matchmaking, shop manager, plugin system, Redis (if enabled), auth service. Each check returns a status (<code>ok</code> / <code>disabled</code> / <code>error</code>) and a message.</p>
+            <p>The chart at the bottom shows historic system-test pass rate over the last 24 hours.</p>
+
+            <h2 id="monitor">12. Live Monitor</h2>
+            <p>Real-time charts for CPU, RAM, request rate, and a live list of connected XMPP clients. Polls every 2 seconds; auto-stops when you switch tabs to save bandwidth.</p>
+
+            <h2>Safety &amp; audit</h2>
+            <p>Every write through the Dev Panel goes through CSRF protection (cookie + header) and is recorded in the audit log with the new <code>update_content</code>, <code>reset_content</code>, <code>upload_asset</code>, <code>delete_asset</code>, <code>update_shop_slot</code>, <code>clear_shop_slot</code>, <code>randomize_shop_slot</code> action types. The Admin Panel&#39;s <a href="panel-admin.html#audit">Audit Log</a> shows the full before/after diff for each change.</p>
+
+            <h2>Frontend &amp; backend reference</h2>
+            <table>
+                <thead><tr><th>Path</th><th>What it does</th></tr></thead>
+                <tbody>
+                    <tr><td><code>web/html/admin.html</code></td><td>Host page (shared with Moderation &amp; Admin)</td></tr>
+                    <tr><td><code>web/js/admin-panel.js</code></td><td>Tab router + config / overview / commands / system / monitor logic</td></tr>
+                    <tr><td><code>web/js/content-editor.js</code></td><td>Content Editor: schemas, locale switcher, list rendering</td></tr>
+                    <tr><td><code>web/js/assets-manager.js</code></td><td>Assets tab + image picker modal</td></tr>
+                    <tr><td><code>web/js/shop-editor.js</code></td><td>Shop Editor: slot grid, cosmetic picker</td></tr>
+                    <tr><td><code>api/web/dev.js</code></td><td>Dev routes &mdash; live config, config files, content editor, system tests</td></tr>
+                    <tr><td><code>api/web/assets.js</code></td><td>Asset upload, list, delete</td></tr>
+                    <tr><td><code>api/web/shop-editor.js</code></td><td>Shop layout, cosmetic search proxy, slot CRUD</td></tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+</html>

@@ -1180,6 +1180,13 @@ const AUDIT_META = {
     toggle_code:        { icon: 'fa-toggle-on',         color: '#f59e0b', label: 'Toggle Code' },
     force_shop_rotation:{ icon: 'fa-random',            color: '#3b82f6', label: 'Shop Rotation' },
     toggle_maintenance: { icon: 'fa-tools',             color: '#f59e0b', label: 'Maintenance' },
+    update_content:     { icon: 'fa-newspaper',         color: '#8b5cf6', label: 'Edit Content' },
+    reset_content:      { icon: 'fa-cloud-download-alt',color: '#ef4444', label: 'Reset Content' },
+    upload_asset:       { icon: 'fa-upload',            color: '#3b82f6', label: 'Upload Asset' },
+    delete_asset:       { icon: 'fa-trash',             color: '#ef4444', label: 'Delete Asset' },
+    update_shop_slot:   { icon: 'fa-shopping-cart',     color: '#3b82f6', label: 'Edit Shop Slot' },
+    clear_shop_slot:    { icon: 'fa-eraser',            color: '#ef4444', label: 'Clear Shop Slot' },
+    randomize_shop_slot:{ icon: 'fa-dice',              color: '#10b981', label: 'Randomize Slot' },
 };
 
 
@@ -1195,17 +1202,106 @@ function auditBadgeColor(action) {
 }
 
 
+// Audit detail formatting. The legacy version only rendered a handful of
+// hand-picked fields and showed "-" for everything else. This version walks
+// the whole `details` payload, pairs old/new values together (diff style),
+// pretty-prints arrays and nested objects, and skips fields we already
+// surface in the row header (action label, performedByName, target).
+const AUDIT_FIELD_LABELS = {
+    targetUserName: 'Target user',
+    reason: 'Reason',
+    duration: 'Duration',
+    note: 'Note',
+    configKey: 'Config key',
+    oldValue: 'Was', newValue: 'Now',
+    oldRole: 'Was role', newRole: 'Now role',
+    fileName: 'File', filename: 'File',
+    scope: 'Scope', section: 'Section',
+    entryCount: 'Entries', i18nLeaves: 'i18n fields', contentIds: 'Content IDs',
+    scopes: 'Scopes', results: 'Per-file result',
+    path: 'Path', url: 'Public URL', size: 'Size', ext: 'Extension',
+    originalName: 'Original filename', uploadedBy: 'Uploaded by', uploadedAt: 'Uploaded at',
+    indexEntry: 'Was in index', fileExisted: 'File existed on disk',
+    slot: 'Slot',
+    pickedId: 'Picked CID', pickedName: 'Picked name', pickedRarity: 'Rarity', pickedType: 'Type',
+    oldItemGrants: 'Was item grants', newItemGrants: 'Now item grants',
+    oldPrice: 'Was price', newPrice: 'Now price',
+    clearedItemGrants: 'Cleared item grants', clearedPrice: 'Cleared price',
+};
+
+// Fields we already display in the row header - don't repeat them.
+const AUDIT_REDUNDANT = new Set(['scope', 'section', 'slot', 'filename', 'fileName', 'path']);
+
+// Diff pairs: when we see one of these we render them as a single before-after row.
+const AUDIT_DIFF_PAIRS = [
+    ['oldValue', 'newValue'],
+    ['oldRole', 'newRole'],
+    ['oldPrice', 'newPrice'],
+    ['oldItemGrants', 'newItemGrants'],
+];
+
+function formatAuditValue(v) {
+    if (v == null) return '<span style="color:#555;">null</span>';
+    if (typeof v === 'boolean') return v ? '<span style="color:#10b981;">yes</span>' : '<span style="color:#ef4444;">no</span>';
+    if (typeof v === 'number') return `<code style="color:#fbbf24;">${v}</code>`;
+    if (Array.isArray(v)) {
+        if (v.length === 0) return '<span style="color:#555;">(empty)</span>';
+        const items = v.slice(0, 12).map(x => typeof x === 'object'
+            ? `<code style="background:#1e1e1e;padding:1px 5px;border-radius:3px;font-size:10px;">${escapeHtml(JSON.stringify(x))}</code>`
+            : `<code style="background:#1e1e1e;padding:1px 5px;border-radius:3px;font-size:11px;">${escapeHtml(String(x))}</code>`).join(' ');
+        return items + (v.length > 12 ? ` <span style="color:#555;">...+${v.length - 12}</span>` : '');
+    }
+    if (typeof v === 'object') {
+        const json = JSON.stringify(v, null, 0);
+        if (json.length <= 120) return `<code style="background:#1e1e1e;padding:1px 5px;border-radius:3px;font-size:10px;">${escapeHtml(json)}</code>`;
+        return `<pre style="background:#1e1e1e;padding:6px 8px;border-radius:4px;font-size:10px;color:#aaa;max-height:160px;overflow:auto;margin:4px 0 0;white-space:pre-wrap;word-break:break-all;">${escapeHtml(JSON.stringify(v, null, 2))}</pre>`;
+    }
+    const s = String(v);
+    return s.length > 200
+        ? `<span style="color:#ccc;">${escapeHtml(s.slice(0, 200))}<span style="color:#555;">...+${s.length - 200}</span></span>`
+        : `<span style="color:#ccc;">${escapeHtml(s)}</span>`;
+}
+
 function formatAuditDetails(log) {
     const d = log.details || {};
-    const parts = [];
-    if (d.targetUserName) parts.push(`<strong>${escapeHtml(d.targetUserName)}</strong>`);
-    if (d.reason)         parts.push(`<span style="color:#aaa;">Reason: <em>${escapeHtml(d.reason)}</em></span>`);
-    if (d.duration)       parts.push(`<span style="color:#aaa;">Duration: ${escapeHtml(String(d.duration))}</span>`);
-    if (d.oldRole != null && d.newRole != null)
-        parts.push(`<span style="color:#aaa;">${escapeHtml(String(d.oldRole))} -> <strong>${escapeHtml(String(d.newRole))}</strong></span>`);
-    if (d.configKey)      parts.push(`<code style="background:#1e1e1e;padding:1px 5px;border-radius:3px;font-size:11px;">${escapeHtml(d.configKey)}</code>`);
-    if (d.note)           parts.push(`<span style="color:#aaa;"><em>${escapeHtml(d.note)}</em></span>`);
-    return parts.length ? parts.join(' <span style="color:#444;">·</span> ') : '<span style="color:#555;">-</span>';
+    const keys = Object.keys(d).filter(k => !AUDIT_REDUNDANT.has(k) && d[k] !== undefined);
+    if (keys.length === 0) return '<span style="color:#555;">No additional details for this entry.</span>';
+
+    // Collect diff pairs we can render side-by-side.
+    const handled = new Set();
+    const rows = [];
+
+    for (const [oldKey, newKey] of AUDIT_DIFF_PAIRS) {
+        if (keys.includes(oldKey) && keys.includes(newKey)) {
+            handled.add(oldKey); handled.add(newKey);
+            const oldLabel = AUDIT_FIELD_LABELS[oldKey] || oldKey;
+            const newLabel = AUDIT_FIELD_LABELS[newKey] || newKey;
+            rows.push(`
+                <div style="display:grid;grid-template-columns:130px 1fr;gap:8px;margin-bottom:6px;">
+                    <div style="color:#888;font-size:11px;">${escapeHtml(oldLabel.replace(/^Was /, ''))} change</div>
+                    <div>
+                        <span style="color:#ef4444;font-size:10px;font-weight:600;letter-spacing:.04em;">${escapeHtml(oldLabel.toUpperCase())}</span>
+                        ${formatAuditValue(d[oldKey])}
+                        <span style="color:#555;margin:0 6px;">-></span>
+                        <span style="color:#10b981;font-size:10px;font-weight:600;letter-spacing:.04em;">${escapeHtml(newLabel.toUpperCase())}</span>
+                        ${formatAuditValue(d[newKey])}
+                    </div>
+                </div>`);
+        }
+    }
+
+    // Remaining fields - regular key/value rows.
+    for (const k of keys) {
+        if (handled.has(k)) continue;
+        const label = AUDIT_FIELD_LABELS[k] || k;
+        rows.push(`
+            <div style="display:grid;grid-template-columns:130px 1fr;gap:8px;margin-bottom:6px;">
+                <div style="color:#888;font-size:11px;">${escapeHtml(label)}</div>
+                <div>${formatAuditValue(d[k])}</div>
+            </div>`);
+    }
+
+    return rows.join('');
 }
 
 

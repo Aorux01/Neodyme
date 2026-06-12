@@ -203,9 +203,15 @@
 - [x] **Shop controls** - Manual rotation, date-based rotation, featured items
 - [x] **Security settings** - Rate limiting, CORS, Helmet, Trust Proxy toggles
 - [x] **XMPP monitor** - Real-time connected clients widget
-- [ ] **Shop editor** - Integrated shop editor (drag-and-drop)
+- [x] **Content Editor** - Typed editors for 17 in-game content sections (MOTD, login message, emergency notices v1/v2, BR/Creative/STW news, lobby, special offer video, subgame select/info, BP about, creative ads/features, athena/survival messages) with i18n toggle per field, 13-locale switcher, list reorder/duplicate/delete, and Reset-from-GitHub
+- [x] **Assets Manager** - Upload (drag-and-drop, magic-byte validation, 5MB max), Browse local (grid by folder, copy URL, delete uploads), Browse online (CDN-only entries from assets-index.json). Uploads land in `public/images/uploaded-images/` with full metadata in `assets-index.json` and `alwaysLocal` enforcement
+- [x] **Shop Editor (BETA)** - Hand-pick each slot of `data/shop.json` via a slot grid backed by `config/shop.json`. Searchable cosmetic picker from fortnite-api.com (rarity-coloured), single-slot random reroll, bulk "Randomize all empty", inline price/grant edit, slot clear
+- [ ] **Shop Editor (full)** - Drag-and-drop between slots, full preview with rendering by chapter, prices/rarity/sections matrix
+- [ ] **Game Modes Manager UI** - Frontend on top of `config/playlists.json` (enable, rotation, minBuild)
+- [ ] **Lobby Background Manager** - Pick lobby tile/banner per season via `content/pages/lobby-backgrounds.json` (replaces the per-season switch in `page-service.js`)
+- [ ] **Radio Stations Editor** - Manage `content/pages/radio-stations.json` with Assets integration for logos
+- [ ] **Tournament Information Editor** - Full editor for `content-pages.json[tournamentinformation]` (colours, images, prizes, brackets)
 - [ ] **Live configuration** - Modify server.properties without restart
-- [ ] **Game modes** - Manage game servers and game modes
 - [ ] **Events** - Manage in-game events
 - [ ] **Announcements** - Broadcast system
 

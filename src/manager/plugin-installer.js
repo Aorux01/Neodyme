@@ -131,7 +131,6 @@ class PluginInstaller {
     }
 
     static resolveBestVersion(manifest, backendVersion, requestedVersion = null) {
-        // ---- 1) New schema: `versions` object ----
         if (manifest.versions && typeof manifest.versions === 'object' && !Array.isArray(manifest.versions)) {
             const all = Object.entries(manifest.versions)
                 .map(([v, payload]) => ({
@@ -170,7 +169,6 @@ class PluginInstaller {
             return compatible;
         }
 
-        // ---- 2) Legacy schema: flat `files[]` with optional per-file `version` ----
         if (Array.isArray(manifest.files) && manifest.files.length > 0) {
             // Group files by their `version` field (or by manifest.version if uniform).
             const byVersion = new Map();
@@ -253,7 +251,7 @@ class PluginInstaller {
             // Keep only the basename - full paths are noisy.
             const base = name.split(/[\\/]/).pop() || name;
             if (base.length <= MAX_NAME_LEN) return base;
-            return '…' + base.slice(-(MAX_NAME_LEN - 1));
+            return '...' + base.slice(-(MAX_NAME_LEN - 1));
         };
 
         const render = (currentName, force = false) => {
@@ -408,7 +406,6 @@ class PluginInstaller {
                 return false;
             }
 
-            // ---- Resolve plugin-to-plugin dependencies first ----
             const pluginDeps = manifest.dependencies?.plugins || [];
             if (pluginDeps.length > 0) {
                 LoggerService.log('info', `Resolving ${pluginDeps.length} plugin dependency(ies)...`);
@@ -434,7 +431,6 @@ class PluginInstaller {
                 }
             }
 
-            // ---- Download files for the resolved version ----
             const pluginsDir = path.join(process.cwd(), 'plugins');
             const totalFiles = resolved.files.length;
 

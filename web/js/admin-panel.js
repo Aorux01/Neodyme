@@ -652,6 +652,9 @@ function showDevTab(tab) {
 
     if (tab === 'overview')  { if (typeof loadDevOverview === 'function') loadDevOverview(); }
     if (tab === 'config')    { if (typeof loadDevConfig   === 'function') loadDevConfig();   }
+    if (tab === 'content')   { if (typeof resetContentEditor === 'function') resetContentEditor(); }
+    if (tab === 'assets')    { if (typeof showAssetsView === 'function') showAssetsView('upload'); }
+    if (tab === 'shop')      { if (typeof shopEditorInit === 'function') shopEditorInit(); }
     if (tab === 'stats')     { if (typeof loadDevStats    === 'function') loadDevStats();    }
     if (tab === 'logs')      loadConsoleLogs('dev-logs-output');
     if (tab === 'plugins')   loadAdminPlugins('dev-plugins-list');

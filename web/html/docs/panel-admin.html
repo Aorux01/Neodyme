@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Neodyme Docs</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/docs.css">
+</head>
+<body>
+    <header class="neodyme-header">
+        <div class="header-container">
+            <a href="../../index.html" class="neodyme-logo">N</a>
+            <nav class="neodyme-nav">
+                <ul class="nav-links">
+                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
+                    <li><a href="../updates.html">UPDATES</a></li>
+                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
+                    <li><a href="../status.html">STATUS</a></li>
+                    <li><a href="index.html" class="active">DOCS</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
+                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </header>
+    <div class="docs-layout">
+        <aside class="docs-sidebar">
+            <div class="docs-sidebar-title">Documentation</div>
+            <nav class="docs-nav">
+                <div class="docs-nav-section">Getting Started</div>
+                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="configuration.html" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
+                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <div class="docs-nav-section">Features</div>
+                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="panel-moderation.html" class="docs-nav-link"><i class="fas fa-gavel"></i> Moderation Panel</a>
+                <a href="panel-developer.html" class="docs-nav-link"><i class="fas fa-code-branch"></i> Developer Panel</a>
+                <a href="panel-admin.html" class="docs-nav-link active"><i class="fas fa-user-shield"></i> Admin Panel</a>
+                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
+                <div class="docs-nav-section">Development</div>
+                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+            </nav>
+        </aside>
+        <main class="docs-content">
+            <h1><i class="fas fa-user-shield"></i> Admin Panel</h1>
+            <p>The Admin Panel is reserved for trusted operators. It covers user management (role changes, permanent bans), the full server-wide audit log with full diffs, detailed statistics with historical charts, and live web/security settings. Access requires the <code>admin</code> or <code>owner</code> role.</p>
+
+            <div class="alert alert-warning" style="background:rgba(245,158,11,0.1);border-left:3px solid #f59e0b;padding:12px 16px;border-radius:6px;margin:16px 0;">
+                <strong><i class="fas fa-exclamation-triangle"></i> With great power&hellip;</strong> &mdash; Admins can change roles, permanently ban accounts, and modify live server settings. There is no "undo" on most of these &mdash; the audit log is your safety net. Use the <a href="#audit">Audit Log</a> to review your own actions periodically.
+            </div>
+
+            <h2>Panel layout</h2>
+            <p>The Admin Panel has 5 tabs:</p>
+            <table>
+                <thead><tr><th>Tab</th><th>What it does</th><th>Backend</th></tr></thead>
+                <tbody>
+                    <tr><td><i class="fas fa-users"></i> Users</td><td>List, search, change role, ban, unban</td><td><code>/neodyme/api/admin/users/*</code></td></tr>
+                    <tr><td><i class="fas fa-history"></i> Audit Log</td><td>Server-wide log of every staff action with full diffs</td><td><code>/neodyme/api/admin/audit-log</code></td></tr>
+                    <tr><td><i class="fas fa-chart-line"></i> Statistics</td><td>Detailed stats &amp; historical player charts</td><td><code>/neodyme/api/admin/stats</code></td></tr>
+                    <tr><td><i class="fas fa-cogs"></i> Settings</td><td>Web settings &amp; security toggles</td><td><code>/neodyme/api/dev/config</code></td></tr>
+                    <tr><td><i class="fas fa-terminal"></i> Commands</td><td>Admin-only console shortcuts</td><td><code>/neodyme/api/admin/commands</code></td></tr>
+                </tbody>
+            </table>
+
+            <h2>1. User Management</h2>
+            <p>The Users tab is a searchable table of every account, paginated. For each user:</p>
+            <ul>
+                <li><strong>Display name</strong>, <strong>email</strong>, <strong>accountId</strong>, <strong>created at</strong>, <strong>last login</strong></li>
+                <li>Current <strong>role</strong> (Player / Founder / Helper / Moderator / Developer / Admin / Owner / Server)</li>
+                <li>Ban status (banned + reason + duration + expiry, or not banned)</li>
+            </ul>
+
+            <h3>Change role</h3>
+            <p>Dropdown next to each user. Promoting someone to <code>admin</code> or <code>owner</code> gives them access to this panel &mdash; do it consciously. The change is logged with <code>change_role</code> (old role &rarr; new role).</p>
+            <p>Role hierarchy from least to most privileged:</p>
+            <ol>
+                <li><code>player</code> &mdash; default for new sign-ups</li>
+                <li><code>founder</code> &mdash; cosmetic-only (founder pack)</li>
+                <li><code>helper</code> &mdash; cosmetic + read-only on tickets (no enforcement powers)</li>
+                <li><code>moderator</code> &mdash; tickets, reports, bans, creator codes</li>
+                <li><code>developer</code> &mdash; full Developer Panel (config, content, assets, shop&hellip;)</li>
+                <li><code>admin</code> &mdash; everything moderators have + this panel</li>
+                <li><code>owner</code> &mdash; admin + cannot be demoted by another admin</li>
+                <li><code>server</code> &mdash; reserved for dedicated-server host accounts (Host0001, &hellip;). Don&#39;t assign to humans.</li>
+            </ol>
+
+            <h3>Ban a user</h3>
+            <p>Same modal as the Moderation Panel (reason + duration + invalidate sessions). Admins can apply <strong>permanent bans</strong> that auto-expire never.</p>
+
+            <h3>Unban</h3>
+            <p>Available on banned users. Justification required, logged.</p>
+
+            <h2 id="audit">2. Audit Log</h2>
+            <p>The audit log is the most important admin tool. It records <strong>every staff action that modifies state</strong> &mdash; nothing is silent.</p>
+
+            <h3>Header row (always visible)</h3>
+            <ul>
+                <li><strong>Action badge</strong> (colour-coded icon + label, e.g. <span style="color:#ef4444;">Ban User</span>, <span style="color:#8b5cf6;">Edit Content</span>, <span style="color:#10b981;">Randomize Slot</span>)</li>
+                <li><strong>Who</strong> &mdash; display name of the actor</li>
+                <li><strong>Target</strong> &mdash; the affected resource (<code>user:&lt;accountId&gt;</code>, <code>content:motd:root</code>, <code>shop_slot:daily3</code>&hellip;)</li>
+                <li><strong>IP address</strong> (small, right-aligned)</li>
+                <li><strong>Time</strong> &mdash; HH:MM:SS + date</li>
+            </ul>
+
+            <h3>Detail panel (click to expand)</h3>
+            <p>Every entry's full <code>details</code> payload is rendered as a key-value table. The new audit modal pays special attention to <strong>before/after diffs</strong>:</p>
+            <ul>
+                <li><strong>Diff pairs</strong> &mdash; when both <code>oldValue</code>/<code>newValue</code>, <code>oldRole</code>/<code>newRole</code>, <code>oldPrice</code>/<code>newPrice</code>, <code>oldItemGrants</code>/<code>newItemGrants</code> are present, they're rendered side-by-side: <span style="color:#ef4444;">WAS</span> &nbsp;<code>old</code>&nbsp; &rarr; &nbsp;<span style="color:#10b981;">NOW</span>&nbsp; <code>new</code></li>
+                <li><strong>Booleans</strong> render in green ("yes") / red ("no")</li>
+                <li><strong>Arrays</strong> render inline with overflow truncation past 12 items</li>
+                <li><strong>Small objects</strong> render as inline <code>JSON</code>; <strong>large objects</strong> get a scrollable <code>&lt;pre&gt;</code> block</li>
+                <li>Fields already visible in the header (scope, section, slot, path) are hidden in the detail to avoid duplication</li>
+            </ul>
+
+            <h3>Action types currently recorded</h3>
+            <table>
+                <thead><tr><th>Action</th><th>Origin</th><th>Sample <code>details</code></th></tr></thead>
+                <tbody>
+                    <tr><td><code>ban_user</code></td><td>Moderation/Admin</td><td><code>{targetUserName, reason, duration}</code></td></tr>
+                    <tr><td><code>unban_user</code></td><td>Moderation/Admin</td><td><code>{targetUserName, reason}</code></td></tr>
+                    <tr><td><code>change_role</code></td><td>Admin</td><td><code>{targetUserName, oldRole, newRole}</code></td></tr>
+                    <tr><td><code>close_ticket</code> / <code>delete_ticket</code> / <code>assign_ticket</code></td><td>Moderation</td><td><code>{ticketId, &hellip;}</code></td></tr>
+                    <tr><td><code>approve_code</code> / <code>reject_code</code> / <code>delete_code</code> / <code>toggle_code</code></td><td>Moderation</td><td><code>{code, &hellip;}</code></td></tr>
+                    <tr><td><code>update_config</code></td><td>Developer</td><td><code>{configKey, oldValue, newValue}</code></td></tr>
+                    <tr><td><code>update_config_file</code></td><td>Developer</td><td><code>{fileName}</code></td></tr>
+                    <tr><td><code>update_content</code></td><td>Developer (Content Editor)</td><td><code>{scope, section, entryCount, i18nLeaves, contentIds[]}</code></td></tr>
+                    <tr><td><code>reset_content</code></td><td>Developer (Content Editor)</td><td><code>{scopes[], results[]}</code></td></tr>
+                    <tr><td><code>upload_asset</code></td><td>Developer (Assets)</td><td><code>{filename, path, originalName, size, ext, url}</code></td></tr>
+                    <tr><td><code>delete_asset</code></td><td>Developer (Assets)</td><td><code>{path, size, indexEntry, fileExisted}</code></td></tr>
+                    <tr><td><code>update_shop_slot</code></td><td>Developer (Shop Editor)</td><td><code>{slot, oldItemGrants, oldPrice, newItemGrants, newPrice}</code></td></tr>
+                    <tr><td><code>clear_shop_slot</code></td><td>Developer (Shop Editor)</td><td><code>{slot, clearedItemGrants, clearedPrice}</code></td></tr>
+                    <tr><td><code>randomize_shop_slot</code></td><td>Developer (Shop Editor)</td><td><code>{slot, pickedId, pickedName, pickedRarity, pickedType, oldItemGrants, oldPrice, newItemGrants, newPrice}</code></td></tr>
+                    <tr><td><code>force_shop_rotation</code></td><td>Developer</td><td><code>{}</code></td></tr>
+                    <tr><td><code>toggle_maintenance</code></td><td>Developer</td><td><code>{newState}</code></td></tr>
+                </tbody>
+            </table>
+
+            <h3>Filters &amp; search</h3>
+            <p>Above the log:</p>
+            <ul>
+                <li><strong>Action filter</strong> (dropdown of all action types)</li>
+                <li><strong>Search</strong> (matches actor name, target ID, action name, ban reason, target user name)</li>
+                <li><strong>Date range</strong> &mdash; <code>from</code> + <code>to</code></li>
+                <li>Pagination &mdash; 25 entries per page, "Page N / M"</li>
+            </ul>
+
+            <h3>24h summary bar</h3>
+            <p>Above the filters, a chip strip shows the top-5 most-frequent action types in the last 24 hours, with counts. Lets you spot anomalies (e.g. 200 bans in a day = someone went rogue or a wave of cheaters).</p>
+
+            <h3>Audit log storage</h3>
+            <p>Audit entries live in <code>data/audit-log.json</code> (JSON adapter) or the <code>auditlogs</code> collection (Mongo adapter). They are <strong>never</strong> deleted automatically &mdash; only manual pruning via <code>/audit clean &lt;days&gt;</code> from the console.</p>
+
+            <h2>3. Statistics</h2>
+            <p>The Statistics tab shows:</p>
+            <ul>
+                <li><strong>Total accounts</strong>, <strong>active players (last 5 min)</strong>, <strong>peak concurrent</strong></li>
+                <li><strong>Player history chart</strong> &mdash; 24h / 7d / 30d toggles</li>
+                <li><strong>System health history</strong> &mdash; pass rate of the System Tests over the last 72h</li>
+            </ul>
+            <p>The underlying samples are recorded by <code>player-stats-service</code> every 5 minutes.</p>
+
+            <h2>4. Web Settings</h2>
+            <p>Quick-access toggles for the most-tweaked production settings. Each toggle saves immediately:</p>
+            <ul>
+                <li><strong>Rate Limiting</strong> &mdash; master toggle for the global IP limiter</li>
+                <li><strong>Max login attempts</strong> &mdash; per IP, before lockout (default 5)</li>
+                <li><strong>Lockout window (minutes)</strong> &mdash; how long the lockout lasts (default 15)</li>
+                <li><strong>CORS</strong>, <strong>Helmet</strong>, <strong>Compression</strong>, <strong>Trust Proxy</strong> &mdash; security middleware toggles</li>
+            </ul>
+            <p>These map to the same <code>server.properties</code> keys as the Developer Panel&#39;s Configuration tab &mdash; this tab is just a curated shortcut.</p>
+
+            <h2>5. Commands</h2>
+            <p>Admin-only console shortcuts:</p>
+            <ul>
+                <li><strong>Database</strong>: backup, migrate JSON&harr;Mongo, restore from backup</li>
+                <li><strong>Accounts</strong>: bulk role change, bulk unban, prune inactive (with <code>--dry-run</code>)</li>
+                <li><strong>Logs</strong>: tail server logs, clear logs</li>
+            </ul>
+
+            <h2>Security model</h2>
+            <ul>
+                <li>All admin routes require <code>requireAdmin</code> middleware (role gate)</li>
+                <li>Writes additionally require CSRF (cookie <code>neodyme_session</code> + header <code>X-CSRF-Token</code>) &mdash; provided automatically by <code>secureFetch()</code> in the frontend</li>
+                <li>Every write hits the audit log <em>before</em> the response is sent &mdash; you cannot silently change state</li>
+                <li>Admins cannot demote themselves below admin (the API refuses to avoid lockout)</li>
+                <li>Only <code>owner</code> can demote an <code>admin</code>; an <code>admin</code> cannot demote another <code>admin</code></li>
+            </ul>
+
+            <h2>Frontend &amp; backend reference</h2>
+            <table>
+                <thead><tr><th>Path</th><th>What it does</th></tr></thead>
+                <tbody>
+                    <tr><td><code>web/html/admin.html</code></td><td>Host page (shared with Moderation &amp; Developer)</td></tr>
+                    <tr><td><code>web/js/staff-panel.js</code></td><td>Logic for Users / Audit / Stats / Settings / Commands tabs</td></tr>
+                    <tr><td><code>api/web/admin.js</code></td><td>Backend routes under <code>/neodyme/api/admin/*</code> &mdash; <code>requireAdmin</code></td></tr>
+                    <tr><td><code>src/service/api/audit-service.js</code></td><td>All audit log helpers + 14 action types</td></tr>
+                    <tr><td><code>data/audit-log.json</code></td><td>JSON-adapter audit storage (Mongo: <code>auditlogs</code> collection)</td></tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+</html>

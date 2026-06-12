@@ -40,6 +40,9 @@
                 <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
                 <div class="docs-nav-section">Features</div>
                 <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="panel-moderation.html" class="docs-nav-link"><i class="fas fa-gavel"></i> Moderation Panel</a>
+                <a href="panel-developer.html" class="docs-nav-link"><i class="fas fa-code-branch"></i> Developer Panel</a>
+                <a href="panel-admin.html" class="docs-nav-link"><i class="fas fa-user-shield"></i> Admin Panel</a>
                 <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
                 <a href="security.html" class="docs-nav-link active"><i class="fas fa-shield-alt"></i> Security</a>
                 <div class="docs-nav-section">Development</div>
@@ -57,7 +60,7 @@
             <ul>
                 <li>Passwords hashed with bcrypt (configurable work factor, default 12 rounds)</li>
                 <li>Minimum password length enforcement (default 8 characters)</li>
-                <li>Timing-safe authentication responses (configurable delay 50–200ms) to prevent timing attacks</li>
+                <li>Timing-safe authentication responses (configurable delay 50-200ms) to prevent timing attacks</li>
             </ul>
             <pre><code>bcryptWorkFactor=12
 passwordMinLength=8
@@ -206,7 +209,7 @@ sslKeyPath=config/ssl/key.pem</code></pre>
                 <li><strong>Change default secrets</strong> - Always change <code>jwtSecret</code> and <code>gameServerSecret</code> in production</li>
                 <li><strong>Enable HTTPS</strong> - Use <code>protocol=https</code> with valid SSL certificates</li>
                 <li><strong>Keep rate limiting on</strong> - Prevents brute force and abuse</li>
-                <li><strong>Use bcrypt factor 12–14</strong> - Good balance of security and performance</li>
+                <li><strong>Use bcrypt factor 12-14</strong> - Good balance of security and performance</li>
                 <li><strong>Enable Helmet</strong> - Protects against common web vulnerabilities</li>
                 <li><strong>Enable regular backups</strong> - <code>databaseBackup=true</code></li>
                 <li><strong>Review audit logs</strong> - Watch for suspicious administrative activity</li>

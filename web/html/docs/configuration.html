@@ -67,6 +67,9 @@
                 <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
                 <div class="docs-nav-section">Features</div>
                 <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="panel-moderation.html" class="docs-nav-link"><i class="fas fa-gavel"></i> Moderation Panel</a>
+                <a href="panel-developer.html" class="docs-nav-link"><i class="fas fa-code-branch"></i> Developer Panel</a>
+                <a href="panel-admin.html" class="docs-nav-link"><i class="fas fa-user-shield"></i> Admin Panel</a>
                 <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
                 <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
                 <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
@@ -92,8 +95,8 @@
                     <li><a href="#database">6. Database</a></li>
                     <li><a href="#redis">7. Redis Cache</a></li>
                     <li><a href="#security">8. Security</a></li>
-                    <li><a href="#ratelimit">9–11. Rate Limiting</a></li>
-                    <li><a href="#auth">12–14. Auth &amp; Tokens</a></li>
+                    <li><a href="#ratelimit">9-11. Rate Limiting</a></li>
+                    <li><a href="#auth">12-14. Auth &amp; Tokens</a></li>
                     <li><a href="#creator">15. Creator Codes</a></li>
                     <li><a href="#webui">16. Web Interface</a></li>
                     <li><a href="#events">17. Game Events</a></li>
@@ -194,7 +197,7 @@
                 <tr><td><code>limitRequestSize</code></td><td><code>1mb</code></td><td>Maximum request size for regular API calls.</td></tr>
             </table>
 
-            <h3 id="ratelimit" class="section-anchor">[9–11] Rate Limiting</h3>
+            <h3 id="ratelimit" class="section-anchor">[9-11] Rate Limiting</h3>
             <table class="config-table">
                 <tr><th>Key</th><th>Default</th><th>Description</th></tr>
                 <tr><td><code>maxRequestsPerMinute</code></td><td><code>125</code></td><td>Global: maximum requests per IP per minute.</td></tr>
@@ -206,13 +209,13 @@
                 <tr><td><code>expensiveWindowMinutes</code></td><td><code>5</code></td><td>Expensive ops: window duration in minutes.</td></tr>
             </table>
 
-            <h3 id="auth" class="section-anchor">[12–14] Authentication &amp; Tokens</h3>
+            <h3 id="auth" class="section-anchor">[12-14] Authentication &amp; Tokens</h3>
             <table class="config-table">
                 <tr><th>Key</th><th>Default</th><th>Description</th></tr>
                 <tr><td><code>accessTokenExpiryHours</code></td><td><code>8</code></td><td>Game access token validity in hours.</td></tr>
                 <tr><td><code>exchangeTokenExpiryMinutes</code></td><td><code>5</code></td><td>Exchange token validity in minutes.</td></tr>
                 <tr><td><code>refreshTokenExpiryDays</code></td><td><code>30</code></td><td>Refresh token validity in days.</td></tr>
-                <tr><td><code>bcryptWorkFactor</code></td><td><code>12</code></td><td>Bcrypt salt rounds for password hashing. Values 12–14 are recommended. Higher = slower but more secure.</td></tr>
+                <tr><td><code>bcryptWorkFactor</code></td><td><code>12</code></td><td>Bcrypt salt rounds for password hashing. Values 12-14 are recommended. Higher = slower but more secure.</td></tr>
                 <tr><td><code>passwordMinLength</code></td><td><code>8</code></td><td>Minimum password length when registering a new account.</td></tr>
                 <tr><td><code>authTimingDelayMin</code></td><td><code>50</code></td><td>Minimum random delay (ms) added to auth responses to prevent timing attacks.</td></tr>
                 <tr><td><code>authTimingDelayMax</code></td><td><code>200</code></td><td>Maximum random delay (ms) added to auth responses.</td></tr>
@@ -228,7 +231,7 @@
             <h3 id="creator" class="section-anchor">[15] Creator Code Settings</h3>
             <table class="config-table">
                 <tr><th>Key</th><th>Default</th><th>Description</th></tr>
-                <tr><td><code>creatorCodeCommissionPercent</code></td><td><code>1</code></td><td>Percentage of V-Bucks purchases credited to the creator whose code was active at time of purchase. Range 0–100.</td></tr>
+                <tr><td><code>creatorCodeCommissionPercent</code></td><td><code>1</code></td><td>Percentage of V-Bucks purchases credited to the creator whose code was active at time of purchase. Range 0-100.</td></tr>
             </table>
 
             <h3 id="webui" class="section-anchor">[16] Web Interface</h3>
@@ -297,8 +300,8 @@
 
             <table class="config-table">
                 <tr><th>Key</th><th>Default</th><th>Description</th></tr>
-                <tr><td><code>randomShop</code></td><td><code>false</code></td><td>When <code>true</code>, the shop is generated <strong>on-the-fly per request</strong> from the fortnite-api.com cosmetics cache - <code>data/shop.json</code> is never read or written. Chapter 1/2 layout is <strong>auto-detected from the connecting client's version</strong>: Season ≤ 10 -> Ch1 (4 daily + 2 featured, <code>BRDailyStorefront</code> / <code>BRWeeklyStorefront</code>) ; Season &gt; 10 -> Ch2+ (counts from <code>shopCategories</code>). Cosmetics are filtered to the client's own era (<code>backendValue ≤ season</code>), so a Season 5 client only sees Season 1–5 items while a Season 14 client sees Seasons 1–14 items. The shop is seeded on <em>season + date</em> - identical for the same client reconnecting the same day, automatically different the next day. <code>isChapter1</code>, <code>shopRotationTime</code>, and the rotation scheduler are all ignored when this mode is active.</td></tr>
-                <tr><td><code>isChapter1</code></td><td><code>false</code></td><td>When <code>true</code>, forces Chapter 1 shop mode: the shop always uses exactly two fixed storefronts - <code>BRDailyStorefront</code> (4 small tiles, daily rotation) and <code>BRWeeklyStorefront</code> (2 normal tiles, weekly rotation). The <code>shopCategories</code> block is ignored in this mode. Set to <code>true</code> when hosting Chapter 1 builds (Seasons 1–10). Ignored when <code>randomShop: true</code> (Chapter detection is automatic).</td></tr>
+                <tr><td><code>randomShop</code></td><td><code>false</code></td><td>When <code>true</code>, the shop is generated <strong>on-the-fly per request</strong> from the fortnite-api.com cosmetics cache - <code>data/shop.json</code> is never read or written. Chapter 1/2 layout is <strong>auto-detected from the connecting client's version</strong>: Season ≤ 10 -> Ch1 (4 daily + 2 featured, <code>BRDailyStorefront</code> / <code>BRWeeklyStorefront</code>) ; Season &gt; 10 -> Ch2+ (counts from <code>shopCategories</code>). Cosmetics are filtered to the client's own era (<code>backendValue ≤ season</code>), so a Season 5 client only sees Season 1-5 items while a Season 14 client sees Seasons 1-14 items. The shop is seeded on <em>season + date</em> - identical for the same client reconnecting the same day, automatically different the next day. <code>isChapter1</code>, <code>shopRotationTime</code>, and the rotation scheduler are all ignored when this mode is active.</td></tr>
+                <tr><td><code>isChapter1</code></td><td><code>false</code></td><td>When <code>true</code>, forces Chapter 1 shop mode: the shop always uses exactly two fixed storefronts - <code>BRDailyStorefront</code> (4 small tiles, daily rotation) and <code>BRWeeklyStorefront</code> (2 normal tiles, weekly rotation). The <code>shopCategories</code> block is ignored in this mode. Set to <code>true</code> when hosting Chapter 1 builds (Seasons 1-10). Ignored when <code>randomShop: true</code> (Chapter detection is automatic).</td></tr>
                 <tr><td><code>shopRotationTime</code></td><td><code>"00:00"</code></td><td>Time of day (HH:MM, 24-hour) at which the daily rotation fires automatically. Requires <code>autoShopRotation=true</code> in <code>server.properties</code>. Unused when <code>randomShop: true</code>.</td></tr>
                 <tr><td><code>shopMaxSeason</code></td><td><code>32</code></td><td>Maximum <em>backendValue</em> of cosmetics to include in the shop. <code>0</code> = no limit (all seasons). See the <a href="#backendvalue">reference table</a> below for values per season. Ignored when <code>customVersion=false</code> (era is derived from <code>fnVersion</code> major component instead). In <code>randomShop</code> mode the client's own season is used as the ceiling - this setting is ignored.</td></tr>
                 <tr><td><code>shopExcludedItems</code></td><td><em>array</em></td><td>Array of cosmetic IDs to never include in the shop, regardless of other filters. Battle Pass and Winterfest reward items are always excluded automatically (read from <code>content/athena/battlepasses/</code> and <code>content/athena/winterfest-rewards.json</code>). Applied in both normal and <code>randomShop</code> mode.</td></tr>

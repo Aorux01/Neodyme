@@ -524,4 +524,206 @@ router.get('/neodyme/api/dev/system/history', ...dev, async (req, res) => {
     }
 });
 
+
+const CONTENT_PAGES_PATH = path.join(__dirname, '../../content/pages/content-pages.json');
+const MOTD_PATH          = path.join(CONFIG_DIR, 'motd.json');
+
+// Pull a short summary of a content payload so the audit log entry shows
+// useful info ("4 entries, 12 i18n leaves") without storing the whole JSON.
+const countI18nLeaves = (obj) => {
+    let n = 0;
+    const visit = (v) => {
+        if (Array.isArray(v)) return v.forEach(visit);
+        if (v && typeof v === 'object') {
+            const keys = Object.keys(v);
+            const localeLike = keys.filter(k => /^[a-z]{2}(-[A-Za-z0-9]{2,4})?$/.test(k));
+            if (localeLike.length >= 3) { n += 1; return; }
+            keys.forEach(k => visit(v[k]));
+        }
+    };
+    visit(obj);
+    return n;
+};
+
+const summarizeContent = (scope, section, content) => {
+    const summary = { scope, section };
+    try {
+        if (scope === 'motd' && Array.isArray(content && content.contentItems)) {
+            summary.entryCount = content.contentItems.length;
+            summary.contentIds = content.contentItems.map(it => it && it.contentId).filter(Boolean).slice(0, 10);
+        }
+        const arrayCandidates = [
+            content && content.news && content.news.motds,
+            content && content.news && content.news.messages,
+            content && content.ad_info && content.ad_info.ads,
+            content && content.ad_info && content.ad_info.features,
+            content && content.emergencynotices && content.emergencynotices.emergencynotices,
+        ].filter(Array.isArray);
+        if (arrayCandidates.length > 0) {
+            summary.entryCount = arrayCandidates.reduce((sum, a) => sum + a.length, 0);
+        }
+        summary.i18nLeaves = countI18nLeaves(content);
+    } catch (_) {}
+    return summary;
+};
+
+const CONTENT_SECTIONS = {
+    motd: {
+        path: MOTD_PATH,
+        // For motd.json the "section" param is ignored - the whole file is the editor target.
+        sections: ['root'],
+    },
+    pages: {
+        path: CONTENT_PAGES_PATH,
+        sections: [
+            'loginmessage',
+            'emergencynotice', 'emergencynoticev2',
+            'battleroyalenews', 'battleroyalenewsv2',
+            'creativenews',
+            'savetheworldnews', 'athenamessage', 'survivalmessage',
+            'tournamentinformation',
+            'specialoffervideo',
+            'lobby',
+            'subgameselectdata', 'subgameinfo',
+            'battlepassaboutmessages',
+            'creativeAds', 'creativeFeatures',
+        ],
+    },
+};
+
+const readJsonOrEmpty = (filePath) => {
+    if (!fs.existsSync(filePath)) return {};
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+};
+
+const invalidatePagesCache = () => {
+    try {
+        const PagesService = require('../../src/service/api/page-service');
+        if (typeof PagesService.clearCache === 'function') PagesService.clearCache();
+    } catch (_) {}
+};
+
+router.get('/neodyme/api/dev/content/:scope/:section', ...dev, async (req, res) => {
+    try {
+        const { scope, section } = req.params;
+        const def = CONTENT_SECTIONS[scope];
+        if (!def) return WebResponse.notFound(res, 'Unknown content scope.');
+        if (!def.sections.includes(section)) {
+            return WebResponse.notFound(res, 'Unknown content section.');
+        }
+
+        const data = readJsonOrEmpty(def.path);
+        const content = (scope === 'motd') ? data : (data[section] || null);
+        return WebResponse.ok(res, { scope, section, content });
+    } catch (error) {
+        return WebResponse.serverError(res, 'get content section', error);
+    }
+});
+
+// Map a scope to the upstream GitHub raw URL. We host the canonical defaults
+// in the repo, so the reset action just re-downloads them and overwrites the
+// local file. This lets staff recover from a broken edit in one click.
+const RESET_SOURCES = {
+    motd: {
+        url: 'https://raw.githubusercontent.com/Aorux01/Neodyme/refs/heads/main/config/motd.json',
+        path: MOTD_PATH,
+        label: 'config/motd.json'
+    },
+    pages: {
+        url: 'https://raw.githubusercontent.com/Aorux01/Neodyme/refs/heads/main/content/pages/content-pages.json',
+        path: CONTENT_PAGES_PATH,
+        label: 'content/pages/content-pages.json'
+    }
+};
+
+const downloadJson = (url) => new Promise((resolve, reject) => {
+    const https = require('https');
+    const req = https.get(url, { headers: { 'User-Agent': 'Neodyme-Dev-Panel' } }, (resp) => {
+        if (resp.statusCode >= 300 && resp.statusCode < 400 && resp.headers.location) {
+            resp.resume();
+            return downloadJson(resp.headers.location).then(resolve, reject);
+        }
+        if (resp.statusCode !== 200) {
+            resp.resume();
+            return reject(new Error(`HTTP ${resp.statusCode} from ${url}`));
+        }
+        let raw = '';
+        resp.setEncoding('utf8');
+        resp.on('data', (chunk) => { raw += chunk; });
+        resp.on('end', () => {
+            try { JSON.parse(raw); } // validate
+            catch (err) { return reject(new Error('Upstream file is not valid JSON: ' + err.message)); }
+            resolve(raw);
+        });
+    });
+    req.setTimeout(10000, () => { req.destroy(new Error('Download timed out after 10s')); });
+    req.on('error', reject);
+});
+
+router.post('/neodyme/api/dev/content/reset', ...devWrite, async (req, res) => {
+    try {
+        const { scopes } = req.body || {};
+        const requested = Array.isArray(scopes) && scopes.length > 0 ? scopes : Object.keys(RESET_SOURCES);
+        const targets = requested.filter(s => RESET_SOURCES[s]);
+        if (targets.length === 0) return WebResponse.badRequest(res, 'No valid scope to reset.');
+
+        const results = [];
+        for (const scope of targets) {
+            const src = RESET_SOURCES[scope];
+            try {
+                const raw = await downloadJson(src.url);
+                writeFileAtomic(src.path, raw);
+                LoggerService.log('info', `Content reset: ${src.label} restored from upstream by ${req.user.displayName}`);
+                results.push({ scope, label: src.label, ok: true, bytes: raw.length });
+            } catch (err) {
+                LoggerService.log('error', `Reset failed for ${scope}: ${err.message}`);
+                results.push({ scope, label: src.label, ok: false, error: err.message });
+            }
+        }
+
+        await AuditService.logContentReset(req.user.accountId, req.user.displayName, targets, req.ip, results);
+        invalidatePagesCache();
+        const failed = results.filter(r => !r.ok).length;
+        return WebResponse.ok(res, {
+            message: failed === 0 ? `${results.length} file(s) restored.` : `${results.length - failed}/${results.length} file(s) restored.`,
+            results
+        });
+    } catch (error) {
+        return WebResponse.serverError(res, 'reset content', error);
+    }
+});
+
+router.put('/neodyme/api/dev/content/:scope/:section', ...devWrite, async (req, res) => {
+    try {
+        const { scope, section } = req.params;
+        const { content } = req.body;
+        const def = CONTENT_SECTIONS[scope];
+        if (!def) return WebResponse.notFound(res, 'Unknown content scope.');
+        if (!def.sections.includes(section)) {
+            return WebResponse.notFound(res, 'Unknown content section.');
+        }
+        if (typeof content !== 'object' || content === null) {
+            return WebResponse.badRequest(res, 'Content must be a valid JSON object.');
+        }
+
+        if (scope === 'motd') {
+            writeFileAtomic(def.path, JSON.stringify(content, null, 2));
+        } else {
+            const data = readJsonOrEmpty(def.path);
+            data[section] = content;
+            data.lastModified = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
+            writeFileAtomic(def.path, JSON.stringify(data, null, 2));
+        }
+
+        invalidatePagesCache();
+        const summary = summarizeContent(scope, section, content);
+        await AuditService.logContentEdit(req.user.accountId, req.user.displayName, scope, section, req.ip, summary);
+        LoggerService.log('info', `Content ${scope}:${section} updated by ${req.user.displayName}`);
+
+        return WebResponse.ok(res, { message: `${scope}/${section} updated.` });
+    } catch (error) {
+        return WebResponse.serverError(res, 'update content section', error);
+    }
+});
+
 module.exports = router;

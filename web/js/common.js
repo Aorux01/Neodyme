@@ -1,8 +1,3 @@
-// Neodyme - shared frontend helpers (loaded on every page).
-// All website API calls target /neodyme/api/*. Authentication is cookie-based
-// (HttpOnly neodyme_auth); CSRF uses a session cookie + X-CSRF-Token header.
-// Mutating calls (POST/PUT/DELETE/PATCH) MUST go through secureFetch().
-
 const API = '/neodyme/api';
 
 // --- Server status (footer/header dot) ---

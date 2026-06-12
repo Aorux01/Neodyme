@@ -58,6 +58,19 @@ class AuditService {
         UPDATE_CONFIG: 'update_config',
         UPDATE_CONFIG_FILE: 'update_config_file',
 
+        // Content editor (typed editors over content-pages.json / motd.json)
+        UPDATE_CONTENT: 'update_content',
+        RESET_CONTENT:  'reset_content',
+
+        // Assets manager
+        UPLOAD_ASSET: 'upload_asset',
+        DELETE_ASSET: 'delete_asset',
+
+        // Shop editor
+        UPDATE_SHOP_SLOT:    'update_shop_slot',
+        CLEAR_SHOP_SLOT:     'clear_shop_slot',
+        RANDOMIZE_SHOP_SLOT: 'randomize_shop_slot',
+
         // Server
         FORCE_SHOP_ROTATION: 'force_shop_rotation',
         TOGGLE_MAINTENANCE: 'toggle_maintenance'
@@ -112,14 +125,129 @@ class AuditService {
         );
     }
 
-    static async logConfigFileChange(userId, userName, fileName, ip) {
+    static async logConfigFileChange(userId, userName, fileName, ip, extra = {}) {
         return this.log(
             this.ACTIONS.UPDATE_CONFIG_FILE,
             userId,
             userName,
             'config_file',
             fileName,
-            {},
+            { fileName, ...extra },
+            ip
+        );
+    }
+
+    // Content editor: PUT /dev/content/:scope/:section. Includes a short
+    // human summary of what changed so the audit modal does not need to
+    // re-fetch the file.
+    static async logContentEdit(userId, userName, scope, section, ip, extra = {}) {
+        return this.log(
+            this.ACTIONS.UPDATE_CONTENT,
+            userId,
+            userName,
+            'content',
+            `${scope}:${section}`,
+            { scope, section, ...extra },
+            ip
+        );
+    }
+
+    // Content editor reset (download canonical file from upstream).
+    static async logContentReset(userId, userName, scopes, ip, results = []) {
+        return this.log(
+            this.ACTIONS.RESET_CONTENT,
+            userId,
+            userName,
+            'content',
+            scopes.join(','),
+            { scopes, results },
+            ip
+        );
+    }
+
+    static async logAssetUpload(userId, userName, fileMeta, ip) {
+        return this.log(
+            this.ACTIONS.UPLOAD_ASSET,
+            userId,
+            userName,
+            'asset',
+            fileMeta.path || fileMeta.filename || '?',
+            {
+                filename: fileMeta.filename,
+                path: fileMeta.path,
+                originalName: fileMeta.originalName,
+                size: fileMeta.size,
+                ext: fileMeta.ext,
+                url: fileMeta.url,
+            },
+            ip
+        );
+    }
+
+    static async logAssetDelete(userId, userName, relPath, ip, extra = {}) {
+        return this.log(
+            this.ACTIONS.DELETE_ASSET,
+            userId,
+            userName,
+            'asset',
+            relPath,
+            { path: relPath, ...extra },
+            ip
+        );
+    }
+
+    static async logShopSlotUpdate(userId, userName, slot, oldEntry, newEntry, ip) {
+        return this.log(
+            this.ACTIONS.UPDATE_SHOP_SLOT,
+            userId,
+            userName,
+            'shop_slot',
+            slot,
+            {
+                slot,
+                oldItemGrants: oldEntry ? oldEntry.itemGrants : null,
+                oldPrice:      oldEntry ? oldEntry.price      : null,
+                newItemGrants: newEntry.itemGrants,
+                newPrice:      newEntry.price,
+            },
+            ip
+        );
+    }
+
+    static async logShopSlotClear(userId, userName, slot, oldEntry, ip) {
+        return this.log(
+            this.ACTIONS.CLEAR_SHOP_SLOT,
+            userId,
+            userName,
+            'shop_slot',
+            slot,
+            {
+                slot,
+                clearedItemGrants: oldEntry ? oldEntry.itemGrants : null,
+                clearedPrice:      oldEntry ? oldEntry.price      : null,
+            },
+            ip
+        );
+    }
+
+    static async logShopSlotRandomize(userId, userName, slot, picked, oldEntry, newEntry, ip) {
+        return this.log(
+            this.ACTIONS.RANDOMIZE_SHOP_SLOT,
+            userId,
+            userName,
+            'shop_slot',
+            slot,
+            {
+                slot,
+                pickedId: picked.id,
+                pickedName: picked.name,
+                pickedRarity: picked.rarity,
+                pickedType: picked.type,
+                oldItemGrants: oldEntry ? oldEntry.itemGrants : null,
+                oldPrice:      oldEntry ? oldEntry.price      : null,
+                newItemGrants: newEntry.itemGrants,
+                newPrice:      newEntry.price,
+            },
             ip
         );
     }
