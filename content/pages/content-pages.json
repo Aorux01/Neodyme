@@ -6278,7 +6278,7 @@
           "hidden": false,
           "tabTitleOverride": "Neodyme",
           "_type": "CommonUI Simple Message MOTD",
-          "title": "v1.2.6",
+          "title": "v1.2.7",
           "body": {
             "de": "Neodyme Patch-Hinweise",
             "ru": "Примечания к патчу Neodyme",
@@ -6604,7 +6604,7 @@
           "tabTitleOverride": "Patch Notes",
           "_type": "CommonUI Simple Message MOTD",
           "adspace": "PATCH NOTES!",
-          "title": "v1.2.6",
+          "title": "v1.2.7",
           "body": {
             "de": "Neodyme Patch-Hinweise",
             "ru": "Примечания к патчу Neodyme",

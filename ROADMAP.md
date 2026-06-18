@@ -288,4 +288,4 @@
 
 ---
 
-*Last updated: v1.2.6*
+*Last updated: v1.2.7*

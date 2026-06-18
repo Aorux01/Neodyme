@@ -182,7 +182,7 @@ Content-Type: application/json
                 <tr><td><code>PUT</code></td><td><code>/neodyme/api/auth/profile</code></td><td>Update profile</td></tr>
                 <tr><td><code>PUT</code></td><td><code>/neodyme/api/auth/change-password</code></td><td>Change password</td></tr>
                 <tr><td><code>POST</code></td><td><code>/neodyme/api/auth/logout</code></td><td>Logout</td></tr>
-                <tr><td><code>DELETE</code></td><td><code>/neodyme/api/auth/account</code></td><td>Delete own account (requires password) <span style="background:rgba(139,92,246,0.2);color:#8b5cf6;padding:1px 6px;border-radius:4px;font-size:11px;">NEW 1.2.6</span></td></tr>
+                <tr><td><code>DELETE</code></td><td><code>/neodyme/api/auth/account</code></td><td>Delete own account (requires password)</td></tr>
                 <tr><td><code>GET</code></td><td><code>/neodyme/api/auth/csrf-token</code></td><td>Get CSRF token</td></tr>
             </table>
 
@@ -269,7 +269,7 @@ Content-Type: application/json
                 <tr><td><code>PUT</code></td><td><code>/neodyme/api/admin/users/:accountId/ban</code></td><td>Ban user</td></tr>
                 <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/stats</code></td><td>Server statistics</td></tr>
                 <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/audit-log</code></td><td>Get audit logs (filter by <code>action</code>, <code>search</code>, <code>from</code>, <code>to</code>, paginated)</td></tr>
-                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/audit-log/summary?hours=</code></td><td>Action-type counts over the last N hours <span style="background:rgba(245,158,11,0.18);color:#fbbf24;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.6</span></td></tr>
+                <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/audit-log/summary?hours=</code></td><td>Action-type counts over the last N hours</td></tr>
                 <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/console-logs</code></td><td>Get server console logs</tr>
                 <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/live-stats</code></td><td>CPU, RAM, player count (real-time)</tr>
                 <tr><td><code>GET</code></td><td><code>/neodyme/api/admin/server-properties</code></td><td>Read server.properties</tr>
@@ -303,7 +303,7 @@ Content-Type: application/json
                 <tr><td><code>PUT</code></td><td><code>/neodyme/api/dev/ini-files/:fileName</code></td><td>Replace a cloud-storage INI file</td></tr>
             </table>
 
-            <h3>Content Editor <span style="background:rgba(245,158,11,0.18);color:#fbbf24;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.6</span></h3>
+            <h3>Content Editor</h3>
             <p>Typed editors for <code>config/motd.json</code> and 16 sections of <code>content/pages/content-pages.json</code> (login, news, notices, lobby, &hellip;).</p>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
@@ -312,7 +312,7 @@ Content-Type: application/json
                 <tr><td><code>POST</code></td><td><code>/neodyme/api/dev/content/reset</code></td><td>Re-download <code>motd.json</code> and/or <code>content-pages.json</code> from the upstream GitHub repo. Body: <code>{scopes: ['motd','pages']}</code></td></tr>
             </table>
 
-            <h3>Assets Manager <span style="background:rgba(245,158,11,0.18);color:#fbbf24;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.6</span></h3>
+            <h3>Assets Manager</h3>
             <p>Image upload + library browse. Uploads are validated against magic bytes (PNG/JPEG/WebP/GIF), max 5 MB.</p>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
@@ -322,7 +322,7 @@ Content-Type: application/json
                 <tr><td><code>DELETE</code></td><td><code>/neodyme/api/dev/assets/uploaded/:filename</code></td><td>Delete an uploaded image (only files under <code>uploaded-images/</code>)</td></tr>
             </table>
 
-            <h3>Shop Editor (BETA) <span style="background:rgba(245,158,11,0.18);color:#fbbf24;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;">NEW 1.2.6</span></h3>
+            <h3>Shop Editor (BETA)</h3>
             <p>Hand-pick what fills each slot of <code>data/shop.json</code>. Cosmetic catalog proxied from <code>fortnite-api.com</code> with 1h server-side cache.</p>
             <table>
                 <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>

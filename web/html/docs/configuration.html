@@ -118,7 +118,7 @@
             <table class="config-table">
                 <tr><th>Key</th><th>Default</th><th>Description</th></tr>
                 <tr><td><code>port</code></td><td><code>3551</code></td><td>TCP port the HTTP server listens on.</td></tr>
-                <tr><td><code>version</code></td><td><code>1.2.6</code></td><td>Backend version string exposed via API.</td></tr>
+                <tr><td><code>version</code></td><td><code>1.2.7</code></td><td>Backend version string exposed via API.</td></tr>
                 <tr><td><code>apiVersion</code></td><td><code>1.8</code></td><td>API version string exposed via API.</td></tr>
                 <tr><td><code>customVersion</code></td><td><code>true</code></td><td>When <code>true</code>, any Fortnite client version can connect and <code>shopMaxSeason</code> from <code>shop.json</code> controls the shop era. When <code>false</code>, only clients matching <code>fnVersion</code> can connect and the shop era is derived from <code>fnVersion</code> automatically.</td></tr>
                 <tr><td><code>fnVersion</code></td><td><code>3.50</code></td><td>Specific Fortnite version allowed when <code>customVersion=false</code>. Also used to derive the shop era when <code>customVersion=false</code> (major component = season number).</td></tr>
@@ -350,7 +350,7 @@
             </div>
 
             <h2 id="feature-status" class="section-anchor">Feature Status</h2>
-            <p>What actually works in the current build (v1.2.6):</p>
+            <p>What actually works in the current build (v1.2.7):</p>
             <table class="config-table">
                 <tr><th>Feature</th><th>Status</th><th>Notes</th></tr>
                 <tr><td>Account registration &amp; login</td><td><span class="badge badge-yes">Working</span></td><td>Full auth flow with bcrypt + JWT.</td></tr>
