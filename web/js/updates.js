@@ -1,10 +1,22 @@
 const VERSIONS = [
     {
+        version: '1.2.7',
+        title: 'Random Cosmetics Fix',
+        date: 'June 18, 2026',
+        type: 'hotfix',
+        latest: true,
+        lts: false,
+        summary: 'Hotfix for the long-standing "random skin in-game" issue. Players were spawning with a random outfit instead of the one equipped in the locker.',
+        features: [
+            { label: 'Fix: Random Cosmetics In-Game', text: 'Players were spawning with a random outfit / backpack / pickaxe / glider regardless of what they had equipped in the locker. Investigation of the MCP profile, the <code>favorite_*</code> stats and the locker_slots_data showed the backend was sending the correct loadout, ruling out the MCP layer. Root cause: <code>bLoadTestCosmetics=true</code> in <code>data/cloudstorage/system/DefaultGame.ini</code> instructs the Fortnite client to bypass the backend loadout and randomly pick cosmetics for test scenarios. The flag is now set to <code>false</code> by default. Existing servers should run with manually flip the flag in <strong>Dev Panel -> Config Files -> DefaultGame.ini</strong> or directly into the folder in <strong>data/cloudstorage/system/DefaultGame.ini</strong>. Credit to the community member who pinpointed the flag.' },
+        ]
+    },
+    {
         version: '1.2.6',
         title: 'Asset Pipeline, Web Rebuild & Locker Sync',
         date: 'June 12, 2026',
         type: 'feature',
-        latest: true,
+        latest: false,
         lts: false,
         summary: 'New unified Asset Pipeline (online CDN-redirect or local serving with one command), full /assets toolset with verification and integrity checks, versioned plugin manifests with per-version dependencies, a complete website backend/frontend logic rebuild (all web routes namespaced under /neodyme/api/* with a single unified response shape, a per-user website rate limiter, account self-deletion, a fully functional friends & player-search dashboard, and a large frontend cleanup), a fix for the locker "one-step-behind" desync where equip changes lagged a step in the menu, locker/stats synchronization on every equip, and a complete matchmaking configuration guide.',
         features: [
@@ -173,7 +185,7 @@ const VERSIONS = [
         ]
     },
     {
-        version: '1.1.7',
+        version: '1.1.6',
         title: 'Security Hardening',
         date: 'January 15, 2026',
         type: 'security',
