@@ -140,6 +140,7 @@ const Errors = {
     Account: {
         disabledAccount: () => ApiError.fromDefinition('account.disabledAccount'),
         inactiveAccount: () => ApiError.fromDefinition('account.inactiveAccount'),
+        notWhitelisted: () => ApiError.fromDefinition('account.notWhitelisted'),
         invalidAccountIdCount: () => ApiError.fromDefinition('account.invalidAccountIdCount'),
         accountNotFound: (displayName) => ApiError.fromDefinition('account.accountNotFound', displayName),
         privacyNotFound: (accountId) => ApiError.fromDefinition('account.privacyNotFound', accountId)

@@ -306,6 +306,12 @@
       "numericCode": -1,
       "statusCode": 400
     },
+    "notWhitelisted": {
+      "code": "errors.com.epicgames.account.account_not_active",
+      "message": "Your account is not whitelisted on this server.",
+      "numericCode": -1,
+      "statusCode": 400
+    },
     "invalidAccountIdCount": {
       "code": "errors.com.epicgames.account.invalidAccountIdCount",
       "message": "Sorry, the number of account id should be at least one and not more than 100.",

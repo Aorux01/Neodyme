@@ -676,6 +676,30 @@ class DatabaseManager {
     static async getAllReports() {
         return await this.getDatabaseInstance().getAllReports();
     }
+
+    static async setWhitelistEnabled(enabled) {
+        return await this.getDatabaseInstance().setWhitelistEnabled(enabled);
+    }
+
+    static async getWhitelist() {
+        return await this.getDatabaseInstance().getWhitelist();
+    }
+
+    static async isWhitelisted(accountId) {
+        return await this.getDatabaseInstance().isWhitelisted(accountId);
+    }
+
+    static async addToWhitelist(accountId) {
+        return await this.getDatabaseInstance().addToWhitelist(accountId);
+    }
+
+    static async removeFromWhitelist(accountId) {
+        return await this.getDatabaseInstance().removeFromWhitelist(accountId);
+    }
+
+    static async getAllWhitelistedAccounts() {
+        return await this.getDatabaseInstance().getAllWhitelistedAccounts();
+    }
 }
 
 module.exports = DatabaseManager;

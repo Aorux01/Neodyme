@@ -217,12 +217,10 @@
 
 ### Console Commands
 - [x] **Command system** - Base architecture with role-based access
-- [ ] **SAC commands** - Creator code add/list/delete management
 - [x] **Moderation commands** - Ban, unban, lookup
 - [x] **Server commands** - Restart, status, reload, stop, diagnostic
 - [x] **Data commands** - Migrate JSON↔MongoDB with --dry-run
 - [x] **Test commands** - Full system test suite
-- [ ] **Player commands** - Give items, V-Bucks, XP
 - [x] **Shop commands** - Manual rotation, featured items, date-based rotation
 - [x] **Debug commands** - Logs, profiling, token management
 
@@ -288,4 +286,4 @@
 
 ---
 
-*Last updated: v1.2.7*
+*Last updated: v1.2.8*

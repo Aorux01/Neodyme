@@ -406,6 +406,84 @@ router.get('/neodyme/api/admin/xmpp-clients', ...dev, async (req, res) => {
     }
 });
 
+// ---- Whitelist (admin) ----
+
+router.get('/neodyme/api/admin/whitelist', ...admin, async (req, res) => {
+    try {
+        const whitelist = await DatabaseManager.getWhitelist();
+        const accounts = await DatabaseManager.getAllWhitelistedAccounts();
+        const byId = new Map(accounts.map(a => [a.accountId, a]));
+
+        return WebResponse.ok(res, {
+            enabled: ConfigManager.get('whitelistEnabled', false) === true,
+            entries: whitelist.map(accountId => {
+                const account = byId.get(accountId);
+                return {
+                    accountId,
+                    displayName: account ? account.displayName : null
+                };
+            })
+        });
+    } catch (error) {
+        return WebResponse.serverError(res, 'get whitelist', error);
+    }
+});
+
+router.put('/neodyme/api/admin/whitelist/enabled', ...adminWrite, async (req, res) => {
+    try {
+        const { enabled } = req.body;
+        if (typeof enabled !== 'boolean') {
+            return WebResponse.badRequest(res, 'enabled must be a boolean.');
+        }
+
+        await DatabaseManager.setWhitelistEnabled(enabled);
+        LoggerService.log('info', `Whitelist ${enabled ? 'enabled' : 'disabled'} via admin panel by ${req.user.displayName}`);
+        return WebResponse.ok(res, { message: `Whitelist ${enabled ? 'enabled' : 'disabled'}.`, enabled });
+    } catch (error) {
+        return WebResponse.serverError(res, 'set whitelist enabled', error);
+    }
+});
+
+router.post('/neodyme/api/admin/whitelist', ...adminWrite, async (req, res) => {
+    try {
+        const query = (typeof req.body.query === 'string' ? req.body.query : '').trim();
+        if (!query) {
+            return WebResponse.badRequest(res, 'query (displayName or accountId) is required.');
+        }
+
+        const account = await DatabaseManager.getAccountByDisplayName(query)
+            || await DatabaseManager.getAccount(query);
+        if (!account) {
+            return WebResponse.notFound(res, `No account found for "${query}".`);
+        }
+
+        const added = await DatabaseManager.addToWhitelist(account.accountId);
+        if (!added) {
+            return WebResponse.ok(res, { message: `${account.displayName} is already whitelisted.`, added: false });
+        }
+
+        LoggerService.log('info', `${account.displayName} (${account.accountId}) added to whitelist by ${req.user.displayName}`);
+        return WebResponse.ok(res, { message: `${account.displayName} added to the whitelist.`, added: true });
+    } catch (error) {
+        return WebResponse.serverError(res, 'add to whitelist', error);
+    }
+});
+
+router.delete('/neodyme/api/admin/whitelist/:accountId', ...adminWrite, async (req, res) => {
+    try {
+        const { accountId } = req.params;
+        const removed = await DatabaseManager.removeFromWhitelist(accountId);
+        if (!removed) {
+            return WebResponse.notFound(res, 'Account is not on the whitelist.');
+        }
+
+        LoggerService.log('info', `${accountId} removed from whitelist by ${req.user.displayName}`);
+        return WebResponse.ok(res, { message: 'Account removed from the whitelist.' });
+    } catch (error) {
+        return WebResponse.serverError(res, 'remove from whitelist', error);
+    }
+});
+
 // ---- Console command (moderator+, gated per-command by required level) ----
 
 router.post('/neodyme/api/admin/command', verifyToken, requireModerator, csrfProtection, async (req, res) => {

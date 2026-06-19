@@ -12,6 +12,8 @@ const User = require('./mongodb/clients');
 const Profile = require('./mongodb/profiles');
 const Friends = require('./mongodb/friends');
 const CloudStorage = require('./mongodb/cloud-storage');
+const AuditLog = require('./mongodb/audit-log');
+const Whitelist = require('./mongodb/whitelist');
 
 class MongoDatabase {
     static MAX_FAILED_ATTEMPTS = 5;
@@ -1408,6 +1410,64 @@ class MongoDatabase {
     static async getAllReports() {
         const Report = this.getReportModel();
         return await Report.find({}).sort({ createdAt: -1 }).lean();
+    }
+
+    static async setWhitelistEnabled(enabled) {
+        const configPath = path.join(__dirname, '../../server.properties');
+        if (!fs.existsSync(configPath)) {
+            throw new Error('server.properties file not found');
+        }
+
+        const lines = fs.readFileSync(configPath, 'utf-8').split('\n');
+        let found = false;
+
+        for (let i = 0; i < lines.length; i++) {
+            if (lines[i].startsWith('whitelistEnabled=')) {
+                lines[i] = `whitelistEnabled=${enabled}`;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            lines.push(`whitelistEnabled=${enabled}`);
+        }
+
+        fs.writeFileSync(configPath, lines.join('\n'), 'utf-8');
+
+        // Keep the in-memory config in sync so the change applies without a restart.
+        ConfigManager.set('whitelistEnabled', enabled);
+    }
+
+    static async getWhitelist() {
+        const entries = await Whitelist.find({}, { accountId: 1, _id: 0 }).lean();
+        return entries.map(entry => entry.accountId);
+    }
+
+    static async isWhitelisted(accountId) {
+        const entry = await Whitelist.findOne({ accountId }).lean();
+        return !!entry;
+    }
+
+    static async addToWhitelist(accountId) {
+        const existing = await Whitelist.findOne({ accountId }).lean();
+        if (existing) {
+            return false;
+        }
+
+        await Whitelist.create({ accountId, addedAt: new Date() });
+        return true;
+    }
+
+    static async removeFromWhitelist(accountId) {
+        const result = await Whitelist.deleteOne({ accountId });
+        return result.deletedCount > 0;
+    }
+
+    static async getAllWhitelistedAccounts() {
+        const whitelist = await this.getWhitelist();
+        const clients = await this.getClients();
+        return clients.filter(client => whitelist.includes(client.accountId));
     }
 }
 

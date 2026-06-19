@@ -11,7 +11,8 @@ class JsonDatabase {
     static clientsFile = path.join(this.dataPath, 'clients.json');
     static playersPath = path.join(this.dataPath, 'players');
     static auditLogFile = path.join(this.dataPath, 'audit-log.json');
-    
+    static whitelistFile = path.join(this.dataPath, 'whitelist.json');
+
     static maxAuditLogEntries = 10000;
 
     static fileLocks = new Map();
@@ -32,6 +33,10 @@ class JsonDatabase {
 
         if (!fs.existsSync(this.clientsFile)) {
             this.atomicWriteFile(this.clientsFile, JSON.stringify([], null, 2));
+        }
+
+        if (!fs.existsSync(this.whitelistFile)) {
+            this.atomicWriteFile(this.whitelistFile, JSON.stringify([], null, 2));
         }
 
         LoggerService.log('info', 'JSON Database initialized');
@@ -1592,6 +1597,75 @@ class JsonDatabase {
         const data = await this.getReportsData();
         return Object.values(data.reports)
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    static async setWhitelistEnabled(enabled) {
+        const configPath = path.join(__dirname, '../../server.properties');
+        if (!fs.existsSync(configPath)) {
+            throw new Error('server.properties file not found');
+        }
+
+        const lines = fs.readFileSync(configPath, 'utf-8').split('\n');
+        let found = false;
+
+        for (let i = 0; i < lines.length; i++) {
+            if (lines[i].startsWith('whitelistEnabled=')) {
+                lines[i] = `whitelistEnabled=${enabled}`;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            lines.push(`whitelistEnabled=${enabled}`);
+        }
+
+        fs.writeFileSync(configPath, lines.join('\n'), 'utf-8');
+
+        // Keep the in-memory config in sync so the change applies without a restart.
+        ConfigManager.set('whitelistEnabled', enabled);
+    }
+
+    static async getWhitelist() {
+        const data = await this.safeReadFile(this.whitelistFile);
+        const parsed = JSON.parse(data);
+        return Array.isArray(parsed) ? parsed : [];
+    }
+
+    static async isWhitelisted(accountId) {
+        const whitelist = await this.getWhitelist();
+        return whitelist.includes(accountId);
+    }
+
+    static async addToWhitelist(accountId) {
+        const whitelist = await this.getWhitelist();
+
+        if (whitelist.includes(accountId)) {
+            return false;
+        }
+
+        whitelist.push(accountId);
+        await this.safeWriteFile(this.whitelistFile, JSON.stringify(whitelist, null, 2));
+        return true;
+    }
+
+    static async removeFromWhitelist(accountId) {
+        const whitelist = await this.getWhitelist();
+        const index = whitelist.indexOf(accountId);
+
+        if (index === -1) {
+            return false;
+        }
+
+        whitelist.splice(index, 1);
+        await this.safeWriteFile(this.whitelistFile, JSON.stringify(whitelist, null, 2));
+        return true;
+    }
+
+    static async getAllWhitelistedAccounts() {
+        const whitelist = await this.getWhitelist();
+        const clients = await this.getClients();
+        return clients.filter(client => whitelist.includes(client.accountId));
     }
 }
 

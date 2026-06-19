@@ -1012,6 +1012,7 @@
                     <button class="tab-btn" onclick="showAdminTab('stats')"><i class="fas fa-chart-bar"></i> Statistics</button>
                     <button class="tab-btn" onclick="showAdminTab('audit')"><i class="fas fa-history"></i> Audit Log</button>
                     <button class="tab-btn" onclick="showAdminTab('commands')"><i class="fas fa-terminal"></i> Commands</button>
+                    <button class="tab-btn" onclick="showAdminTab('whitelist')"><i class="fas fa-user-shield"></i> Whitelist</button>
                     <button class="tab-btn" onclick="showAdminTab('settings')"><i class="fas fa-cog"></i> Settings</button>
                 </div>
 
@@ -1269,6 +1270,41 @@
                             <button class="btn btn-sm btn-secondary" onclick="loadPlayerStatsChart('1m')"  id="pstat-1m">1 month</button>
                             <button class="btn btn-sm btn-secondary" onclick="loadPlayerStatsChart('1y')"  id="pstat-1y">1 year</button>
                             <button class="btn btn-sm btn-secondary" onclick="loadPlayerStatsChart('all')" id="pstat-all">All</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-whitelist" class="admin-tab-content" style="display: none;">
+                    <div id="admin-whitelist-result" class="alert" style="display:none;margin-bottom:16px;"></div>
+
+                    <div class="config-category" style="margin-bottom:18px;">
+                        <h4><i class="fas fa-user-shield"></i> Server Whitelist</h4>
+                        <p style="color:#999;font-size:13px;margin:4px 0 12px;">When enabled, only whitelisted accounts can connect to the server.</p>
+                        <div class="config-options">
+                            <div class="config-item">
+                                <label>Status</label>
+                                <div style="display:flex;gap:6px;align-items:center;">
+                                    <span id="admin-whitelist-status" style="font-size:13px;font-weight:600;color:#999;">Loading...</span>
+                                    <button id="btn-whitelist-on" class="btn btn-sm btn-secondary" onclick="setWhitelistEnabled(true)"><i class="fas fa-check"></i> Enable</button>
+                                    <button id="btn-whitelist-off" class="btn btn-sm btn-secondary" onclick="setWhitelistEnabled(false)"><i class="fas fa-times"></i> Disable</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-search">
+                        <input type="text" id="admin-whitelist-input" class="form-input" placeholder="Add by displayName or accountId...">
+                        <button class="btn btn-primary" onclick="addToWhitelist()">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                        <button class="btn btn-secondary" onclick="loadWhitelist()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div id="admin-whitelist-list" class="users-list">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i> Loading whitelist...
                         </div>
                     </div>
                 </div>

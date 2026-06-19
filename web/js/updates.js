@@ -1,10 +1,25 @@
 const VERSIONS = [
     {
+        version: '1.2.8',
+        title: 'Server Whitelist & Creator Code Console',
+        date: 'June 19, 2026',
+        type: 'feature',
+        latest: true,
+        lts: false,
+        summary: 'Optional server-wide whitelist gating who can connect (enforced on every login - password, refresh and exchange-code grants), managed from the console or a new Whitelist tab in the Admin panel, a new /sac console command for full creator-code management (add / list / delete / info), and supporting database methods for both JSON and MongoDB backends.',
+        features: [
+            { label: 'Server Whitelist', text: 'New optional whitelist that restricts who can connect to the server. Toggle it with <code>whitelistEnabled</code> in <code>server.properties</code> (default <code>false</code>); when enabled, only accountIds listed in <code>data/whitelist.json</code> (JSON) or the <code>whitelist</code> collection (MongoDB) can authenticate. The check runs at every auth entry point - <code>password</code>, <code>refresh_token</code> and <code>exchange_code</code> grants - and rejected players receive a clear <em>"Your account is not whitelisted on this server."</em> message instead of a generic credentials error. Toggling via the console or panel applies immediately without a restart.' },
+            { label: '/whitelist Console Command', text: 'New <code>/whitelist</code> command with <code>set &lt;true|false&gt;</code> (enable/disable), <code>add &lt;user|accountId&gt;</code>, <code>remove &lt;user|accountId&gt;</code> and <code>list</code>. Add/remove accept either a displayName or a raw accountId, and <code>list</code> surfaces whitelisted accounts (flagging entries whose account no longer exists).' },
+            { label: 'Whitelist Admin Tab', text: 'New <strong>Whitelist</strong> tab in the Admin panel to enable/disable the whitelist and add, remove or review whitelisted accounts from the browser - no console access required.' },
+            { label: '/sac Console Command', text: 'New <code>/sac</code> command for full creator-code management from the console: <code>add &lt;user|accountId&gt; &lt;code&gt;</code> (create a code directly for an account), <code>list</code> (all active codes with uses and earnings), <code>delete &lt;code&gt;</code> and <code>info &lt;code&gt;</code> (owner, status, usage and earnings).' },
+        ]
+    },
+    {
         version: '1.2.7',
         title: 'Random Cosmetics Fix',
         date: 'June 18, 2026',
         type: 'hotfix',
-        latest: true,
+        latest: false,
         lts: false,
         summary: 'Hotfix for the long-standing "random skin in-game" issue. Players were spawning with a random outfit instead of the one equipped in the locker.',
         features: [

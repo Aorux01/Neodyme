@@ -482,6 +482,14 @@ const ADMIN_COMMANDS = [
         ]
     },
     {
+        cat: 'Creator Codes', icon: 'fa-code', color: '#10b981', cmds: [
+            { label: 'Add',    cmd: 'sac add',    args: [{id:'acmd-sac-user',ph:'username or accountId'},{id:'acmd-sac-code',ph:'code (3-16 chars)'}] },
+            { label: 'Info',   cmd: 'sac info',   args: [{id:'acmd-sac-info',ph:'code'}] },
+            { label: 'Delete', cmd: 'sac delete', args: [{id:'acmd-sac-del',ph:'code'}], danger: true },
+            { label: 'List',   cmd: 'sac list' },
+        ]
+    },
+    {
         cat: 'Broadcast', icon: 'fa-bullhorn', color: '#8b5cf6', cmds: [
             { label: 'Message', cmd: 'broadcast', args: [{id:'acmd-bc-msg',ph:'message to all players'}] },
         ]
@@ -634,8 +642,116 @@ function showAdminTab(tab) {
     if (tab === 'stats')    { loadAdminDetailedStats(); loadPlayerStatsChart('24h'); loadAdminWebSettings(); }
     if (tab === 'settings') loadAdminWebSettings();
     if (tab === 'commands') loadAdminCommands();
+    if (tab === 'whitelist') loadWhitelist();
 
     if (logsAutoRunning) toggleLogsAuto();
+}
+
+// ---- Whitelist management ----
+
+function showWhitelistResult(success, message) {
+    const el = document.getElementById('admin-whitelist-result');
+    if (!el) return;
+    el.className     = `alert ${success ? 'alert-success' : 'alert-danger'}`;
+    el.style.display = 'block';
+    el.textContent   = message;
+    setTimeout(() => { el.style.display = 'none'; }, 6000);
+}
+
+async function loadWhitelist() {
+    const list = document.getElementById('admin-whitelist-list');
+    try {
+        const res  = await fetch('/neodyme/api/admin/whitelist', { credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(apiError(data, 'Failed to load whitelist'));
+
+        const statusEl = document.getElementById('admin-whitelist-status');
+        const on  = document.getElementById('btn-whitelist-on');
+        const off = document.getElementById('btn-whitelist-off');
+        if (statusEl) {
+            statusEl.textContent = data.enabled ? 'Enabled' : 'Disabled';
+            statusEl.style.color = data.enabled ? '#4ade80' : '#ef4444';
+        }
+        if (on && off) {
+            on.className  = data.enabled ? 'btn btn-sm btn-success'   : 'btn btn-sm btn-secondary';
+            off.className = data.enabled ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-danger';
+        }
+
+        if (!list) return;
+        if (!data.entries || data.entries.length === 0) {
+            list.innerHTML = '<div style="text-align:center;color:#666;padding:24px;font-size:13px;">The whitelist is empty.</div>';
+            return;
+        }
+
+        list.innerHTML = data.entries.map(entry => {
+            const name = entry.displayName
+                ? escHtml(entry.displayName)
+                : '<span style="color:#fbbf24;">&lt;unknown account&gt;</span>';
+            return `<div class="user-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;margin-bottom:6px;">
+                <div>
+                    <div style="font-weight:600;color:#ddd;">${name}</div>
+                    <div style="font-size:11px;color:#777;font-family:monospace;">${escHtml(entry.accountId)}</div>
+                </div>
+                <button class="btn btn-sm btn-danger" onclick="removeFromWhitelist('${escHtml(entry.accountId)}')">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            </div>`;
+        }).join('');
+    } catch (err) {
+        if (list) list.innerHTML = `<span style="color:#ef4444;font-size:13px;">Error: ${escHtml(err.message)}</span>`;
+    }
+}
+
+async function setWhitelistEnabled(enabled) {
+    try {
+        const res  = await secureFetch('/neodyme/api/admin/whitelist/enabled', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ enabled })
+        });
+        const data = await res.json();
+        showWhitelistResult(res.ok, apiError(data, res.ok ? 'Saved.' : 'Failed to save.'));
+        if (res.ok) loadWhitelist();
+    } catch (err) {
+        showWhitelistResult(false, err.message);
+    }
+}
+
+async function addToWhitelist() {
+    const input = document.getElementById('admin-whitelist-input');
+    const query = (input?.value || '').trim();
+    if (!query) {
+        showWhitelistResult(false, 'Enter a displayName or accountId.');
+        return;
+    }
+    try {
+        const res  = await secureFetch('/neodyme/api/admin/whitelist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query })
+        });
+        const data = await res.json();
+        showWhitelistResult(res.ok, apiError(data, res.ok ? 'Added.' : 'Failed to add.'));
+        if (res.ok) {
+            if (input) input.value = '';
+            loadWhitelist();
+        }
+    } catch (err) {
+        showWhitelistResult(false, err.message);
+    }
+}
+
+async function removeFromWhitelist(accountId) {
+    try {
+        const res  = await secureFetch(`/neodyme/api/admin/whitelist/${encodeURIComponent(accountId)}`, {
+            method: 'DELETE'
+        });
+        const data = await res.json();
+        showWhitelistResult(res.ok, apiError(data, res.ok ? 'Removed.' : 'Failed to remove.'));
+        if (res.ok) loadWhitelist();
+    } catch (err) {
+        showWhitelistResult(false, err.message);
+    }
 }
 
 // Full dev tab router (handles overview / config / stats / logs / plugins / commands / system / monitor).

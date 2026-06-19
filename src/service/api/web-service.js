@@ -26,6 +26,8 @@ const CMD_PERMISSIONS = [
     ['account delete', 3],
     ['backup restore', 3],
     ['admin',          3],
+    ['whitelist',      3],
+    ['sac',            3],
     ['maintenance',    3],
     ['broadcast',      3],
 ];

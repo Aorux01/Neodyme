@@ -72,6 +72,7 @@ class AuthService {
             }
 
             await this.checkBanStatus(account.accountId);
+            await this.checkWhitelist(account.accountId);
             await DatabaseManager.resetFailedAttempts(account.accountId);
             await DatabaseManager.updateLastLogin(account.accountId);
 
@@ -110,6 +111,7 @@ class AuthService {
         }
 
         await this.checkBanStatus(account.accountId);
+        await this.checkWhitelist(account.accountId);
 
         await TokenService.removeToken(refreshToken);
 
@@ -138,6 +140,7 @@ class AuthService {
         }
 
         await this.checkBanStatus(account.accountId);
+        await this.checkWhitelist(account.accountId);
 
         const tokens = await this.generateTokens(account, clientId, deviceId, 'exchange_code', ip);
 
@@ -184,6 +187,17 @@ class AuthService {
         }
 
         throw Errors.Account.disabledAccount();
+    }
+
+    static async checkWhitelist(accountId) {
+        if (ConfigManager.get('whitelistEnabled', false) !== true) {
+            return;
+        }
+
+        const whitelisted = await DatabaseManager.isWhitelisted(accountId);
+        if (!whitelisted) {
+            throw Errors.Account.notWhitelisted();
+        }
     }
 
     static async generateTokens(account, clientId, deviceId, grantType, ip) {
