@@ -5,15 +5,32 @@
 }
 
 .login-sidebar {
+    position: relative;
     flex: 1;
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface-3) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 40px;
+    overflow: hidden;
+}
+
+/* Soft brand glow behind the logo, echoing the 404 page's halo. */
+.login-sidebar::before {
+    content: "";
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--primary-soft) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    pointer-events: none;
 }
 
 .sidebar-content {
+    position: relative;
     max-width: 400px;
     text-align: center;
 }
@@ -21,26 +38,42 @@
 .neodyme-logo-large {
     font-size: 80px;
     font-weight: 900;
-    color: #8b5cf6;
-    margin-bottom: 40px;
+    line-height: 1;
+    color: var(--primary);
+    margin-bottom: 28px;
+    letter-spacing: -2px;
+    text-shadow: 0 0 40px var(--primary-glow);
+}
+
+/* Same gradient rule used on the 404 page. */
+.neodyme-logo-large::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-600));
+    border-radius: 2px;
+    margin: 28px auto 0;
 }
 
 .sidebar-title {
     font-size: 32px;
     font-weight: 700;
     margin-bottom: 16px;
-    color: #ffffff;
+    color: var(--text);
 }
 
 .sidebar-subtitle {
-    color: #b0b0b0;
+    color: var(--muted);
     font-size: 16px;
+    line-height: 1.6;
     margin-bottom: 40px;
 }
 
 .login-form-container {
     width: 400px;
-    background: #1e1e1e;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
     padding: 60px 40px;
     display: flex;
     flex-direction: column;
@@ -55,11 +88,23 @@
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 8px;
+    color: var(--text);
+}
+
+.form-title::after {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-600));
+    border-radius: 2px;
+    margin-top: 12px;
 }
 
 .form-subtitle {
-    color: #b0b0b0;
+    color: var(--muted);
     font-size: 14px;
+    margin-top: 12px;
 }
 
 .form-options {
@@ -79,41 +124,45 @@
 .checkbox-container input[type="checkbox"] {
     width: 16px;
     height: 16px;
-    accent-color: #8b5cf6;
+    accent-color: var(--primary);
 }
 
+/* Flex rules on either side of the label - no overlapping pseudo-element,
+   so the text needs no background patch to mask the line behind it. */
 .divider {
-    text-align: center;
-    margin: 24px 0;
-    color: #666;
-    font-size: 14px;
-    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 28px 0;
+    color: var(--faint);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
-.divider::before {
+.divider::before,
+.divider::after {
     content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
+    flex: 1;
     height: 1px;
-    background: #4a4a4a;
+    background: var(--border-strong);
 }
 
 .divider span {
-    background: #1e1e1e;
-    padding: 0 16px;
+    background: none;
+    padding: 0;
 }
 
 .signup-link {
     text-align: center;
     margin-top: 24px;
     font-size: 14px;
-    color: #b0b0b0;
+    color: var(--muted);
 }
 
 .signup-link a {
-    color: #8b5cf6;
+    color: var(--primary-400);
     text-decoration: none;
     font-weight: 500;
 }

@@ -9,14 +9,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
+        /* Fades into the page background instead of ending on a hard edge. */
         .neodyme-hero {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            background:
+                linear-gradient(180deg, rgba(27, 23, 38, 0.55) 0%, transparent 100%);
             padding: 160px 0 80px;
             position: relative;
             overflow: hidden;
         }
 
+        /* Brand halo behind the hero, same glow language as the 404 page. */
+        .neodyme-hero::before {
+            content: "";
+            position: absolute;
+            width: 900px;
+            height: 900px;
+            border-radius: 50%;
+            left: 50%;
+            top: 0;
+            transform: translate(-50%, -55%);
+            background: radial-gradient(circle, var(--primary-soft) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
         .hero-content {
+            position: relative;
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 24px;
@@ -27,15 +44,28 @@
             font-size: 64px;
             font-weight: 700;
             margin-bottom: 24px;
-            background: linear-gradient(45deg, #ffffff, #8b5cf6);
+            letter-spacing: -1px;
+            background: linear-gradient(45deg, #ffffff, var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
+        /* Gradient rule under the hero title, echoing the 404 divider. */
+        .hero-title::after {
+            content: "";
+            display: block;
+            width: 72px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-600));
+            border-radius: 2px;
+            margin: 28px auto 0;
+        }
+
         .hero-subtitle {
             font-size: 20px;
-            color: #b0b0b0;
+            color: var(--muted);
+            line-height: 1.6;
             margin-bottom: 40px;
             max-width: 600px;
             margin-left: auto;
@@ -59,28 +89,35 @@
         }
 
         .feature-card {
-            background: #1e1e1e;
-            border-radius: 8px;
+            background: var(--surface);
+            border-radius: var(--radius, 14px);
             padding: 32px;
             text-align: center;
-            border: 1px solid #333;
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .feature-card:hover {
             transform: translateY(-4px);
-            border-color: #8b5cf6;
+            border-color: var(--primary);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.18);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .feature-card { transition: none; }
+            .feature-card:hover { transform: none; }
         }
 
         .feature-icon {
             width: 64px;
             height: 64px;
-            background: #8b5cf6;
+            background: linear-gradient(135deg, var(--primary), var(--primary-600));
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
         }
 
         .feature-icon i {
@@ -160,14 +197,14 @@
                 </a>
             </div>
             
-            <div class="server-status">
+            <!-- <div class="server-status">
                 <div class="status-dot"></div>
                 <span>SERVER STATUS: ONLINE</span>
-            </div>
+            </div> -->
         </div>
     </section>
 
-    <section style="padding: 80px 0; background: #121212;">
+    <section style="padding: 80px 0;">
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">

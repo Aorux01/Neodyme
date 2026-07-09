@@ -112,6 +112,26 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/SetCosmeticLockerSl
                     return res.status(err.statusCode).json(err.toJSON());
                 }
 
+                // Ensure the locker has a slots map, then make sure the targeted
+                // slot exists before writing to it. Players who unlocked items of a
+                // type their loadout was created without (e.g. via /give allcosmetics)
+                // would otherwise hit slots[category] === undefined and crash the
+                // whole equip request, leaving them unable to equip anything.
+                const lockerAttrs = profile.items[lockerItem].attributes;
+                if (!lockerAttrs.locker_slots_data || typeof lockerAttrs.locker_slots_data !== 'object') {
+                    lockerAttrs.locker_slots_data = { slots: {} };
+                }
+                if (!lockerAttrs.locker_slots_data.slots || typeof lockerAttrs.locker_slots_data.slots !== 'object') {
+                    lockerAttrs.locker_slots_data.slots = {};
+                }
+                const lockerSlots = lockerAttrs.locker_slots_data.slots;
+                const ensureSlot = (name, size) => {
+                    if (!lockerSlots[name] || !Array.isArray(lockerSlots[name].items)) {
+                        lockerSlots[name] = { items: new Array(size).fill("") };
+                    }
+                    return lockerSlots[name];
+                };
+
                 switch (category) {
                     case "Character":
                     case "Backpack":
@@ -120,27 +140,34 @@ router.post("/fortnite/api/game/v2/profile/:accountId/client/SetCosmeticLockerSl
                     case "SkyDiveContrail":
                     case "MusicPack":
                     case "LoadingScreen":
-                        profile.items[lockerItem].attributes.locker_slots_data.slots[category].items = [itemToSlot || ""];
+                        ensureSlot(category, 1).items = [itemToSlot || ""];
                         break;
 
                     case "Dance":
                         const danceIndex = slotIndex || 0;
                         if (Math.sign(danceIndex) === 1 || Math.sign(danceIndex) === 0) {
-                            profile.items[lockerItem].attributes.locker_slots_data.slots.Dance.items[danceIndex] = itemToSlot || "";
+                            ensureSlot("Dance", 6).items[danceIndex] = itemToSlot || "";
                         }
                         break;
 
                     case "ItemWrap":
                         const wrapIndex = slotIndex || 0;
                         const sign = Math.sign(wrapIndex);
+                        const wrapSlot = ensureSlot("ItemWrap", 7);
 
                         if (sign === 0 || sign === 1) {
-                            profile.items[lockerItem].attributes.locker_slots_data.slots.ItemWrap.items[wrapIndex] = itemToSlot || "";
+                            wrapSlot.items[wrapIndex] = itemToSlot || "";
                         } else if (sign === -1) {
                             for (let i = 0; i < 7; i++) {
-                                profile.items[lockerItem].attributes.locker_slots_data.slots.ItemWrap.items[i] = itemToSlot || "";
+                                wrapSlot.items[i] = itemToSlot || "";
                             }
                         }
+                        break;
+
+                    default:
+                        // Unknown/season-specific slot: store it generically so the
+                        // request still succeeds instead of throwing.
+                        ensureSlot(category, 1).items = [itemToSlot || ""];
                         break;
                 }
 

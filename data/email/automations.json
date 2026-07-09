@@ -1,0 +1,18 @@
+[
+  {
+    "id": "welcome-on-signup",
+    "name": "Welcome email on signup",
+    "trigger": "account.created",
+    "templateId": "welcome",
+    "enabled": false,
+    "selection": null
+  },
+  {
+    "id": "maintenance-start",
+    "name": "Notify on maintenance start",
+    "trigger": "maintenance.on",
+    "templateId": "announcement",
+    "enabled": false,
+    "selection": { "roleLevels": [0], "accountIds": [], "verifiedOnly": true }
+  }
+]

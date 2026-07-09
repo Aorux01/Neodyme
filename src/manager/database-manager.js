@@ -126,7 +126,16 @@ class DatabaseManager {
     }
 
     static async createAccount(email, password, displayName) {
-        return await this.getDatabaseInstance().createAccount(email, password, displayName);
+        const account = await this.getDatabaseInstance().createAccount(email, password, displayName);
+
+        // Fire the account.created email automation (non-blocking, best-effort).
+        try {
+            const EmailAutomationService = require('../service/email/email-automation-service');
+            const target = (account && account.email) ? account : { email, displayName };
+            EmailAutomationService.emit('account.created', { account: target });
+        } catch (_) { /* email automation is optional; never block account creation */ }
+
+        return account;
     }
 
     static setAdmin(accountId, isAdmin) {

@@ -244,6 +244,7 @@
                     <button class="tab-btn" onclick="showDevTab('content')"><i class="fas fa-newspaper"></i> Content</button>
                     <button class="tab-btn" onclick="showDevTab('assets')"><i class="fas fa-images"></i> Assets</button>
                     <button class="tab-btn" onclick="showDevTab('shop')"><i class="fas fa-shopping-cart"></i> Shop <span class="tag-beta">BETA</span></button>
+                    <button class="tab-btn" onclick="showDevTab('email')"><i class="fas fa-envelope"></i> Email <span class="tag-beta">BETA</span></button>
                     <button class="tab-btn" onclick="showDevTab('stats')"><i class="fas fa-chart-bar"></i> Statistics</button>
                     <button class="tab-btn" onclick="showDevTab('logs')"><i class="fas fa-terminal"></i> Logs</button>
                     <button class="tab-btn" onclick="showDevTab('plugins')"><i class="fas fa-plug"></i> Plugins</button>
@@ -821,6 +822,137 @@
                     </header>
                     <div id="shop-editor-grid" class="shop-editor-grid">
                         <div class="asset-grid-loading"><i class="fas fa-spinner fa-spin"></i> Loading shop layout...</div>
+                    </div>
+                </div>
+
+                <!-- Email Tab -->
+                <div id="dev-email" class="dev-tab-content" style="display: none;">
+                    <div class="content-header">
+                        <h3><i class="fas fa-envelope"></i> Email <span class="tag-beta">BETA</span></h3>
+                        <p class="muted">SMTP is configured from the console with <code>/email create</code>. Templates, layouts and automation rules are edited here. Mass sending is admin-only and throttled - test on a small role first.</p>
+                    </div>
+
+                    <div id="email-result" class="alert" style="display:none;margin-bottom:12px;"></div>
+
+                    <div class="admin-tabs" style="flex-wrap:wrap;gap:4px;margin-bottom:16px;">
+                        <button class="tab-btn active" onclick="showEmailView('templates')"><i class="fas fa-file-alt"></i> Templates</button>
+                        <button class="tab-btn" onclick="showEmailView('layouts')"><i class="fas fa-code"></i> HTML Layouts</button>
+                        <button class="tab-btn" onclick="showEmailView('send')"><i class="fas fa-paper-plane"></i> Send</button>
+                        <button class="tab-btn" onclick="showEmailView('automation')"><i class="fas fa-robot"></i> Automation</button>
+                    </div>
+
+                    <!-- SMTP status banner -->
+                    <div id="email-smtp-banner" style="margin-bottom:16px;"></div>
+
+                    <!-- Templates sub-view -->
+                    <div id="email-view-templates" class="email-view">
+                        <div class="content-editor-shell">
+                            <aside class="content-editor-nav">
+                                <div class="content-cat-title"><i class="fas fa-file-alt"></i> Templates</div>
+                                <div id="email-template-list"></div>
+                                <button class="btn btn-sm btn-secondary" style="margin-top:10px;width:100%;" onclick="newEmailTemplate()"><i class="fas fa-plus"></i> New template</button>
+                            </aside>
+                            <main class="content-editor-main">
+                                <div id="email-template-editor">
+                                    <div style="text-align:center;color:#666;padding:40px 20px;font-size:13px;">
+                                        <i class="fas fa-envelope-open-text" style="font-size:28px;opacity:0.4;"></i>
+                                        <p>Select a template to edit, or create a new one.</p>
+                                    </div>
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+
+                    <!-- HTML Layouts sub-view -->
+                    <div id="email-view-layouts" class="email-view" style="display:none;">
+                        <div class="content-editor-shell">
+                            <aside class="content-editor-nav">
+                                <div class="content-cat-title"><i class="fas fa-code"></i> Layouts</div>
+                                <div id="email-layout-list"></div>
+                                <button class="btn btn-sm btn-secondary" style="margin-top:10px;width:100%;" onclick="newEmailLayout()"><i class="fas fa-plus"></i> New layout</button>
+                            </aside>
+                            <main class="content-editor-main">
+                                <div id="email-layout-editor">
+                                    <div style="text-align:center;color:#666;padding:40px 20px;font-size:13px;">
+                                        <i class="fas fa-code" style="font-size:28px;opacity:0.4;"></i>
+                                        <p>Select a layout to edit, or create a new one.</p>
+                                    </div>
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+
+                    <!-- Send sub-view -->
+                    <div id="email-view-send" class="email-view" style="display:none;">
+                        <div class="config-category" style="margin-bottom:16px;">
+                            <h4><i class="fas fa-paper-plane"></i> Mass Email</h4>
+                            <p style="color:#999;font-size:13px;margin:4px 0 14px;">Send a template to selected roles and/or specific accounts. Admin only.</p>
+
+                            <div class="config-item" style="align-items:flex-start;flex-direction:column;gap:6px;">
+                                <label>Template</label>
+                                <select id="email-send-template" class="form-input" style="max-width:340px;"></select>
+                            </div>
+
+                            <div class="config-item" style="align-items:flex-start;flex-direction:column;gap:8px;margin-top:14px;">
+                                <label>Recipients by role</label>
+                                <div id="email-send-roles" style="display:flex;flex-wrap:wrap;gap:12px;">
+                                    <label style="font-weight:400;"><input type="checkbox" class="email-role-cb" value="0"> Players</label>
+                                    <label style="font-weight:400;"><input type="checkbox" class="email-role-cb" value="1"> Moderators</label>
+                                    <label style="font-weight:400;"><input type="checkbox" class="email-role-cb" value="2"> Developers</label>
+                                    <label style="font-weight:400;"><input type="checkbox" class="email-role-cb" value="3"> Admins</label>
+                                    <label style="font-weight:400;"><input type="checkbox" class="email-role-cb" value="4"> Owners</label>
+                                </div>
+                            </div>
+
+                            <div class="config-item" style="align-items:flex-start;flex-direction:column;gap:6px;margin-top:14px;">
+                                <label>Specific accounts (comma-separated displayNames or accountIds, optional)</label>
+                                <input type="text" id="email-send-accounts" class="form-input" placeholder="JojoM, 1a2b3c..." style="max-width:480px;">
+                            </div>
+
+                            <div class="config-item" style="margin-top:14px;">
+                                <label style="font-weight:400;"><input type="checkbox" id="email-send-verified"> Verified emails only</label>
+                            </div>
+
+                            <div style="display:flex;gap:8px;align-items:center;margin-top:16px;">
+                                <button class="btn btn-secondary" onclick="previewEmailCount()"><i class="fas fa-users"></i> Preview count</button>
+                                <button class="btn btn-primary" onclick="confirmSendCampaign()"><i class="fas fa-paper-plane"></i> Send</button>
+                                <span id="email-send-count" style="font-size:13px;color:#999;"></span>
+                            </div>
+                        </div>
+
+                        <div id="email-campaign-progress" style="display:none;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:16px;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;">
+                                <span id="email-progress-label">Sending...</span>
+                                <span id="email-progress-stats" style="color:#999;"></span>
+                            </div>
+                            <div style="height:10px;background:#0e0e12;border-radius:6px;overflow:hidden;">
+                                <div id="email-progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#7c3aed,#a78bfa);transition:width .3s;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Automation sub-view -->
+                    <div id="email-view-automation" class="email-view" style="display:none;">
+                        <div class="config-category" style="margin-bottom:16px;">
+                            <h4><i class="fas fa-robot"></i> Automated Emails</h4>
+                            <p style="color:#999;font-size:13px;margin:4px 0 0;">Rules that send emails automatically on events or a schedule. Account events send to the affected account; other triggers send to the rule's selected roles.</p>
+                        </div>
+                        <div id="email-automation-list" class="users-list">
+                            <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading automations...</div>
+                        </div>
+                        <button class="btn btn-secondary" style="margin-top:12px;" onclick="newEmailAutomation()"><i class="fas fa-plus"></i> New rule</button>
+                        <div id="email-automation-editor" style="margin-top:16px;"></div>
+                    </div>
+
+                    <!-- Preview modal (shared by templates) -->
+                    <div id="email-preview-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9998;align-items:center;justify-content:center;padding:24px;">
+                        <div style="background:#17171d;border:1px solid #2a2a33;border-radius:12px;width:100%;max-width:660px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #2a2a33;">
+                                <span style="font-weight:600;color:#ddd;"><i class="fas fa-eye"></i> Preview: <span id="email-preview-subject" style="color:#a78bfa;"></span></span>
+                                <button class="btn btn-sm btn-secondary" onclick="closeEmailPreview()"><i class="fas fa-times"></i> Close</button>
+                            </div>
+                            <iframe id="email-preview-frame" style="border:0;width:100%;height:70vh;background:#fff;"></iframe>
+                        </div>
                     </div>
                 </div>
 

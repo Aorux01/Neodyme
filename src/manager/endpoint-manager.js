@@ -19,6 +19,9 @@ class EndpointManager {
 
     static async start() {
         this.app = express();
+        // Disable ETags so dynamic JSON responses are never served as a stale 304
+        // from the browser cache. Static files keep their own Last-Modified caching.
+        this.app.set('etag', false);
         await this.initializeRateLimiting();
         this.setupMiddleware();
         await this.loadEndpoints();

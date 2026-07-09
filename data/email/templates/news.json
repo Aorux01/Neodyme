@@ -1,0 +1,11 @@
+{
+  "id": "news",
+  "system": false,
+  "name": "News",
+  "description": "General news / update announcement to players.",
+  "layout": "default",
+  "subject": "{{serverName}} - Latest News",
+  "heading": "What's new on {{serverName}}",
+  "body": "We've been working on new features and fixes. Log in to check out the latest changes and see what's waiting for you in the item shop!",
+  "footerNote": "You are receiving this because you have an account on {{serverName}}."
+}

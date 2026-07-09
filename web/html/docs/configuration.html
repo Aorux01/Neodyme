@@ -76,6 +76,8 @@
                 <div class="docs-nav-section">Development</div>
                 <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
                 <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+                <div class="docs-nav-section">About</div>
+                <a href="credits.html" class="docs-nav-link"><i class="fas fa-heart"></i> Credits</a>
             </nav>
         </aside>
 
@@ -98,12 +100,14 @@
                     <li><a href="#ratelimit">9-11. Rate Limiting</a></li>
                     <li><a href="#auth">12-14. Auth &amp; Tokens</a></li>
                     <li><a href="#creator">15. Creator Codes</a></li>
+                    <li><a href="#email">15b. Email / SMTP</a></li>
                     <li><a href="#webui">16. Web Interface</a></li>
                     <li><a href="#events">17. Game Events</a></li>
                     <li><a href="#defaults">18. Profile Defaults</a></li>
                     <li><a href="#gameserver">19. Game Server</a></li>
                     <li><a href="#maintenance">20. Maintenance</a></li>
                     <li><a href="#ssl">21. SSL / HTTPS</a></li>
+                    <li><a href="#env">.env (secrets &amp; SMTP)</a></li>
                     <li><a href="#shop-json">config/shop.json</a></li>
                     <li><a href="#playlists-json">config/playlists.json</a></li>
                     <li><a href="#backendvalue">shopMaxSeason reference</a></li>
@@ -192,6 +196,7 @@
                 <tr><td><code>compressionEnable</code></td><td><code>true</code></td><td>Enable HTTP response compression (gzip/deflate).</td></tr>
                 <tr><td><code>helmetEnable</code></td><td><code>true</code></td><td>Add secure HTTP headers via Helmet.js.</td></tr>
                 <tr><td><code>trustProxy</code></td><td><code>true</code></td><td>Trust <code>X-Forwarded-For</code> headers. Enable when behind nginx, Cloudflare, or another reverse proxy.</td></tr>
+                <tr><td><code>whitelistEnabled</code></td><td><code>false</code></td><td>When <code>true</code>, only accounts on the whitelist can log in (enforced on every grant). Manage entries with the <code>/whitelist</code> command or the Admin Panel.</td></tr>
                 <tr><td><code>secureCookies</code></td><td><code>false</code></td><td>Mark session cookies as <code>Secure</code>. Requires HTTPS (<code>protocol=https</code>).</td></tr>
                 <tr><td><code>limitBodySize</code></td><td><code>50mb</code></td><td>Maximum request body size for file uploads.</td></tr>
                 <tr><td><code>limitRequestSize</code></td><td><code>1mb</code></td><td>Maximum request size for regular API calls.</td></tr>
@@ -232,6 +237,14 @@
             <table class="config-table">
                 <tr><th>Key</th><th>Default</th><th>Description</th></tr>
                 <tr><td><code>creatorCodeCommissionPercent</code></td><td><code>1</code></td><td>Percentage of V-Bucks purchases credited to the creator whose code was active at time of purchase. Range 0-100.</td></tr>
+            </table>
+
+            <h3 id="email" class="section-anchor">[15b] Email / SMTP</h3>
+            <p>SMTP credentials live in <a href="#env"><code>.env</code></a> (configured with the <code>/email</code> command). These keys only control the mass-send throttle, used to stay within SMTP provider limits.</p>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>emailBatchSize</code></td><td><code>20</code></td><td>Number of emails sent per batch during a mass send.</td></tr>
+                <tr><td><code>emailBatchDelayMs</code></td><td><code>2000</code></td><td>Pause in milliseconds between each batch. Raise this for stricter providers.</td></tr>
             </table>
 
             <h3 id="webui" class="section-anchor">[16] Web Interface</h3>
@@ -294,6 +307,21 @@
                 <tr><td><code>sslCertPath</code></td><td><code>config/ssl/cert.pem</code></td><td>Path to the SSL certificate (PEM format).</td></tr>
                 <tr><td><code>sslKeyPath</code></td><td><code>config/ssl/key.pem</code></td><td>Path to the SSL private key (PEM format).</td></tr>
             </table>
+
+            <h2 id="env" class="section-anchor">.env (secrets &amp; SMTP)</h2>
+            <p>The <code>.env</code> file holds secrets and credentials, kept out of <code>server.properties</code>. It is auto-created on first launch with random <code>jwtSecret</code> / <code>gameServerSecret</code> values. <strong>Never commit this file.</strong></p>
+            <table class="config-table">
+                <tr><th>Key</th><th>Description</th></tr>
+                <tr><td><code>jwtSecret</code></td><td>Secret used to sign authentication tokens (auto-generated).</td></tr>
+                <tr><td><code>gameServerSecret</code></td><td>Secret used by dedicated game servers (auto-generated).</td></tr>
+                <tr><td><code>smtpHost</code></td><td>SMTP server hostname (e.g. <code>smtp.gmail.com</code>).</td></tr>
+                <tr><td><code>smtpPort</code></td><td>SMTP port (<code>587</code> for STARTTLS, <code>465</code> for implicit TLS).</td></tr>
+                <tr><td><code>smtpUser</code></td><td>SMTP username (usually the sending email address).</td></tr>
+                <tr><td><code>smtpPass</code></td><td>SMTP password or app password.</td></tr>
+                <tr><td><code>smtpFrom</code></td><td>The <code>From</code> header (e.g. <code>Neodyme &lt;you@example.com&gt;</code>). Defaults to <code>smtpUser</code>.</td></tr>
+                <tr><td><code>smtpSecure</code></td><td>Optional. <code>true</code>/<code>false</code> to force TLS mode; auto-detected from the port when unset.</td></tr>
+            </table>
+            <p>The SMTP keys are best managed with the <code>/email</code> command rather than by hand - see <a href="commands.html#email">Commands &rarr; /email</a>. They power test emails today, and email-based features (magic-link, verification, password reset) on the roadmap.</p>
 
             <h2 id="shop-json" class="section-anchor">config/shop.json</h2>
             <p>Controls the automatic item shop rotation. Changes take effect immediately when you run <code>/shop rotate force</code> from the server console - no restart needed.</p>

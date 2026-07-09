@@ -1,3 +1,39 @@
+:root {
+    /* Surfaces */
+    --bg: #0c0a12;
+    --surface: #15121d;
+    --surface-2: #1b1726;
+    --surface-3: #221d31;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
+
+    /* Brand */
+    --primary: #8b5cf6;
+    --primary-600: #7c3aed;
+    --primary-400: #a78bfa;
+    --primary-soft: rgba(139, 92, 246, 0.14);
+    --primary-glow: rgba(139, 92, 246, 0.45);
+
+    /* Text */
+    --text: #f4f2f8;
+    --muted: #a39fb3;
+    --faint: #6f6b80;
+
+    /* Status */
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+
+    /* Shape */
+    --radius: 14px;
+    --radius-sm: 10px;
+    --radius-lg: 20px;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.7);
+    --shadow-glow: 0 16px 40px -16px var(--primary-glow);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,14 +42,21 @@
 
 body {
     font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-    background: #121212;
-    color: #ffffff;
+    background-color: var(--bg);
+    background-image:
+        radial-gradient(900px circle at 12% -5%, rgba(139, 92, 246, 0.16), transparent 55%),
+        radial-gradient(700px circle at 100% 0%, rgba(124, 58, 237, 0.10), transparent 45%);
+    background-attachment: fixed;
+    color: var(--text);
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
 .neodyme-header {
-    background: #121212;
-    border-bottom: 1px solid #2a2a2a;
+    background: rgba(12, 10, 18, 0.72);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid var(--border);
     padding: 12px 0;
     position: fixed;
     width: 100%;
@@ -30,11 +73,19 @@ body {
 }
 
 .neodyme-logo {
-    font-size: 32px;
+    font-size: 22px;
     font-weight: 900;
-    color: #8b5cf6;
+    color: #fff;
     margin-right: 40px;
     text-decoration: none;
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient(140deg, var(--primary) 0%, var(--primary-600) 100%);
+    box-shadow: var(--shadow-glow);
 }
 
 .neodyme-nav {
@@ -72,37 +123,45 @@ body {
 }
 
 .btn {
-    padding: 8px 20px;
-    border: none;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border: 1px solid transparent;
+    border-radius: 10px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
+    line-height: 1;
+}
+
+.btn:active {
+    transform: translateY(1px);
 }
 
 .btn-primary {
-    background: #8b5cf6;
+    background: linear-gradient(140deg, var(--primary) 0%, var(--primary-600) 100%);
     color: white;
+    box-shadow: 0 8px 20px -10px var(--primary-glow);
 }
 
 .btn-primary:hover {
-    background: #7c3aed;
+    box-shadow: 0 12px 26px -10px var(--primary-glow);
+    transform: translateY(-1px);
 }
 
 .btn-secondary {
-    background: transparent;
-    color: #e6e6e6;
-    border: 1px solid #4a4a4a;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
 }
 
 .btn-secondary:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: #666;
+    background: rgba(255, 255, 255, 0.09);
+    border-color: var(--primary-400);
 }
 
 .btn-large {
@@ -126,21 +185,24 @@ body {
 .form-input {
     width: 100%;
     padding: 12px 16px;
-    border: 1px solid #4a4a4a;
-    border-radius: 4px;
-    background: #2a2a2a;
-    color: #ffffff;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text);
     font-size: 14px;
-    transition: border-color 0.2s ease;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .form-input:focus {
     outline: none;
-    border-color: #8b5cf6;
+    border-color: var(--primary);
+    background: rgba(139, 92, 246, 0.06);
+    box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
 .form-input::placeholder {
-    color: #666;
+    color: var(--faint);
 }
 
 .alert {
@@ -163,8 +225,11 @@ body {
     color: #81c784;
 }
 
+/* Transparent so the page's ambient background shows through, separated by a
+   hairline rather than an opaque grey slab. */
 .neodyme-footer {
-    background: #1a1a1a;
+    background: transparent;
+    border-top: 1px solid var(--border);
     padding: 60px 0 40px;
     margin-top: 80px;
 }
@@ -183,27 +248,41 @@ body {
 }
 
 .footer-column h4 {
-    color: #8b5cf6;
+    color: var(--text);
     margin-bottom: 16px;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+/* Gradient rule under each column title, echoing the 404 divider. */
+.footer-column h4::after {
+    content: "";
+    display: block;
+    width: 28px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-600));
+    border-radius: 2px;
+    margin-top: 10px;
 }
 
 .footer-column a {
     display: block;
-    color: #b0b0b0;
+    color: var(--muted);
     text-decoration: none;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-size: 14px;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .footer-column a:hover {
-    color: #ffffff;
+    color: var(--text);
+    transform: translateX(3px);
 }
 
 .footer-bottom {
-    border-top: 1px solid #333;
+    border-top: 1px solid var(--border);
     padding-top: 24px;
     display: flex;
     justify-content: space-between;
@@ -213,7 +292,7 @@ body {
 }
 
 .footer-bottom p {
-    color: #666;
+    color: var(--faint);
     font-size: 14px;
 }
 
@@ -223,12 +302,19 @@ body {
 }
 
 .social-links a {
-    color: #b0b0b0;
-    transition: color 0.2s ease;
+    color: var(--muted);
+    font-size: 18px;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .social-links a:hover {
-    color: #8b5cf6;
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .footer-column a:hover,
+    .social-links a:hover { transform: none; }
 }
 
 .loading-spinner {

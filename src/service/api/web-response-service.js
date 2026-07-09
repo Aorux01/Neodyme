@@ -30,11 +30,22 @@ const DEFAULT_MESSAGE = {
     SERVER_ERROR: 'An unexpected error occurred.',
 };
 
-const ok = (res, data = {}, status = 200) =>
-    res.status(status).json({ success: true, ...data });
+// These are dynamic API responses - never let the browser serve a stale cached
+// copy. We both forbid caching and drop the ETag, otherwise Express revalidates
+// with If-None-Match and returns a 304 whose (empty/old) cached body the client reuses.
+const noStore = (res) => {
+    res.set('Cache-Control', 'no-store');
+    res.removeHeader('ETag');
+};
+
+const ok = (res, data = {}, status = 200) => {
+    noStore(res);
+    return res.status(status).json({ success: true, ...data });
+};
 
 const fail = (res, code, message) => {
     const status = ERROR_STATUS[code] || 400;
+    noStore(res);
     return res.status(status).json({
         success: false,
         error: code,

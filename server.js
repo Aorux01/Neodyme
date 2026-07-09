@@ -24,6 +24,7 @@ const { CsrfTokenService } = require('./src/service/token/csrf-token-service');
 const CreatorCodeService = require('./src/service/api/creator-code-service');
 const TicketService = require('./src/service/api/ticket-service');
 const AuditService = require('./src/service/api/audit-service');
+const EmailService = require('./src/service/email/email-service');
 const PlaylistRotationService = require('./src/service/playlist-rotation-service');
 const FirstLaunchService = require('./src/service/setup/first-launch-service');
 
@@ -136,6 +137,12 @@ class Server {
 
             LoggerService.log('info', 'Initializing Audit Service...');
             await AuditService.initialize();
+
+            LoggerService.log('info', 'Initializing Email Service BETA...');
+            await EmailService.initialize();
+            await require('./src/service/email/email-template-service').initialize();
+            await require('./src/service/email/email-layout-service').initialize();
+            await require('./src/service/email/email-automation-service').initialize();
 
             LoggerService.log('info', 'Loading experience system...');
             await EXPService.loadConfig();

@@ -1,0 +1,11 @@
+{
+  "id": "test",
+  "system": true,
+  "name": "Test Email",
+  "description": "Sent by /email test to verify the SMTP configuration.",
+  "layout": "default",
+  "subject": "Neodyme - Test Email",
+  "heading": "Hello {{displayName}}!",
+  "body": "This is a test email sent from your Neodyme backend. If you are reading this, your SMTP configuration is working correctly.",
+  "footerNote": "You received this email because an administrator triggered a test from the server console."
+}

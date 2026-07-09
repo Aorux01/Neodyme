@@ -5,6 +5,8 @@
 }
 
 .status-banner {
+    position: relative;
+    overflow: hidden;
     border-radius: 14px;
     padding: 28px 32px;
     margin-bottom: 28px;
@@ -12,6 +14,19 @@
     align-items: center;
     gap: 20px;
     border: 1px solid transparent;
+}
+
+/* Subtle sheen so the banner reads as a live surface rather than a flat box. */
+.status-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 100% at 0% 0%, rgba(255, 255, 255, 0.06) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.status-banner > * {
+    position: relative;
 }
 
 .status-banner.operational {
@@ -58,10 +73,11 @@
 }
 
 .services-card {
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
-    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 12px);
     overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
 
 .services-card-header {
@@ -96,6 +112,17 @@
 .service-dot.operational {
     background: #10b981;
     box-shadow: 0 0 6px rgba(16,185,129,.6);
+    animation: service-pulse 2.4s ease-in-out infinite;
+}
+
+/* Gentle heartbeat on healthy services. Disabled for reduced-motion users. */
+@keyframes service-pulse {
+    0%, 100% { box-shadow: 0 0 6px rgba(16,185,129,.6); }
+    50%      { box-shadow: 0 0 12px rgba(16,185,129,.9); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .service-dot.operational { animation: none; }
 }
 
 .service-dot.degraded {

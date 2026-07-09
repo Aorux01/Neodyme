@@ -1,17 +1,19 @@
 /* ── Docs Layout ───────────────────────────────────────────────────────────── */
+/* Transparent so the page's ambient background reads through the docs shell. */
 .docs-layout {
     display: flex;
     min-height: calc(100vh - 64px);
     margin-top: 64px;
-    background: #121212;
+    background: transparent;
 }
 
 /* ── Sidebar ────────────────────────────────────────────────────────────────── */
 .docs-sidebar {
     width: 240px;
     min-width: 240px;
-    background: #1a1a1a;
-    border-right: 1px solid #2a2a2a;
+    background: rgba(21, 18, 29, 0.6);
+    backdrop-filter: blur(8px);
+    border-right: 1px solid var(--border);
     padding: 24px 0;
     position: sticky;
     top: 64px;
@@ -24,7 +26,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #666;
+    color: var(--muted);
     padding: 0 20px 12px;
 }
 
@@ -33,7 +35,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: #555;
+    color: var(--faint);
     padding: 16px 20px 4px;
 }
 
@@ -42,7 +44,7 @@
     align-items: center;
     gap: 10px;
     padding: 8px 20px;
-    color: #b0b0b0;
+    color: var(--muted);
     text-decoration: none;
     font-size: 14px;
     transition: background 0.15s, color 0.15s;
@@ -51,21 +53,21 @@
 
 .docs-nav-link:hover,
 .docs-nav-link.active {
-    background: rgba(139, 92, 246, 0.08);
-    color: #8b5cf6;
-    border-left-color: #8b5cf6;
+    background: var(--primary-soft);
+    color: var(--primary-400);
+    border-left-color: var(--primary);
 }
 
 .docs-nav-link i {
     font-size: 13px;
     width: 16px;
     text-align: center;
-    color: #555;
+    color: var(--faint);
 }
 
 .docs-nav-link:hover i,
 .docs-nav-link.active i {
-    color: #8b5cf6;
+    color: var(--primary-400);
 }
 
 /* ── Content ────────────────────────────────────────────────────────────────── */
@@ -73,7 +75,7 @@
     flex: 1;
     padding: 48px 56px;
     max-width: 900px;
-    color: #d4d4d4;
+    color: var(--text);
     font-size: 15px;
     line-height: 1.7;
 }
@@ -85,21 +87,33 @@
 .docs-hero h1 {
     font-size: 40px;
     font-weight: 700;
-    color: #fff;
+    color: var(--text);
     margin: 0 0 12px;
+    letter-spacing: -0.5px;
+}
+
+/* Gradient rule under the docs title, echoing the 404 divider. */
+.docs-hero h1::after {
+    content: "";
+    display: block;
+    width: 56px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-600));
+    border-radius: 2px;
+    margin-top: 18px;
 }
 
 .docs-hero p {
     font-size: 17px;
-    color: #888;
-    margin: 0 0 16px;
+    color: var(--muted);
+    margin: 16px 0;
 }
 
 .docs-version-badge {
     display: inline-block;
-    background: rgba(139,92,246,0.15);
-    border: 1px solid rgba(139,92,246,0.3);
-    color: #8b5cf6;
+    background: var(--primary-soft);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: var(--primary-400);
     padding: 4px 14px;
     border-radius: 20px;
     font-size: 13px;
@@ -115,24 +129,30 @@
 }
 
 .docs-card {
-    background: #1e1e1e;
-    border: 1px solid #2a2a2a;
-    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 10px);
     padding: 24px;
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.2s, transform 0.15s;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
 }
 
 .docs-card:hover {
-    border-color: #8b5cf6;
+    border-color: var(--primary);
     transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(139, 92, 246, 0.16);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .docs-card { transition: border-color 0.2s; }
+    .docs-card:hover { transform: none; }
 }
 
 .docs-card-icon {
     width: 44px;
     height: 44px;
-    background: rgba(139,92,246,0.15);
+    background: var(--primary-soft);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -156,16 +176,16 @@
 
 /* ── Quick links ────────────────────────────────────────────────────────────── */
 .docs-quicklinks {
-    background: #1e1e1e;
-    border: 1px solid #2a2a2a;
-    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 10px);
     padding: 24px 28px;
 }
 
 .docs-quicklinks h2 {
     margin: 0 0 14px;
     font-size: 18px;
-    color: #fff;
+    color: var(--text);
 }
 
 .docs-quicklinks ul {
@@ -191,19 +211,41 @@
 }
 
 /* ── Page body styles ───────────────────────────────────────────────────────── */
-.docs-content h1 { font-size: 32px; color: #fff; margin: 0 0 8px; }
-.docs-content h2 { font-size: 22px; color: #fff; margin: 36px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #2a2a2a; }
-.docs-content h3 { font-size: 17px; color: #e0e0e0; margin: 24px 0 8px; }
-.docs-content p  { margin: 0 0 16px; color: #b0b0b0; }
+.docs-content h1 { font-size: 32px; color: var(--text); margin: 0 0 8px; letter-spacing: -0.5px; }
+
+/* Gradient rule under the page title, echoing the 404 divider. */
+.docs-content > h1:first-child::after {
+    content: "";
+    display: block;
+    width: 56px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-600));
+    border-radius: 2px;
+    margin-top: 16px;
+}
+
+.docs-content h2 {
+    font-size: 22px;
+    color: var(--text);
+    margin: 40px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.docs-content h3 { font-size: 17px; color: var(--text); margin: 24px 0 8px; }
+.docs-content p  { margin: 0 0 16px; color: var(--muted); }
 .docs-content ul,
-.docs-content ol  { padding-left: 20px; margin: 0 0 16px; color: #b0b0b0; }
+.docs-content ol  { padding-left: 20px; margin: 0 0 16px; color: var(--muted); }
 .docs-content li  { margin-bottom: 6px; }
-.docs-content a   { color: #8b5cf6; text-decoration: none; }
-.docs-content a:hover { text-decoration: underline; }
+.docs-content a   { color: var(--primary-400); text-decoration: none; }
+/* Inline prose links underline on hover; card- and pill-style links must not. */
+.docs-content a:hover:not(.docs-card):not(.docs-nav-link):not(.credit-tag):not(.credit-link-card) {
+    text-decoration: underline;
+}
 
 .docs-content code {
-    background: #2a2a2a;
-    border: 1px solid #3a3a3a;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 2px 6px;
     font-family: 'Fira Code', monospace;
@@ -212,8 +254,8 @@
 }
 
 .docs-content pre {
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 8px;
     padding: 20px;
     overflow-x: auto;
@@ -228,34 +270,45 @@
     font-size: 13px;
 }
 
+/* Tables sit on their own surface with a rounded, clipped frame. */
 .docs-content table {
     width: 100%;
     border-collapse: collapse;
     margin: 16px 0;
     font-size: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 10px);
+    overflow: hidden;
 }
 
 .docs-content th {
-    background: #2a2a2a;
-    color: #fff;
-    padding: 10px 14px;
+    background: var(--surface-2);
+    color: var(--text);
+    padding: 11px 14px;
     text-align: left;
     font-weight: 600;
+    border-bottom: 1px solid var(--border);
 }
 
 .docs-content td {
-    padding: 9px 14px;
-    border-bottom: 1px solid #2a2a2a;
-    color: #b0b0b0;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+}
+
+.docs-content tr:last-child td {
+    border-bottom: none;
 }
 
 .docs-content tr:hover td {
-    background: rgba(139,92,246,0.04);
+    background: var(--primary-soft);
 }
 
 .docs-alert {
-    background: rgba(139,92,246,0.1);
-    border: 1px solid rgba(139,92,246,0.3);
+    background: var(--primary-soft);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-left: 3px solid var(--primary);
     border-radius: 8px;
     padding: 14px 18px;
     margin: 16px 0;
@@ -269,8 +322,160 @@
     color: #fbbf24;
 }
 
+/* ── Credits page ───────────────────────────────────────────────────────────── */
+.credits-people {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin: 16px 0 28px;
+}
+
+.credit-person {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 10px);
+    padding: 14px 16px;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.credit-person:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(139, 92, 246, 0.14);
+}
+
+.credit-avatar {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary), var(--primary-600));
+    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
+}
+
+.credit-person-info {
+    min-width: 0;
+}
+
+.credit-person-name {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 15px;
+}
+
+.credit-person-role {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+/* Tag pills (technologies, inspiring projects) */
+.credits-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 16px 0 28px;
+}
+
+.credit-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    text-decoration: none;
+    transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.credit-tag i {
+    color: var(--primary-400);
+    font-size: 14px;
+}
+
+a.credit-tag:hover {
+    color: var(--text);
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+/* Contribute link cards */
+.credits-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 16px 0 28px;
+}
+
+.credit-link-card {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 10px);
+    padding: 22px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.credit-link-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(139, 92, 246, 0.16);
+    text-decoration: none;
+}
+
+.credit-link-card > i {
+    font-size: 22px;
+    color: var(--primary-400);
+    margin-bottom: 12px;
+    display: block;
+}
+
+.credit-link-card h3 {
+    margin: 0 0 6px;
+    font-size: 15px;
+    color: var(--text);
+}
+
+.credit-link-card p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+}
+
+/* Section headings on the credits page carry a brand-tinted icon. */
+.docs-content h2 > i {
+    color: var(--primary-400);
+    margin-right: 8px;
+    font-size: 0.85em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .credit-person:hover,
+    a.credit-tag:hover,
+    .credit-link-card:hover { transform: none; }
+}
+
 @media (max-width: 768px) {
     .docs-layout { flex-direction: column; }
     .docs-sidebar { width: 100%; min-width: 0; height: auto; position: static; }
     .docs-content { padding: 24px 20px; }
+    .credits-people, .credits-links { grid-template-columns: 1fr; }
 }

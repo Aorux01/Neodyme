@@ -1,0 +1,11 @@
+{
+  "id": "announcement",
+  "system": false,
+  "name": "Announcement",
+  "description": "Important server announcement (maintenance, events, etc.).",
+  "layout": "default",
+  "subject": "{{serverName}} - Important Announcement",
+  "heading": "Announcement",
+  "body": "We have an important update to share with you. Please read the details on our website or Discord server.",
+  "footerNote": "You are receiving this because you have an account on {{serverName}}."
+}

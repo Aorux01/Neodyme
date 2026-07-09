@@ -1,0 +1,11 @@
+{
+  "id": "welcome",
+  "system": false,
+  "name": "Welcome",
+  "description": "Greets a new player after they create an account.",
+  "layout": "default",
+  "subject": "Welcome to {{serverName}}, {{displayName}}!",
+  "heading": "Welcome aboard, {{displayName}}!",
+  "body": "Your account has been created successfully. You can now log in and jump into the game. We're glad to have you with us!",
+  "footerNote": "You received this email because an account was created with this address on {{serverName}}."
+}

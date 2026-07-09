@@ -10,11 +10,18 @@ const AuditService = require('../../src/service/api/audit-service');
 const WebResponse = require('../../src/service/api/web-response-service');
 const WebService = require('../../src/service/api/web-service');
 const { csrfProtection } = require('../../src/service/token/csrf-token-service');
-const { requireDeveloper } = require('../../src/service/api/role-middleware-service');
+const { requireDeveloper, requireAdmin } = require('../../src/service/api/role-middleware-service');
+const EmailService = require('../../src/service/email/email-service');
+const EmailTemplateService = require('../../src/service/email/email-template-service');
+const EmailLayoutService = require('../../src/service/email/email-layout-service');
+const EmailCampaignService = require('../../src/service/email/email-campaign-service');
+const EmailAutomationService = require('../../src/service/email/email-automation-service');
 
 const verifyToken = WebService.verifyToken;
 const dev = [verifyToken, requireDeveloper];
 const devWrite = [verifyToken, requireDeveloper, csrfProtection];
+// Mass email is high-impact: require admin + CSRF, not just developer.
+const adminWrite = [verifyToken, requireAdmin, csrfProtection];
 
 const CONFIG_DIR = path.join(__dirname, '../../config');
 const PLUGINS_DIR = path.join(__dirname, '../../plugins');
@@ -723,6 +730,258 @@ router.put('/neodyme/api/dev/content/:scope/:section', ...devWrite, async (req, 
         return WebResponse.ok(res, { message: `${scope}/${section} updated.` });
     } catch (error) {
         return WebResponse.serverError(res, 'update content section', error);
+    }
+});
+
+// ---- Email: SMTP status & templates (developer) ----
+
+router.get('/neodyme/api/dev/email/status', ...dev, async (req, res) => {
+    try {
+        const configured = EmailService.isConfigured();
+        const payload = { configured, config: null, connection: null };
+
+        if (configured) {
+            const cfg = EmailService.getConfig();
+            // Never expose the password.
+            payload.config = { host: cfg.host, port: cfg.port, secure: cfg.secure, user: cfg.user, from: cfg.from };
+        }
+
+        return WebResponse.ok(res, payload);
+    } catch (error) {
+        return WebResponse.serverError(res, 'email status', error);
+    }
+});
+
+router.post('/neodyme/api/dev/email/verify', ...dev, async (req, res) => {
+    try {
+        const result = await EmailService.verify();
+        return WebResponse.ok(res, result);
+    } catch (error) {
+        return WebResponse.serverError(res, 'email verify', error);
+    }
+});
+
+router.get('/neodyme/api/dev/email/templates', ...dev, async (req, res) => {
+    try {
+        const templates = await EmailTemplateService.list();
+        return WebResponse.ok(res, { templates, variables: EmailTemplateService.getVariableHelp() });
+    } catch (error) {
+        return WebResponse.serverError(res, 'list email templates', error);
+    }
+});
+
+router.get('/neodyme/api/dev/email/templates/:id', ...dev, async (req, res) => {
+    try {
+        const template = await EmailTemplateService.get(req.params.id);
+        if (!template) {
+            return WebResponse.notFound(res, 'Template not found.');
+        }
+        return WebResponse.ok(res, { template });
+    } catch (error) {
+        return WebResponse.serverError(res, 'get email template', error);
+    }
+});
+
+router.put('/neodyme/api/dev/email/templates/:id', ...devWrite, async (req, res) => {
+    try {
+        const template = await EmailTemplateService.save(req.params.id, req.body || {});
+        LoggerService.log('info', `Email template '${template.id}' saved by ${req.user.displayName}`);
+        return WebResponse.ok(res, { template, message: 'Template saved.' });
+    } catch (error) {
+        if (/needs|Invalid/.test(error.message)) {
+            return WebResponse.badRequest(res, error.message);
+        }
+        return WebResponse.serverError(res, 'save email template', error);
+    }
+});
+
+router.delete('/neodyme/api/dev/email/templates/:id', ...devWrite, async (req, res) => {
+    try {
+        const result = await EmailTemplateService.delete(req.params.id);
+        if (!result.success) {
+            return WebResponse.badRequest(res, result.error);
+        }
+        LoggerService.log('info', `Email template '${req.params.id}' deleted by ${req.user.displayName}`);
+        return WebResponse.ok(res, { message: 'Template deleted.' });
+    } catch (error) {
+        return WebResponse.serverError(res, 'delete email template', error);
+    }
+});
+
+// ---- Email: HTML layouts (developer) ----
+
+router.get('/neodyme/api/dev/email/layouts', ...dev, async (req, res) => {
+    try {
+        const layouts = await EmailLayoutService.list();
+        return WebResponse.ok(res, { layouts, slots: EmailLayoutService.getSlots() });
+    } catch (error) {
+        return WebResponse.serverError(res, 'list email layouts', error);
+    }
+});
+
+router.get('/neodyme/api/dev/email/layouts/:id', ...dev, async (req, res) => {
+    try {
+        const layout = await EmailLayoutService.get(req.params.id);
+        if (!layout) {
+            return WebResponse.notFound(res, 'Layout not found.');
+        }
+        return WebResponse.ok(res, { layout });
+    } catch (error) {
+        return WebResponse.serverError(res, 'get email layout', error);
+    }
+});
+
+router.put('/neodyme/api/dev/email/layouts/:id', ...devWrite, async (req, res) => {
+    try {
+        const result = await EmailLayoutService.save(req.params.id, (req.body || {}).html);
+        LoggerService.log('info', `Email layout '${result.id}' saved by ${req.user.displayName}`);
+        return WebResponse.ok(res, { layout: result, message: 'Layout saved.' });
+    } catch (error) {
+        if (/Invalid|empty/.test(error.message)) {
+            return WebResponse.badRequest(res, error.message);
+        }
+        return WebResponse.serverError(res, 'save email layout', error);
+    }
+});
+
+router.delete('/neodyme/api/dev/email/layouts/:id', ...devWrite, async (req, res) => {
+    try {
+        const result = await EmailLayoutService.delete(req.params.id);
+        if (!result.success) {
+            return WebResponse.badRequest(res, result.error);
+        }
+        LoggerService.log('info', `Email layout '${req.params.id}' deleted by ${req.user.displayName}`);
+        return WebResponse.ok(res, { message: 'Layout deleted.' });
+    } catch (error) {
+        return WebResponse.serverError(res, 'delete email layout', error);
+    }
+});
+
+// Render a template (or ad-hoc template data) with sample variables, for preview.
+// Returns raw HTML so the panel can show it in an iframe.
+router.post('/neodyme/api/dev/email/preview', ...dev, async (req, res) => {
+    try {
+        const body = req.body || {};
+        let template;
+        if (body.id) {
+            template = await EmailTemplateService.get(body.id);
+            if (!template) {
+                return WebResponse.notFound(res, 'Template not found.');
+            }
+            // Allow live overrides from the unsaved editor.
+            template = { ...template, ...body.overrides };
+        } else {
+            template = body.template || {};
+        }
+
+        const sampleAccount = {
+            displayName: 'PreviewPlayer',
+            email: 'preview@example.com',
+            accountId: '0000preview0000',
+            emailVerified: true
+        };
+
+        const rendered = await EmailTemplateService.render(template, sampleAccount);
+        return WebResponse.ok(res, { subject: rendered.subject, html: rendered.html });
+    } catch (error) {
+        return WebResponse.serverError(res, 'email preview', error);
+    }
+});
+
+// ---- Email: mass send (admin) ----
+
+// Normalize a recipient selection from the request body.
+function parseSelection(body) {
+    const roleLevels = Array.isArray(body.roleLevels)
+        ? body.roleLevels.map(Number).filter(n => Number.isInteger(n))
+        : [];
+    const accountIds = Array.isArray(body.accountIds)
+        ? body.accountIds.filter(id => typeof id === 'string' && id.trim())
+        : [];
+    const verifiedOnly = body.verifiedOnly === true;
+    return { roleLevels, accountIds, verifiedOnly };
+}
+
+router.post('/neodyme/api/dev/email/preview-count', ...adminWrite, async (req, res) => {
+    try {
+        const count = await EmailCampaignService.previewCount(parseSelection(req.body || {}));
+        return WebResponse.ok(res, { count });
+    } catch (error) {
+        return WebResponse.serverError(res, 'email preview count', error);
+    }
+});
+
+router.post('/neodyme/api/dev/email/campaign', ...adminWrite, async (req, res) => {
+    try {
+        const { templateId } = req.body || {};
+        if (!templateId) {
+            return WebResponse.badRequest(res, 'templateId is required.');
+        }
+
+        const job = await EmailCampaignService.startCampaign({
+            templateId,
+            selection: parseSelection(req.body || {}),
+            startedBy: req.user.displayName
+        });
+
+        LoggerService.log('info', `Mass email started by ${req.user.displayName}: ${job.total} recipient(s), template "${templateId}"`);
+        return WebResponse.ok(res, { job });
+    } catch (error) {
+        if (/in progress|not configured|not found|No recipients/.test(error.message)) {
+            return WebResponse.badRequest(res, error.message);
+        }
+        return WebResponse.serverError(res, 'start email campaign', error);
+    }
+});
+
+router.get('/neodyme/api/dev/email/campaign/:id', ...dev, async (req, res) => {
+    try {
+        const job = EmailCampaignService.getJob(req.params.id);
+        if (!job) {
+            return WebResponse.notFound(res, 'Job not found.');
+        }
+        return WebResponse.ok(res, { job });
+    } catch (error) {
+        return WebResponse.serverError(res, 'get email campaign', error);
+    }
+});
+
+// ---- Email: automation rules (developer) ----
+
+router.get('/neodyme/api/dev/email/automations', ...dev, async (req, res) => {
+    try {
+        return WebResponse.ok(res, {
+            rules: EmailAutomationService.list(),
+            triggers: EmailAutomationService.getTriggers()
+        });
+    } catch (error) {
+        return WebResponse.serverError(res, 'list email automations', error);
+    }
+});
+
+router.put('/neodyme/api/dev/email/automations/:id', ...devWrite, async (req, res) => {
+    try {
+        const rule = await EmailAutomationService.upsert({ ...(req.body || {}), id: req.params.id });
+        LoggerService.log('info', `Email automation '${rule.id}' saved by ${req.user.displayName}`);
+        return WebResponse.ok(res, { rule, message: 'Automation saved.' });
+    } catch (error) {
+        if (/required|Unknown|valid/.test(error.message)) {
+            return WebResponse.badRequest(res, error.message);
+        }
+        return WebResponse.serverError(res, 'save email automation', error);
+    }
+});
+
+router.delete('/neodyme/api/dev/email/automations/:id', ...devWrite, async (req, res) => {
+    try {
+        const result = await EmailAutomationService.remove(req.params.id);
+        if (!result.success) {
+            return WebResponse.notFound(res, result.error);
+        }
+        LoggerService.log('info', `Email automation '${req.params.id}' deleted by ${req.user.displayName}`);
+        return WebResponse.ok(res, { message: 'Automation deleted.' });
+    } catch (error) {
+        return WebResponse.serverError(res, 'delete email automation', error);
     }
 });
 

@@ -123,6 +123,71 @@ class ConfigManager {
             return false;
         }
     }
+
+    // Create or update a key in the .env file (and the in-memory env cache).
+    static async saveEnv(key, value) {
+        this.env[key] = String(value);
+        process.env[key] = String(value);
+
+        try {
+            const envPath = path.join(__dirname, '..', '..', '.env');
+            let lines = [];
+            if (fsSync.existsSync(envPath)) {
+                lines = (await fs.readFile(envPath, 'utf-8')).split('\n');
+            }
+
+            let found = false;
+            for (let i = 0; i < lines.length; i++) {
+                const trimmed = lines[i].trim();
+                if (trimmed && !trimmed.startsWith('#') && trimmed.split('=')[0].trim() === key) {
+                    lines[i] = `${key}=${value}`;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                if (lines.length > 0 && lines[lines.length - 1].trim() !== '') {
+                    lines.push(`${key}=${value}`);
+                } else {
+                    lines[Math.max(0, lines.length - 1)] = `${key}=${value}`;
+                    lines.push('');
+                }
+            }
+
+            await fs.writeFile(envPath, lines.join('\n'), 'utf-8');
+            return true;
+        } catch (error) {
+            LoggerService.log('error', `Failed to save .env key '${key}': ${error.message}`);
+            return false;
+        }
+    }
+
+    // Remove a key from the .env file (and the in-memory env cache).
+    static async deleteEnv(key) {
+        delete this.env[key];
+        delete process.env[key];
+
+        try {
+            const envPath = path.join(__dirname, '..', '..', '.env');
+            if (!fsSync.existsSync(envPath)) {
+                return true;
+            }
+
+            const lines = (await fs.readFile(envPath, 'utf-8')).split('\n');
+            const filtered = lines.filter(line => {
+                const trimmed = line.trim();
+                if (!trimmed || trimmed.startsWith('#')) return true;
+                return trimmed.split('=')[0].trim() !== key;
+            });
+
+            await fs.writeFile(envPath, filtered.join('\n'), 'utf-8');
+            return true;
+        } catch (error) {
+            LoggerService.log('error', `Failed to delete .env key '${key}': ${error.message}`);
+            return false;
+        }
+    }
 }
 
 module.exports = ConfigManager;

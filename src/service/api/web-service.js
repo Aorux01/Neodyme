@@ -28,6 +28,7 @@ const CMD_PERMISSIONS = [
     ['admin',          3],
     ['whitelist',      3],
     ['sac',            3],
+    ['email',          3],
     ['maintenance',    3],
     ['broadcast',      3],
 ];
@@ -113,8 +114,8 @@ class WebService {
     
         if (cmdName === 'maintenance') {
             const mode = (args[0] || '').toLowerCase();
-            if (mode === 'on')  { ConfigManager.set('maintenanceMode', true);  return { success: true,  message: 'Maintenance mode enabled.'  }; }
-            if (mode === 'off') { ConfigManager.set('maintenanceMode', false); return { success: true,  message: 'Maintenance mode disabled.' }; }
+            if (mode === 'on')  { ConfigManager.set('maintenanceMode', true);  this.emitMaintenanceEmail(true);  return { success: true,  message: 'Maintenance mode enabled.'  }; }
+            if (mode === 'off') { ConfigManager.set('maintenanceMode', false); this.emitMaintenanceEmail(false); return { success: true,  message: 'Maintenance mode disabled.' }; }
             return { success: false, message: 'Usage: maintenance on | off' };
         }
     

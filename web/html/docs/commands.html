@@ -49,6 +49,8 @@
                 <div class="docs-nav-section">Development</div>
                 <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
                 <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+                <div class="docs-nav-section">About</div>
+                <a href="credits.html" class="docs-nav-link"><i class="fas fa-heart"></i> Credits</a>
             </nav>
         </aside>
         <main class="docs-content">
@@ -235,6 +237,42 @@
                 <tr><th>Command</th><th>Description</th></tr>
                 <tr><td><code>/broadcast &lt;message&gt;</code></td><td>Send a message to all connected players</td></tr>
             </table>
+
+            <h2>/whitelist</h2>
+            <p>Optional server-wide whitelist. When enabled (<code>whitelistEnabled=true</code> in <code>server.properties</code>), only whitelisted accounts can connect - enforced on every login (password, refresh and exchange-code grants). Toggling applies immediately, no restart needed.</p>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/whitelist set &lt;true|false&gt;</code></td><td>Enable or disable the whitelist</td></tr>
+                <tr><td><code>/whitelist add &lt;user|accountId&gt;</code></td><td>Add an account to the whitelist (accepts a displayName or an accountId)</td></tr>
+                <tr><td><code>/whitelist remove &lt;user|accountId&gt;</code></td><td>Remove an account from the whitelist</td></tr>
+                <tr><td><code>/whitelist list</code></td><td>List all whitelisted accounts (flags entries whose account no longer exists)</td></tr>
+            </table>
+            <p>The whitelist is stored in <code>data/whitelist.json</code> (JSON backend) or the <code>whitelist</code> collection (MongoDB), and can also be managed from the <a href="panel-admin.html">Admin Panel &rarr; Whitelist</a> tab.</p>
+
+            <h2>/sac - Creator Codes</h2>
+            <p>Support-A-Creator code management from the console.</p>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/sac add &lt;user|accountId&gt; &lt;code&gt;</code></td><td>Create a creator code directly for an account (code must be 3-16 chars, alphanumeric with <code>_</code> or <code>-</code>)</td></tr>
+                <tr><td><code>/sac list</code></td><td>List all creator codes with uses and earnings</td></tr>
+                <tr><td><code>/sac delete &lt;code&gt;</code></td><td>Delete a creator code</td></tr>
+                <tr><td><code>/sac info &lt;code&gt;</code></td><td>Show a code's owner, status, usage and earnings</td></tr>
+            </table>
+
+            <h2>/email - SMTP</h2>
+            <p>Configure outgoing email (SMTP) and send test messages. The configuration is stored in <code>.env</code> (<code>smtpHost</code>, <code>smtpPort</code>, <code>smtpUser</code>, <code>smtpPass</code>, <code>smtpFrom</code>, <code>smtpSecure</code>).</p>
+            <table>
+                <tr><th>Command</th><th>Description</th></tr>
+                <tr><td><code>/email info</code></td><td>Show the current SMTP config and test the connection</td></tr>
+                <tr><td><code>/email create &lt;host&gt; &lt;port&gt; &lt;user&gt; &lt;pass&gt; [from]</code></td><td>Configure SMTP and verify the connection</td></tr>
+                <tr><td><code>/email delete</code></td><td>Remove the SMTP config from <code>.env</code></td></tr>
+                <tr><td><code>/email test &lt;user|accountId&gt;</code></td><td>Send a branded HTML test email to the account's email address</td></tr>
+            </table>
+            <pre><code># Gmail example (requires an App Password, not your main password)
+/email create smtp.gmail.com 587 you@gmail.com app_password "Neodyme &lt;you@gmail.com&gt;"
+/email info
+/email test MyPlayer</code></pre>
+            <p><code>secure</code> is auto-detected: implicit TLS on port 465, STARTTLS otherwise.</p>
 
             <h2>Miscellaneous</h2>
             <table>

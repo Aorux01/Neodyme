@@ -754,6 +754,603 @@ async function removeFromWhitelist(accountId) {
     }
 }
 
+// ---- Email tab (Dev panel) ----
+
+let emailTemplatesCache = [];
+let emailVariablesCache = [];
+let emailLayoutsCache = [];
+let emailAutomationsCache = [];
+let emailTriggersCache = [];
+let emailEditingId = null;
+let emailLayoutEditingId = null;
+let emailCampaignPoll = null;
+
+function showEmailResult(success, message) {
+    const el = document.getElementById('email-result');
+    if (!el) return;
+    el.className     = `alert ${success ? 'alert-success' : 'alert-danger'}`;
+    el.style.display = 'block';
+    el.textContent   = message;
+    setTimeout(() => { el.style.display = 'none'; }, 6000);
+}
+
+function showEmailView(view) {
+    document.querySelectorAll('#dev-email .email-view').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('#dev-email .admin-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+    const target = document.getElementById(`email-view-${view}`);
+    if (target) target.style.display = 'block';
+    document.querySelectorAll('#dev-email .admin-tabs .tab-btn').forEach(btn => {
+        if (btn.getAttribute('onclick')?.includes(`'${view}'`)) btn.classList.add('active');
+    });
+    if (view === 'send') populateSendTemplates();
+    if (view === 'layouts') renderEmailLayoutList();
+    if (view === 'automation') loadEmailAutomations();
+}
+
+async function initEmailTab() {
+    await loadEmailStatus();
+    await loadEmailLayouts();
+    await loadEmailTemplates();
+    showEmailView('templates');
+}
+
+async function loadEmailLayouts() {
+    try {
+        const res  = await fetch('/neodyme/api/dev/email/layouts', { credentials: 'include' });
+        const data = await res.json();
+        if (res.ok) emailLayoutsCache = data.layouts || [];
+    } catch (_) {}
+}
+
+async function loadEmailStatus() {
+    const banner = document.getElementById('email-smtp-banner');
+    try {
+        const res  = await fetch('/neodyme/api/dev/email/status', { credentials: 'include' });
+        const data = await res.json();
+        if (!banner) return;
+
+        if (!data.configured) {
+            banner.innerHTML = `<div class="alert alert-danger" style="margin:0;">
+                <i class="fas fa-exclamation-triangle"></i> SMTP is not configured. Use the <code>/email create</code> console command to set it up before sending.
+            </div>`;
+            return;
+        }
+        const c = data.config || {};
+        banner.innerHTML = `<div class="alert alert-success" style="margin:0;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+            <span><i class="fas fa-check-circle"></i> SMTP: <strong>${escHtml(c.host || '')}:${escHtml(String(c.port || ''))}</strong> as ${escHtml(c.user || '')}</span>
+            <button class="btn btn-sm btn-secondary" onclick="verifyEmailConnection()"><i class="fas fa-plug"></i> Test connection</button>
+        </div>`;
+    } catch (_) {}
+}
+
+async function verifyEmailConnection() {
+    try {
+        const res  = await secureFetch('/neodyme/api/dev/email/verify', { method: 'POST' });
+        const data = await res.json();
+        showEmailResult(data.success, data.success ? 'SMTP connection OK.' : `Connection failed: ${data.error || 'unknown error'}`);
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+async function loadEmailTemplates() {
+    try {
+        const res  = await fetch('/neodyme/api/dev/email/templates', { credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(apiError(data, 'Failed to load templates'));
+        emailTemplatesCache = data.templates || [];
+        emailVariablesCache = data.variables || [];
+        renderEmailTemplateList();
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+function renderEmailTemplateList() {
+    const list = document.getElementById('email-template-list');
+    if (!list) return;
+    if (emailTemplatesCache.length === 0) {
+        list.innerHTML = '<div style="color:#666;font-size:12px;padding:8px;">No templates.</div>';
+        return;
+    }
+    list.innerHTML = emailTemplatesCache.map(t => {
+        const active = t.id === emailEditingId ? ' active' : '';
+        const badge = t.system ? ' <i class="fas fa-lock" style="font-size:10px;color:#fbbf24;" title="System template"></i>' : '';
+        return `<button class="content-nav-item${active}" onclick="editEmailTemplate('${escHtml(t.id)}')">
+            <i class="fas fa-file-alt"></i> ${escHtml(t.name || t.id)}${badge}
+        </button>`;
+    }).join('');
+}
+
+function newEmailTemplate() {
+    emailEditingId = null;
+    renderEmailTemplateEditor({ id: '', name: '', subject: '', heading: '', body: '', footerNote: '', system: false }, true);
+    renderEmailTemplateList();
+}
+
+async function editEmailTemplate(id) {
+    try {
+        const res  = await fetch(`/neodyme/api/dev/email/templates/${encodeURIComponent(id)}`, { credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(apiError(data, 'Failed to load template'));
+        emailEditingId = id;
+        renderEmailTemplateEditor(data.template, false);
+        renderEmailTemplateList();
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+function renderEmailTemplateEditor(t, isNew) {
+    const editor = document.getElementById('email-template-editor');
+    if (!editor) return;
+    const vars = emailVariablesCache.map(v => `<code style="font-size:11px;margin-right:6px;">${escHtml(v)}</code>`).join('');
+
+    const selectedLayout = t.layout || 'default';
+    const layoutOptions = (emailLayoutsCache.length ? emailLayoutsCache : ['default']).map(id =>
+        `<option value="${escHtml(id)}" ${id === selectedLayout ? 'selected' : ''}>${escHtml(id)}</option>`
+    ).join('');
+
+    editor.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:680px;">
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <input id="tpl-id" class="form-input" placeholder="template-id" value="${escHtml(t.id || '')}" ${isNew ? '' : 'readonly'} style="max-width:200px;${isNew ? '' : 'opacity:.6;'}">
+                <input id="tpl-name" class="form-input" placeholder="Display name" value="${escHtml(t.name || '')}" style="flex:1;min-width:160px;">
+                ${t.system ? '<span style="font-size:11px;color:#fbbf24;"><i class="fas fa-lock"></i> system</span>' : ''}
+            </div>
+            <input id="tpl-subject" class="form-input" placeholder="Subject" value="${escHtml(t.subject || '')}">
+            <input id="tpl-heading" class="form-input" placeholder="Heading (large title in the email)" value="${escHtml(t.heading || '')}">
+            <textarea id="tpl-body" class="form-input" placeholder="Body" rows="6" style="resize:vertical;font-family:inherit;">${escHtml(t.body || '')}</textarea>
+            <input id="tpl-footer" class="form-input" placeholder="Footer note" value="${escHtml(t.footerNote || '')}">
+            <div style="display:flex;gap:8px;align-items:center;">
+                <label style="font-size:13px;color:#aaa;white-space:nowrap;">HTML Layout</label>
+                <select id="tpl-layout" class="form-input" style="max-width:220px;">${layoutOptions}</select>
+            </div>
+            <div style="font-size:12px;color:#888;">Variables: ${vars}</div>
+            <div style="display:flex;gap:8px;">
+                <button class="btn btn-primary" onclick="saveEmailTemplate()"><i class="fas fa-save"></i> Save</button>
+                <button class="btn btn-secondary" onclick="previewEmailTemplate()"><i class="fas fa-eye"></i> Preview</button>
+                ${(!isNew && !t.system) ? `<button class="btn btn-danger" onclick="deleteEmailTemplate('${escHtml(t.id)}')"><i class="fas fa-trash"></i> Delete</button>` : ''}
+            </div>
+        </div>`;
+}
+
+async function saveEmailTemplate() {
+    const id = (document.getElementById('tpl-id')?.value || '').trim();
+    if (!id) { showEmailResult(false, 'Template id is required.'); return; }
+    const payload = {
+        name:       document.getElementById('tpl-name')?.value || '',
+        subject:    document.getElementById('tpl-subject')?.value || '',
+        heading:    document.getElementById('tpl-heading')?.value || '',
+        body:       document.getElementById('tpl-body')?.value || '',
+        footerNote: document.getElementById('tpl-footer')?.value || '',
+        layout:     document.getElementById('tpl-layout')?.value || 'default'
+    };
+    try {
+        const res  = await secureFetch(`/neodyme/api/dev/email/templates/${encodeURIComponent(id)}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        showEmailResult(res.ok, apiError(data, res.ok ? 'Template saved.' : 'Failed to save.'));
+        if (res.ok) { emailEditingId = id; await loadEmailTemplates(); editEmailTemplate(id); }
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+async function deleteEmailTemplate(id) {
+    if (!confirm(`Delete template "${id}"? This cannot be undone.`)) return;
+    try {
+        const res  = await secureFetch(`/neodyme/api/dev/email/templates/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        const data = await res.json();
+        showEmailResult(res.ok, apiError(data, res.ok ? 'Template deleted.' : 'Failed to delete.'));
+        if (res.ok) {
+            emailEditingId = null;
+            document.getElementById('email-template-editor').innerHTML = '<div style="text-align:center;color:#666;padding:40px 20px;font-size:13px;">Select a template to edit, or create a new one.</div>';
+            await loadEmailTemplates();
+        }
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+// Preview the template currently open in the editor (uses unsaved field values).
+async function previewEmailTemplate() {
+    const overrides = {
+        subject:    document.getElementById('tpl-subject')?.value || '',
+        heading:    document.getElementById('tpl-heading')?.value || '',
+        body:       document.getElementById('tpl-body')?.value || '',
+        footerNote: document.getElementById('tpl-footer')?.value || '',
+        layout:     document.getElementById('tpl-layout')?.value || 'default'
+    };
+    try {
+        const res  = await secureFetch('/neodyme/api/dev/email/preview', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ template: overrides })
+        });
+        const data = await res.json();
+        if (!res.ok) { showEmailResult(false, apiError(data, 'Preview failed.')); return; }
+        openEmailPreview(data.subject, data.html);
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+function openEmailPreview(subject, html) {
+    const modal = document.getElementById('email-preview-modal');
+    const frame = document.getElementById('email-preview-frame');
+    const subj  = document.getElementById('email-preview-subject');
+    if (subj) subj.textContent = subject || '';
+    if (frame) frame.srcdoc = html || '';
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeEmailPreview() {
+    const modal = document.getElementById('email-preview-modal');
+    const frame = document.getElementById('email-preview-frame');
+    if (frame) frame.srcdoc = '';
+    if (modal) modal.style.display = 'none';
+}
+
+// ---- HTML layouts CRUD ----
+
+function renderEmailLayoutList() {
+    const list = document.getElementById('email-layout-list');
+    if (!list) return;
+    if (emailLayoutsCache.length === 0) {
+        list.innerHTML = '<div style="color:#666;font-size:12px;padding:8px;">No layouts.</div>';
+        return;
+    }
+    list.innerHTML = emailLayoutsCache.map(id => {
+        const active = id === emailLayoutEditingId ? ' active' : '';
+        const badge = id === 'default' ? ' <i class="fas fa-lock" style="font-size:10px;color:#fbbf24;" title="Default layout"></i>' : '';
+        return `<button class="content-nav-item${active}" onclick="editEmailLayout('${escHtml(id)}')">
+            <i class="fas fa-code"></i> ${escHtml(id)}${badge}
+        </button>`;
+    }).join('');
+}
+
+function newEmailLayout() {
+    emailLayoutEditingId = null;
+    renderEmailLayoutEditor({ id: '', html: '', isDefault: false }, true);
+    renderEmailLayoutList();
+}
+
+async function editEmailLayout(id) {
+    try {
+        const res  = await fetch(`/neodyme/api/dev/email/layouts/${encodeURIComponent(id)}`, { credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(apiError(data, 'Failed to load layout'));
+        emailLayoutEditingId = id;
+        renderEmailLayoutEditor(data.layout, false);
+        renderEmailLayoutList();
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+function renderEmailLayoutEditor(layout, isNew) {
+    const editor = document.getElementById('email-layout-editor');
+    if (!editor) return;
+    editor.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <input id="layout-id" class="form-input" placeholder="layout-id" value="${escHtml(layout.id || '')}" ${isNew ? '' : 'readonly'} style="max-width:220px;${isNew ? '' : 'opacity:.6;'}">
+                ${layout.isDefault ? '<span style="font-size:11px;color:#fbbf24;"><i class="fas fa-lock"></i> default</span>' : ''}
+            </div>
+            <p style="font-size:12px;color:#888;margin:0;">Slots filled at render: <code>{{subject}}</code> <code>{{serverName}}</code> <code>{{heading}}</code> <code>{{body}}</code> <code>{{footerNote}}</code></p>
+            <textarea id="layout-html" class="form-input" rows="16" style="resize:vertical;font-family:monospace;font-size:12px;white-space:pre;">${escHtml(layout.html || '')}</textarea>
+            <div style="display:flex;gap:8px;">
+                <button class="btn btn-primary" onclick="saveEmailLayout()"><i class="fas fa-save"></i> Save</button>
+                <button class="btn btn-secondary" onclick="previewEmailLayout()"><i class="fas fa-eye"></i> Preview</button>
+                ${(!isNew && !layout.isDefault) ? `<button class="btn btn-danger" onclick="deleteEmailLayout('${escHtml(layout.id)}')"><i class="fas fa-trash"></i> Delete</button>` : ''}
+            </div>
+        </div>`;
+}
+
+async function saveEmailLayout() {
+    const id   = (document.getElementById('layout-id')?.value || '').trim();
+    const html = document.getElementById('layout-html')?.value || '';
+    if (!id) { showEmailResult(false, 'Layout id is required.'); return; }
+    try {
+        const res  = await secureFetch(`/neodyme/api/dev/email/layouts/${encodeURIComponent(id)}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ html })
+        });
+        const data = await res.json();
+        showEmailResult(res.ok, apiError(data, res.ok ? 'Layout saved.' : 'Failed to save.'));
+        if (res.ok) { emailLayoutEditingId = id; await loadEmailLayouts(); renderEmailLayoutList(); editEmailLayout(id); }
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+async function deleteEmailLayout(id) {
+    if (!confirm(`Delete layout "${id}"? Templates using it will fall back to "default".`)) return;
+    try {
+        const res  = await secureFetch(`/neodyme/api/dev/email/layouts/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        const data = await res.json();
+        showEmailResult(res.ok, apiError(data, res.ok ? 'Layout deleted.' : 'Failed to delete.'));
+        if (res.ok) {
+            emailLayoutEditingId = null;
+            document.getElementById('email-layout-editor').innerHTML = '<div style="text-align:center;color:#666;padding:40px 20px;font-size:13px;">Select a layout to edit, or create a new one.</div>';
+            await loadEmailLayouts();
+            renderEmailLayoutList();
+        }
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+// Preview a layout with sample content (wrapped via an ad-hoc template).
+async function previewEmailLayout() {
+    const html = document.getElementById('layout-html')?.value || '';
+    // Render sample content through this raw layout by interpolating client-side
+    // would duplicate server logic; instead, temporarily save is avoided by
+    // sending an ad-hoc template whose html field is the layout with sample slots.
+    const sample = html
+        .replace(/\{\{\s*heading\s*\}\}/g, 'Sample heading')
+        .replace(/\{\{\s*body\s*\}\}/g, 'This is sample body text to preview the layout.')
+        .replace(/\{\{\s*footerNote\s*\}\}/g, 'Sample footer note.');
+    try {
+        const res  = await secureFetch('/neodyme/api/dev/email/preview', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ template: { subject: 'Layout preview', html: sample } })
+        });
+        const data = await res.json();
+        if (!res.ok) { showEmailResult(false, apiError(data, 'Preview failed.')); return; }
+        openEmailPreview(data.subject, data.html);
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+// ---- Email automation rules ----
+
+async function loadEmailAutomations() {
+    const list = document.getElementById('email-automation-list');
+    try {
+        const res  = await fetch('/neodyme/api/dev/email/automations', { credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(apiError(data, 'Failed to load automations'));
+        emailAutomationsCache = data.rules || [];
+        emailTriggersCache = data.triggers || [];
+        renderEmailAutomationList();
+    } catch (err) {
+        if (list) list.innerHTML = `<span style="color:#ef4444;font-size:13px;">Error: ${escHtml(err.message)}</span>`;
+    }
+}
+
+function renderEmailAutomationList() {
+    const list = document.getElementById('email-automation-list');
+    if (!list) return;
+    if (emailAutomationsCache.length === 0) {
+        list.innerHTML = '<div style="text-align:center;color:#666;padding:24px;font-size:13px;">No automation rules.</div>';
+        return;
+    }
+    list.innerHTML = emailAutomationsCache.map(r => {
+        const status = r.enabled
+            ? '<span style="color:#4ade80;font-size:12px;"><i class="fas fa-circle" style="font-size:8px;"></i> enabled</span>'
+            : '<span style="color:#777;font-size:12px;"><i class="fas fa-circle" style="font-size:8px;"></i> disabled</span>';
+        const cronInfo = r.trigger === 'cron' ? ` <code style="font-size:11px;">${escHtml(r.cron || '')}</code>` : '';
+        return `<div class="user-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;margin-bottom:6px;">
+            <div>
+                <div style="font-weight:600;color:#ddd;">${escHtml(r.name || r.id)} ${status}</div>
+                <div style="font-size:11px;color:#888;">on <code style="font-size:11px;">${escHtml(r.trigger)}</code>${cronInfo} &rarr; template <code style="font-size:11px;">${escHtml(r.templateId)}</code></div>
+            </div>
+            <div style="display:flex;gap:6px;">
+                <button class="btn btn-sm btn-secondary" onclick="editEmailAutomation('${escHtml(r.id)}')"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="deleteEmailAutomation('${escHtml(r.id)}')"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function newEmailAutomation() {
+    renderEmailAutomationEditor({ id: '', name: '', trigger: 'account.created', templateId: '', enabled: false, cron: '', selection: { roleLevels: [0], verifiedOnly: true } }, true);
+}
+
+function editEmailAutomation(id) {
+    const rule = emailAutomationsCache.find(r => r.id === id);
+    if (rule) renderEmailAutomationEditor(rule, false);
+}
+
+function renderEmailAutomationEditor(r, isNew) {
+    const editor = document.getElementById('email-automation-editor');
+    if (!editor) return;
+
+    const triggerOptions = (emailTriggersCache.length ? emailTriggersCache : ['account.created', 'maintenance.on', 'maintenance.off', 'cron'])
+        .map(t => `<option value="${escHtml(t)}" ${t === r.trigger ? 'selected' : ''}>${escHtml(t)}</option>`).join('');
+    const templateOptions = emailTemplatesCache.map(t =>
+        `<option value="${escHtml(t.id)}" ${t.id === r.templateId ? 'selected' : ''}>${escHtml(t.name || t.id)}</option>`).join('');
+    const sel = r.selection || {};
+    const roleChecks = [['0','Players'],['1','Moderators'],['2','Developers'],['3','Admins'],['4','Owners']].map(([v,label]) =>
+        `<label style="font-weight:400;font-size:13px;"><input type="checkbox" class="auto-role-cb" value="${v}" ${(sel.roleLevels||[]).includes(Number(v)) ? 'checked' : ''}> ${label}</label>`).join(' ');
+
+    editor.innerHTML = `
+        <div class="config-category" style="display:flex;flex-direction:column;gap:12px;max-width:680px;">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <input id="auto-id" class="form-input" placeholder="rule-id" value="${escHtml(r.id || '')}" ${isNew ? '' : 'readonly'} style="max-width:200px;${isNew ? '' : 'opacity:.6;'}">
+                <input id="auto-name" class="form-input" placeholder="Rule name" value="${escHtml(r.name || '')}" style="flex:1;min-width:160px;">
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                <label style="font-size:13px;color:#aaa;">Trigger</label>
+                <select id="auto-trigger" class="form-input" style="max-width:200px;" onchange="onAutoTriggerChange()">${triggerOptions}</select>
+                <label style="font-size:13px;color:#aaa;">Template</label>
+                <select id="auto-template" class="form-input" style="max-width:200px;">${templateOptions}</select>
+            </div>
+            <div id="auto-cron-row" style="display:${r.trigger === 'cron' ? 'flex' : 'none'};gap:10px;align-items:center;">
+                <label style="font-size:13px;color:#aaa;">Cron</label>
+                <input id="auto-cron" class="form-input" placeholder="0 9 * * 1  (every Monday 9am)" value="${escHtml(r.cron || '')}" style="max-width:260px;">
+            </div>
+            <div id="auto-selection-row" style="display:${r.trigger === 'account.created' ? 'none' : 'block'};">
+                <div style="font-size:13px;color:#aaa;margin-bottom:6px;">Recipients (roles)</div>
+                <div style="display:flex;flex-wrap:wrap;gap:12px;">${roleChecks}</div>
+                <label style="font-weight:400;font-size:13px;display:block;margin-top:8px;"><input type="checkbox" id="auto-verified" ${sel.verifiedOnly ? 'checked' : ''}> Verified emails only</label>
+            </div>
+            <label style="font-weight:400;font-size:13px;"><input type="checkbox" id="auto-enabled" ${r.enabled ? 'checked' : ''}> Enabled</label>
+            <div style="display:flex;gap:8px;">
+                <button class="btn btn-primary" onclick="saveEmailAutomation()"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </div>`;
+}
+
+function onAutoTriggerChange() {
+    const trigger = document.getElementById('auto-trigger')?.value;
+    document.getElementById('auto-cron-row').style.display = trigger === 'cron' ? 'flex' : 'none';
+    document.getElementById('auto-selection-row').style.display = trigger === 'account.created' ? 'none' : 'block';
+}
+
+async function saveEmailAutomation() {
+    const id = (document.getElementById('auto-id')?.value || '').trim();
+    if (!id) { showEmailResult(false, 'Rule id is required.'); return; }
+    const trigger = document.getElementById('auto-trigger')?.value;
+    const payload = {
+        name: document.getElementById('auto-name')?.value || '',
+        trigger,
+        templateId: document.getElementById('auto-template')?.value || '',
+        enabled: document.getElementById('auto-enabled')?.checked === true,
+        cron: document.getElementById('auto-cron')?.value || '',
+        selection: {
+            roleLevels: [...document.querySelectorAll('.auto-role-cb:checked')].map(cb => parseInt(cb.value, 10)),
+            accountIds: [],
+            verifiedOnly: document.getElementById('auto-verified')?.checked === true
+        }
+    };
+    try {
+        const res  = await secureFetch(`/neodyme/api/dev/email/automations/${encodeURIComponent(id)}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        showEmailResult(res.ok, apiError(data, res.ok ? 'Automation saved.' : 'Failed to save.'));
+        if (res.ok) { document.getElementById('email-automation-editor').innerHTML = ''; loadEmailAutomations(); }
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+async function deleteEmailAutomation(id) {
+    if (!confirm(`Delete automation "${id}"?`)) return;
+    try {
+        const res  = await secureFetch(`/neodyme/api/dev/email/automations/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        const data = await res.json();
+        showEmailResult(res.ok, apiError(data, res.ok ? 'Automation deleted.' : 'Failed to delete.'));
+        if (res.ok) loadEmailAutomations();
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+function populateSendTemplates() {
+    const sel = document.getElementById('email-send-template');
+    if (!sel) return;
+    sel.innerHTML = emailTemplatesCache.map(t =>
+        `<option value="${escHtml(t.id)}">${escHtml(t.name || t.id)}</option>`
+    ).join('');
+}
+
+function collectSendSelection() {
+    const roleLevels = [...document.querySelectorAll('.email-role-cb:checked')].map(cb => parseInt(cb.value, 10));
+    const accountIds = (document.getElementById('email-send-accounts')?.value || '')
+        .split(',').map(s => s.trim()).filter(Boolean);
+    const verifiedOnly = document.getElementById('email-send-verified')?.checked === true;
+    return { roleLevels, accountIds, verifiedOnly };
+}
+
+async function previewEmailCount() {
+    const sel = collectSendSelection();
+    if (sel.roleLevels.length === 0 && sel.accountIds.length === 0) {
+        document.getElementById('email-send-count').textContent = 'Select at least one role or account.';
+        return;
+    }
+    try {
+        const res  = await secureFetch('/neodyme/api/dev/email/preview-count', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(sel)
+        });
+        const data = await res.json();
+        const el = document.getElementById('email-send-count');
+        if (res.ok) el.textContent = `${data.count} recipient(s) match.`;
+        else el.textContent = apiError(data, 'Failed to count.');
+    } catch (err) {
+        document.getElementById('email-send-count').textContent = err.message;
+    }
+}
+
+async function confirmSendCampaign() {
+    const templateId = document.getElementById('email-send-template')?.value;
+    const sel = collectSendSelection();
+    if (!templateId) { showEmailResult(false, 'Pick a template.'); return; }
+    if (sel.roleLevels.length === 0 && sel.accountIds.length === 0) {
+        showEmailResult(false, 'Select at least one role or account.');
+        return;
+    }
+
+    // Resolve the exact count first so the confirmation is honest.
+    let count = '?';
+    try {
+        const pre  = await secureFetch('/neodyme/api/dev/email/preview-count', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sel)
+        });
+        const pdata = await pre.json();
+        if (pre.ok) count = pdata.count;
+    } catch (_) {}
+
+    if (count === 0) { showEmailResult(false, 'No recipients match the selection.'); return; }
+    if (!confirm(`Send "${templateId}" to ${count} recipient(s)? This cannot be undone.`)) return;
+
+    try {
+        const res  = await secureFetch('/neodyme/api/dev/email/campaign', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ templateId, ...sel })
+        });
+        const data = await res.json();
+        if (!res.ok) { showEmailResult(false, apiError(data, 'Failed to start.')); return; }
+        showEmailResult(true, `Sending to ${data.job.total} recipient(s)...`);
+        trackCampaign(data.job.id);
+    } catch (err) {
+        showEmailResult(false, err.message);
+    }
+}
+
+function trackCampaign(jobId) {
+    const progress = document.getElementById('email-campaign-progress');
+    const bar      = document.getElementById('email-progress-bar');
+    const label    = document.getElementById('email-progress-label');
+    const stats    = document.getElementById('email-progress-stats');
+    if (progress) progress.style.display = 'block';
+    if (emailCampaignPoll) clearInterval(emailCampaignPoll);
+
+    emailCampaignPoll = setInterval(async () => {
+        try {
+            const res  = await fetch(`/neodyme/api/dev/email/campaign/${encodeURIComponent(jobId)}`, { credentials: 'include' });
+            const data = await res.json();
+            if (!res.ok || !data.job) return;
+            const j = data.job;
+            const done = j.sent + j.failed;
+            const pct  = j.total ? Math.round((done / j.total) * 100) : 0;
+            if (bar)   bar.style.width = pct + '%';
+            if (stats) stats.textContent = `${done}/${j.total} (${j.sent} sent, ${j.failed} failed)`;
+            if (label) label.textContent = j.status === 'running' ? 'Sending...' : `Finished (${j.status})`;
+
+            if (j.status !== 'running') {
+                clearInterval(emailCampaignPoll);
+                emailCampaignPoll = null;
+                showEmailResult(j.failed === 0, `Campaign ${j.status}: ${j.sent} sent, ${j.failed} failed.`);
+            }
+        } catch (_) {}
+    }, 1500);
+}
+
 // Full dev tab router (handles overview / config / stats / logs / plugins / commands / system / monitor).
 function showDevTab(tab) {
     document.querySelectorAll('.dev-tab-content').forEach(el => el.style.display = 'none');
@@ -771,6 +1368,7 @@ function showDevTab(tab) {
     if (tab === 'content')   { if (typeof resetContentEditor === 'function') resetContentEditor(); }
     if (tab === 'assets')    { if (typeof showAssetsView === 'function') showAssetsView('upload'); }
     if (tab === 'shop')      { if (typeof shopEditorInit === 'function') shopEditorInit(); }
+    if (tab === 'email')     { if (typeof initEmailTab    === 'function') initEmailTab();    }
     if (tab === 'stats')     { if (typeof loadDevStats    === 'function') loadDevStats();    }
     if (tab === 'logs')      loadConsoleLogs('dev-logs-output');
     if (tab === 'plugins')   loadAdminPlugins('dev-plugins-list');
@@ -1053,7 +1651,7 @@ async function loadXmppClients() {
         const mucSummary = data.mucs && data.mucs.length > 0
             ? `<div style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;">${data.mucs.map(m =>
                 `<span style="font-size:11px;color:#888;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:5px;padding:2px 8px;">
-                    ${escHtml(m.name)} &mdash; ${m.members} member${m.members !== 1 ? 's' : ''}
+                    ${escHtml(m.name)}: ${m.members} member${m.members !== 1 ? 's' : ''}
                 </span>`).join('')}</div>`
             : '';
 

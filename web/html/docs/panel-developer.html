@@ -49,21 +49,24 @@
                 <div class="docs-nav-section">Development</div>
                 <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
                 <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+                <div class="docs-nav-section">About</div>
+                <a href="credits.html" class="docs-nav-link"><i class="fas fa-heart"></i> Credits</a>
             </nav>
         </aside>
         <main class="docs-content">
             <h1><i class="fas fa-code-branch"></i> Developer Panel</h1>
-            <p>The Developer Panel is the technical control surface of the backend. It exposes 11 specialized tabs covering live configuration, file editing, content editing, asset management, the shop editor, statistics, console logs, plugin management, command shortcuts, system health checks and a real-time WebSocket monitor.</p>
+            <p>The Developer Panel is the technical control surface of the backend. It exposes specialized tabs covering live configuration, file editing, content editing, asset management, the shop editor, email (templates, layouts, sending &amp; automation), statistics, console logs, plugin management, command shortcuts, system health checks and a real-time WebSocket monitor.</p>
             <p>Access requires the <code>developer</code> or <code>owner</code> role. All writes are CSRF-protected and audit-logged.</p>
 
             <div class="alert alert-info" style="background:rgba(59,130,246,0.1);border-left:3px solid #3b82f6;padding:12px 16px;border-radius:6px;margin:16px 0;">
-                <strong><i class="fas fa-lightbulb"></i> Quick navigation</strong> &mdash;
+                <strong><i class="fas fa-lightbulb"></i> Quick navigation</strong>:
                 <a href="#overview">Overview</a> &middot;
                 <a href="#config">Configuration</a> &middot;
                 <a href="#config-files">Config Files</a> &middot;
                 <a href="#content">Content Editor</a> &middot;
                 <a href="#assets">Assets</a> &middot;
                 <a href="#shop">Shop Editor</a> &middot;
+                <a href="#email">Email</a> &middot;
                 <a href="#stats">Stats</a> &middot;
                 <a href="#logs">Logs</a> &middot;
                 <a href="#plugins">Plugins</a> &middot;
@@ -115,10 +118,10 @@
                     <tr><td><code>data/cloudstorage/system/DefaultRuntimeOptions.ini</code></td><td>Gifting, BR mode, subgame toggles</td></tr>
                 </tbody>
             </table>
-            <p>For <code>motd.json</code> and the news/content files, prefer the <a href="#content">Content Editor</a> &mdash; it knows the schema and validates everything.</p>
+            <p>For <code>motd.json</code> and the news/content files, prefer the <a href="#content">Content Editor</a>: it knows the schema and validates everything.</p>
 
             <h2 id="content">4. Content Editor <span style="background:rgba(245,158,11,0.18);color:#fbbf24;font-size:0.65rem;padding:1px 6px;border-radius:8px;letter-spacing:0.05em;font-weight:700;">NEW</span></h2>
-            <p>Typed editors for 17 in-game content sections &mdash; <strong>no more raw JSON editing</strong> for MOTD, news, login messages, BR/Creative/STW content. Each section has a schema-driven form with locale switching, list reordering, duplication, deletion, and an upstream-reset button.</p>
+            <p>Typed editors for 17 in-game content sections: <strong>no more raw JSON editing</strong> for MOTD, news, login messages, BR/Creative/STW content. Each section has a schema-driven form with locale switching, list reordering, duplication, deletion, and an upstream-reset button.</p>
 
             <h3>Layout</h3>
             <p>A left sidebar groups every editable section by domain:</p>
@@ -136,8 +139,8 @@
             <h3>i18n field toggle</h3>
             <p>Each translatable field has a checkbox labeled <strong>i18n</strong>:</p>
             <ul>
-                <li><strong>OFF</strong> &mdash; the field is a plain string (useful for things like <code>title: "v1.2.8"</code>). The "plain string" badge shows in grey.</li>
-                <li><strong>ON</strong> &mdash; the field is a 13-locale object. A coverage badge shows next to the label: <span style="color:#4ade80;">13/13 translations</span> (green), <span style="color:#fbbf24;">7/13</span> (orange), <span style="color:#f87171;">0/13</span> (red).</li>
+                <li><strong>OFF</strong>: the field is a plain string (useful for things like <code>title: "v1.2.8"</code>). The "plain string" badge shows in grey.</li>
+                <li><strong>ON</strong>: the field is a 13-locale object. A coverage badge shows next to the label: <span style="color:#4ade80;">13/13 translations</span> (green), <span style="color:#fbbf24;">7/13</span> (orange), <span style="color:#f87171;">0/13</span> (red).</li>
             </ul>
             <p>Toggling preserves what you had: switching ON converts the string to <code>{ en: "..." }</code>, switching OFF takes the current locale&#39;s value back as a plain string.</p>
 
@@ -162,8 +165,8 @@
 
             <h3>Reset</h3>
             <ul>
-                <li><strong>Reset file</strong> (red button in the editor header) &mdash; re-downloads only the file behind the current editor from <code>https://raw.githubusercontent.com/Aorux01/Neodyme/refs/heads/main/&hellip;</code>. Confirmation required.</li>
-                <li><strong>Reset all content</strong> (danger zone in sidebar) &mdash; re-downloads both <code>motd.json</code> and <code>content-pages.json</code> at once. Local edits are lost.</li>
+                <li><strong>Reset file</strong> (red button in the editor header): re-downloads only the file behind the current editor from <code>https://raw.githubusercontent.com/Aorux01/Neodyme/refs/heads/main/&hellip;</code>. Confirmation required.</li>
+                <li><strong>Reset all content</strong> (danger zone in sidebar): re-downloads both <code>motd.json</code> and <code>content-pages.json</code> at once. Local edits are lost.</li>
             </ul>
 
             <h3>Validation</h3>
@@ -178,11 +181,11 @@
             <h3>Upload</h3>
             <ul>
                 <li><strong>Drag-and-drop</strong> or click the dropzone to pick a file</li>
-                <li>Allowed types: PNG, JPEG, WebP, GIF &mdash; max 5 MB</li>
+                <li>Allowed types: PNG, JPEG, WebP, GIF: max 5 MB</li>
                 <li>Validation is done with <strong>magic-byte sniffing</strong>: a renamed <code>.js</code> file claiming to be a PNG is rejected</li>
                 <li>The file is written to <code>public/images/uploaded-images/&lt;timestamp&gt;-&lt;rand&gt;.&lt;ext&gt;</code></li>
                 <li>It is registered in <code>content/assets-index.json</code> with metadata: <code>originalName</code>, <code>uploadedBy</code>, <code>uploadedAt</code>, <code>size</code>, <code>tags: ["uploaded"]</code></li>
-                <li>The folder <code>images/uploaded-images/**</code> is added to <code>alwaysLocal</code> automatically, so the file is always served from disk &mdash; never redirected to a CDN</li>
+                <li>The folder <code>images/uploaded-images/**</code> is added to <code>alwaysLocal</code> automatically, so the file is always served from disk: never redirected to a CDN</li>
                 <li>Result card includes the public URL and a one-click Copy button</li>
                 <li>"Recently uploaded" grid at the bottom shows the last 12 uploads</li>
             </ul>
@@ -192,22 +195,22 @@
             <ul>
                 <li>Thumbnail (lazy-loaded)</li>
                 <li>Filename, size, extension</li>
-                <li><strong>Copy URL</strong> &mdash; copies the public URL to clipboard</li>
-                <li><strong>Delete</strong> &mdash; only on <code>uploaded-images/</code>; staff-installed assets cannot be deleted from the panel</li>
+                <li><strong>Copy URL</strong>: copies the public URL to clipboard</li>
+                <li><strong>Delete</strong>: only on <code>uploaded-images/</code>; staff-installed assets cannot be deleted from the panel</li>
             </ul>
 
             <h3>Browse online</h3>
-            <p>Lists every entry in <code>assets-index.json</code> that has a CDN URL and is not present on disk &mdash; these are served by 302 redirect in online mode. Useful to know what the server <em>could</em> serve locally if you switch to local mode.</p>
+            <p>Lists every entry in <code>assets-index.json</code> that has a CDN URL and is not present on disk: these are served by 302 redirect in online mode. Useful to know what the server <em>could</em> serve locally if you switch to local mode.</p>
 
             <h2 id="shop">6. Shop Editor <span style="background:rgba(245,158,11,0.18);color:#fbbf24;font-size:0.65rem;padding:1px 6px;border-radius:8px;letter-spacing:0.05em;font-weight:700;">BETA</span></h2>
             <p>Hand-pick what fills each slot of <code>data/shop.json</code>. The slot layout (6 Daily + 8 Featured by default) comes from <code>config/shop.json &rarr; shopCategories[].count</code>.</p>
 
             <h3>Per-slot actions</h3>
             <ul>
-                <li><strong>Pick</strong> &mdash; opens a searchable cosmetic picker backed by <code>fortnite-api.com/v2/cosmetics/br</code>. Filter by name or CID, rarity-coloured borders. Pick &rarr; suggested price by rarity (legendary 2000, epic 1500, rare 1200, uncommon 800, common 200) &rarr; confirm</li>
-                <li><strong>Random</strong> &mdash; rerolls just this slot from the eligible pool (rarity filter + <code>shopExcludedItems</code>)</li>
-                <li><strong>Edit</strong> &mdash; manually tweak the grant string and price</li>
-                <li><strong>Clear</strong> &mdash; remove the entry; next auto-rotation will refill</li>
+                <li><strong>Pick</strong>: opens a searchable cosmetic picker backed by <code>fortnite-api.com/v2/cosmetics/br</code>. Filter by name or CID, rarity-coloured borders. Pick &rarr; suggested price by rarity (legendary 2000, epic 1500, rare 1200, uncommon 800, common 200) &rarr; confirm</li>
+                <li><strong>Random</strong>: rerolls just this slot from the eligible pool (rarity filter + <code>shopExcludedItems</code>)</li>
+                <li><strong>Edit</strong>: manually tweak the grant string and price</li>
+                <li><strong>Clear</strong>: remove the entry; next auto-rotation will refill</li>
             </ul>
 
             <h3>Bulk action</h3>
@@ -215,6 +218,27 @@
 
             <h3>Important caveat</h3>
             <p>The auto shop rotation (<code>autoShopRotation</code>) <strong>will overwrite</strong> manual picks at the next rotation. To keep a fixed shop, disable auto rotation in Configuration &rarr; Features.</p>
+
+            <h2 id="email">Email <span style="background:rgba(245,158,11,0.18);color:#fbbf24;font-size:0.65rem;padding:1px 6px;border-radius:8px;letter-spacing:0.05em;font-weight:700;">BETA</span></h2>
+            <p>End-to-end email management. SMTP credentials are configured from the console with the <code>/email</code> command (stored in <code>.env</code>); everything else is driven from this tab. A banner at the top shows the current SMTP status with a "Test connection" button. The tab has four sub-views:</p>
+            <table>
+                <thead><tr><th>Sub-view</th><th>What it does</th></tr></thead>
+                <tbody>
+                    <tr><td><i class="fas fa-file-alt"></i> Templates</td><td>CRUD email templates (subject, heading, body, footer + chosen layout). Each renders through an HTML layout. System templates (e.g. <code>test</code>) can be edited but not deleted. A <strong>Preview</strong> button renders the email with sample data in an iframe.</td></tr>
+                    <tr><td><i class="fas fa-code"></i> HTML Layouts</td><td>CRUD the reusable HTML wrappers that templates are rendered into. Slots: <code>{{subject}}</code> <code>{{serverName}}</code> <code>{{heading}}</code> <code>{{body}}</code> <code>{{footerNote}}</code>. The <code>default</code> layout cannot be deleted and is auto-restored if missing.</td></tr>
+                    <tr><td><i class="fas fa-paper-plane"></i> Send</td><td>Mass send: pick a template, select recipient roles and/or specific accounts, optionally restrict to verified emails. <strong>Preview count</strong> shows how many recipients match; sending requires confirmation and shows a live progress bar. <strong>Admin-only.</strong></td></tr>
+                    <tr><td><i class="fas fa-robot"></i> Automation</td><td>Rules that send emails automatically. Triggers: <code>account.created</code> (sends to the new account), <code>maintenance.on</code> / <code>maintenance.off</code>, and <code>cron</code> (scheduled, e.g. a newsletter). Each rule picks a template and a recipient selection, and can be enabled/disabled.</td></tr>
+                </tbody>
+            </table>
+            <h3>Storage &amp; throttle</h3>
+            <ul>
+                <li>Templates: <code>data/email/templates/*.json</code>: Layouts: <code>data/email/layouts/*.html</code>: Automations: <code>data/email/automations.json</code></li>
+                <li>Variables available in templates: <code>{{displayName}}</code> <code>{{email}}</code> <code>{{accountId}}</code> <code>{{serverName}}</code> <code>{{version}}</code></li>
+                <li>Mass-send throttle: <code>emailBatchSize</code> (default 20) and <code>emailBatchDelayMs</code> (default 2000) in <code>server.properties</code>: raise the delay for stricter SMTP providers</li>
+            </ul>
+            <div class="alert alert-info" style="background:rgba(59,130,246,0.1);border-left:3px solid #3b82f6;padding:12px 16px;border-radius:6px;margin:16px 0;">
+                <strong><i class="fas fa-info-circle"></i> Roles</strong>: Templates, layouts and automation rules are <code>developer</code>-level. Actually sending a mass email is <code>admin</code>-only.
+            </div>
 
             <h2 id="stats">7. Statistics</h2>
             <p>Detailed runtime stats:</p>
@@ -228,7 +252,7 @@
 
             <h2 id="logs">8. Logs</h2>
             <p>Streaming view of the server&#39;s console output. Filter by level (info / warn / error / debug). The auto-refresh toggle re-fetches every second; switching tabs auto-pauses it.</p>
-            <p>If <code>debugRequests</code> or <code>debugResponses</code> is on (Configuration &rarr; Debug), expect a flood &mdash; turn them off when not actively debugging.</p>
+            <p>If <code>debugRequests</code> or <code>debugResponses</code> is on (Configuration &rarr; Debug), expect a flood: turn them off when not actively debugging.</p>
 
             <h2 id="plugins">9. Plugins</h2>
             <p>The plugin manager. List installed plugins, browse the remote store, install / update / uninstall by version, edit per-plugin config files (each plugin can ship its own JSON configs under <code>plugins/&lt;name&gt;/*.json</code>).</p>
@@ -245,7 +269,7 @@
             <p>The output is streamed back into the panel so you don&#39;t need a terminal session.</p>
 
             <h2 id="system">11. System</h2>
-            <p>Live health checks of the 8 critical subsystems &mdash; HTTP server, database, XMPP, matchmaking, shop manager, plugin system, Redis (if enabled), auth service. Each check returns a status (<code>ok</code> / <code>disabled</code> / <code>error</code>) and a message.</p>
+            <p>Live health checks of the 8 critical subsystems: HTTP server, database, XMPP, matchmaking, shop manager, plugin system, Redis (if enabled), auth service. Each check returns a status (<code>ok</code> / <code>disabled</code> / <code>error</code>) and a message.</p>
             <p>The chart at the bottom shows historic system-test pass rate over the last 24 hours.</p>
 
             <h2 id="monitor">12. Live Monitor</h2>
@@ -263,9 +287,10 @@
                     <tr><td><code>web/js/content-editor.js</code></td><td>Content Editor: schemas, locale switcher, list rendering</td></tr>
                     <tr><td><code>web/js/assets-manager.js</code></td><td>Assets tab + image picker modal</td></tr>
                     <tr><td><code>web/js/shop-editor.js</code></td><td>Shop Editor: slot grid, cosmetic picker</td></tr>
-                    <tr><td><code>api/web/dev.js</code></td><td>Dev routes &mdash; live config, config files, content editor, system tests</td></tr>
+                    <tr><td><code>api/web/dev.js</code></td><td>Dev routes: live config, config files, content editor, system tests, email (templates / layouts / send / automation)</td></tr>
                     <tr><td><code>api/web/assets.js</code></td><td>Asset upload, list, delete</td></tr>
                     <tr><td><code>api/web/shop-editor.js</code></td><td>Shop layout, cosmetic search proxy, slot CRUD</td></tr>
+                    <tr><td><code>src/service/email/*.js</code></td><td>Email services: SMTP transport, templates, layouts, mass campaigns, automation rules</td></tr>
                 </tbody>
             </table>
         </main>

@@ -49,6 +49,8 @@
                 <div class="docs-nav-section">Development</div>
                 <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
                 <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+                <div class="docs-nav-section">About</div>
+                <a href="credits.html" class="docs-nav-link"><i class="fas fa-heart"></i> Credits</a>
             </nav>
         </aside>
         <main class="docs-content">
@@ -56,14 +58,14 @@
             <p>The Moderation Panel is the day-to-day workspace for the support team. It handles support tickets, in-game player reports, bans, account lookups, and creator-code approvals. Access requires the <code>moderator</code>, <code>admin</code>, or <code>owner</code> role.</p>
 
             <div class="alert alert-info" style="background:rgba(59,130,246,0.1);border-left:3px solid #3b82f6;padding:12px 16px;border-radius:6px;margin:16px 0;">
-                <strong><i class="fas fa-info-circle"></i> Heads up</strong> &mdash; The Moderation, Developer and Admin panels are all hosted on a single page (<code>web/html/admin.html</code>) reached via the dashboard's "Staff Panel" link. The page only renders the sections your role is authorized to see; non-staff are redirected to the regular dashboard.
+                <strong><i class="fas fa-info-circle"></i> Heads up</strong>: The Moderation, Developer and Admin panels are all hosted on a single page (<code>web/html/admin.html</code>) reached via the dashboard's "Staff Panel" link. The page only renders the sections your role is authorized to see; non-staff are redirected to the regular dashboard.
             </div>
 
             <h2>Accessing the panel</h2>
             <ol>
                 <li>Sign in on the dashboard at <code>https://your-server.tld/</code></li>
                 <li>If your role allows it, a "Staff Panel" link appears in the dashboard header</li>
-                <li>The page route is <code>/admin.html</code> &mdash; bookmarkable</li>
+                <li>The page route is <code>/admin.html</code>: bookmarkable</li>
                 <li>The page checks your role via <code>GET /neodyme/api/user/role</code> on load; if you are not staff, you are redirected back to the dashboard</li>
             </ol>
 
@@ -84,10 +86,10 @@
             <p>Players open tickets from their dashboard ("Help &amp; Support"). Each ticket carries a category, a message, an optional attachment, and a status (<code>open</code>, <code>in_progress</code>, <code>closed</code>).</p>
             <h3>Typical workflow</h3>
             <ol>
-                <li>A new ticket arrives in <em>Open</em> &mdash; it&#39;s highlighted</li>
+                <li>A new ticket arrives in <em>Open</em>: it&#39;s highlighted</li>
                 <li>You can <strong>assign yourself</strong> (<code>POST /tickets/:id/assign</code>) so other staff see who owns it</li>
-                <li>Add internal notes &mdash; only staff see them</li>
-                <li>Send replies &mdash; the player gets a dashboard notification</li>
+                <li>Add internal notes: only staff see them</li>
+                <li>Send replies: the player gets a dashboard notification</li>
                 <li><strong>Close</strong> when resolved (<code>POST /tickets/:id/close</code>) or <strong>delete</strong> for spam (<code>DELETE /tickets/:id</code>, admin-only)</li>
             </ol>
             <h3>Audit trail</h3>
@@ -97,20 +99,20 @@
             <p>When a player uses Fortnite&#39;s in-game report UI (right-click on a player, "Report"), the data is forwarded to the Reports tab. Each entry shows the reporter, the target, the category (cheating, toxicity, exploit&hellip;), and the in-game context where it happened.</p>
             <h3>Actions per report</h3>
             <ul>
-                <li><strong>Open a ticket from the report</strong> &mdash; opens a pre-filled ticket targeted at the reported player, useful if a real investigation is needed</li>
-                <li><strong>Quick ban</strong> &mdash; opens the ban modal with the target pre-filled</li>
-                <li><strong>Dismiss</strong> &mdash; mark as not actionable; the entry stays in the audit log</li>
-                <li><strong>Dismiss all</strong> &mdash; bulk-clear if a wave of false reports comes in</li>
+                <li><strong>Open a ticket from the report</strong>: opens a pre-filled ticket targeted at the reported player, useful if a real investigation is needed</li>
+                <li><strong>Quick ban</strong>: opens the ban modal with the target pre-filled</li>
+                <li><strong>Dismiss</strong>: mark as not actionable; the entry stays in the audit log</li>
+                <li><strong>Dismiss all</strong>: bulk-clear if a wave of false reports comes in</li>
             </ul>
             <h3>Note on duplicates</h3>
-            <p>Reports are not deduplicated server-side &mdash; if 5 players report the same target you&#39;ll see 5 entries. The reporter column lets you filter and triage quickly.</p>
+            <p>Reports are not deduplicated server-side: if 5 players report the same target you&#39;ll see 5 entries. The reporter column lets you filter and triage quickly.</p>
 
             <h2>3. Player Search &amp; Ban</h2>
             <p>The Players tab lets you search a player by display name, email or account ID and see:</p>
             <ul>
                 <li>Account creation date, last login, last IP</li>
                 <li>Current role (<code>player</code> / <code>founder</code> / <code>helper</code> / <code>moderator</code> / <code>developer</code> / <code>admin</code> / <code>owner</code> / <code>server</code>)</li>
-                <li>Current ban status &mdash; if banned, reason, duration and the moderator who banned them</li>
+                <li>Current ban status: if banned, reason, duration and the moderator who banned them</li>
                 <li>Active sessions (live access tokens; revoking them logs the player out everywhere)</li>
             </ul>
 
@@ -132,19 +134,19 @@
             <p>Players can request a SAC code from their dashboard. Requests appear in this tab.</p>
             <h3>Per-request actions</h3>
             <ul>
-                <li><strong>Approve</strong> &mdash; activates the code; the player now earns the configured commission (<code>creatorCodeCommissionPercent</code>) on every shop purchase that uses it</li>
-                <li><strong>Reject</strong> &mdash; refused with no commission. The player can request again with a new code string after.</li>
-                <li><strong>Toggle</strong> &mdash; temporarily disable an already-approved code (e.g. ToS violation under investigation)</li>
-                <li><strong>Delete</strong> &mdash; remove permanently. The player can then request a new code.</li>
+                <li><strong>Approve</strong>: activates the code; the player now earns the configured commission (<code>creatorCodeCommissionPercent</code>) on every shop purchase that uses it</li>
+                <li><strong>Reject</strong>: refused with no commission. The player can request again with a new code string after.</li>
+                <li><strong>Toggle</strong>: temporarily disable an already-approved code (e.g. ToS violation under investigation)</li>
+                <li><strong>Delete</strong>: remove permanently. The player can then request a new code.</li>
             </ul>
             <h3>Naming rules</h3>
-            <p>Codes are case-insensitive, A&ndash;Z and 0&ndash;9 only, 3&ndash;16 characters. Profanity filtering is not built-in &mdash; staff must review manually before approving.</p>
+            <p>Codes are case-insensitive, A&ndash;Z and 0&ndash;9 only, 3&ndash;16 characters. Profanity filtering is not built-in: staff must review manually before approving.</p>
 
             <h2>5. Feedback</h2>
             <p>Players can submit free-form feedback (one-shot, not a ticket) via their dashboard. This tab is a flat list with timestamp, account ID and content.</p>
             <ul>
-                <li><strong>Mark as read</strong> &mdash; visual only, doesn&#39;t remove the entry</li>
-                <li><strong>Delete</strong> &mdash; permanently remove. Logged in audit.</li>
+                <li><strong>Mark as read</strong>: visual only, doesn&#39;t remove the entry</li>
+                <li><strong>Delete</strong>: permanently remove. Logged in audit.</li>
             </ul>
 
             <h2>Audit log</h2>
@@ -158,10 +160,10 @@
 
             <h2>Common pitfalls</h2>
             <ul>
-                <li><strong>Don&#39;t change your own role</strong> &mdash; the API will refuse, but if you somehow end up role-less you lose panel access</li>
-                <li><strong>Permanent bans without a clear reason</strong> &mdash; the reason field is shown to the player and stored forever; write it as if it were public</li>
-                <li><strong>Quick-banning from a report without checking sessions</strong> &mdash; the player can finish the match if you forget to invalidate sessions</li>
-                <li><strong>Deleting a ticket</strong> &mdash; loses the message history. Prefer <strong>close</strong> unless it&#39;s outright spam.</li>
+                <li><strong>Don&#39;t change your own role</strong>: the API will refuse, but if you somehow end up role-less you lose panel access</li>
+                <li><strong>Permanent bans without a clear reason</strong>: the reason field is shown to the player and stored forever; write it as if it were public</li>
+                <li><strong>Quick-banning from a report without checking sessions</strong>: the player can finish the match if you forget to invalidate sessions</li>
+                <li><strong>Deleting a ticket</strong>: loses the message history. Prefer <strong>close</strong> unless it&#39;s outright spam.</li>
             </ul>
 
             <h2>Frontend &amp; backend reference</h2>
@@ -170,7 +172,7 @@
                 <tbody>
                     <tr><td><code>web/html/admin.html</code></td><td>Single host page for Moderation, Developer and Admin panels</td></tr>
                     <tr><td><code>web/js/staff-panel.js</code></td><td>Logic for all staff sections (tickets, reports, players, codes, feedback)</td></tr>
-                    <tr><td><code>api/web/mod.js</code></td><td>Backend routes &mdash; all under <code>/neodyme/api/mod/*</code>, guarded by <code>requireModerator</code></td></tr>
+                    <tr><td><code>api/web/mod.js</code></td><td>Backend routes: all under <code>/neodyme/api/mod/*</code>, guarded by <code>requireModerator</code></td></tr>
                     <tr><td><code>src/service/api/audit-service.js</code></td><td>Audit log helpers (<code>logBan</code>, <code>logUnban</code>, <code>logTicketAction</code>&hellip;)</td></tr>
                 </tbody>
             </table>
