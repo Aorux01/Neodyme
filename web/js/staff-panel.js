@@ -207,7 +207,7 @@ async function deleteCode(code) {
 
 async function loadDeveloperData() {
     try {
-        const response = await fetch('/neodyme/neodyme/api/status', { credentials: 'include' });
+        const response = await fetch(`${API}/status`, { credentials: 'include' });
         const data = await response.json();
 
         document.getElementById('dev-server-status').textContent = data.online ? 'Online' : 'Offline';
@@ -285,6 +285,12 @@ async function loadAdminUsers() {
                         <button class="btn btn-sm ${user.banned ? 'btn-success' : 'btn-danger'}" onclick="toggleBan('${user.accountId}', ${!user.banned})">
                             <i class="fas fa-${user.banned ? 'unlock' : 'ban'}"></i>
                         </button>
+                        ${hasCap('users.logout') ? `<button class="btn btn-sm btn-secondary" title="Log out everywhere" onclick="forceLogoutPlayer('${user.accountId}', this.dataset.name)" data-name="${escapeHtml(user.displayName)}">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>` : ''}
+                        ${hasCap('users.reset') ? `<button class="btn btn-sm btn-secondary" title="Reset password" onclick="resetUserPassword('${user.accountId}', this.dataset.name)" data-name="${escapeHtml(user.displayName)}">
+                            <i class="fas fa-key"></i>
+                        </button>` : ''}
                     </td>
                 </tr>
             `;
@@ -439,6 +445,9 @@ async function loadModPlayers() {
                         <button class="btn btn-sm btn-secondary" onclick="viewBanHistory('${player.accountId}', '${escapeHtml(player.displayName)}')">
                             <i class="fas fa-history"></i>
                         </button>
+                        ${hasCap('users.logout') ? `<button class="btn btn-sm btn-secondary" title="Log out everywhere" onclick="forceLogoutPlayer('${player.accountId}', '${escapeHtml(player.displayName)}')">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>` : ''}
                     </td>
                 </tr>
             `;
@@ -1247,14 +1256,14 @@ function formatAuditValue(v) {
     if (Array.isArray(v)) {
         if (v.length === 0) return '<span style="color:#555;">(empty)</span>';
         const items = v.slice(0, 12).map(x => typeof x === 'object'
-            ? `<code style="background:#1e1e1e;padding:1px 5px;border-radius:3px;font-size:10px;">${escapeHtml(JSON.stringify(x))}</code>`
-            : `<code style="background:#1e1e1e;padding:1px 5px;border-radius:3px;font-size:11px;">${escapeHtml(String(x))}</code>`).join(' ');
+            ? `<code style="background:var(--surface-2, #1b1726);padding:1px 5px;border-radius:3px;font-size:10px;">${escapeHtml(JSON.stringify(x))}</code>`
+            : `<code style="background:var(--surface-2, #1b1726);padding:1px 5px;border-radius:3px;font-size:11px;">${escapeHtml(String(x))}</code>`).join(' ');
         return items + (v.length > 12 ? ` <span style="color:#555;">...+${v.length - 12}</span>` : '');
     }
     if (typeof v === 'object') {
         const json = JSON.stringify(v, null, 0);
-        if (json.length <= 120) return `<code style="background:#1e1e1e;padding:1px 5px;border-radius:3px;font-size:10px;">${escapeHtml(json)}</code>`;
-        return `<pre style="background:#1e1e1e;padding:6px 8px;border-radius:4px;font-size:10px;color:#aaa;max-height:160px;overflow:auto;margin:4px 0 0;white-space:pre-wrap;word-break:break-all;">${escapeHtml(JSON.stringify(v, null, 2))}</pre>`;
+        if (json.length <= 120) return `<code style="background:var(--surface-2, #1b1726);padding:1px 5px;border-radius:3px;font-size:10px;">${escapeHtml(json)}</code>`;
+        return `<pre style="background:var(--surface-2, #1b1726);padding:6px 8px;border-radius:4px;font-size:10px;color:#aaa;max-height:160px;overflow:auto;margin:4px 0 0;white-space:pre-wrap;word-break:break-all;">${escapeHtml(JSON.stringify(v, null, 2))}</pre>`;
     }
     const s = String(v);
     return s.length > 200
@@ -1333,7 +1342,7 @@ async function loadAuditLog() {
                         .map(([action, count]) => {
                             const meta = auditActionMeta(action);
                             return `<span style="display:inline-flex;align-items:center;gap:5px;
-                                          background:#1e1e1e;border:1px solid #2a2a2a;border-radius:20px;
+                                          background:var(--surface-2, #1b1726);border:1px solid var(--border, rgba(255,255,255,0.08));border-radius:20px;
                                           padding:4px 10px;font-size:11px;color:#aaa;">
                                 <i class="fas ${meta.icon}" style="color:${meta.color};"></i>
                                 <strong style="color:#fff;">${count}</strong> ${meta.label}
@@ -1371,7 +1380,7 @@ async function loadAuditLog() {
             const detailId = `audit-detail-${idx}`;
 
             html += `
-            <div style="background:#161616;border:1px solid #232323;border-radius:9px;padding:12px 14px;
+            <div style="background:var(--surface, #15121d);border:1px solid var(--border, rgba(255,255,255,0.08));border-radius:9px;padding:12px 14px;
                         display:flex;align-items:flex-start;gap:12px;cursor:pointer;"
                  onclick="toggleAuditDetail('${detailId}')">
                 <!-- Icon -->
@@ -1390,7 +1399,7 @@ async function loadAuditLog() {
                         ${ipStr}
                     </div>
                     <!-- Details (collapsed) -->
-                    <div id="${detailId}" style="display:none;margin-top:8px;padding-top:8px;border-top:1px solid #222;font-size:12px;">
+                    <div id="${detailId}" style="display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--border, rgba(255,255,255,0.08));font-size:12px;">
                         ${formatAuditDetails(log)}
                     </div>
                 </div>
@@ -1572,7 +1581,7 @@ async function loadPlayerStatsChart(range) {
                             autoSkip: true,
                             maxRotation: 0
                         },
-                        grid: { color: '#1e1e1e' }
+                        grid: { color: 'var(--surface-2, #1b1726)' }
                     },
                     y: { min: 0, ticks: { color: '#888' }, grid: { color: '#2a2a2a' } }
                 },
@@ -1898,6 +1907,11 @@ async function deleteFeedbackSubmission(submissionId) {
 // Helper function
 // escapeHtml moved to common.js (shared with staff panel)
 // --- Section router (staff panel page) ---
+// True when the signed-in account may use any of the given capabilities.
+function hasCap(...ids) {
+    return !window.staffCaps || ids.some(id => window.staffCaps.has(id));
+}
+
 function showSection(sectionName) {
     document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -1910,9 +1924,15 @@ function showSection(sectionName) {
     document.getElementById('user-dropdown')?.classList.remove('show');
 
     // Staff section data loaders.
-    if (sectionName === 'moderation') { loadModPlayers(); loadModStats(); }
-    else if (sectionName === 'developer') { loadDevOverview(); loadDevConfig(); }
-    else if (sectionName === 'admin') { loadAdminUsers(); loadAdminDetailedStats(); loadPlayerStatsChart('24h'); }
+    if (sectionName === 'moderation') {
+        if (hasCap('users.view')) { loadModPlayers(); loadModStats(); }
+    } else if (sectionName === 'developer') {
+        if (hasCap('system.view')) loadDevOverview();
+        if (hasCap('config.edit')) loadDevConfig();
+    } else if (sectionName === 'admin') {
+        if (hasCap('users.manage')) loadAdminUsers();
+        if (hasCap('stats.view')) { loadAdminDetailedStats(); loadPlayerStatsChart('24h'); }
+    }
 }
 
 // --- Moderation tab router ---
@@ -1937,3 +1957,57 @@ function showModTab(tabName) {
 
 // showAdminTab is defined in admin-panel.js (loaded after this file), which provides
 // the complete router including the audit/settings/commands tabs.
+
+async function forceLogoutPlayer(accountId, displayName) {
+    if (!confirm(`Log ${displayName} out of every session? They will have to sign in again.`)) return;
+
+    try {
+        const response = await secureFetch(`/neodyme/api/mod/players/${accountId}/logout`, { method: 'POST' });
+        const data = await response.json();
+        showAlert(response.ok ? data.message : apiError(data, 'Could not log the player out'), response.ok ? 'success' : 'error');
+    } catch (error) {
+        showAlert('Could not log the player out', 'error');
+    }
+}
+
+async function resetUserPassword(accountId, displayName) {
+    if (!confirm(`Reset the password of ${displayName}? Their sessions end now and they get a one-time reset link.`)) return;
+
+    try {
+        const response = await secureFetch(`/neodyme/api/admin/users/${accountId}/reset-password`, { method: 'POST' });
+        const data = await response.json();
+        if (!response.ok) return showAlert(apiError(data, 'Could not reset the password'), 'error');
+
+        showAlert(data.message, 'success');
+        if (data.link) prompt(`Reset link for ${displayName} (works once, expires in ${data.expiresIn}). Copy it:`, data.link);
+    } catch (error) {
+        showAlert('Could not reset the password', 'error');
+    }
+}
+
+async function exportAuditCsv() {
+    const params = new URLSearchParams();
+    const action = document.getElementById('audit-action-filter')?.value || '';
+    const search = document.getElementById('audit-search')?.value || '';
+    const from = document.getElementById('audit-date-from')?.value || '';
+    const to = document.getElementById('audit-date-to')?.value || '';
+    if (action) params.set('action', action);
+    if (search) params.set('search', search);
+    if (from) params.set('from', from);
+    if (to) params.set('to', to);
+
+    try {
+        const response = await fetch(`/neodyme/api/admin/audit-log/export?${params}`, { credentials: 'include' });
+        if (!response.ok) throw new Error('Export failed');
+
+        const blob = await response.blob();
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `audit-log-${new Date().toISOString().slice(0, 10)}.csv`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    } catch (error) {
+        showAlert('Could not export the audit log', 'error');
+    }
+}
+

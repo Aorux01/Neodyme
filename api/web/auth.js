@@ -7,12 +7,34 @@ const FunctionsService = require('../../src/service/api/functions-service');
 const LoggerService = require('../../src/service/logger/logger-service');
 const WebResponse = require('../../src/service/api/web-response-service');
 const WebService = require('../../src/service/api/web-service');
+const RecoveryService = require('../../src/service/api/recovery-service');
+const TwoFactorService = require('../../src/service/security/two-factor-service');
 const { authRateLimit } = require('../../src/middleware/rate-limit-middleware');
 const { csrfProtection, generateCsrfToken } = require('../../src/service/token/csrf-token-service');
 
 const { setAuthCookies, clearAuthCookies, verifyToken } = WebService;
 
 const MAX = { email: 254, username: 20, password: 128 };
+
+// Sensitive actions need a fresh code when the account has two-factor enabled.
+// Returns true to continue, or sends the response itself and returns false.
+async function requireSecondFactor(req, res, knownAccount = null) {
+    const account = knownAccount || await DatabaseManager.getAccount(req.user.accountId);
+    if (!account || !account.tfaEnabled) return true;
+
+    const code = req.body && typeof req.body.code === 'string' ? req.body.code : '';
+    if (!code) {
+        WebResponse.fail(res, 'TWO_FACTOR_REQUIRED', 'Enter a code from your authenticator app to continue.');
+        return false;
+    }
+
+    const check = await TwoFactorService.verifySecondFactor(account, code);
+    if (!check.ok) {
+        check.locked ? WebResponse.rateLimited(res, check.message) : WebResponse.fail(res, 'TWO_FACTOR_REQUIRED', check.message);
+        return false;
+    }
+    return true;
+}
 
 router.post('/neodyme/api/auth/register', authRateLimit(), async (req, res) => {
     try {
@@ -39,6 +61,14 @@ router.post('/neodyme/api/auth/register', authRateLimit(), async (req, res) => {
         const account = await DatabaseManager.createAccount(email, password, username);
         if (!account || !account.accountId) {
             return WebResponse.serverError(res, 'register', new Error('createAccount returned null'));
+        }
+
+        const verificationRequired = await RecoveryService.onRegister(account);
+        if (verificationRequired) {
+            return WebResponse.ok(res, {
+                message: 'Account created. Check your email to verify your address before signing in.',
+                verificationRequired: true
+            }, 201);
         }
 
         const tokens = await TokenService.generateTokenPair(account.accountId, 'fortnite', username);
@@ -96,9 +126,18 @@ router.post('/neodyme/api/auth/login', authRateLimit(), async (req, res) => {
 
         await DatabaseManager.resetFailedAttempts(account.accountId);
 
-        const banInfo = DatabaseManager.getBanInfo(account.accountId);
+        const banInfo = await DatabaseManager.getBanInfo(account.accountId);
         if (banInfo && banInfo.banned) {
             return WebResponse.forbidden(res, 'This account has been disabled.');
+        }
+
+        if (account.emailVerified === false && RecoveryService.verificationRequired()) {
+            return WebResponse.fail(res, 'EMAIL_NOT_VERIFIED', 'Please verify your email address before signing in.');
+        }
+
+        if (account.tfaEnabled) {
+            const challenge = await TwoFactorService.startLogin(account, { remember: remember === true });
+            return WebResponse.ok(res, { mfaRequired: true, mfaToken: challenge.token, methods: challenge.methods });
         }
 
         await DatabaseManager.updateLastLogin(account.accountId);
@@ -208,6 +247,8 @@ router.put('/neodyme/api/auth/change-password', verifyToken, csrfProtection, asy
             return WebResponse.badRequest(res, passwordCheck.errors.join('. '));
         }
 
+        if (!(await requireSecondFactor(req, res))) return;
+
         const result = await DatabaseManager.updatePassword(req.user.accountId, currentPassword, newPassword);
         if (!result.success) {
             return WebResponse.badRequest(res, result.message || 'Failed to change password.');
@@ -238,6 +279,8 @@ router.delete('/neodyme/api/auth/account', verifyToken, csrfProtection, async (r
         if (!passwordMatch) {
             return WebResponse.unauthorized(res, 'Incorrect password.');
         }
+
+        if (!(await requireSecondFactor(req, res, account))) return;
 
         const deleted = await DatabaseManager.deleteAccount(req.user.accountId);
         if (!deleted) {

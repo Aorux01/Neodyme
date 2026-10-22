@@ -11,6 +11,8 @@ data/clients.json
 data/reports.json
 data/whitelist.json
 data/shop_state.json
+data/one-time-tokens.json
+data/account-links.json
 data/*.tmp
 src/service/token/*tokens.json
 public/images/uploaded-images/

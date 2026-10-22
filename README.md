@@ -29,9 +29,11 @@ Join the **Discord** Server: https://discord.gg/gWpDVKR4nF
 
 ## Main Features
 
-- ✅ **Secure login and authentication system**
+- ✅ **Secure login and authentication system:** 2FA, password reset, email verification, sign-in links, Discord login
 - ✅ **Multi-account support**
-- ✅ **Web interface**
+- ✅ **Web interface** with clean addresses (`/login`, `/dashboard`, `/admin`...)
+- ✅ **Fine-grained staff permissions** (`/caps`, Permissions tab)
+- ✅ **Built-in self-tests** (`/test`, Developer panel, status page)
 - ✅ **Fully implemented MCP (profile service)**
 - ✅ **Complete friends system:** friend requests, acceptance, removal
 - ✅ **Token system and full XMPP support** (chat, presence, private parties)
@@ -54,7 +56,7 @@ Join the **Discord** Server: https://discord.gg/gWpDVKR4nF
 - [ ] 📂 Finish and expand the website (leaderboards, 2FA setup, player stats, etc.)
 - 🔄 🧰 **Admin Panel** - core features done (BETA), ongoing: shop editor, live config, events manager
 - [ ] 💾 Implement all remaining storage systems (**SQLite, MySQL, PostgreSQL**)
-- [ ] 🔐 Finish **2FA setup**
+- [x] 🔐 **2FA setup** (authenticator app, backup codes, staff policy)
 - [ ] 📘 Complete the **public API**
 - [ ] 🛡️ Implement **Ward** (AntiCheat)
 

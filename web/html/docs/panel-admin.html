@@ -7,26 +7,26 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/docs.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/docs.css">
 </head>
 <body>
     <header class="neodyme-header">
         <div class="header-container">
-            <a href="../../index.html" class="neodyme-logo">N</a>
+            <a href="/" class="neodyme-logo">N</a>
             <nav class="neodyme-nav">
                 <ul class="nav-links">
-                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="/">HOME</a></li>
                     <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
-                    <li><a href="../updates.html">UPDATES</a></li>
-                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
-                    <li><a href="../status.html">STATUS</a></li>
-                    <li><a href="index.html" class="active">DOCS</a></li>
+                    <li><a href="/updates">UPDATES</a></li>
+                    <li><a href="/shop" target="_blank">SHOP</a></li>
+                    <li><a href="/status">STATUS</a></li>
+                    <li><a href="/docs" class="active">DOCS</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
-                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
-                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+                <a href="/login" class="btn btn-secondary">SIGN IN</a>
+                <a href="/register" class="btn btn-primary">CREATE ACCOUNT</a>
             </div>
         </div>
     </header>
@@ -35,22 +35,22 @@
             <div class="docs-sidebar-title">Documentation</div>
             <nav class="docs-nav">
                 <div class="docs-nav-section">Getting Started</div>
-                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
-                <a href="configuration.html" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
-                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <a href="/docs/getting-started" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="/docs/configuration" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
+                <a href="/docs/commands" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
                 <div class="docs-nav-section">Features</div>
-                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
-                <a href="panel-moderation.html" class="docs-nav-link"><i class="fas fa-gavel"></i> Moderation Panel</a>
-                <a href="panel-developer.html" class="docs-nav-link"><i class="fas fa-code-branch"></i> Developer Panel</a>
-                <a href="panel-admin.html" class="docs-nav-link active"><i class="fas fa-user-shield"></i> Admin Panel</a>
-                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
-                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
-                <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
+                <a href="/docs/web-interface" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="/docs/panel-moderation" class="docs-nav-link"><i class="fas fa-gavel"></i> Moderation Panel</a>
+                <a href="/docs/panel-developer" class="docs-nav-link"><i class="fas fa-code-branch"></i> Developer Panel</a>
+                <a href="/docs/panel-admin" class="docs-nav-link active"><i class="fas fa-user-shield"></i> Admin Panel</a>
+                <a href="/docs/database" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="/docs/security" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="/docs/game-files" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
                 <div class="docs-nav-section">Development</div>
-                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
-                <a href="plugins.html" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
+                <a href="/docs/api" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="/docs/plugins" class="docs-nav-link"><i class="fas fa-plug"></i> Plugins</a>
                 <div class="docs-nav-section">About</div>
-                <a href="credits.html" class="docs-nav-link"><i class="fas fa-heart"></i> Credits</a>
+                <a href="/docs/credits" class="docs-nav-link"><i class="fas fa-heart"></i> Credits</a>
             </nav>
         </aside>
         <main class="docs-content">
@@ -100,6 +100,12 @@
             <h3>Ban a user</h3>
             <p>Same modal as the Moderation Panel (reason + duration + invalidate sessions). Admins can apply <strong>permanent bans</strong> that auto-expire never.</p>
 
+            <h3>Log out everywhere</h3>
+            <p>The sign-out button ends every session of an account: game tokens, website sessions and refresh tokens. It exists in the Moderation panel and in the Users tab, and you can only use it on accounts below your own role. It writes <code>force_logout</code> to the audit log.</p>
+
+            <h3>Reset a password</h3>
+            <p>The key button ends the account's sessions and sends the player a one-time reset link by email. When email is not configured, or a link was sent less than a minute ago, the panel says so; without email it shows the link once so you can hand it over yourself. It writes <code>admin_password_reset</code> to the audit log.</p>
+
             <h3>Unban</h3>
             <p>Available on banned users. Justification required, logged.</p>
 
@@ -145,6 +151,10 @@
                     <tr><td><code>randomize_shop_slot</code></td><td>Developer (Shop Editor)</td><td><code>{slot, pickedId, pickedName, pickedRarity, pickedType, oldItemGrants, oldPrice, newItemGrants, newPrice}</code></td></tr>
                     <tr><td><code>force_shop_rotation</code></td><td>Developer</td><td><code>{}</code></td></tr>
                     <tr><td><code>toggle_maintenance</code></td><td>Developer</td><td><code>{newState}</code></td></tr>
+                    <tr><td><code>force_logout</code></td><td>Moderation/Admin</td><td><code>{targetUserName}</code></td></tr>
+                    <tr><td><code>admin_password_reset</code></td><td>Admin</td><td><code>{targetUserName, delivery}</code></td></tr>
+                    <tr><td><code>audit_export</code></td><td>Admin</td><td><code>{rows}</code></td></tr>
+                    <tr><td><code>capabilities.updated</code></td><td>Admin (Permissions) / console</td><td><code>{before: {grants, denies}, after: {grants, denies}}</code></td></tr>
                 </tbody>
             </table>
 
@@ -156,6 +166,9 @@
                 <li><strong>Date range</strong>: <code>from</code> + <code>to</code></li>
                 <li>Pagination: 25 entries per page, "Page N / M"</li>
             </ul>
+
+            <h3>Export</h3>
+            <p>The <strong>Export CSV</strong> button downloads up to 5000 entries matching the current filters, dates included. Cells that could be read as spreadsheet formulas are neutralized, and the export itself is recorded as <code>audit_export</code>.</p>
 
             <h3>24h summary bar</h3>
             <p>Above the filters, a chip strip shows the top-5 most-frequent action types in the last 24 hours, with counts. Lets you spot anomalies (e.g. 200 bans in a day = someone went rogue or a wave of cheaters).</p>
@@ -197,11 +210,28 @@
                 <li><strong>Add</strong>: enter a displayName or an accountId; the account is resolved and added</li>
                 <li><strong>Remove</strong>: drop an account from the list (entries whose account no longer exists are flagged)</li>
             </ul>
-            <p>This mirrors the <code>/whitelist</code> console command. See <a href="commands.html#whitelist">Commands &rarr; /whitelist</a>.</p>
+            <p>This mirrors the <code>/whitelist</code> console command. See <a href="/docs/commands#whitelist">Commands &rarr; /whitelist</a>.</p>
+
+            <h2>7. Permissions</h2>
+            <p>Roles give each account a default set of permissions. This tab adds <strong>particular authorizations</strong> on top of a role, without changing the role itself.</p>
+            <ul>
+                <li><strong>Search</strong> a player by name, email or id. With an empty search the list shows staff accounts and every account that already has an adjustment.</li>
+                <li>For each permission the editor shows what the role gives, and lets you pick <strong>Role default</strong>, <strong>Allow</strong> (a plain player can be given one staff permission) or <strong>Deny</strong> (an admin can lose one). A denial always wins, and the Result column shows the outcome before you save.</li>
+                <li><strong>Back to role default</strong> removes every adjustment of the account.</li>
+                <li>The panels follow the permissions: a tab only appears when the account can use it, and a panel only appears when at least one of its tabs does.</li>
+            </ul>
+            <p>Rules that prevent escalation:</p>
+            <ul>
+                <li>Nobody can change their own authorizations.</li>
+                <li>Only an owner can change an account of the same or a higher role than their own. Owners already have every permission and cannot be adjusted.</li>
+                <li>You can only allow a permission you hold yourself.</li>
+                <li>Every change is written to the audit log as <code>capabilities.updated</code>, with the lists before and after.</li>
+            </ul>
+            <p>The same actions are available from the console with <a href="/docs/commands#caps">/caps</a>. Staff two-factor authentication (<code>require2faForStaff</code>) also applies to a player who has been allowed any permission.</p>
 
             <h2>Security model</h2>
             <ul>
-                <li>All admin routes require <code>requireAdmin</code> middleware (role gate)</li>
+                <li>Admin routes are gated by a permission (<code>requireCap</code>): the role default, an allowance or a denial on the account decide, and owners always pass</li>
                 <li>Writes additionally require CSRF (cookie <code>neodyme_session</code> + header <code>X-CSRF-Token</code>): provided automatically by <code>secureFetch()</code> in the frontend</li>
                 <li>Every write hits the audit log <em>before</em> the response is sent: you cannot silently change state</li>
                 <li>Admins cannot demote themselves below admin (the API refuses to avoid lockout)</li>

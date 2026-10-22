@@ -1,3 +1,4 @@
+const { gate, gateWrite } = require('../../src/service/api/capability-middleware');
 const express = require('express');
 const router = express.Router();
 const os = require('os');
@@ -10,18 +11,17 @@ const AuditService = require('../../src/service/api/audit-service');
 const WebResponse = require('../../src/service/api/web-response-service');
 const WebService = require('../../src/service/api/web-service');
 const { csrfProtection } = require('../../src/service/token/csrf-token-service');
-const { requireDeveloper, requireAdmin } = require('../../src/service/api/role-middleware-service');
 const EmailService = require('../../src/service/email/email-service');
 const EmailTemplateService = require('../../src/service/email/email-template-service');
 const EmailLayoutService = require('../../src/service/email/email-layout-service');
 const EmailCampaignService = require('../../src/service/email/email-campaign-service');
 const EmailAutomationService = require('../../src/service/email/email-automation-service');
+const TestRegistry = require('../../src/service/test/test-registry');
+
+TestRegistry.loadBuiltInChecks();
 
 const verifyToken = WebService.verifyToken;
-const dev = [verifyToken, requireDeveloper];
-const devWrite = [verifyToken, requireDeveloper, csrfProtection];
 // Mass email is high-impact: require admin + CSRF, not just developer.
-const adminWrite = [verifyToken, requireAdmin, csrfProtection];
 
 const CONFIG_DIR = path.join(__dirname, '../../config');
 const PLUGINS_DIR = path.join(__dirname, '../../plugins');
@@ -64,7 +64,7 @@ const writeFileAtomic = (filePath, data) => {
 
 // ---- Live config (server.properties keys) ----
 
-router.get('/neodyme/api/dev/config', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/config', ...gate('config.edit'), async (req, res) => {
     try {
         const config = {
             debug: {
@@ -166,7 +166,7 @@ router.get('/neodyme/api/dev/config', ...dev, async (req, res) => {
     }
 });
 
-router.put('/neodyme/api/dev/config/:key', ...devWrite, async (req, res) => {
+router.put('/neodyme/api/dev/config/:key', ...gateWrite('config.edit'), async (req, res) => {
     try {
         const { key } = req.params;
         const { value } = req.body;
@@ -193,7 +193,7 @@ router.put('/neodyme/api/dev/config/:key', ...devWrite, async (req, res) => {
 
 // ---- Editable JSON config files ----
 
-router.get('/neodyme/api/dev/config/files', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/config/files', ...gate('config.edit'), async (req, res) => {
     try {
         const files = fs.readdirSync(CONFIG_DIR)
             .filter(f => f.endsWith('.json'))
@@ -208,7 +208,7 @@ router.get('/neodyme/api/dev/config/files', ...dev, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/dev/config/files/:fileName', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/config/files/:fileName', ...gate('config.edit'), async (req, res) => {
     try {
         const { fileName } = req.params;
         if (!EDITABLE_CONFIG_FILES.includes(fileName)) {
@@ -225,7 +225,7 @@ router.get('/neodyme/api/dev/config/files/:fileName', ...dev, async (req, res) =
     }
 });
 
-router.put('/neodyme/api/dev/config/files/:fileName', ...devWrite, async (req, res) => {
+router.put('/neodyme/api/dev/config/files/:fileName', ...gateWrite('config.edit'), async (req, res) => {
     try {
         const { fileName } = req.params;
         const { content } = req.body;
@@ -249,7 +249,7 @@ router.put('/neodyme/api/dev/config/files/:fileName', ...devWrite, async (req, r
 
 // ---- Editable cloud-storage INI files ----
 
-router.get('/neodyme/api/dev/ini-files/:fileName', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/ini-files/:fileName', ...gate('config.edit'), async (req, res) => {
     try {
         const { fileName } = req.params;
         if (!EDITABLE_INI_FILES.includes(fileName)) {
@@ -266,7 +266,7 @@ router.get('/neodyme/api/dev/ini-files/:fileName', ...dev, async (req, res) => {
     }
 });
 
-router.put('/neodyme/api/dev/ini-files/:fileName', ...devWrite, async (req, res) => {
+router.put('/neodyme/api/dev/ini-files/:fileName', ...gateWrite('config.edit'), async (req, res) => {
     try {
         const { fileName } = req.params;
         const { content } = req.body;
@@ -290,7 +290,7 @@ router.put('/neodyme/api/dev/ini-files/:fileName', ...devWrite, async (req, res)
 
 // ---- Server / database stats ----
 
-router.get('/neodyme/api/dev/stats/server', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/stats/server', ...gate('system.view'), async (req, res) => {
     try {
         const mem = process.memoryUsage();
         return WebResponse.ok(res, {
@@ -321,7 +321,7 @@ router.get('/neodyme/api/dev/stats/server', ...dev, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/dev/stats/database', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/stats/database', ...gate('system.view'), async (req, res) => {
     try {
         const dataDir = path.join(__dirname, '../../data');
         const users = await DatabaseManager.getAllAccounts();
@@ -349,7 +349,7 @@ router.get('/neodyme/api/dev/stats/database', ...dev, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/dev/ssl/status', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/ssl/status', ...gate('system.view'), async (req, res) => {
     try {
         const protocol = ConfigManager.get('protocol', 'http');
         const certPath = path.resolve(ConfigManager.get('sslCertPath', 'config/ssl/cert.pem'));
@@ -380,7 +380,7 @@ router.get('/neodyme/api/dev/ssl/status', ...dev, async (req, res) => {
 
 // ---- Plugin config files ----
 
-router.get('/neodyme/api/dev/plugins/:pluginName/files', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/plugins/:pluginName/files', ...gate('plugins.manage'), async (req, res) => {
     try {
         const { pluginName } = req.params;
         if (!/^[\w-]+$/.test(pluginName)) {
@@ -399,7 +399,7 @@ router.get('/neodyme/api/dev/plugins/:pluginName/files', ...dev, async (req, res
     }
 });
 
-router.get('/neodyme/api/dev/plugins/:pluginName/files/:fileName', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/plugins/:pluginName/files/:fileName', ...gate('plugins.manage'), async (req, res) => {
     try {
         const { pluginName, fileName } = req.params;
         if (!/^[\w-]+$/.test(pluginName) || !/^[\w.-]+\.json$/.test(fileName)) {
@@ -420,7 +420,7 @@ router.get('/neodyme/api/dev/plugins/:pluginName/files/:fileName', ...dev, async
     }
 });
 
-router.put('/neodyme/api/dev/plugins/:pluginName/files/:fileName', ...devWrite, async (req, res) => {
+router.put('/neodyme/api/dev/plugins/:pluginName/files/:fileName', ...gateWrite('plugins.manage'), async (req, res) => {
     try {
         const { pluginName, fileName } = req.params;
         const { content } = req.body;
@@ -452,76 +452,44 @@ router.put('/neodyme/api/dev/plugins/:pluginName/files/:fileName', ...devWrite, 
 
 // ---- System self-tests ----
 
-router.get('/neodyme/api/dev/system/tests', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/system/tests', ...gate('system.view'), async (req, res) => {
     try {
-        const XmppManager = require('../../src/manager/xmpp-manager');
-        const MatchmakerManager = require('../../src/manager/matchmaker-manager');
-        const ShopManager = require('../../src/manager/shop-manager');
-        const PluginManager = require('../../src/manager/plugin-manager');
-        const RedisManager = require('../../src/manager/redis-manager');
         const PlayerStatsService = require('../../src/service/api/player-stats-service');
 
-        const runCheck = async (id, name, fn) => {
-            const t0 = performance.now();
-            try {
-                const result = await fn();
-                return { id, name, status: result.status || 'ok', ms: Math.round(performance.now() - t0), message: result.message || 'Operational' };
-            } catch (err) {
-                return { id, name, status: 'error', ms: Math.round(performance.now() - t0), message: err.message };
-            }
-        };
+        const checks = await TestRegistry.runHealth();
+        const summary = TestRegistry.summarize(checks);
 
-        const checks = await Promise.all([
-            runCheck('http', 'HTTP Server', () => ({ status: 'ok', message: 'Online' })),
-            runCheck('database', 'Database', async () => {
-                const accounts = await DatabaseManager.getAllAccounts();
-                const type = DatabaseManager.getDatabaseType ? DatabaseManager.getDatabaseType() : 'unknown';
-                return { status: 'ok', message: `${accounts.length} accounts (${type})` };
-            }),
-            runCheck('xmpp', 'XMPP Service', () => {
-                if (!ConfigManager.get('xmppEnable')) return { status: 'disabled', message: 'Disabled in config' };
-                if (XmppManager.startError) return { status: 'error', message: XmppManager.startError };
-                if (!XmppManager.wss) return { status: 'error', message: 'Not running' };
-                return { status: 'ok', message: `${(XmppManager.clients || []).length} connected` };
-            }),
-            runCheck('matchmaking', 'Matchmaking', () => {
-                if (!ConfigManager.get('xmppEnable')) return { status: 'disabled', message: 'Disabled in config' };
-                if (XmppManager.startError) return { status: 'disabled', message: 'XMPP failed to start' };
-                const stats = MatchmakerManager.getStats ? MatchmakerManager.getStats() : { connectedClients: 0 };
-                return { status: 'ok', message: `${stats.connectedClients || 0} clients` };
-            }),
-            runCheck('shop', 'Shop System', () => {
-                if (!ConfigManager.get('autoShopRotation')) return { status: 'disabled', message: 'Disabled in config' };
-                if (ShopManager.startError) return { status: 'error', message: ShopManager.startError };
-                if (!ShopManager.isInitialized) return { status: 'error', message: 'Not initialized' };
-                return { status: 'ok', message: 'Initialized' };
-            }),
-            runCheck('plugins', 'Plugin System', () => {
-                const plugins = PluginManager.getPlugins ? PluginManager.getPlugins() : [];
-                return { status: 'ok', message: `${plugins.length} loaded` };
-            }),
-            runCheck('redis', 'Redis Cache', () => {
-                if (!RedisManager.enabled) return { status: 'disabled', message: 'Not enabled' };
-                if (!RedisManager.connected) return { status: 'error', message: 'Disconnected' };
-                return { status: 'ok', message: 'Connected' };
-            }),
-            runCheck('auth', 'Auth Service', () => ({ status: 'ok', message: 'Token valid' })),
-        ]);
+        PlayerStatsService.record(0, 0, 0, { passing: summary.passing, total: summary.total - summary.disabled }).catch(() => {});
 
-        const passing = checks.filter(c => c.status === 'ok').length;
-        const disabled = checks.filter(c => c.status === 'disabled').length;
-        const failing = checks.filter(c => c.status === 'error').length;
-        const total = checks.length;
-
-        PlayerStatsService.record(0, 0, 0, { passing, total: total - disabled }).catch(() => {});
-
-        return WebResponse.ok(res, { checks, summary: { total, passing, disabled, failing } });
+        return WebResponse.ok(res, { checks, summary, groups: TestRegistry.groups() });
     } catch (error) {
         return WebResponse.serverError(res, 'system tests', error);
     }
 });
 
-router.get('/neodyme/api/dev/system/history', ...dev, async (req, res) => {
+router.post('/neodyme/api/dev/system/tests/functional', ...gateWrite('tests.run'), async (req, res) => {
+    try {
+        const group = typeof req.body.group === 'string' && req.body.group ? req.body.group : undefined;
+        if (group && !TestRegistry.groups().some(g => g.name === group)) {
+            return WebResponse.badRequest(res, 'Unknown test group.');
+        }
+
+        const results = await TestRegistry.runFunctional({ group });
+        const summary = TestRegistry.summarize(results);
+
+        await AuditService.log('system.functional_tests', req.user.accountId, req.user.displayName, 'system', 'tests',
+            { group: group || 'all', ...summary }, req.ip);
+
+        return WebResponse.ok(res, { results, summary });
+    } catch (error) {
+        if (/already in progress/.test(error.message)) {
+            return WebResponse.badRequest(res, error.message);
+        }
+        return WebResponse.serverError(res, 'functional tests', error);
+    }
+});
+
+router.get('/neodyme/api/dev/system/history', ...gate('system.view'), async (req, res) => {
     try {
         const PlayerStatsService = require('../../src/service/api/player-stats-service');
         const hours = Math.min(72, parseInt(req.query.hours, 10) || 24);
@@ -530,7 +498,6 @@ router.get('/neodyme/api/dev/system/history', ...dev, async (req, res) => {
         return WebResponse.serverError(res, 'system history', error);
     }
 });
-
 
 const CONTENT_PAGES_PATH = path.join(__dirname, '../../content/pages/content-pages.json');
 const MOTD_PATH          = path.join(CONFIG_DIR, 'motd.json');
@@ -610,7 +577,7 @@ const invalidatePagesCache = () => {
     } catch (_) {}
 };
 
-router.get('/neodyme/api/dev/content/:scope/:section', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/content/:scope/:section', ...gate('content.edit'), async (req, res) => {
     try {
         const { scope, section } = req.params;
         const def = CONTENT_SECTIONS[scope];
@@ -667,7 +634,7 @@ const downloadJson = (url) => new Promise((resolve, reject) => {
     req.on('error', reject);
 });
 
-router.post('/neodyme/api/dev/content/reset', ...devWrite, async (req, res) => {
+router.post('/neodyme/api/dev/content/reset', ...gateWrite('content.edit'), async (req, res) => {
     try {
         const { scopes } = req.body || {};
         const requested = Array.isArray(scopes) && scopes.length > 0 ? scopes : Object.keys(RESET_SOURCES);
@@ -700,7 +667,7 @@ router.post('/neodyme/api/dev/content/reset', ...devWrite, async (req, res) => {
     }
 });
 
-router.put('/neodyme/api/dev/content/:scope/:section', ...devWrite, async (req, res) => {
+router.put('/neodyme/api/dev/content/:scope/:section', ...gateWrite('content.edit'), async (req, res) => {
     try {
         const { scope, section } = req.params;
         const { content } = req.body;
@@ -735,7 +702,7 @@ router.put('/neodyme/api/dev/content/:scope/:section', ...devWrite, async (req, 
 
 // ---- Email: SMTP status & templates (developer) ----
 
-router.get('/neodyme/api/dev/email/status', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/email/status', ...gate('email.manage'), async (req, res) => {
     try {
         const configured = EmailService.isConfigured();
         const payload = { configured, config: null, connection: null };
@@ -752,7 +719,7 @@ router.get('/neodyme/api/dev/email/status', ...dev, async (req, res) => {
     }
 });
 
-router.post('/neodyme/api/dev/email/verify', ...dev, async (req, res) => {
+router.post('/neodyme/api/dev/email/verify', ...gate('email.manage'), async (req, res) => {
     try {
         const result = await EmailService.verify();
         return WebResponse.ok(res, result);
@@ -761,7 +728,7 @@ router.post('/neodyme/api/dev/email/verify', ...dev, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/dev/email/templates', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/email/templates', ...gate('email.manage'), async (req, res) => {
     try {
         const templates = await EmailTemplateService.list();
         return WebResponse.ok(res, { templates, variables: EmailTemplateService.getVariableHelp() });
@@ -770,7 +737,7 @@ router.get('/neodyme/api/dev/email/templates', ...dev, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/dev/email/templates/:id', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/email/templates/:id', ...gate('email.manage'), async (req, res) => {
     try {
         const template = await EmailTemplateService.get(req.params.id);
         if (!template) {
@@ -782,7 +749,7 @@ router.get('/neodyme/api/dev/email/templates/:id', ...dev, async (req, res) => {
     }
 });
 
-router.put('/neodyme/api/dev/email/templates/:id', ...devWrite, async (req, res) => {
+router.put('/neodyme/api/dev/email/templates/:id', ...gateWrite('email.manage'), async (req, res) => {
     try {
         const template = await EmailTemplateService.save(req.params.id, req.body || {});
         LoggerService.log('info', `Email template '${template.id}' saved by ${req.user.displayName}`);
@@ -795,7 +762,7 @@ router.put('/neodyme/api/dev/email/templates/:id', ...devWrite, async (req, res)
     }
 });
 
-router.delete('/neodyme/api/dev/email/templates/:id', ...devWrite, async (req, res) => {
+router.delete('/neodyme/api/dev/email/templates/:id', ...gateWrite('email.manage'), async (req, res) => {
     try {
         const result = await EmailTemplateService.delete(req.params.id);
         if (!result.success) {
@@ -810,7 +777,7 @@ router.delete('/neodyme/api/dev/email/templates/:id', ...devWrite, async (req, r
 
 // ---- Email: HTML layouts (developer) ----
 
-router.get('/neodyme/api/dev/email/layouts', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/email/layouts', ...gate('email.manage'), async (req, res) => {
     try {
         const layouts = await EmailLayoutService.list();
         return WebResponse.ok(res, { layouts, slots: EmailLayoutService.getSlots() });
@@ -819,7 +786,7 @@ router.get('/neodyme/api/dev/email/layouts', ...dev, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/dev/email/layouts/:id', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/email/layouts/:id', ...gate('email.manage'), async (req, res) => {
     try {
         const layout = await EmailLayoutService.get(req.params.id);
         if (!layout) {
@@ -831,7 +798,7 @@ router.get('/neodyme/api/dev/email/layouts/:id', ...dev, async (req, res) => {
     }
 });
 
-router.put('/neodyme/api/dev/email/layouts/:id', ...devWrite, async (req, res) => {
+router.put('/neodyme/api/dev/email/layouts/:id', ...gateWrite('email.manage'), async (req, res) => {
     try {
         const result = await EmailLayoutService.save(req.params.id, (req.body || {}).html);
         LoggerService.log('info', `Email layout '${result.id}' saved by ${req.user.displayName}`);
@@ -844,7 +811,7 @@ router.put('/neodyme/api/dev/email/layouts/:id', ...devWrite, async (req, res) =
     }
 });
 
-router.delete('/neodyme/api/dev/email/layouts/:id', ...devWrite, async (req, res) => {
+router.delete('/neodyme/api/dev/email/layouts/:id', ...gateWrite('email.manage'), async (req, res) => {
     try {
         const result = await EmailLayoutService.delete(req.params.id);
         if (!result.success) {
@@ -859,7 +826,7 @@ router.delete('/neodyme/api/dev/email/layouts/:id', ...devWrite, async (req, res
 
 // Render a template (or ad-hoc template data) with sample variables, for preview.
 // Returns raw HTML so the panel can show it in an iframe.
-router.post('/neodyme/api/dev/email/preview', ...dev, async (req, res) => {
+router.post('/neodyme/api/dev/email/preview', ...gate('email.manage'), async (req, res) => {
     try {
         const body = req.body || {};
         let template;
@@ -902,7 +869,7 @@ function parseSelection(body) {
     return { roleLevels, accountIds, verifiedOnly };
 }
 
-router.post('/neodyme/api/dev/email/preview-count', ...adminWrite, async (req, res) => {
+router.post('/neodyme/api/dev/email/preview-count', ...gateWrite('email.send'), async (req, res) => {
     try {
         const count = await EmailCampaignService.previewCount(parseSelection(req.body || {}));
         return WebResponse.ok(res, { count });
@@ -911,7 +878,7 @@ router.post('/neodyme/api/dev/email/preview-count', ...adminWrite, async (req, r
     }
 });
 
-router.post('/neodyme/api/dev/email/campaign', ...adminWrite, async (req, res) => {
+router.post('/neodyme/api/dev/email/campaign', ...gateWrite('email.send'), async (req, res) => {
     try {
         const { templateId } = req.body || {};
         if (!templateId) {
@@ -934,7 +901,7 @@ router.post('/neodyme/api/dev/email/campaign', ...adminWrite, async (req, res) =
     }
 });
 
-router.get('/neodyme/api/dev/email/campaign/:id', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/email/campaign/:id', ...gate('email.manage'), async (req, res) => {
     try {
         const job = EmailCampaignService.getJob(req.params.id);
         if (!job) {
@@ -948,7 +915,7 @@ router.get('/neodyme/api/dev/email/campaign/:id', ...dev, async (req, res) => {
 
 // ---- Email: automation rules (developer) ----
 
-router.get('/neodyme/api/dev/email/automations', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/email/automations', ...gate('email.manage'), async (req, res) => {
     try {
         return WebResponse.ok(res, {
             rules: EmailAutomationService.list(),
@@ -959,7 +926,7 @@ router.get('/neodyme/api/dev/email/automations', ...dev, async (req, res) => {
     }
 });
 
-router.put('/neodyme/api/dev/email/automations/:id', ...devWrite, async (req, res) => {
+router.put('/neodyme/api/dev/email/automations/:id', ...gateWrite('email.manage'), async (req, res) => {
     try {
         const rule = await EmailAutomationService.upsert({ ...(req.body || {}), id: req.params.id });
         LoggerService.log('info', `Email automation '${rule.id}' saved by ${req.user.displayName}`);
@@ -972,7 +939,7 @@ router.put('/neodyme/api/dev/email/automations/:id', ...devWrite, async (req, re
     }
 });
 
-router.delete('/neodyme/api/dev/email/automations/:id', ...devWrite, async (req, res) => {
+router.delete('/neodyme/api/dev/email/automations/:id', ...gateWrite('email.manage'), async (req, res) => {
     try {
         const result = await EmailAutomationService.remove(req.params.id);
         if (!result.success) {

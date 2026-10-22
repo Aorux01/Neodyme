@@ -71,6 +71,15 @@ class ConfigManager {
 
             this.env = result.parsed || {};
 
+            if (!this.env.tfaKey) {
+                const tfaKey = crypto.randomBytes(32).toString('hex');
+                const current = fsSync.readFileSync(envPath, 'utf-8');
+                const separator = current === '' || current.endsWith('\n') ? '' : '\n';
+                await fs.writeFile(envPath, `${current}${separator}tfaKey=${tfaKey}\n`, 'utf-8');
+                this.env.tfaKey = tfaKey;
+                LoggerService.log('info', 'Generated tfaKey in .env (encrypts two-factor secrets, back it up with the rest of .env).');
+            }
+
             LoggerService.log('success', '.env file loaded successfully.');
         } catch (error) {
             LoggerService.log('error', `Failed to load .env file: ${error.message}`);

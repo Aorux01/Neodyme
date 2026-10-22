@@ -7,21 +7,21 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
     <header class="neodyme-header">
         <div class="header-container">
-            <a href="../index.html" class="neodyme-logo">N</a>
+            <a href="/" class="neodyme-logo">N</a>
 
             <nav class="neodyme-nav">
                 <ul class="nav-links">
-                    <li><a href="../index.html">HOME</a></li>
+                    <li><a href="/">HOME</a></li>
                     <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
-                    <li><a href="updates.html">UPDATES</a></li>
-                    <li><a href="shop.html">SHOP</a></li>
-                    <li><a href="docs/index.html">DOCS</a></li>
+                    <li><a href="/updates">UPDATES</a></li>
+                    <li><a href="/shop">SHOP</a></li>
+                    <li><a href="/docs">DOCS</a></li>
                 </ul>
             </nav>
 
@@ -33,7 +33,7 @@
     <div class="dashboard-container">
         <aside class="dashboard-sidebar">
             <nav class="sidebar-nav">
-                <a href="dashboard.html" class="nav-link">
+                <a href="/dashboard" class="nav-link">
                     <i class="fas fa-arrow-left"></i>
                     <span>Back to Dashboard</span>
                 </a>
@@ -73,13 +73,13 @@
                 </div>
 
                 <div class="mod-tabs">
-                    <button class="tab-btn active" onclick="showModTab('players')"><i class="fas fa-users"></i> Players</button>
-                    <button class="tab-btn" onclick="showModTab('tickets')"><i class="fas fa-ticket-alt"></i> Tickets <span class="badge badge-warning" id="mod-tickets-badge" style="display:none;">0</span></button>
-                    <button class="tab-btn" onclick="showModTab('reports')"><i class="fas fa-flag"></i> Reports <span class="badge badge-danger" id="mod-reports-badge" style="display:none;">0</span></button>
-                    <button class="tab-btn" onclick="showModTab('feedback')"><i class="fas fa-bug"></i> Feedback <span class="badge badge-warning" id="mod-feedback-badge" style="display:none;">0</span></button>
-                    <button class="tab-btn" onclick="showModTab('pending-codes')"><i class="fas fa-clock"></i> Pending</button>
-                    <button class="tab-btn" onclick="showModTab('all-codes')"><i class="fas fa-code"></i> All Codes</button>
-                    <button class="tab-btn" onclick="showModTab('code-stats')"><i class="fas fa-chart-bar"></i> Statistics</button>
+                    <button class="tab-btn active" data-cap="users.view" onclick="showModTab('players')"><i class="fas fa-users"></i> Players</button>
+                    <button class="tab-btn" data-cap="tickets.manage" onclick="showModTab('tickets')"><i class="fas fa-ticket-alt"></i> Tickets <span class="badge badge-warning" id="mod-tickets-badge" style="display:none;">0</span></button>
+                    <button class="tab-btn" data-cap="reports.manage" onclick="showModTab('reports')"><i class="fas fa-flag"></i> Reports <span class="badge badge-danger" id="mod-reports-badge" style="display:none;">0</span></button>
+                    <button class="tab-btn" data-cap="feedback.manage" onclick="showModTab('feedback')"><i class="fas fa-bug"></i> Feedback <span class="badge badge-warning" id="mod-feedback-badge" style="display:none;">0</span></button>
+                    <button class="tab-btn" data-cap="creators.manage" onclick="showModTab('pending-codes')"><i class="fas fa-clock"></i> Pending</button>
+                    <button class="tab-btn" data-cap="creators.manage" onclick="showModTab('all-codes')"><i class="fas fa-code"></i> All Codes</button>
+                    <button class="tab-btn" data-cap="creators.manage" onclick="showModTab('code-stats')"><i class="fas fa-chart-bar"></i> Statistics</button>
                     <button class="tab-btn" onclick="showModTab('commands')"><i class="fas fa-terminal"></i> Commands</button>
                 </div>
 
@@ -238,19 +238,19 @@
                 </div>
 
                 <div class="dev-tabs" style="flex-wrap:wrap;gap:4px;">
-                    <button class="tab-btn active" onclick="showDevTab('overview')"><i class="fas fa-tachometer-alt"></i> Overview</button>
-                    <button class="tab-btn" onclick="showDevTab('config')"><i class="fas fa-sliders-h"></i> Configuration</button>
-                    <button class="tab-btn" onclick="showDevTab('config-files')"><i class="fas fa-file-code"></i> Config Files</button>
-                    <button class="tab-btn" onclick="showDevTab('content')"><i class="fas fa-newspaper"></i> Content</button>
-                    <button class="tab-btn" onclick="showDevTab('assets')"><i class="fas fa-images"></i> Assets</button>
-                    <button class="tab-btn" onclick="showDevTab('shop')"><i class="fas fa-shopping-cart"></i> Shop <span class="tag-beta">BETA</span></button>
-                    <button class="tab-btn" onclick="showDevTab('email')"><i class="fas fa-envelope"></i> Email <span class="tag-beta">BETA</span></button>
-                    <button class="tab-btn" onclick="showDevTab('stats')"><i class="fas fa-chart-bar"></i> Statistics</button>
-                    <button class="tab-btn" onclick="showDevTab('logs')"><i class="fas fa-terminal"></i> Logs</button>
-                    <button class="tab-btn" onclick="showDevTab('plugins')"><i class="fas fa-plug"></i> Plugins</button>
+                    <button class="tab-btn active" data-cap="system.view,config.edit" onclick="showDevTab('overview')"><i class="fas fa-tachometer-alt"></i> Overview</button>
+                    <button class="tab-btn" data-cap="config.edit" onclick="showDevTab('config')"><i class="fas fa-sliders-h"></i> Configuration</button>
+                    <button class="tab-btn" data-cap="config.edit" onclick="showDevTab('config-files')"><i class="fas fa-file-code"></i> Config Files</button>
+                    <button class="tab-btn" data-cap="content.edit" onclick="showDevTab('content')"><i class="fas fa-newspaper"></i> Content</button>
+                    <button class="tab-btn" data-cap="assets.manage" onclick="showDevTab('assets')"><i class="fas fa-images"></i> Assets</button>
+                    <button class="tab-btn" data-cap="shop.edit" onclick="showDevTab('shop')"><i class="fas fa-shopping-cart"></i> Shop <span class="tag-beta">BETA</span></button>
+                    <button class="tab-btn" data-cap="email.manage" onclick="showDevTab('email')"><i class="fas fa-envelope"></i> Email <span class="tag-beta">BETA</span></button>
+                    <button class="tab-btn" data-cap="system.view" onclick="showDevTab('stats')"><i class="fas fa-chart-bar"></i> Statistics</button>
+                    <button class="tab-btn" data-cap="system.view" onclick="showDevTab('logs')"><i class="fas fa-terminal"></i> Logs</button>
+                    <button class="tab-btn" data-cap="plugins.manage" onclick="showDevTab('plugins')"><i class="fas fa-plug"></i> Plugins</button>
                     <button class="tab-btn" onclick="showDevTab('commands')"><i class="fas fa-terminal"></i> Commands</button>
-                    <button class="tab-btn" onclick="showDevTab('system')"><i class="fas fa-heartbeat"></i> System</button>
-                    <button class="tab-btn" onclick="showDevTab('monitor')"><i class="fas fa-chart-line"></i> Live Monitor</button>
+                    <button class="tab-btn" data-cap="system.view" onclick="showDevTab('system')"><i class="fas fa-heartbeat"></i> System</button>
+                    <button class="tab-btn" data-cap="system.view" onclick="showDevTab('monitor')"><i class="fas fa-chart-line"></i> Live Monitor</button>
                 </div>
 
                 <!-- Overview Tab -->
@@ -906,7 +906,7 @@
 
                             <div class="config-item" style="align-items:flex-start;flex-direction:column;gap:6px;margin-top:14px;">
                                 <label>Specific accounts (comma-separated displayNames or accountIds, optional)</label>
-                                <input type="text" id="email-send-accounts" class="form-input" placeholder="JojoM, 1a2b3c..." style="max-width:480px;">
+                                <input type="text" id="email-send-accounts" class="form-input" placeholder="Pseudo001, 1a2b3c..." style="max-width:480px;">
                             </div>
 
                             <div class="config-item" style="margin-top:14px;">
@@ -920,12 +920,12 @@
                             </div>
                         </div>
 
-                        <div id="email-campaign-progress" style="display:none;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:16px;">
+                        <div id="email-campaign-progress" style="display:none;background:var(--surface-2, #1b1726);border:1px solid var(--border, rgba(255,255,255,0.08));border-radius:10px;padding:16px;">
                             <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;">
                                 <span id="email-progress-label">Sending...</span>
                                 <span id="email-progress-stats" style="color:#999;"></span>
                             </div>
-                            <div style="height:10px;background:#0e0e12;border-radius:6px;overflow:hidden;">
+                            <div style="height:10px;background:var(--bg, #0c0a12);border-radius:6px;overflow:hidden;">
                                 <div id="email-progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#7c3aed,#a78bfa);transition:width .3s;"></div>
                             </div>
                         </div>
@@ -946,8 +946,8 @@
 
                     <!-- Preview modal (shared by templates) -->
                     <div id="email-preview-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9998;align-items:center;justify-content:center;padding:24px;">
-                        <div style="background:#17171d;border:1px solid #2a2a33;border-radius:12px;width:100%;max-width:660px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #2a2a33;">
+                        <div style="background:var(--surface, #15121d);border:1px solid var(--border, rgba(255,255,255,0.08));border-radius:12px;width:100%;max-width:660px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border, rgba(255,255,255,0.08));">
                                 <span style="font-weight:600;color:#ddd;"><i class="fas fa-eye"></i> Preview: <span id="email-preview-subject" style="color:#a78bfa;"></span></span>
                                 <button class="btn btn-sm btn-secondary" onclick="closeEmailPreview()"><i class="fas fa-times"></i> Close</button>
                             </div>
@@ -1019,7 +1019,7 @@
                             <button class="btn btn-secondary" onclick="loadConsoleLogs('dev-logs-output')"><i class="fas fa-sync"></i> Refresh</button>
                         </div>
                     </div>
-                    <div id="dev-logs-output" style="background:#0d0d0d;border:1px solid #333;border-radius:8px;padding:16px;font-family:monospace;font-size:12px;height:480px;overflow-y:auto;white-space:pre-wrap;color:#d4d4d4;">
+                    <div id="dev-logs-output" style="background:var(--bg, #0c0a12);border:1px solid var(--border-strong, rgba(255,255,255,0.14));border-radius:8px;padding:16px;font-family:monospace;font-size:12px;height:480px;overflow-y:auto;white-space:pre-wrap;color:#d4d4d4;">
                         <span style="color:#666;">Click Refresh to load logs...</span>
                     </div>
                 </div>
@@ -1046,7 +1046,7 @@
                 <!-- System Health Tab -->
                 <div id="dev-system" class="dev-tab-content" style="display: none;">
                     <!-- Overall status banner -->
-                    <div id="system-status-banner" style="display:flex;align-items:center;justify-content:space-between;background:#1e1e1e;border:1px solid #333;border-radius:10px;padding:16px 20px;margin-bottom:16px;">
+                    <div id="system-status-banner" style="display:flex;align-items:center;justify-content:space-between;background:var(--surface-2, #1b1726);border:1px solid var(--border-strong, rgba(255,255,255,0.14));border-radius:10px;padding:16px 20px;margin-bottom:16px;">
                         <div style="display:flex;align-items:center;gap:12px;">
                             <i id="system-status-icon" class="fas fa-circle-notch fa-spin" style="font-size:24px;color:#888;"></i>
                             <div>
@@ -1063,8 +1063,22 @@
                     <div id="system-checks-list" style="margin-bottom:24px;">
                         <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
                     </div>
+                    <!-- Functional tests -->
+                    <div style="margin-bottom:24px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+                            <div>
+                                <h4 style="margin:0;color:#aaa;font-size:14px;"><i class="fas fa-vial"></i> Functional Tests</h4>
+                                <div style="font-size:12px;color:#888;margin-top:2px;">Runs real scenarios (login, tokens, bans...) on throwaway accounts. Never runs automatically.</div>
+                            </div>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <select id="system-functional-group" class="form-input" style="width:auto;"><option value="">All groups</option></select>
+                                <button class="btn btn-primary" id="system-functional-btn" onclick="runFunctionalTests()"><i class="fas fa-vial"></i> Run functional tests</button>
+                            </div>
+                        </div>
+                        <div id="system-functional-list"></div>
+                    </div>
                     <!-- History chart -->
-                    <div style="background:#1e1e1e;border:1px solid #333;border-radius:10px;padding:16px;">
+                    <div style="background:var(--surface-2, #1b1726);border:1px solid var(--border-strong, rgba(255,255,255,0.14));border-radius:10px;padding:16px;">
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
                             <h4 style="margin:0;color:#aaa;font-size:14px;"><i class="fas fa-chart-area"></i> System Health History</h4>
                             <div style="display:flex;gap:6px;">
@@ -1107,21 +1121,21 @@
                         </div>
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px;">
-                        <div style="background:#1e1e1e;border-radius:8px;padding:16px;border:1px solid #333;">
+                        <div style="background:var(--surface-2, #1b1726);border-radius:8px;padding:16px;border:1px solid var(--border-strong, rgba(255,255,255,0.14));">
                             <h4 style="margin:0 0 12px;color:#8b5cf6;">CPU % (last 20 polls)</h4>
                             <canvas id="chart-cpu" height="120"></canvas>
                         </div>
-                        <div style="background:#1e1e1e;border-radius:8px;padding:16px;border:1px solid #333;">
+                        <div style="background:var(--surface-2, #1b1726);border-radius:8px;padding:16px;border:1px solid var(--border-strong, rgba(255,255,255,0.14));">
                             <h4 style="margin:0 0 12px;color:#8b5cf6;">RAM % (last 20 polls)</h4>
                             <canvas id="chart-ram" height="120"></canvas>
                         </div>
                     </div>
-                    <div style="background:#1e1e1e;border-radius:8px;padding:16px;border:1px solid #333;margin-top:24px;">
+                    <div style="background:var(--surface-2, #1b1726);border-radius:8px;padding:16px;border:1px solid var(--border-strong, rgba(255,255,255,0.14));margin-top:24px;">
                         <h4 style="margin:0 0 12px;color:#8b5cf6;">Active Players (last 20 polls)</h4>
                         <canvas id="chart-players" height="80"></canvas>
                     </div>
 
-                    <div style="background:#1e1e1e;border-radius:8px;padding:16px;border:1px solid #333;margin-top:24px;">
+                    <div style="background:var(--surface-2, #1b1726);border-radius:8px;padding:16px;border:1px solid var(--border-strong, rgba(255,255,255,0.14));margin-top:24px;">
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
                             <h4 style="margin:0;color:#8b5cf6;"><i class="fas fa-comments" style="margin-right:8px;"></i>XMPP Connected Clients</h4>
                             <button class="btn btn-sm btn-secondary" onclick="loadXmppClients()"><i class="fas fa-sync"></i> Refresh</button>
@@ -1140,12 +1154,13 @@
                 <div id="admin-cmd-result" class="alert" style="display:none;margin-bottom:12px;"></div>
 
                 <div class="admin-tabs" style="flex-wrap:wrap;gap:4px;">
-                    <button class="tab-btn active" onclick="showAdminTab('users')"><i class="fas fa-users"></i> Users</button>
-                    <button class="tab-btn" onclick="showAdminTab('stats')"><i class="fas fa-chart-bar"></i> Statistics</button>
-                    <button class="tab-btn" onclick="showAdminTab('audit')"><i class="fas fa-history"></i> Audit Log</button>
+                    <button class="tab-btn active" data-cap="users.manage" onclick="showAdminTab('users')"><i class="fas fa-users"></i> Users</button>
+                    <button class="tab-btn" data-cap="stats.view" onclick="showAdminTab('stats')"><i class="fas fa-chart-bar"></i> Statistics</button>
+                    <button class="tab-btn" data-cap="audit.view" onclick="showAdminTab('audit')"><i class="fas fa-history"></i> Audit Log</button>
                     <button class="tab-btn" onclick="showAdminTab('commands')"><i class="fas fa-terminal"></i> Commands</button>
-                    <button class="tab-btn" onclick="showAdminTab('whitelist')"><i class="fas fa-user-shield"></i> Whitelist</button>
-                    <button class="tab-btn" onclick="showAdminTab('settings')"><i class="fas fa-cog"></i> Settings</button>
+                    <button class="tab-btn" data-cap="whitelist.manage" onclick="showAdminTab('whitelist')"><i class="fas fa-user-shield"></i> Whitelist</button>
+                    <button class="tab-btn" data-cap="settings.edit" onclick="showAdminTab('settings')"><i class="fas fa-cog"></i> Settings</button>
+                    <button class="tab-btn" data-cap="permissions.manage" onclick="showAdminTab('permissions')"><i class="fas fa-user-lock"></i> Permissions</button>
                 </div>
 
                 <div id="admin-users" class="admin-tab-content">
@@ -1269,6 +1284,9 @@
                             <option value="delete_ticket">Delete Ticket</option>
                             <option value="approve_code">Approve Code</option>
                             <option value="reject_code">Reject Code</option>
+                            <option value="force_logout">Force Logout</option>
+                            <option value="admin_password_reset">Admin Password Reset</option>
+                            <option value="capabilities.updated">Permissions Changed</option>
                             <option value="force_shop_rotation">Shop Rotation</option>
                             <option value="toggle_maintenance">Maintenance</option>
                         </select>
@@ -1280,6 +1298,9 @@
                         </button>
                         <button class="btn btn-secondary" onclick="auditCurrentPage=1;loadAuditLog()">
                             <i class="fas fa-sync"></i> Refresh
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportAuditCsv()">
+                            <i class="fas fa-file-csv"></i> Export CSV
                         </button>
                         <button class="btn btn-secondary" onclick="clearAuditFilters()">
                             <i class="fas fa-times"></i> Clear
@@ -1310,6 +1331,18 @@
                     <div id="admin-commands-list">
                         <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading commands...</div>
                     </div>
+                </div>
+
+                <div id="admin-permissions" class="admin-tab-content" style="display: none;">
+                    <div style="margin-bottom:14px;color:#aaa;font-size:13px;line-height:1.6;">
+                        Roles give a default set of permissions. Here you can allow one more permission to a single account, or forbid one it would normally have. A denial always wins.
+                    </div>
+                    <div class="admin-search" style="gap:8px;margin-bottom:14px;">
+                        <input type="text" id="perm-search" class="form-input" placeholder="Search a player by name, email or id (empty shows staff and adjusted accounts)" onkeydown="if(event.key==='Enter')loadPermissionUsers()">
+                        <button class="btn btn-primary" onclick="loadPermissionUsers()"><i class="fas fa-search"></i> Search</button>
+                    </div>
+                    <div id="perm-users" style="margin-bottom:20px;"></div>
+                    <div id="perm-editor" style="display:none;"></div>
                 </div>
 
                 <div id="admin-settings" class="admin-tab-content" style="display: none;">
@@ -1390,12 +1423,12 @@
                     <div class="content-header" style="margin-top:24px;">
                         <h3>Player Activity Over Time</h3>
                     </div>
-                    <div style="background:#1e1e1e;border:1px solid #333;border-radius:10px;padding:16px;">
+                    <div style="background:var(--surface-2, #1b1726);border:1px solid var(--border-strong, rgba(255,255,255,0.14));border-radius:10px;padding:16px;">
                         <canvas id="chart-player-stats" height="100"></canvas>
                         <div id="player-stats-empty" style="display:none;text-align:center;color:#666;padding:24px;font-size:13px;">
                             <i class="fas fa-chart-line"></i> No data yet - stats are recorded every 5 minutes after server start.
                         </div>
-                        <div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid #2a2a2a;">
+                        <div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--border, rgba(255,255,255,0.08));">
                             <button class="btn btn-sm btn-secondary" onclick="loadPlayerStatsChart('1h')"  id="pstat-1h">Last hour</button>
                             <button class="btn btn-sm btn-secondary" onclick="loadPlayerStatsChart('24h')" id="pstat-24h">24h</button>
                             <button class="btn btn-sm btn-secondary" onclick="loadPlayerStatsChart('1w')"  id="pstat-1w">1 week</button>
@@ -1446,21 +1479,21 @@
         </main>
     </div>
 
-    <script src="../js/common.js"></script>
-    <script src="../js/header.js"></script>
-    <script src="../js/staff-panel.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/header.js"></script>
+    <script src="/js/staff-panel.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="../js/admin-panel.js"></script>
-    <script src="../js/assets-manager.js"></script>
-    <script src="../js/content-editor.js"></script>
-    <script src="../js/shop-editor.js"></script>
+    <script src="/js/admin-panel.js"></script>
+    <script src="/js/assets-manager.js"></script>
+    <script src="/js/content-editor.js"></script>
+    <script src="/js/shop-editor.js"></script>
     <script>
         // Staff Panel gate: only moderation/developer/admin staff may view this page.
         // Reuses the same /neodyme/api/user/role endpoint as the dashboard.
         (async function staffGate() {
             try {
                 const res = await fetch('/neodyme/api/user/role', { credentials: 'include' });
-                if (!res.ok) { window.location.href = 'dashboard.html'; return; }
+                if (!res.ok) { window.location.href = '/dashboard'; return; }
                 const data = await res.json();
                 const panels = data.panels || {};
                 const anyStaff = panels.moderation || panels.developer || panels.admin;
@@ -1469,7 +1502,7 @@
                     document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
                     const denied = document.getElementById('staff-access-denied');
                     if (denied) denied.style.display = 'block';
-                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+                    setTimeout(() => { window.location.href = '/dashboard'; }, 2000);
                     return;
                 }
 
@@ -1478,11 +1511,27 @@
                 if (panels.developer)  document.getElementById('nav-developer').style.display  = 'flex';
                 if (panels.admin)      document.getElementById('nav-admin').style.display      = 'flex';
 
+                // Hide the tabs this account has no permission for.
+                window.staffCaps = new Set(data.capabilities || []);
+                document.querySelectorAll('[data-cap]').forEach(el => {
+                    const needed = el.dataset.cap.split(',');
+                    if (!needed.some(cap => window.staffCaps.has(cap))) el.style.display = 'none';
+                });
+
                 // Open the first panel the user has access to.
                 const first = panels.moderation ? 'moderation' : (panels.developer ? 'developer' : 'admin');
                 if (typeof showSection === 'function') showSection(first);
+
+                // A hidden default tab is replaced by the first visible one.
+                document.querySelectorAll('.mod-tabs, .dev-tabs, .admin-tabs').forEach(bar => {
+                    const active = bar.querySelector('.tab-btn.active');
+                    if (active && active.style.display === 'none') {
+                        const firstVisible = [...bar.querySelectorAll('.tab-btn')].find(b => b.style.display !== 'none');
+                        if (firstVisible) firstVisible.click();
+                    }
+                });
             } catch (err) {
-                window.location.href = 'dashboard.html';
+                window.location.href = '/dashboard';
             }
         })();
     </script>

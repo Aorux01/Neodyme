@@ -1,0 +1,12 @@
+{
+  "id": "magic-link",
+  "system": true,
+  "name": "Magic Link",
+  "description": "Sent when a player asks for a sign-in link instead of typing a password.",
+  "layout": "default",
+  "subject": "Your {{serverName}} sign-in link",
+  "heading": "Sign in to {{serverName}}",
+  "body": "Click the button below to sign in as {{displayName}}. This link expires in {{expiresIn}} and works once.<br><br><a href=\"{{actionUrl}}\" style=\"display:inline-block;background:#7c3aed;color:#ffffff;text-decoration:none;font-weight:600;font-size:14px;padding:12px 28px;border-radius:8px;\">Sign in</a><br><br>If the button does not work, copy this link into your browser:<br><span style=\"word-break:break-all;color:#a78bfa;\">{{actionUrl}}</span>",
+  "text": "Sign in to {{serverName}}: {{actionUrl}} (expires in {{expiresIn}})",
+  "footerNote": "If you did not ask for this link, ignore this email and nobody will be signed in."
+}

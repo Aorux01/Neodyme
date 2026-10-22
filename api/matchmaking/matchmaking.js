@@ -84,7 +84,8 @@ router.get('/fortnite/api/game/v2/matchmakingservice/ticket/player/:accountId', 
         const signedPayload = MatchmakerService.signPayload(payload);
  
         const xmppPort = ConfigManager.get('xmppPort') || 3000;
-        const wsUrl = `ws://127.0.0.1:${xmppPort}`;
+        const scheme = String(ConfigManager.get('xmppProtocol', 'ws')).toLowerCase() === 'wss' ? 'wss' : 'ws';
+        const wsUrl = `${scheme}://${ConfigManager.get('xmppHost') || '127.0.0.1'}:${xmppPort}`;
  
         res.status(200).json({
             serviceUrl: wsUrl,

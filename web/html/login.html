@@ -7,11 +7,11 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-    <a href="../index.html" class="back-home">
+    <a href="/" class="back-home">
         <i class="fas fa-arrow-left"></i> Back to Home
     </a>
 
@@ -34,6 +34,20 @@
                 <span id="alert-message"></span>
             </div>
 
+            <form id="mfa-form" style="display:none;">
+                <div class="form-group">
+                    <label for="mfa-code" class="form-label" id="mfa-label">Authentication Code</label>
+                    <input type="text" id="mfa-code" class="form-input" placeholder="123456 or a backup code" required autocomplete="one-time-code" maxlength="32">
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="mfa-btn" data-original-text="VERIFY">VERIFY</button>
+
+                <div class="signup-link" style="margin-top:16px;">
+                    <a href="#" id="mfa-email-link" style="display:none;">Email me a code instead</a>
+                    <a href="#" id="mfa-restart-link">Start over</a>
+                </div>
+            </form>
+
             <form id="login-form">
                 <div class="form-group">
                     <label for="email" class="form-label">Email Address</label>
@@ -50,26 +64,31 @@
                         <input type="checkbox" id="remember-me">
                         <label for="remember-me">Remember me</label>
                     </div>
+                    <a href="/forgot-password" class="form-link" id="forgot-link" style="display:none;">Forgot password?</a>
                 </div>
 
                 <button type="submit" class="btn btn-primary" id="login-btn" data-original-text="SIGN IN">SIGN IN</button>
             </form>
 
+            <button type="button" class="btn btn-secondary" id="magic-btn" data-original-text="EMAIL ME A SIGN-IN LINK" style="display:none;margin-top:12px;">EMAIL ME A SIGN-IN LINK</button>
+
+            <button type="button" class="btn btn-secondary" id="discord-btn" style="display:none;margin-top:12px;"><i class="fab fa-discord"></i> CONTINUE WITH DISCORD</button>
+
             <div class="divider">
                 <span>OR</span>
             </div>
 
-            <button class="btn btn-secondary" onclick="window.location.href='register.html'">
+            <button class="btn btn-secondary" onclick="window.location.href='/register'">
                 CREATE ACCOUNT
             </button>
 
             <div class="signup-link">
-                Need an account? <a href="register.html">Register here</a>
+                Need an account? <a href="/register">Register here</a>
             </div>
         </div>
     </div>
 
-    <script src="../js/common.js"></script>
-    <script src="../js/login.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/login.js"></script>
 </body>
 </html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - Neodyme</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body data-page="verify-email">
+    <a href="/login" class="back-home">
+        <i class="fas fa-arrow-left"></i> Back to Sign In
+    </a>
+
+    <div class="login-container">
+        <div class="login-sidebar">
+            <div class="sidebar-content">
+                <div class="neodyme-logo-large">N</div>
+                <h1 class="sidebar-title">Neodyme Server</h1>
+                <p class="sidebar-subtitle">One last step before you can sign in</p>
+            </div>
+        </div>
+
+        <div class="login-form-container">
+            <div class="form-header">
+                <h2 class="form-title">Verify Email</h2>
+                <p class="form-subtitle">Checking your verification link</p>
+            </div>
+
+            <div class="alert alert-error" id="alert">
+                <span id="alert-message"></span>
+            </div>
+
+            <div class="alert alert-info" id="verify-status" style="display:block;">
+                <i class="fas fa-spinner fa-spin"></i> Verifying your email address...
+            </div>
+
+            <form id="resend-form" style="display:none;">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required autocomplete="email">
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submit-btn" data-original-text="SEND A NEW LINK">SEND A NEW LINK</button>
+            </form>
+
+            <div class="signup-link">
+                Already verified? <a href="/login">Sign in</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/common.js"></script>
+    <script src="/js/recovery.js"></script>
+</body>
+</html>

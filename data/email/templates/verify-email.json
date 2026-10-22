@@ -1,0 +1,12 @@
+{
+  "id": "verify-email",
+  "system": true,
+  "name": "Verify Email",
+  "description": "Sent after sign up when email verification is required, and when a new link is requested.",
+  "layout": "default",
+  "subject": "Verify your email for {{serverName}}",
+  "heading": "Confirm your email address, {{displayName}}",
+  "body": "Click the button below to verify your email address. This link expires in {{expiresIn}}.<br><br><a href=\"{{actionUrl}}\" style=\"display:inline-block;background:#7c3aed;color:#ffffff;text-decoration:none;font-weight:600;font-size:14px;padding:12px 28px;border-radius:8px;\">Verify email</a><br><br>If the button does not work, copy this link into your browser:<br><span style=\"word-break:break-all;color:#a78bfa;\">{{actionUrl}}</span>",
+  "text": "Verify your email address for {{serverName}}: {{actionUrl}} (expires in {{expiresIn}})",
+  "footerNote": "You received this email because an account was created with this address on {{serverName}}. If this was not you, you can ignore it."
+}

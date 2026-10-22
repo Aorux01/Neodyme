@@ -578,6 +578,30 @@ class DatabaseManager {
         return await this.getDatabaseInstance().updateAccount(accountId, updates);
     }
 
+    static async updateSecurityFields(accountId, fields) {
+        return await this.getDatabaseInstance().updateSecurityFields(accountId, fields);
+    }
+
+    static async getAccountLinks(accountId) {
+        return await this.getDatabaseInstance().getAccountLinks(accountId);
+    }
+
+    static async findAccountLink(provider, providerId) {
+        return await this.getDatabaseInstance().findAccountLink(provider, providerId);
+    }
+
+    static async addAccountLink(link) {
+        return await this.getDatabaseInstance().addAccountLink(link);
+    }
+
+    static async removeAccountLink(accountId, provider) {
+        return await this.getDatabaseInstance().removeAccountLink(accountId, provider);
+    }
+
+    static async resetPassword(accountId, newPassword) {
+        return await this.getDatabaseInstance().resetPassword(accountId, newPassword);
+    }
+
     static async updatePassword(accountId, currentPassword, newPassword) {
         return await this.getDatabaseInstance().updatePassword(accountId, currentPassword, newPassword);
     }

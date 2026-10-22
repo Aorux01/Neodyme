@@ -7,28 +7,28 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/updates.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/updates.css">
 </head>
 <body>
     <header class="neodyme-header">
         <div class="header-container">
-            <a href="../index.html" class="neodyme-logo">N</a>
+            <a href="/" class="neodyme-logo">N</a>
 
             <nav class="neodyme-nav">
                 <ul class="nav-links">
-                    <li><a href="../index.html">HOME</a></li>
+                    <li><a href="/">HOME</a></li>
                     <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
                     <li><a href="#" class="active">UPDATES</a></li>
-                    <li><a href="shop.html" target="_blank">SHOP</a></li>
-                    <li><a href="status.html">STATUS</a></li>
-                    <li><a href="docs/index.html">DOCS</a></li>
+                    <li><a href="/shop" target="_blank">SHOP</a></li>
+                    <li><a href="/status">STATUS</a></li>
+                    <li><a href="/docs">DOCS</a></li>
                 </ul>
             </nav>
 
             <div class="header-actions">
-                <a href="login.html" class="btn btn-secondary">SIGN IN</a>
-                <a href="register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+                <a href="/login" class="btn btn-secondary">SIGN IN</a>
+                <a href="/register" class="btn btn-primary">CREATE ACCOUNT</a>
             </div>
         </div>
     </header>
@@ -42,6 +42,7 @@
         <div class="updates-layout">
             <!-- Left: version list -->
             <aside class="updates-sidebar">
+                <div class="updates-toolbar" id="version-toolbar"></div>
                 <div class="updates-sidebar-inner" id="version-list">
                     <!-- Populated by JS -->
                 </div>
@@ -57,7 +58,7 @@
     <script>
     </script>
 
-    <script src="../js/common.js"></script>
-    <script src="../js/updates.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/updates.js"></script>
 </body>
 </html>

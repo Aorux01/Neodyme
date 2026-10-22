@@ -82,7 +82,7 @@
 
 .services-card-header {
     padding: 14px 20px;
-    border-bottom: 1px solid #2a2a2a;
+    border-bottom: 1px solid var(--border, rgba(255,255,255,0.08));
     font-size: 12px;
     font-weight: 600;
     color: #666;
@@ -95,7 +95,7 @@
     align-items: center;
     gap: 14px;
     padding: 14px 20px;
-    border-bottom: 1px solid #1e1e1e;
+    border-bottom: 1px solid var(--surface-2, #1b1726);
 }
 
 .service-row:last-child {
@@ -178,8 +178,8 @@
 .refresh-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px; background: #1e1e1e;
-    border: 1px solid #333;
+    gap: 6px; background: var(--surface-2, #1b1726);
+    border: 1px solid var(--border-strong, rgba(255,255,255,0.14));
     border-radius: 20px;
     padding: 4px 12px;
     font-size: 11px;

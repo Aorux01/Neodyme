@@ -45,14 +45,17 @@ class CloudStorageManager {
         
         const xmppHost = ConfigManager.get('xmppHost') || '127.0.0.1';
 
+        const secure = String(ConfigManager.get('xmppProtocol', 'ws')).toLowerCase() === 'wss';
+        const scheme = secure ? 'wss' : 'ws';
+
         let content = `[OnlineSubsystemMcp.Xmpp]
-bUseSSL=false
-ServerAddr="ws://${xmppHost}"
+bUseSSL=${secure}
+ServerAddr="${scheme}://${xmppHost}"
 ServerPort=${xmppPort}
 
 [OnlineSubsystemMcp.Xmpp Prod]
-bUseSSL=false
-ServerAddr="ws://${xmppHost}"
+bUseSSL=${secure}
+ServerAddr="${scheme}://${xmppHost}"
 ServerPort=${xmppPort}
 
 [OnlineSubsystemMcp.OnlineWaitingRoomMcp]

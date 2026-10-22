@@ -293,7 +293,7 @@ async function loadAdminPlugins(containerId) {
             const loadedPlugin = loaded.find(p => p.name.toLowerCase() === name.toLowerCase());
             const safeName     = escHtml(name);
             return `
-            <div class="plugin-row" style="background:#1e1e1e;border:1px solid #333;border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+            <div class="plugin-row" style="background:var(--surface-2, #1b1726);border:1px solid var(--border-strong, rgba(255,255,255,0.14));border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:8px;">
                 <div style="flex:1;min-width:0;">
                     <strong style="color:#fff;">${safeName}</strong>
                     ${loadedPlugin ? `<span style="color:#666;font-size:12px;"> v${escHtml(loadedPlugin.version || '?')}</span>` : ''}
@@ -356,7 +356,7 @@ async function openPluginConfig(pluginName, containerId) {
 
         const div = document.createElement('div');
         div.id = panelId;
-        div.style.cssText = 'background:#161616;border:1px solid #444;border-radius:8px;padding:12px 16px;margin-bottom:8px;';
+        div.style.cssText = 'background:var(--surface, #15121d);border:1px solid #444;border-radius:8px;padding:12px 16px;margin-bottom:8px;';
         div.innerHTML = `
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
                 <strong style="color:#8b5cf6;font-size:13px;"><i class="fas fa-folder-open"></i>&nbsp;${escHtml(pluginName)} - Config Files</strong>
@@ -560,9 +560,9 @@ function renderCmdSections(sections) {
         const complex    = cmds.filter(c =>  c.args && c.args.length  >  0);
 
         const simpleButtons = simple.map(({ label, cmd, danger }) => {
-            const bg = danger ? '#3b0808' : '#1e1e1e';
-            const bc = danger ? '#7f1d1d' : '#2d2d2d';
-            const tc = danger ? '#fca5a5' : '#c4c4c4';
+            const bg = danger ? 'rgba(239, 68, 68, 0.16)' : 'var(--surface-2, #1b1726)';
+            const bc = danger ? 'rgba(239, 68, 68, 0.45)' : 'var(--border-strong, rgba(255,255,255,0.14))';
+            const tc = danger ? '#fca5a5' : 'var(--text, #f4f2f8)';
             const oc = `runPanelCmd('${escHtml(cmd)}', [])`;
             return `<button onclick="${oc}"
                 style="display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -581,9 +581,9 @@ function renderCmdSections(sections) {
             ).join('');
             const btnClass = danger ? 'btn-danger' : 'btn-primary';
             const oc       = `runPanelCmd('${escHtml(cmd)}', [${(args||[]).map(a => `'${a.id}'`).join(',')}])`;
-            return `<div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;
+            return `<div style="background:var(--surface-2, #1b1726);border:1px solid var(--border, rgba(255,255,255,0.08));border-radius:8px;
                                padding:10px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <span style="color:#999;font-size:12px;font-weight:600;white-space:nowrap;min-width:110px;">${escHtml(label)}</span>
+                <span style="color:var(--muted, #a39fb3);font-size:12px;font-weight:600;white-space:nowrap;min-width:110px;">${escHtml(label)}</span>
                 ${inputs}
                 <button class="btn btn-sm ${btnClass}" onclick="${oc}" style="white-space:nowrap;">
                     <i class="fas fa-play"></i> Run
@@ -595,7 +595,7 @@ function renderCmdSections(sections) {
         const complexSection = complex.length > 0 ? `<div style="display:flex;flex-direction:column;gap:6px;">${complexRows}</div>` : '';
 
         return `
-        <div style="background:#141414;border:1px solid #272727;border-left:3px solid ${escHtml(iconColor)};border-radius:12px;padding:16px 18px;margin-bottom:12px;">
+        <div style="background:var(--surface, #15121d);border:1px solid var(--border, rgba(255,255,255,0.08));border-left:3px solid ${escHtml(iconColor)};border-radius:12px;padding:16px 18px;margin-bottom:12px;">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
                 <i class="fas ${escHtml(icon)}" style="color:${escHtml(iconColor)};font-size:14px;"></i>
                 <span style="color:#ccc;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">${escHtml(cat)}</span>
@@ -641,6 +641,7 @@ function showAdminTab(tab) {
     if (tab === 'audit')    { auditCurrentPage = 1; loadAuditLog(); }
     if (tab === 'stats')    { loadAdminDetailedStats(); loadPlayerStatsChart('24h'); loadAdminWebSettings(); }
     if (tab === 'settings') loadAdminWebSettings();
+    if (tab === 'permissions') loadPermissionUsers();
     if (tab === 'commands') loadAdminCommands();
     if (tab === 'whitelist') loadWhitelist();
 
@@ -687,7 +688,7 @@ async function loadWhitelist() {
             const name = entry.displayName
                 ? escHtml(entry.displayName)
                 : '<span style="color:#fbbf24;">&lt;unknown account&gt;</span>';
-            return `<div class="user-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;margin-bottom:6px;">
+            return `<div class="user-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--surface-2, #1b1726);border:1px solid var(--border, rgba(255,255,255,0.08));border-radius:8px;margin-bottom:6px;">
                 <div>
                     <div style="font-weight:600;color:#ddd;">${name}</div>
                     <div style="font-size:11px;color:#777;font-family:monospace;">${escHtml(entry.accountId)}</div>
@@ -1138,7 +1139,7 @@ function renderEmailAutomationList() {
             ? '<span style="color:#4ade80;font-size:12px;"><i class="fas fa-circle" style="font-size:8px;"></i> enabled</span>'
             : '<span style="color:#777;font-size:12px;"><i class="fas fa-circle" style="font-size:8px;"></i> disabled</span>';
         const cronInfo = r.trigger === 'cron' ? ` <code style="font-size:11px;">${escHtml(r.cron || '')}</code>` : '';
-        return `<div class="user-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;margin-bottom:6px;">
+        return `<div class="user-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--surface-2, #1b1726);border:1px solid var(--border, rgba(255,255,255,0.08));border-radius:8px;margin-bottom:6px;">
             <div>
                 <div style="font-weight:600;color:#ddd;">${escHtml(r.name || r.id)} ${status}</div>
                 <div style="font-size:11px;color:#888;">on <code style="font-size:11px;">${escHtml(r.trigger)}</code>${cronInfo} &rarr; template <code style="font-size:11px;">${escHtml(r.templateId)}</code></div>
@@ -1540,6 +1541,64 @@ const STATUS_COLORS = { ok: '#10b981', degraded: '#f59e0b', error: '#ef4444', di
 const STATUS_ICONS  = { ok: 'fa-check-circle', degraded: 'fa-exclamation-circle', error: 'fa-times-circle', disabled: 'fa-circle' };
 const STATUS_LABELS = { ok: 'Operational', degraded: 'Degraded', error: 'Outage', disabled: 'Disabled' };
 
+function renderCheckRow(c) {
+    const color = STATUS_COLORS[c.status] || '#888';
+    const icon  = STATUS_ICONS[c.status]  || 'fa-question-circle';
+    const label = STATUS_LABELS[c.status]  || c.status;
+    const ms    = c.status === 'disabled' ? 'N/A' : `${c.ms}ms`;
+    return `<div style="display:flex;align-items:center;gap:12px;background:var(--surface-2, #1b1726);border:1px solid var(--border, rgba(255,255,255,0.08));border-radius:8px;padding:12px 16px;margin-bottom:6px;">
+        <i class="fas ${icon}" style="font-size:18px;color:${color};min-width:20px;text-align:center;"></i>
+        <div style="flex:1;min-width:0;">
+            <strong style="color:#fff;font-size:14px;">${escHtml(c.name)}</strong>
+            <span style="color:#888;font-size:12px;margin-left:8px;">${escHtml(c.message || '')}</span>
+        </div>
+        <span style="color:#666;font-size:11px;min-width:36px;text-align:right;">${ms}</span>
+        <span style="color:${color};font-size:12px;font-weight:600;min-width:90px;text-align:right;">${label}</span>
+    </div>`;
+}
+
+function populateFunctionalGroups(groups) {
+    const select = document.getElementById('system-functional-group');
+    if (!select) return;
+    const current = select.value;
+    const options = groups.filter(g => g.functional > 0)
+        .map(g => `<option value="${escHtml(g.name)}">${escHtml(g.name)} (${g.functional})</option>`);
+    select.innerHTML = `<option value="">All groups</option>${options.join('')}`;
+    select.value = current;
+}
+
+async function runFunctionalTests() {
+    const btn    = document.getElementById('system-functional-btn');
+    const listEl = document.getElementById('system-functional-list');
+    const group  = (document.getElementById('system-functional-group') || {}).value || '';
+    if (!btn || !listEl) return;
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running...';
+    listEl.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Running functional tests on throwaway accounts...</div>';
+
+    try {
+        const res  = await secureFetch('/neodyme/api/dev/system/tests/functional', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ group })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(apiError(data, 'Functional tests failed'));
+
+        const { results, summary } = data;
+        const color = summary.failing === 0 ? '#10b981' : '#ef4444';
+        listEl.innerHTML = `<div style="color:${color};font-size:13px;font-weight:600;margin-bottom:8px;">
+                ${summary.passing}/${summary.total} passed${summary.failing ? `, ${summary.failing} failed` : ''}${summary.degraded ? `, ${summary.degraded} with warnings` : ''}
+            </div>${results.map(renderCheckRow).join('')}`;
+    } catch (err) {
+        listEl.innerHTML = `<div class="empty-state"><p style="color:#ef4444;">${escHtml(err.message)}</p></div>`;
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-vial"></i> Run functional tests';
+    }
+}
+
 async function loadSystemTests() {
     const checksEl = document.getElementById('system-checks-list');
     if (!checksEl) return;
@@ -1573,22 +1632,8 @@ async function loadSystemTests() {
             iconEl.style.color = summary.failing === 0 ? '#10b981' : (summary.failing > 2 ? '#ef4444' : '#f59e0b');
         }
 
-        // Render rows
-        checksEl.innerHTML = checks.map(c => {
-            const color = STATUS_COLORS[c.status] || '#888';
-            const icon  = STATUS_ICONS[c.status]  || 'fa-question-circle';
-            const label = STATUS_LABELS[c.status]  || c.status;
-            const ms    = c.status === 'disabled' ? 'N/A' : `${c.ms}ms`;
-            return `<div style="display:flex;align-items:center;gap:12px;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:8px;padding:12px 16px;margin-bottom:6px;">
-                <i class="fas ${icon}" style="font-size:18px;color:${color};min-width:20px;text-align:center;"></i>
-                <div style="flex:1;min-width:0;">
-                    <strong style="color:#fff;font-size:14px;">${escHtml(c.name)}</strong>
-                    <span style="color:#888;font-size:12px;margin-left:8px;">${escHtml(c.message || '')}</span>
-                </div>
-                <span style="color:#666;font-size:11px;min-width:36px;text-align:right;">${ms}</span>
-                <span style="color:${color};font-size:12px;font-weight:600;min-width:90px;text-align:right;">${label}</span>
-            </div>`;
-        }).join('');
+        checksEl.innerHTML = checks.map(renderCheckRow).join('');
+        populateFunctionalGroups(data.groups || []);
 
     } catch (err) {
         checksEl.innerHTML = `<div class="empty-state"><p style="color:#ef4444;">${escHtml(err.message)}</p></div>`;
@@ -1638,7 +1683,7 @@ async function loadXmppClients() {
                 ? c.joinedMUCs.map(r => `<span style="font-size:10px;background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);border-radius:4px;padding:1px 6px;">${escHtml(r)}</span>`).join(' ')
                 : '<span style="color:#444;font-size:11px;">-</span>';
 
-            return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:7px;margin-bottom:5px;">
+            return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface-2, #1b1726);border:1px solid var(--border, rgba(255,255,255,0.08));border-radius:7px;margin-bottom:5px;">
                 <span style="font-size:14px;">${statusDot}</span>
                 <div style="flex:1;min-width:0;">
                     <span style="color:#e5e5e5;font-size:13px;font-weight:600;">${escHtml(c.displayName)}</span>
@@ -1650,7 +1695,7 @@ async function loadXmppClients() {
 
         const mucSummary = data.mucs && data.mucs.length > 0
             ? `<div style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;">${data.mucs.map(m =>
-                `<span style="font-size:11px;color:#888;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:5px;padding:2px 8px;">
+                `<span style="font-size:11px;color:#888;background:var(--surface-2, #1b1726);border:1px solid var(--border, rgba(255,255,255,0.08));border-radius:5px;padding:2px 8px;">
                     ${escHtml(m.name)}: ${m.members} member${m.members !== 1 ? 's' : ''}
                 </span>`).join('')}</div>`
             : '';
@@ -1705,4 +1750,169 @@ async function loadSystemChart(hours) {
             }
         });
     } catch (_) {}
+}
+
+
+// ---- Permissions tab (particular authorizations per account) ----
+
+let permUserId = null;
+
+async function loadPermissionUsers() {
+    const list = document.getElementById('perm-users');
+    if (!list) return;
+
+    list.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+    const search = document.getElementById('perm-search').value.trim();
+
+    try {
+        const res = await fetch(`${API}/admin/permissions/users?search=${encodeURIComponent(search)}`, { credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(apiError(data, 'Could not load accounts'));
+
+        if (!data.users.length) {
+            list.innerHTML = '<div class="empty-state"><p>No account found.</p></div>';
+            return;
+        }
+
+        list.innerHTML = data.users.map(user => `
+            <div style="display:flex;align-items:center;gap:12px;background:var(--surface-2, #1b1726);border:1px solid var(--border, rgba(255,255,255,0.08));border-radius:8px;padding:10px 14px;margin-bottom:6px;">
+                <div style="flex:1;min-width:0;">
+                    <strong style="color:#fff;">${escHtml(user.displayName)}</strong>
+                    <span style="color:#888;font-size:12px;margin-left:8px;">${escHtml(user.role)}</span>
+                </div>
+                <span style="font-size:12px;color:#10b981;">${user.grants.length ? `+${user.grants.length} allowed` : ''}</span>
+                <span style="font-size:12px;color:#ef4444;">${user.denies.length ? `-${user.denies.length} denied` : ''}</span>
+                <button class="btn btn-sm btn-secondary" data-id="${escHtml(user.accountId)}" onclick="openPermissionEditor(this.dataset.id)"><i class="fas fa-user-lock"></i> Edit</button>
+            </div>`).join('');
+    } catch (err) {
+        list.innerHTML = `<div class="empty-state"><p style="color:#ef4444;">${escHtml(err.message)}</p></div>`;
+    }
+}
+
+function permissionState(cap) {
+    return cap.granted ? 'allow' : (cap.denied ? 'deny' : 'default');
+}
+
+async function openPermissionEditor(accountId) {
+    const editor = document.getElementById('perm-editor');
+    permUserId = accountId;
+    editor.style.display = 'block';
+    editor.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+
+    try {
+        const res = await fetch(`${API}/admin/permissions/users/${encodeURIComponent(accountId)}`, { credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(apiError(data, 'Could not load this account'));
+        renderPermissionEditor(data.user);
+    } catch (err) {
+        editor.innerHTML = `<div class="empty-state"><p style="color:#ef4444;">${escHtml(err.message)}</p></div>`;
+    }
+}
+
+function renderPermissionEditor(user) {
+    const editor = document.getElementById('perm-editor');
+    const isOwner = user.roleLevel >= 4;
+    const groups = { moderation: 'Moderation', developer: 'Developer', admin: 'Admin' };
+
+    const sections = Object.entries(groups).map(([group, title]) => {
+        const rows = user.capabilities.filter(c => c.group === group).map(cap => `
+            <tr data-cap="${escHtml(cap.id)}" data-byrole="${cap.byRole}">
+                <td style="padding:8px 10px;">${escHtml(cap.label)}<div style="color:#666;font-size:11px;">${escHtml(cap.id)}</div></td>
+                <td style="padding:8px 10px;text-align:center;color:${cap.byRole ? '#10b981' : '#888'};">${cap.byRole ? 'Yes' : 'No'}</td>
+                <td style="padding:8px 10px;">
+                    <select class="form-input" style="width:auto;padding:4px 8px;font-size:12px;" ${isOwner ? 'disabled' : ''} onchange="updatePermissionRow(this)">
+                        <option value="default" ${permissionState(cap) === 'default' ? 'selected' : ''}>Role default</option>
+                        <option value="allow" ${permissionState(cap) === 'allow' ? 'selected' : ''}>Allow</option>
+                        <option value="deny" ${permissionState(cap) === 'deny' ? 'selected' : ''}>Deny</option>
+                    </select>
+                </td>
+                <td class="perm-effective" style="padding:8px 10px;text-align:center;font-weight:600;color:${cap.allowed ? '#10b981' : '#ef4444'};">${cap.allowed ? 'Can' : 'Cannot'}</td>
+            </tr>`).join('');
+
+        return `<h4 style="color:#aaa;font-size:13px;margin:18px 0 6px;text-transform:uppercase;letter-spacing:1px;">${title}</h4>
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                <thead><tr style="color:#888;text-align:left;"><th style="padding:6px 10px;">Permission</th><th style="padding:6px 10px;text-align:center;">By role</th><th style="padding:6px 10px;">Adjustment</th><th style="padding:6px 10px;text-align:center;">Result</th></tr></thead>
+                <tbody>${rows}</tbody>
+            </table>`;
+    }).join('');
+
+    editor.innerHTML = `
+        <div style="background:var(--surface-2, #1b1726);border:1px solid var(--border-strong, rgba(255,255,255,0.14));border-radius:10px;padding:18px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <div>
+                    <h3 style="margin:0;color:#fff;">${escHtml(user.displayName)}</h3>
+                    <div style="color:#888;font-size:12px;margin-top:2px;">Role: ${escHtml(user.role)}${isOwner ? ' (owners always have every permission)' : ''}</div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                    ${isOwner ? '' : `<button class="btn btn-primary" onclick="savePermissions()"><i class="fas fa-save"></i> Save</button>
+                    <button class="btn btn-secondary" onclick="resetPermissions()"><i class="fas fa-undo"></i> Back to role default</button>`}
+                    <button class="btn btn-secondary" onclick="closePermissionEditor()">Close</button>
+                </div>
+            </div>
+            <div id="perm-result" class="alert" style="display:none;margin-top:12px;"></div>
+            ${sections}
+        </div>`;
+}
+
+function updatePermissionRow(select) {
+    const row = select.closest('tr');
+    const byRole = row.dataset.byrole === 'true';
+    const allowed = select.value === 'allow' || (select.value === 'default' && byRole);
+    const cell = row.querySelector('.perm-effective');
+    cell.textContent = allowed ? 'Can' : 'Cannot';
+    cell.style.color = allowed ? '#10b981' : '#ef4444';
+}
+
+function showPermissionResult(ok, message) {
+    const el = document.getElementById('perm-result');
+    if (!el) return;
+    el.className = `alert ${ok ? 'alert-success' : 'alert-danger'}`;
+    el.style.display = 'block';
+    el.textContent = message;
+}
+
+async function sendPermissionChange(method, body) {
+    const res = await secureFetch(`${API}/admin/permissions/users/${encodeURIComponent(permUserId)}`, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(apiError(data, 'Could not save'));
+
+    renderPermissionEditor(data.user);
+    showPermissionResult(true, data.message);
+    loadPermissionUsers();
+}
+
+async function savePermissions() {
+    const grants = [];
+    const denies = [];
+    document.querySelectorAll('#perm-editor tr[data-cap]').forEach(row => {
+        const value = row.querySelector('select').value;
+        if (value === 'allow') grants.push(row.dataset.cap);
+        if (value === 'deny') denies.push(row.dataset.cap);
+    });
+
+    try {
+        await sendPermissionChange('PUT', { grants, denies });
+    } catch (err) {
+        showPermissionResult(false, err.message);
+    }
+}
+
+async function resetPermissions() {
+    if (!confirm('Remove every adjustment on this account?')) return;
+    try {
+        await sendPermissionChange('DELETE');
+    } catch (err) {
+        showPermissionResult(false, err.message);
+    }
+}
+
+function closePermissionEditor() {
+    permUserId = null;
+    const editor = document.getElementById('perm-editor');
+    editor.style.display = 'none';
+    editor.innerHTML = '';
 }

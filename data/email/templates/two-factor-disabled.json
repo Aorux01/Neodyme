@@ -1,0 +1,12 @@
+{
+  "id": "two-factor-disabled",
+  "system": true,
+  "name": "Two-Factor Disabled",
+  "description": "Sent when an administrator turns off two-factor authentication on a player account.",
+  "layout": "default",
+  "subject": "Two-factor authentication was turned off on your {{serverName}} account",
+  "heading": "Two-factor authentication turned off",
+  "body": "An administrator of {{serverName}} turned off two-factor authentication on your account, {{displayName}}. You can turn it back on from your Security page whenever you like.",
+  "text": "An administrator turned off two-factor authentication on your {{serverName}} account. You can turn it back on from your Security page.",
+  "footerNote": "If you did not expect this, contact the server administrator."
+}

@@ -13,6 +13,7 @@ const RateLimitManager = require('./rate-limit-manager');
 const { globalRateLimit, webRateLimit } = require('../middleware/rate-limit-middleware');
 const { assetMiddleware } = require('../middleware/asset-middleware');
 const { redact } = require('../utils/redact');
+const { pageRoutes } = require('../middleware/page-routes-middleware');
 
 class EndpointManager {
     static app = null;
@@ -206,6 +207,7 @@ class EndpointManager {
                     LoggerService.log('info', `Created web directory at ${webDir}`);
                 }
                 
+                this.app.use(pageRoutes(webDir));
                 this.app.use('/', express.static(webDir));
                 
                 this.app.get('/', (req, res) => {

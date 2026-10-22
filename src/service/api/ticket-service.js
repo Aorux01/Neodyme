@@ -11,6 +11,65 @@ class TicketService {
         LoggerService.log('info', 'Ticket service initialized');
     }
 
+    static async createAppeal(account, contactEmail, message) {
+        const text = typeof message === 'string' ? message.trim() : '';
+        if (text.length < 10 || text.length > 1000) {
+            return { success: false, error: 'Your message must be between 10 and 1000 characters.' };
+        }
+
+        const data = await DatabaseManager.getTickets();
+        const hasOpenAppeal = Object.values(data.tickets).some(t =>
+            t.category === 'ban_appeal' && t.playerAccountId === account.accountId && ['open', 'in_progress'].includes(t.status)
+        );
+        if (hasOpenAppeal) return { success: false, duplicate: true };
+
+        const now = new Date().toISOString();
+        const ticketId = `ticket_${Date.now()}_${uuidv4().substring(0, 8)}`;
+
+        await DatabaseManager.createTicket({
+            ticketId,
+            category: 'ban_appeal',
+            contactEmail,
+            playerAccountId: account.accountId,
+            playerDisplayName: account.displayName,
+            subject: `[Ban appeal] ${account.displayName}`.slice(0, 100),
+            status: 'open',
+            priority: 'medium',
+            createdAt: now,
+            updatedAt: now,
+            assignedTo: null,
+            assignedToName: null,
+            messages: [{
+                messageId: uuidv4(),
+                authorAccountId: account.accountId,
+                authorName: account.displayName,
+                authorRole: 'player',
+                content: text,
+                timestamp: now
+            }]
+        });
+
+        LoggerService.log('info', `Ban appeal received from ${account.displayName}: ${ticketId}`);
+        return { success: true, ticketId };
+    }
+
+    // A banned player cannot sign in to read the answer, so replies go by email.
+    static async notifyAppealReply(ticket, content) {
+        const EmailService = require('../email/email-service');
+        const EmailTemplateService = require('../email/email-template-service');
+        if (!EmailService.isConfigured() || !ticket.contactEmail) return;
+
+        const reply = String(content)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+            .replace(/\n/g, '<br>');
+        const account = { displayName: ticket.playerDisplayName, email: ticket.contactEmail };
+        const template = await EmailTemplateService.get('ban-appeal-reply');
+        if (!template) return;
+
+        const message = await EmailTemplateService.render(template, account, { reply });
+        await EmailService.sendMail({ to: ticket.contactEmail, subject: message.subject, html: message.html, text: String(content) });
+    }
+
     static async createTicket(accountId, displayName, subject, message, priority = 'medium') {
         if (!subject || subject.trim().length < 5) {
             return { success: false, error: 'Subject must be at least 5 characters' };
@@ -258,6 +317,11 @@ class TicketService {
 
         await DatabaseManager.updateTicket(ticketId, updates);
         LoggerService.log('info', `Ticket ${ticketId}: Moderator ${moderatorName} replied`);
+
+        if (ticket.category === 'ban_appeal') {
+            this.notifyAppealReply(ticket, content).catch(error =>
+                LoggerService.log('warn', `Could not email the appeal reply: ${error.message}`));
+        }
 
         return { success: true, message: 'Reply added successfully' };
     }

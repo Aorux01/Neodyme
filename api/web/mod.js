@@ -1,3 +1,4 @@
+const { gate, gateWrite } = require('../../src/service/api/capability-middleware');
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
@@ -8,18 +9,17 @@ const CreatorCodeService = require('../../src/service/api/creator-code-service')
 const TicketService = require('../../src/service/api/ticket-service');
 const ReportService = require('../../src/service/api/report-service');
 const AuditService = require('../../src/service/api/audit-service');
+const RecoveryService = require('../../src/service/api/recovery-service');
 const WebResponse = require('../../src/service/api/web-response-service');
 const WebService = require('../../src/service/api/web-service');
 const { csrfProtection } = require('../../src/service/token/csrf-token-service');
-const { ROLE_LEVELS, requireModerator } = require('../../src/service/api/role-middleware-service');
+const { ROLE_LEVELS } = require('../../src/service/api/role-middleware-service');
 
 const verifyToken = WebService.verifyToken;
-const mod = [verifyToken, requireModerator];
-const modWrite = [verifyToken, requireModerator, csrfProtection];
 
 // ---- Creator codes ----
 
-router.get('/neodyme/api/mod/creator-codes/requests', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/creator-codes/requests', ...gate('creators.manage'), async (req, res) => {
     try {
         return WebResponse.ok(res, { requests: await CreatorCodeService.getPendingRequests() });
     } catch (error) {
@@ -27,7 +27,7 @@ router.get('/neodyme/api/mod/creator-codes/requests', ...mod, async (req, res) =
     }
 });
 
-router.get('/neodyme/api/mod/creator-codes/requests/all', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/creator-codes/requests/all', ...gate('creators.manage'), async (req, res) => {
     try {
         return WebResponse.ok(res, { requests: await CreatorCodeService.getAllRequests() });
     } catch (error) {
@@ -35,7 +35,7 @@ router.get('/neodyme/api/mod/creator-codes/requests/all', ...mod, async (req, re
     }
 });
 
-router.post('/neodyme/api/mod/creator-codes/approve/:requestId', ...modWrite, async (req, res) => {
+router.post('/neodyme/api/mod/creator-codes/approve/:requestId', ...gateWrite('creators.manage'), async (req, res) => {
     try {
         const result = await CreatorCodeService.approveRequest(
             req.params.requestId, req.user.accountId, req.user.displayName, req.body.note
@@ -46,7 +46,7 @@ router.post('/neodyme/api/mod/creator-codes/approve/:requestId', ...modWrite, as
     }
 });
 
-router.post('/neodyme/api/mod/creator-codes/reject/:requestId', ...modWrite, async (req, res) => {
+router.post('/neodyme/api/mod/creator-codes/reject/:requestId', ...gateWrite('creators.manage'), async (req, res) => {
     try {
         const result = await CreatorCodeService.rejectRequest(
             req.params.requestId, req.user.accountId, req.user.displayName, req.body.note
@@ -57,7 +57,7 @@ router.post('/neodyme/api/mod/creator-codes/reject/:requestId', ...modWrite, asy
     }
 });
 
-router.get('/neodyme/api/mod/creator-codes/stats', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/creator-codes/stats', ...gate('creators.manage'), async (req, res) => {
     try {
         return WebResponse.ok(res, { stats: await CreatorCodeService.getStats() });
     } catch (error) {
@@ -65,7 +65,7 @@ router.get('/neodyme/api/mod/creator-codes/stats', ...mod, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/mod/creator-codes', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/creator-codes', ...gate('creators.manage'), async (req, res) => {
     try {
         return WebResponse.ok(res, { codes: await CreatorCodeService.getAllCodes() });
     } catch (error) {
@@ -73,7 +73,7 @@ router.get('/neodyme/api/mod/creator-codes', ...mod, async (req, res) => {
     }
 });
 
-router.delete('/neodyme/api/mod/creator-codes/:code', ...modWrite, async (req, res) => {
+router.delete('/neodyme/api/mod/creator-codes/:code', ...gateWrite('creators.manage'), async (req, res) => {
     try {
         const result = await CreatorCodeService.deleteCode(req.params.code, req.user.accountId, req.user.displayName);
         return res.json(result);
@@ -82,7 +82,7 @@ router.delete('/neodyme/api/mod/creator-codes/:code', ...modWrite, async (req, r
     }
 });
 
-router.put('/neodyme/api/mod/creator-codes/:code/toggle', ...modWrite, async (req, res) => {
+router.put('/neodyme/api/mod/creator-codes/:code/toggle', ...gateWrite('creators.manage'), async (req, res) => {
     try {
         const result = await CreatorCodeService.toggleCodeStatus(req.params.code, req.body.isActive);
         return res.json(result);
@@ -93,7 +93,7 @@ router.put('/neodyme/api/mod/creator-codes/:code/toggle', ...modWrite, async (re
 
 // ---- Tickets ----
 
-router.get('/neodyme/api/mod/tickets/stats', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/tickets/stats', ...gate('tickets.manage'), async (req, res) => {
     try {
         return WebResponse.ok(res, { stats: await TicketService.getStats() });
     } catch (error) {
@@ -101,7 +101,7 @@ router.get('/neodyme/api/mod/tickets/stats', ...mod, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/mod/tickets', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/tickets', ...gate('tickets.manage'), async (req, res) => {
     try {
         const { status, priority, assignedTo, unassigned } = req.query;
         const filters = {};
@@ -116,7 +116,7 @@ router.get('/neodyme/api/mod/tickets', ...mod, async (req, res) => {
     }
 });
 
-router.put('/neodyme/api/mod/tickets/:ticketId/assign', ...modWrite, async (req, res) => {
+router.put('/neodyme/api/mod/tickets/:ticketId/assign', ...gateWrite('tickets.manage'), async (req, res) => {
     try {
         const result = await TicketService.assignTicket(req.params.ticketId, req.user.accountId, req.user.displayName);
         return res.json(result);
@@ -125,7 +125,7 @@ router.put('/neodyme/api/mod/tickets/:ticketId/assign', ...modWrite, async (req,
     }
 });
 
-router.put('/neodyme/api/mod/tickets/:ticketId/unassign', ...modWrite, async (req, res) => {
+router.put('/neodyme/api/mod/tickets/:ticketId/unassign', ...gateWrite('tickets.manage'), async (req, res) => {
     try {
         return res.json(await TicketService.unassignTicket(req.params.ticketId));
     } catch (error) {
@@ -133,7 +133,7 @@ router.put('/neodyme/api/mod/tickets/:ticketId/unassign', ...modWrite, async (re
     }
 });
 
-router.post('/neodyme/api/mod/tickets/:ticketId/reply', ...modWrite, async (req, res) => {
+router.post('/neodyme/api/mod/tickets/:ticketId/reply', ...gateWrite('tickets.manage'), async (req, res) => {
     try {
         const result = await TicketService.addModeratorReply(
             req.params.ticketId, req.user.accountId, req.user.displayName, req.body.content
@@ -144,7 +144,7 @@ router.post('/neodyme/api/mod/tickets/:ticketId/reply', ...modWrite, async (req,
     }
 });
 
-router.put('/neodyme/api/mod/tickets/:ticketId/status', ...modWrite, async (req, res) => {
+router.put('/neodyme/api/mod/tickets/:ticketId/status', ...gateWrite('tickets.manage'), async (req, res) => {
     try {
         const { status } = req.body;
         const result = await TicketService.updateTicketStatus(req.params.ticketId, status, req.user.displayName);
@@ -161,7 +161,7 @@ router.put('/neodyme/api/mod/tickets/:ticketId/status', ...modWrite, async (req,
     }
 });
 
-router.put('/neodyme/api/mod/tickets/:ticketId/priority', ...modWrite, async (req, res) => {
+router.put('/neodyme/api/mod/tickets/:ticketId/priority', ...gateWrite('tickets.manage'), async (req, res) => {
     try {
         const result = await TicketService.updateTicketPriority(req.params.ticketId, req.body.priority, req.user.displayName);
         return res.json(result);
@@ -170,7 +170,7 @@ router.put('/neodyme/api/mod/tickets/:ticketId/priority', ...modWrite, async (re
     }
 });
 
-router.delete('/neodyme/api/mod/tickets/:ticketId', ...modWrite, async (req, res) => {
+router.delete('/neodyme/api/mod/tickets/:ticketId', ...gateWrite('tickets.manage'), async (req, res) => {
     try {
         const result = await TicketService.deleteTicket(req.params.ticketId, req.user.displayName);
         if (result.success) {
@@ -187,7 +187,7 @@ router.delete('/neodyme/api/mod/tickets/:ticketId', ...modWrite, async (req, res
 
 // ---- Players / bans ----
 
-router.get('/neodyme/api/mod/players', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/players', ...gate('users.view'), async (req, res) => {
     try {
         const { search, banned } = req.query;
         let users = await DatabaseManager.getAllAccounts();
@@ -220,7 +220,7 @@ router.get('/neodyme/api/mod/players', ...mod, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/mod/players/:accountId/bans', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/players/:accountId/bans', ...gate('users.view'), async (req, res) => {
     try {
         const history = await AuditService.getTargetHistory('user', req.params.accountId, 50);
         const banHistory = history.filter(l =>
@@ -232,7 +232,7 @@ router.get('/neodyme/api/mod/players/:accountId/bans', ...mod, async (req, res) 
     }
 });
 
-router.post('/neodyme/api/mod/players/:accountId/ban', ...modWrite, async (req, res) => {
+router.post('/neodyme/api/mod/players/:accountId/ban', ...gateWrite('users.ban'), async (req, res) => {
     try {
         const { accountId } = req.params;
         const { reason, duration } = req.body;
@@ -266,7 +266,27 @@ router.post('/neodyme/api/mod/players/:accountId/ban', ...modWrite, async (req, 
     }
 });
 
-router.post('/neodyme/api/mod/players/:accountId/unban', ...modWrite, async (req, res) => {
+router.post('/neodyme/api/mod/players/:accountId/logout', ...gateWrite('users.logout'), async (req, res) => {
+    try {
+        const target = await DatabaseManager.getAccount(req.params.accountId);
+        if (!target) return WebResponse.notFound(res, 'Account not found.');
+
+        const targetLevel = typeof target.clientType === 'number' ? target.clientType : 0;
+        if (req.userRoleLevel < ROLE_LEVELS.OWNER && targetLevel >= req.userRoleLevel) {
+            return WebResponse.forbidden(res, 'You can only log out accounts below your own role.');
+        }
+
+        await RecoveryService.revokeSessions(target.accountId);
+        await AuditService.log('force_logout', req.user.accountId, req.user.displayName, 'account', target.accountId,
+            { targetUserName: target.displayName }, req.ip).catch(() => {});
+
+        return WebResponse.ok(res, { message: `${target.displayName} has been logged out everywhere.` });
+    } catch (error) {
+        return WebResponse.serverError(res, 'force logout', error);
+    }
+});
+
+router.post('/neodyme/api/mod/players/:accountId/unban', ...gateWrite('users.ban'), async (req, res) => {
     try {
         const { accountId } = req.params;
         const target = await DatabaseManager.getAccount(accountId);
@@ -286,7 +306,7 @@ router.post('/neodyme/api/mod/players/:accountId/unban', ...modWrite, async (req
 
 // ---- Reports ----
 
-router.get('/neodyme/api/mod/reports/stats', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/reports/stats', ...gate('reports.manage'), async (req, res) => {
     try {
         return WebResponse.ok(res, { stats: await ReportService.getStats() });
     } catch (error) {
@@ -294,7 +314,7 @@ router.get('/neodyme/api/mod/reports/stats', ...mod, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/mod/reports/player/:accountId', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/reports/player/:accountId', ...gate('reports.manage'), async (req, res) => {
     try {
         return WebResponse.ok(res, { reports: await ReportService.getReportsByTarget(req.params.accountId) });
     } catch (error) {
@@ -302,7 +322,7 @@ router.get('/neodyme/api/mod/reports/player/:accountId', ...mod, async (req, res
     }
 });
 
-router.get('/neodyme/api/mod/reports', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/reports', ...gate('reports.manage'), async (req, res) => {
     try {
         const { search, reportedAccountId, reporterAccountId } = req.query;
         const filters = {};
@@ -316,7 +336,7 @@ router.get('/neodyme/api/mod/reports', ...mod, async (req, res) => {
     }
 });
 
-router.delete('/neodyme/api/mod/reports/:reportId', ...modWrite, async (req, res) => {
+router.delete('/neodyme/api/mod/reports/:reportId', ...gateWrite('reports.manage'), async (req, res) => {
     try {
         const result = await ReportService.deleteReport(req.params.reportId);
         if (!result.success) {
@@ -333,7 +353,7 @@ router.delete('/neodyme/api/mod/reports/:reportId', ...modWrite, async (req, res
 
 const feedbackStoragePath = path.join(process.cwd(), 'data', 'feedback');
 
-router.get('/neodyme/api/mod/feedback/file', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/feedback/file', ...gate('feedback.manage'), async (req, res) => {
     try {
         const filePath = path.resolve(feedbackStoragePath, req.query.path || '');
         if (!filePath.startsWith(feedbackStoragePath)) return WebResponse.badRequest(res, 'Invalid path.');
@@ -344,7 +364,7 @@ router.get('/neodyme/api/mod/feedback/file', ...mod, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/mod/feedback', ...mod, async (req, res) => {
+router.get('/neodyme/api/mod/feedback', ...gate('feedback.manage'), async (req, res) => {
     try {
         const basePath = path.join(feedbackStoragePath, 'client-feedback', 'Fortnite');
         if (!fs.existsSync(basePath)) return WebResponse.ok(res, { submissions: [] });
@@ -391,7 +411,7 @@ router.get('/neodyme/api/mod/feedback', ...mod, async (req, res) => {
     }
 });
 
-router.delete('/neodyme/api/mod/feedback/:id(*)', ...modWrite, async (req, res) => {
+router.delete('/neodyme/api/mod/feedback/:id(*)', ...gateWrite('feedback.manage'), async (req, res) => {
     try {
         const submissionPath = path.resolve(feedbackStoragePath, 'client-feedback', 'Fortnite', req.params.id);
         if (!submissionPath.startsWith(feedbackStoragePath)) return WebResponse.badRequest(res, 'Invalid path.');

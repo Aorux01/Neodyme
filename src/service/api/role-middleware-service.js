@@ -1,5 +1,7 @@
 const DatabaseManager = require('../../manager/database-manager');
 const WebResponse = require('./web-response-service');
+const TwoFactorService = require('../security/two-factor-service');
+const CapabilityService = require('../security/capability-service');
 
 const ROLE_LEVELS = {
     PLAYER: 0,
@@ -33,11 +35,41 @@ const roleGate = (check, label) => async (req, res, next) => {
             return WebResponse.forbidden(res, `${label} access required.`);
         }
 
+        if (TwoFactorService.isStaffBlocked(account, roleLevel)) {
+            return WebResponse.fail(res, 'TWO_FACTOR_REQUIRED', 'Two-factor authentication is required for staff accounts. Turn it on from your Security page.');
+        }
+
         req.userRole = DatabaseManager.getRoleName(roleLevel);
         req.userRoleLevel = roleLevel;
         next();
     } catch (error) {
         return WebResponse.serverError(res, `roleGate (${label})`, error);
+    }
+};
+
+// Gate on one capability instead of a role: the role default, a grant or a denial
+// on the account decide. Runs after verifyToken, like roleGate.
+const requireCap = (capability) => async (req, res, next) => {
+    try {
+        const account = await DatabaseManager.getAccount(req.user.accountId);
+        if (!account) {
+            return WebResponse.unauthorized(res, 'Session expired. Please sign in again.');
+        }
+
+        const roleLevel = getUserRoleLevel(account);
+        if (!CapabilityService.has(account, roleLevel, capability)) {
+            return WebResponse.forbidden(res, `Missing permission: ${capability}.`);
+        }
+
+        if (TwoFactorService.isStaffBlocked(account, roleLevel)) {
+            return WebResponse.fail(res, 'TWO_FACTOR_REQUIRED', 'Two-factor authentication is required for staff accounts. Turn it on from your Security page.');
+        }
+
+        req.userRole = DatabaseManager.getRoleName(roleLevel);
+        req.userRoleLevel = roleLevel;
+        next();
+    } catch (error) {
+        return WebResponse.serverError(res, `requireCap (${capability})`, error);
     }
 };
 
@@ -50,6 +82,7 @@ const verifyServer     = roleGate(lvl => lvl === ROLE_LEVELS.SERVER, 'Server');
 module.exports = {
     ROLE_LEVELS,
     getUserRoleLevel,
+    requireCap,
     requireModerator,
     requireAdmin,
     requireDeveloper,

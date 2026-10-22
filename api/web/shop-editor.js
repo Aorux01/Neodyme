@@ -1,3 +1,4 @@
+const { gate, gateWrite } = require('../../src/service/api/capability-middleware');
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
@@ -8,11 +9,8 @@ const AuditService = require('../../src/service/api/audit-service');
 const WebResponse = require('../../src/service/api/web-response-service');
 const WebService = require('../../src/service/api/web-service');
 const { csrfProtection } = require('../../src/service/token/csrf-token-service');
-const { requireDeveloper } = require('../../src/service/api/role-middleware-service');
 
 const verifyToken = WebService.verifyToken;
-const dev      = [verifyToken, requireDeveloper];
-const devWrite = [verifyToken, requireDeveloper, csrfProtection];
 
 const SHOP_CONFIG_PATH = path.join(__dirname, '..', '..', 'config', 'shop.json');
 const SHOP_DATA_PATH   = path.join(__dirname, '..', '..', 'data',   'shop.json');
@@ -98,7 +96,7 @@ const getShopLayout = () => {
     return { layout, config };
 };
 
-router.get('/neodyme/api/dev/shop/layout', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/shop/layout', ...gate('shop.edit'), async (req, res) => {
     try {
         const { layout, config } = getShopLayout();
         const shopData = loadJson(SHOP_DATA_PATH, {});
@@ -117,7 +115,7 @@ router.get('/neodyme/api/dev/shop/layout', ...dev, async (req, res) => {
 });
 
 // Cosmetics search (proxy w/ in-memory cache). Optional ?q= filter on name/id.
-router.get('/neodyme/api/dev/shop/cosmetics', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/shop/cosmetics', ...gate('shop.edit'), async (req, res) => {
     try {
         const all = await fetchCosmetics();
         const q = (req.query.q || '').toString().trim().toLowerCase();
@@ -146,7 +144,7 @@ router.get('/neodyme/api/dev/shop/cosmetics', ...dev, async (req, res) => {
 });
 
 // Update one slot (manual hand-pick). Body: { itemGrants: ['Type:id'], price: number }
-router.put('/neodyme/api/dev/shop/slot/:slot', ...devWrite, async (req, res) => {
+router.put('/neodyme/api/dev/shop/slot/:slot', ...gateWrite('shop.edit'), async (req, res) => {
     try {
         const { slot } = req.params;
         if (!/^[a-zA-Z0-9_-]+$/.test(slot)) return WebResponse.badRequest(res, 'Invalid slot name.');
@@ -182,7 +180,7 @@ router.put('/neodyme/api/dev/shop/slot/:slot', ...devWrite, async (req, res) => 
 });
 
 // Clear a slot (so the next rotation regenerates it).
-router.delete('/neodyme/api/dev/shop/slot/:slot', ...devWrite, async (req, res) => {
+router.delete('/neodyme/api/dev/shop/slot/:slot', ...gateWrite('shop.edit'), async (req, res) => {
     try {
         const { slot } = req.params;
         if (!/^[a-zA-Z0-9_-]+$/.test(slot)) return WebResponse.badRequest(res, 'Invalid slot name.');
@@ -205,7 +203,7 @@ router.delete('/neodyme/api/dev/shop/slot/:slot', ...devWrite, async (req, res) 
 // Random-pick a single cosmetic for one slot. We delegate the catalog fetch
 // to the same source the rotation manager uses, then pick a random eligible
 // item respecting basic excluded list.
-router.post('/neodyme/api/dev/shop/randomize/:slot', ...devWrite, async (req, res) => {
+router.post('/neodyme/api/dev/shop/randomize/:slot', ...gateWrite('shop.edit'), async (req, res) => {
     try {
         const { slot } = req.params;
         const { layout, config } = getShopLayout();

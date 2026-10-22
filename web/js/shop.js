@@ -442,7 +442,7 @@ async function purchaseItem(itemKey) {
     if (!currentUser) {
         showAlert('Please sign in to purchase items.', 'error');
         setTimeout(() => {
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         }, 2000);
         return;
     }

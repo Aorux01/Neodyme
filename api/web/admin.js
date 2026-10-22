@@ -1,3 +1,4 @@
+const { gate, gateWrite } = require('../../src/service/api/capability-middleware');
 const express = require('express');
 const router = express.Router();
 const os = require('os');
@@ -9,24 +10,21 @@ const LoggerService = require('../../src/service/logger/logger-service');
 const CreatorCodeService = require('../../src/service/api/creator-code-service');
 const TicketService = require('../../src/service/api/ticket-service');
 const AuditService = require('../../src/service/api/audit-service');
+const RecoveryService = require('../../src/service/api/recovery-service');
 const WebResponse = require('../../src/service/api/web-response-service');
 const WebService = require('../../src/service/api/web-service');
 const { csrfProtection } = require('../../src/service/token/csrf-token-service');
-const { ROLE_LEVELS, requireAdmin, requireDeveloper, requireModerator } = require('../../src/service/api/role-middleware-service');
+const { ROLE_LEVELS, requireModerator } = require('../../src/service/api/role-middleware-service');
 
 const verifyToken = WebService.verifyToken;
 
 // Middleware chains by required staff level (read vs. state-changing).
-const admin = [verifyToken, requireAdmin];
-const adminWrite = [verifyToken, requireAdmin, csrfProtection];
-const dev = [verifyToken, requireDeveloper];
-const devWrite = [verifyToken, requireDeveloper, csrfProtection];
 
 const roleLevelOf = (account) => (typeof account.clientType === 'number' ? account.clientType : 0);
 
 // ---- Users & roles (admin) ----
 
-router.get('/neodyme/api/admin/users', ...admin, async (req, res) => {
+router.get('/neodyme/api/admin/users', ...gate('users.manage'), async (req, res) => {
     try {
         const users = await DatabaseManager.getAllAccounts();
         return WebResponse.ok(res, {
@@ -49,7 +47,7 @@ router.get('/neodyme/api/admin/users', ...admin, async (req, res) => {
     }
 });
 
-router.put('/neodyme/api/admin/users/:accountId/role', ...adminWrite, async (req, res) => {
+router.put('/neodyme/api/admin/users/:accountId/role', ...gateWrite('users.role'), async (req, res) => {
     try {
         const { accountId } = req.params;
         const role = (typeof req.body.role === 'string' ? req.body.role : String(req.body.role ?? '')).trim().toLowerCase();
@@ -73,7 +71,43 @@ router.put('/neodyme/api/admin/users/:accountId/role', ...adminWrite, async (req
     }
 });
 
-router.put('/neodyme/api/admin/users/:accountId/ban', ...adminWrite, async (req, res) => {
+router.post('/neodyme/api/admin/users/:accountId/reset-password', ...gateWrite('users.reset'), async (req, res) => {
+    try {
+        const target = await DatabaseManager.getAccount(req.params.accountId);
+        if (!target) return WebResponse.notFound(res, 'Account not found.');
+
+        if (req.userRoleLevel < ROLE_LEVELS.OWNER && roleLevelOf(target) >= req.userRoleLevel) {
+            return WebResponse.forbidden(res, 'You can only reset accounts below your own role.');
+        }
+
+        await RecoveryService.revokeSessions(target.accountId);
+
+        let delivery = 'link';
+        if (RecoveryService.resetAvailable() && target.email) {
+            const result = await RecoveryService.deliverQuietly('reset', target);
+            if (result.sent) delivery = 'email';
+            else if (result.cooldownMs) delivery = 'cooldown';
+        }
+
+        let link = null;
+        let expiresIn = null;
+        if (delivery === 'link') ({ link, expiresIn } = await RecoveryService.issueResetLink(target));
+
+        await AuditService.log('admin_password_reset', req.user.accountId, req.user.displayName, 'account', target.accountId,
+            { targetUserName: target.displayName, delivery }, req.ip).catch(() => {});
+
+        const messages = {
+            email: `A reset link was emailed to ${target.displayName}. Their sessions were ended.`,
+            cooldown: 'A reset link was sent less than a minute ago. Their sessions were ended.',
+            link: `Email is not available. Give ${target.displayName} the link below, it works once. Their sessions were ended.`
+        };
+        return WebResponse.ok(res, { delivery, link, expiresIn, message: messages[delivery] });
+    } catch (error) {
+        return WebResponse.serverError(res, 'admin password reset', error);
+    }
+});
+
+router.put('/neodyme/api/admin/users/:accountId/ban', ...gateWrite('users.manage'), async (req, res) => {
     try {
         const { accountId } = req.params;
         const { banned, reason } = req.body;
@@ -95,7 +129,7 @@ router.put('/neodyme/api/admin/users/:accountId/ban', ...adminWrite, async (req,
     }
 });
 
-router.put('/neodyme/api/admin/creator-codes/commission', ...adminWrite, async (req, res) => {
+router.put('/neodyme/api/admin/creator-codes/commission', ...gateWrite('creators.commission'), async (req, res) => {
     try {
         const { percent } = req.body;
         if (typeof percent !== 'number' || percent < 0 || percent > 100) {
@@ -117,7 +151,7 @@ router.put('/neodyme/api/admin/creator-codes/commission', ...adminWrite, async (
 
 // ---- Stats & audit (admin) ----
 
-router.get('/neodyme/api/admin/stats', ...admin, async (req, res) => {
+router.get('/neodyme/api/admin/stats', ...gate('stats.view'), async (req, res) => {
     try {
         const users = await DatabaseManager.getAllAccounts();
         const creatorCodes = await CreatorCodeService.getStats();
@@ -137,7 +171,7 @@ router.get('/neodyme/api/admin/stats', ...admin, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/admin/stats/players', ...admin, async (req, res) => {
+router.get('/neodyme/api/admin/stats/players', ...gate('stats.view'), async (req, res) => {
     try {
         const PlayerStatsService = require('../../src/service/api/player-stats-service');
         const RANGE_HOURS = { '1h': 1, '24h': 24, '1w': 168, '1m': 720, '1y': 8760, 'all': 0 };
@@ -149,7 +183,7 @@ router.get('/neodyme/api/admin/stats/players', ...admin, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/admin/stats/detailed', ...admin, async (req, res) => {
+router.get('/neodyme/api/admin/stats/detailed', ...gate('stats.view'), async (req, res) => {
     try {
         const users = await DatabaseManager.getAllAccounts();
         const creatorCodes = await CreatorCodeService.getStats();
@@ -185,7 +219,7 @@ router.get('/neodyme/api/admin/stats/detailed', ...admin, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/admin/audit-log/summary', ...admin, async (req, res) => {
+router.get('/neodyme/api/admin/audit-log/summary', ...gate('audit.view'), async (req, res) => {
     try {
         const summary = await AuditService.getRecentSummary(parseInt(req.query.hours, 10) || 24);
         return WebResponse.ok(res, { summary });
@@ -194,13 +228,50 @@ router.get('/neodyme/api/admin/audit-log/summary', ...admin, async (req, res) =>
     }
 });
 
-router.get('/neodyme/api/admin/audit-log', ...admin, async (req, res) => {
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
+
+const auditFilters = (query) => ({
+    action: query.action,
+    performedBy: query.performedBy,
+    targetType: query.targetType,
+    search: query.search,
+    startDate: DAY.test(query.from || '') ? new Date(`${query.from}T00:00:00.000Z`) : undefined,
+    endDate: DAY.test(query.to || '') ? new Date(`${query.to}T23:59:59.999Z`) : undefined
+});
+
+const csvCell = (value) => {
+    let text = value === null || value === undefined ? '' : String(value);
+    if (/^[=+\-@\t\r]/.test(text)) text = `'${text}`;
+    return `"${text.replace(/"/g, '""')}"`;
+};
+
+router.get('/neodyme/api/admin/audit-log/export', ...gate('audit.view'), async (req, res) => {
     try {
-        const { action, performedBy, targetType, search, page, limit } = req.query;
+        const result = await AuditService.getLogs({ ...auditFilters(req.query), page: 1, limit: 5000 });
+        const header = ['timestamp', 'action', 'performedBy', 'performedByName', 'targetType', 'targetId', 'ipAddress', 'details'];
+        const rows = result.logs.map(log => [
+            log.timestamp, log.action, log.performedBy, log.performedByName,
+            log.targetType, log.targetId, log.ipAddress, JSON.stringify(log.details || {})
+        ].map(csvCell).join(','));
+
+        await AuditService.log('audit_export', req.user.accountId, req.user.displayName, 'audit', 'log',
+            { rows: result.logs.length }, req.ip).catch(() => {});
+
+        res.set('Content-Type', 'text/csv; charset=utf-8');
+        res.set('Content-Disposition', `attachment; filename="audit-log-${new Date().toISOString().slice(0, 10)}.csv"`);
+        res.set('Cache-Control', 'no-store');
+        return res.send([header.join(','), ...rows].join('\r\n'));
+    } catch (error) {
+        return WebResponse.serverError(res, 'export audit log', error);
+    }
+});
+
+router.get('/neodyme/api/admin/audit-log', ...gate('audit.view'), async (req, res) => {
+    try {
         const result = await AuditService.getLogs({
-            action, performedBy, targetType, search,
-            page: parseInt(page, 10) || 1,
-            limit: parseInt(limit, 10) || 50
+            ...auditFilters(req.query),
+            page: parseInt(req.query.page, 10) || 1,
+            limit: parseInt(req.query.limit, 10) || 50
         });
         return WebResponse.ok(res, result);
     } catch (error) {
@@ -208,7 +279,7 @@ router.get('/neodyme/api/admin/audit-log', ...admin, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/admin/server-properties', ...admin, async (req, res) => {
+router.get('/neodyme/api/admin/server-properties', ...gate('settings.edit'), async (req, res) => {
     try {
         const propFile = path.join(__dirname, '../../server.properties');
         if (!fs.existsSync(propFile)) {
@@ -220,7 +291,7 @@ router.get('/neodyme/api/admin/server-properties', ...admin, async (req, res) =>
     }
 });
 
-router.put('/neodyme/api/admin/server-properties', ...adminWrite, async (req, res) => {
+router.put('/neodyme/api/admin/server-properties', ...gateWrite('settings.edit'), async (req, res) => {
     try {
         const { content } = req.body;
         if (typeof content !== 'string') {
@@ -234,7 +305,7 @@ router.put('/neodyme/api/admin/server-properties', ...adminWrite, async (req, re
     }
 });
 
-router.post('/neodyme/api/admin/shop/rotate-date', ...adminWrite, async (req, res) => {
+router.post('/neodyme/api/admin/shop/rotate-date', ...gateWrite('shop.rotate'), async (req, res) => {
     try {
         const { date, categoryKey } = req.body;
         if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
@@ -254,7 +325,7 @@ router.post('/neodyme/api/admin/shop/rotate-date', ...adminWrite, async (req, re
 
 // ---- Developer panel (logs, live metrics, plugins, xmpp) ----
 
-router.get('/neodyme/api/admin/console-logs', ...dev, async (req, res) => {
+router.get('/neodyme/api/admin/console-logs', ...gate('system.view'), async (req, res) => {
     try {
         const lines = parseInt(req.query.lines, 10) || 200;
         const sessionFile = LoggerService.getLogFilePath();
@@ -269,7 +340,7 @@ router.get('/neodyme/api/admin/console-logs', ...dev, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/admin/live-stats', ...dev, async (req, res) => {
+router.get('/neodyme/api/admin/live-stats', ...gate('system.view'), async (req, res) => {
     try {
         const cpuCount = os.cpus().length || 1;
 
@@ -318,7 +389,7 @@ router.get('/neodyme/api/admin/live-stats', ...dev, async (req, res) => {
     }
 });
 
-router.get('/neodyme/api/admin/plugins', ...dev, async (req, res) => {
+router.get('/neodyme/api/admin/plugins', ...gate('plugins.manage'), async (req, res) => {
     try {
         const PluginManager = require('../../src/manager/plugin-manager');
         const loaded = PluginManager.getPlugins();
@@ -337,7 +408,7 @@ router.get('/neodyme/api/admin/plugins', ...dev, async (req, res) => {
     }
 });
 
-router.post('/neodyme/api/admin/plugins/:pluginName/load', ...devWrite, async (req, res) => {
+router.post('/neodyme/api/admin/plugins/:pluginName/load', ...gateWrite('plugins.manage'), async (req, res) => {
     try {
         const PluginManager = require('../../src/manager/plugin-manager');
         const { pluginName } = req.params;
@@ -351,7 +422,7 @@ router.post('/neodyme/api/admin/plugins/:pluginName/load', ...devWrite, async (r
     }
 });
 
-router.post('/neodyme/api/admin/plugins/:pluginName/unload', ...devWrite, async (req, res) => {
+router.post('/neodyme/api/admin/plugins/:pluginName/unload', ...gateWrite('plugins.manage'), async (req, res) => {
     try {
         const PluginManager = require('../../src/manager/plugin-manager');
         const { pluginName } = req.params;
@@ -368,7 +439,7 @@ router.post('/neodyme/api/admin/plugins/:pluginName/unload', ...devWrite, async 
     }
 });
 
-router.post('/neodyme/api/admin/plugins/:pluginName/reload', ...devWrite, async (req, res) => {
+router.post('/neodyme/api/admin/plugins/:pluginName/reload', ...gateWrite('plugins.manage'), async (req, res) => {
     try {
         const PluginManager = require('../../src/manager/plugin-manager');
         const { pluginName } = req.params;
@@ -382,7 +453,7 @@ router.post('/neodyme/api/admin/plugins/:pluginName/reload', ...devWrite, async 
     }
 });
 
-router.get('/neodyme/api/admin/xmpp-clients', ...dev, async (req, res) => {
+router.get('/neodyme/api/admin/xmpp-clients', ...gate('system.view'), async (req, res) => {
     try {
         const XMPPManager = require('../../src/manager/xmpp-manager');
         const clients = XMPPManager.clients.map(c => ({
@@ -401,7 +472,7 @@ router.get('/neodyme/api/admin/xmpp-clients', ...dev, async (req, res) => {
 
 // ---- Whitelist (admin) ----
 
-router.get('/neodyme/api/admin/whitelist', ...admin, async (req, res) => {
+router.get('/neodyme/api/admin/whitelist', ...gate('whitelist.manage'), async (req, res) => {
     try {
         const whitelist = await DatabaseManager.getWhitelist();
         const accounts = await DatabaseManager.getAllWhitelistedAccounts();
@@ -422,7 +493,7 @@ router.get('/neodyme/api/admin/whitelist', ...admin, async (req, res) => {
     }
 });
 
-router.put('/neodyme/api/admin/whitelist/enabled', ...adminWrite, async (req, res) => {
+router.put('/neodyme/api/admin/whitelist/enabled', ...gateWrite('whitelist.manage'), async (req, res) => {
     try {
         const { enabled } = req.body;
         if (typeof enabled !== 'boolean') {
@@ -437,7 +508,7 @@ router.put('/neodyme/api/admin/whitelist/enabled', ...adminWrite, async (req, re
     }
 });
 
-router.post('/neodyme/api/admin/whitelist', ...adminWrite, async (req, res) => {
+router.post('/neodyme/api/admin/whitelist', ...gateWrite('whitelist.manage'), async (req, res) => {
     try {
         const query = (typeof req.body.query === 'string' ? req.body.query : '').trim();
         if (!query) {
@@ -462,7 +533,7 @@ router.post('/neodyme/api/admin/whitelist', ...adminWrite, async (req, res) => {
     }
 });
 
-router.delete('/neodyme/api/admin/whitelist/:accountId', ...adminWrite, async (req, res) => {
+router.delete('/neodyme/api/admin/whitelist/:accountId', ...gateWrite('whitelist.manage'), async (req, res) => {
     try {
         const { accountId } = req.params;
         const removed = await DatabaseManager.removeFromWhitelist(accountId);

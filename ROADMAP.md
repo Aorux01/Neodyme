@@ -11,7 +11,13 @@
 - [x] **Multi-account** - Multiple accounts support
 - [x] **Token management** - Access tokens, refresh tokens, exchange codes
 - [x] **Authentication service** - Auth middleware for all protected routes
-- [ ] **2FA (Two-Factor Authentication)** - 2FA setup and verification on website
+- [x] **2FA (Two-Factor Authentication)** - TOTP with any authenticator app, 10 backup codes, email fallback, mandatory option for staff (`/security enable`)
+- [x] **Password reset** - One-time email link, same answer whether or not the account exists, ends every session
+- [x] **Email verification** - Optional (`requireEmailVerification`), with resend cooldown
+- [x] **Email magic-link login** - One-time sign-in link, two-factor still applies
+- [x] **Discord login & account linking** - Linked from the Security page, stored in `account_links`, silently off without `.env` keys
+- [x] **Session control** - Force logout, admin password reset and password change all end game and website sessions
+- [x] **Particular authorizations** - 26 permissions on top of roles, `/caps` command and Admin panel Permissions tab
 
 ### MCP (Profile Service)
 - [x] **QueryProfile** - Profile retrieval (athena, common_core, campaign, etc.)
@@ -100,7 +106,7 @@
 ## Priority 2 - High
 
 ### XMPP & Communication
-- [x] **XMPP Server** - WebSocket XMPP server
+- [x] **XMPP Server** - WebSocket XMPP server, `ws` or `wss` (`xmppProtocol`)
 - [x] **In-game chat** - Private messages and groupchat (MUC) between players
 - [x] **Presence system** - Online/offline/away status, friend-filtered broadcasts
 - [x] **Real-time notifications** - Friend notifications, invites, party events
@@ -164,9 +170,9 @@
 - [x] **Updates page** - Patch notes
 - [ ] **Leaderboards** - Player rankings
 - [ ] **Player profile** - Profile page with stats
-- [ ] **2FA configuration** - Setup from website
+- [x] **2FA configuration** - Setup from the Security page
 - [ ] **Match history** - Match history
-- [ ] **Friends management** - Web interface for friends
+- [x] **Friends management** - Friends section of the dashboard
 
 ### CloudStorage
 - [x] **System storage** - Server files (hotfixes, etc.)
@@ -205,6 +211,8 @@
 - [x] **XMPP monitor** - Real-time connected clients widget
 - [x] **Content Editor** - Typed editors for 17 in-game content sections (MOTD, login message, emergency notices v1/v2, BR/Creative/STW news, lobby, special offer video, subgame select/info, BP about, creative ads/features, athena/survival messages) with i18n toggle per field, 13-locale switcher, list reorder/duplicate/delete, and Reset-from-GitHub
 - [x] **Assets Manager** - Upload (drag-and-drop, magic-byte validation, 5MB max), Browse local (grid by folder, copy URL, delete uploads), Browse online (CDN-only entries from assets-index.json). Uploads land in `public/images/uploaded-images/` with full metadata in `assets-index.json` and `alwaysLocal` enforcement
+- [x] **Permissions tab** - Per-account allow and deny on top of the role, with escalation rules
+- [x] **Audit log export** - Date filter and CSV export
 - [x] **Shop Editor (BETA)** - Hand-pick each slot of `data/shop.json` via a slot grid backed by `config/shop.json`. Searchable cosmetic picker from fortnite-api.com (rarity-coloured), single-slot random reroll, bulk "Randomize all empty", inline price/grant edit, slot clear
 - [ ] **Shop Editor (full)** - Drag-and-drop between slots, full preview with rendering by chapter, prices/rarity/sections matrix
 - [ ] **Game Modes Manager UI** - Frontend on top of `config/playlists.json` (enable, rotation, minBuild)
@@ -223,6 +231,8 @@
 - [x] **Test commands** - Full system test suite
 - [x] **Shop commands** - Manual rotation, featured items, date-based rotation
 - [x] **Debug commands** - Logs, profiling, token management
+- [x] **Security commands** - `/security` (staff 2FA policy, forced disable, backup codes, forced reset) and `/caps` (authorizations)
+- [x] **Self-tests** - `/test` with health and functional checks, shared with the Developer panel and the status page
 
 ### Database
 - [x] **JSON Database** - Local file storage
@@ -270,7 +280,7 @@
 ### Advanced Features
 - [ ] **Replay system** - Match recording
 - [x] **Report system** - In-game toxicity reports with mod panel integration
-- [ ] **Appeal system** - Ban appeals
+- [x] **Appeal system** - Ban appeals as support tickets, replies emailed
 - [ ] **Newsletter** - Automated emails
 - [ ] **Push notifications** - Mobile notifications
 - [ ] **Animation** - Animations and videos

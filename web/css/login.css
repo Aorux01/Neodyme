@@ -115,6 +115,15 @@
     font-size: 14px;
 }
 
+.form-link {
+    color: var(--primary-400);
+    text-decoration: none;
+}
+
+.form-link:hover {
+    text-decoration: underline;
+}
+
 .checkbox-container {
     display: flex;
     align-items: center;

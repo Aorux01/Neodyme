@@ -96,13 +96,14 @@ class EmailTemplateService {
     }
 
     // Build the variable context for a given recipient account.
-    static buildContext(account = {}) {
+    static buildContext(account = {}, extra = {}) {
         return {
             displayName: account.displayName || 'there',
             email: account.email || '',
             accountId: account.accountId || '',
             serverName: ConfigManager.get('serverName') || ConfigManager.get('websiteName') || 'Neodyme',
-            version: String(ConfigManager.get('version') || '')
+            version: String(ConfigManager.get('version') || ''),
+            ...extra
         };
     }
 
@@ -118,8 +119,8 @@ class EmailTemplateService {
     // The template's content fields (heading/body/footerNote) are interpolated and
     // injected into the chosen HTML layout. A template may still provide a full raw
     // `html` block, which bypasses the layout entirely.
-    static async render(template, account) {
-        const ctx = this.buildContext(account);
+    static async render(template, account, extra = {}) {
+        const ctx = this.buildContext(account, extra);
         const subject = this.interpolate(template.subject, ctx);
 
         let html;

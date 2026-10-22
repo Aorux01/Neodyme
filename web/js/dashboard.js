@@ -9,7 +9,7 @@ let currentSection = 'dashboard';
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth().then(user => {
         if (!user) {
-            window.location.href = 'login.html';
+            window.location.href = '/login';
             return;
         }
         currentUser = user;
@@ -88,12 +88,11 @@ document.getElementById('password-form')?.addEventListener('submit', async (e) =
     }
 
     try {
-        const response = await secureFetch(`${API}/auth/change-password`, {
+        const { response, data } = await sendWithTwoFactor(code => secureFetch(`${API}/auth/change-password`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ currentPassword, newPassword })
-        });
-        const data = await response.json();
+            body: JSON.stringify({ currentPassword, newPassword, code })
+        }));
 
         if (response.ok) {
             document.getElementById('password-form').reset();
@@ -137,6 +136,22 @@ document.querySelector('.settings-form')?.addEventListener('submit', async (e) =
     }
 });
 
+// Sends a request and, when the server asks for a two-factor code, asks for it once and retries.
+async function sendWithTwoFactor(send) {
+    let response = await send(undefined);
+    let data = await response.json();
+
+    if (!response.ok && data.error === 'TWO_FACTOR_REQUIRED') {
+        const code = prompt('Enter a code from your authenticator app (or a backup code):');
+        if (code) {
+            response = await send(code.trim());
+            data = await response.json();
+        }
+    }
+
+    return { response, data };
+}
+
 // --- Delete account (requires password confirmation) ---
 
 function confirmDeleteAccount() {
@@ -148,16 +163,15 @@ function confirmDeleteAccount() {
 
 async function deleteAccount(password) {
     try {
-        const response = await secureFetch(`${API}/auth/account`, {
+        const { response, data } = await sendWithTwoFactor(code => secureFetch(`${API}/auth/account`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password })
-        });
-        const data = await response.json();
+            body: JSON.stringify({ password, code })
+        }));
 
         if (response.ok) {
             showAlert('Account deleted successfully. Redirecting...', 'success');
-            setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+            setTimeout(() => { window.location.href = '/login'; }, 2000);
         } else {
             showAlert(apiError(data, 'Failed to delete account'), 'error');
         }
@@ -482,6 +496,15 @@ async function terminateAllSessions() {
     }
 }
 
+function showStaffTwoFactorNotice() {
+    const content = document.querySelector('.dashboard-content') || document.querySelector('main') || document.body;
+    const notice = document.createElement('div');
+    notice.className = 'alert alert-error';
+    notice.style.display = 'block';
+    notice.innerHTML = '<i class="fas fa-shield-alt"></i> Staff accounts must use two-factor authentication. <a href="/security" class="form-link">Turn it on to unlock the staff panels.</a>';
+    content.prepend(notice);
+}
+
 // --- Staff link reveal ---
 
 async function loadUserRole() {
@@ -489,6 +512,10 @@ async function loadUserRole() {
         const response = await fetch(`${API}/user/role`, { credentials: 'include' });
         if (!response.ok) return;
         const data = await response.json();
+
+        if (data.twoFactorRequired) {
+            showStaffTwoFactorNotice();
+        }
 
         if (data.panels && (data.panels.moderation || data.panels.developer || data.panels.admin)) {
             const staffLink = document.getElementById('nav-staff-panel');

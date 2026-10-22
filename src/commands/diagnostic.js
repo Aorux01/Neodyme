@@ -5,6 +5,9 @@ const ConfigManager = require('../manager/config-manager');
 const DatabaseManager = require('../manager/database-manager');
 const TokenService = require('../service/token/token-service');
 const PluginManager = require('../manager/plugin-manager');
+const EmailService = require('../service/email/email-service');
+const ConfigAdvisor = require('../service/setup/config-advisor');
+const DiscordService = require('../service/security/discord-service');
 
 function register(CM) {
     CM.register('/diagnostic', async () => {
@@ -69,6 +72,22 @@ function register(CM) {
             LoggerService.log('info', `  Refresh:      ${tokenStats.refreshTokens}`);
             LoggerService.log('info', `  Client:       ${tokenStats.clientTokens}`);
             LoggerService.log('info', `  Total:        ${tokenStats.total}`);
+
+            let twoFactorAccounts = 0;
+            try {
+                twoFactorAccounts = (await DatabaseManager.getAllAccounts()).filter(a => a.tfaEnabled).length;
+            } catch (_) {}
+
+            LoggerService.log('info', `\n${colors.yellow('[ ACCOUNT SECURITY ]')}`);
+            LoggerService.log('info', `  Email (SMTP):   ${EmailService.isConfigured() ? colors.green('Configured') : colors.gray('Not configured')}`);
+            LoggerService.log('info', `  Public URL:     ${ConfigManager.get('publicUrl') || colors.gray('(empty, localhost)')}`);
+            LoggerService.log('info', `  2FA accounts:   ${twoFactorAccounts} (staff policy ${ConfigManager.get('require2faForStaff') ? colors.green('required') : colors.gray('not required')})`);
+            LoggerService.log('info', `  Email verify:   ${ConfigManager.get('requireEmailVerification') ? colors.green('Required') : colors.gray('Optional')}`);
+            LoggerService.log('info', `  Discord login:  ${DiscordService.enabled() ? colors.green('Enabled') : colors.gray('Off')}`);
+            LoggerService.log('info', `  XMPP protocol:  ${String(ConfigManager.get('xmppProtocol', 'ws')).toUpperCase()}`);
+
+            const advice = await ConfigAdvisor.collect();
+            advice.forEach(message => LoggerService.log('warn', `  ${message}`));
 
             if (plugins.length > 0) {
                 LoggerService.log('info', `\n${colors.yellow('[ PLUGINS ]')}`);

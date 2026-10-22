@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appeal a Ban - Neodyme</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body data-page="appeal">
+    <a href="/login" class="back-home">
+        <i class="fas fa-arrow-left"></i> Back to Sign In
+    </a>
+
+    <div class="login-container">
+        <div class="login-sidebar">
+            <div class="sidebar-content">
+                <div class="neodyme-logo-large">N</div>
+                <h1 class="sidebar-title">Neodyme Server</h1>
+                <p class="sidebar-subtitle">Ask the moderators to review a ban</p>
+            </div>
+        </div>
+
+        <div class="login-form-container">
+            <div class="form-header">
+                <h2 class="form-title">Appeal a Ban</h2>
+                <p class="form-subtitle">Tell the moderators why the ban should be lifted</p>
+            </div>
+
+            <div class="alert alert-error" id="alert">
+                <span id="alert-message"></span>
+            </div>
+
+            <div class="alert alert-info" id="feature-notice" style="display:none;"></div>
+
+            <form id="appeal-form">
+                <div class="form-group">
+                    <label for="email" class="form-label">Account Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="The email of the banned account" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="message" class="form-label">Your Message</label>
+                    <textarea id="message" class="form-input" rows="6" maxlength="1000" placeholder="Explain what happened and why you think the ban should be lifted" required style="resize:vertical;"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submit-btn" data-original-text="SEND APPEAL">SEND APPEAL</button>
+            </form>
+
+            <p class="form-subtitle" style="margin-top:16px;font-size:13px;">One appeal at a time per account. Moderators answer by email when the server has email set up.</p>
+
+            <div class="signup-link">
+                Not banned? <a href="/login">Sign in</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/common.js"></script>
+    <script src="/js/recovery.js"></script>
+</body>
+</html>

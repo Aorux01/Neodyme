@@ -6,12 +6,15 @@ const { v4: uuidv4 } = require('uuid');
 const LoggerService = require('../service/logger/logger-service');
 const ConfigManager = require('../manager/config-manager');
 
+const SECURITY_FIELDS = ['tfaEnabled', 'tfaSecret', 'tfaPendingSecret', 'tfaBackupCodes', 'tfaLastStep', 'capabilityGrants', 'capabilityDenies', 'sessionsValidAfter'];
+
 class JsonDatabase {
     static dataPath = path.join(__dirname, '../../data');
     static clientsFile = path.join(this.dataPath, 'clients.json');
     static playersPath = path.join(this.dataPath, 'players');
     static auditLogFile = path.join(this.dataPath, 'audit-log.json');
     static whitelistFile = path.join(this.dataPath, 'whitelist.json');
+    static accountLinksFile = path.join(this.dataPath, 'account-links.json');
 
     static maxAuditLogEntries = 10000;
 
@@ -1111,6 +1114,11 @@ class JsonDatabase {
         if (fs.existsSync(playerDir)) {
             fs.rmSync(playerDir, { recursive: true, force: true });
         }
+
+        const links = await this.readAccountLinks();
+        if (links.some(l => l.accountId === accountId)) {
+            await this.safeWriteFile(this.accountLinksFile, JSON.stringify(links.filter(l => l.accountId !== accountId), null, 2));
+        }
         return true;
     }
 
@@ -1295,8 +1303,76 @@ class JsonDatabase {
             account.email = normalizedEmail;
         }
 
+        if (typeof updates.emailVerified === 'boolean') {
+            account.emailVerified = updates.emailVerified;
+        }
+
         await this.saveClients(clients);
         return account;
+    }
+
+    static async updateSecurityFields(accountId, fields) {
+        const clients = await this.getClients();
+        const account = clients.find(c => c.accountId === accountId);
+        if (!account) return false;
+
+        for (const key of SECURITY_FIELDS) {
+            if (key in fields) account[key] = fields[key];
+        }
+
+        await this.saveClients(clients);
+        return true;
+    }
+
+    static async readAccountLinks() {
+        if (!fs.existsSync(this.accountLinksFile)) return [];
+        const parsed = JSON.parse(await this.safeReadFile(this.accountLinksFile));
+        return Array.isArray(parsed) ? parsed : [];
+    }
+
+    static async getAccountLinks(accountId) {
+        return (await this.readAccountLinks()).filter(l => l.accountId === accountId);
+    }
+
+    static async findAccountLink(provider, providerId) {
+        return (await this.readAccountLinks()).find(l => l.provider === provider && l.providerId === providerId) || null;
+    }
+
+    static async addAccountLink({ provider, providerId, accountId, username }) {
+        const links = await this.readAccountLinks();
+        const taken = links.some(l => l.provider === provider && (l.providerId === providerId || l.accountId === accountId));
+        if (taken) return false;
+
+        links.push({ provider, providerId, accountId, username, linkedAt: new Date().toISOString() });
+        await this.safeWriteFile(this.accountLinksFile, JSON.stringify(links, null, 2));
+        return true;
+    }
+
+    static async removeAccountLink(accountId, provider) {
+        const links = await this.readAccountLinks();
+        const remaining = links.filter(l => !(l.accountId === accountId && l.provider === provider));
+        if (remaining.length === links.length) return false;
+
+        await this.safeWriteFile(this.accountLinksFile, JSON.stringify(remaining, null, 2));
+        return true;
+    }
+
+    static async resetPassword(accountId, newPassword) {
+        const clients = await this.getClients();
+        const account = clients.find(c => c.accountId === accountId);
+        if (!account) return false;
+
+        this.validatePasswordStrength(newPassword);
+
+        const workFactor = ConfigManager.get('bcryptWorkFactor', 12);
+        account.password = await bcrypt.hash(newPassword, workFactor);
+        account.failedLoginAttempts = 0;
+        account.lockoutCount = 0;
+        delete account.lockedUntil;
+        await this.saveClients(clients);
+
+        LoggerService.log('info', `Password reset for account: ${accountId}`);
+        return true;
     }
 
     static async updatePassword(accountId, currentPassword, newPassword) {

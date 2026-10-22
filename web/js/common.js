@@ -60,7 +60,7 @@ async function checkAuth() {
     } catch {
         sessionStorage.removeItem('neodyme_user');
         if (window.location.pathname.includes('dashboard')) {
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         }
         return null;
     }
@@ -74,7 +74,7 @@ async function logout() {
         // Logout is best-effort; clear local state regardless.
     }
     sessionStorage.removeItem('neodyme_user');
-    window.location.href = 'login.html';
+    window.location.href = '/login';
 }
 
 function getStoredUser() {

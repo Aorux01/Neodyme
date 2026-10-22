@@ -14,6 +14,7 @@ const Friends = require('./mongodb/friends');
 const CloudStorage = require('./mongodb/cloud-storage');
 const AuditLog = require('./mongodb/audit-log');
 const Whitelist = require('./mongodb/whitelist');
+const AccountLink = require('./mongodb/account-links');
 
 class MongoDatabase {
     static MAX_FAILED_ATTEMPTS = 5;
@@ -304,6 +305,59 @@ class MongoDatabase {
 
         await User.updateOne({ accountId }, { $set: updates });
         return await this.getAccount(accountId);
+    }
+
+    static async updateSecurityFields(accountId, fields) {
+        const update = {};
+        for (const key of ['tfaEnabled', 'tfaSecret', 'tfaPendingSecret', 'tfaBackupCodes', 'tfaLastStep', 'capabilityGrants', 'capabilityDenies', 'sessionsValidAfter']) {
+            if (key in fields) update[key] = fields[key];
+        }
+
+        const result = await User.updateOne({ accountId }, { $set: update });
+        return result.matchedCount > 0;
+    }
+
+    static async getAccountLinks(accountId) {
+        const links = await AccountLink.find({ accountId }).lean();
+        return links.map(l => ({ provider: l.provider, providerId: l.providerId, accountId: l.accountId, username: l.username, linkedAt: l.linkedAt }));
+    }
+
+    static async findAccountLink(provider, providerId) {
+        const link = await AccountLink.findOne({ provider, providerId }).lean();
+        return link ? { provider: link.provider, providerId: link.providerId, accountId: link.accountId, username: link.username, linkedAt: link.linkedAt } : null;
+    }
+
+    static async addAccountLink({ provider, providerId, accountId, username }) {
+        try {
+            await AccountLink.create({ provider, providerId, accountId, username, linkedAt: new Date() });
+            return true;
+        } catch (error) {
+            if (error.code === 11000) return false;
+            throw error;
+        }
+    }
+
+    static async removeAccountLink(accountId, provider) {
+        const result = await AccountLink.deleteOne({ accountId, provider });
+        return result.deletedCount > 0;
+    }
+
+    static async resetPassword(accountId, newPassword) {
+        const user = await User.findOne({ accountId });
+        if (!user) return false;
+
+        this.validatePasswordStrength(newPassword);
+
+        const workFactor = ConfigManager.get('bcryptWorkFactor', 12);
+        const hashedPassword = await bcrypt.hash(newPassword, workFactor);
+
+        await User.updateOne(
+            { accountId },
+            { $set: { password: hashedPassword, failedLoginAttempts: 0, lockoutCount: 0 }, $unset: { lockedUntil: '' } }
+        );
+
+        LoggerService.log('info', `Password reset for account: ${accountId}`);
+        return true;
     }
 
     static async updatePassword(accountId, currentPassword, newPassword) {
@@ -999,6 +1053,7 @@ class MongoDatabase {
         await Profile.deleteOne({ accountId });
         await Friends.deleteOne({ accountId });
         await CloudStorage.deleteMany({ accountId });
+        await AccountLink.deleteMany({ accountId });
         const playerDir = path.join(this.playersPath, accountId);
         if (fs.existsSync(playerDir)) {
             fs.rmSync(playerDir, { recursive: true, force: true });

@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const AuthService = require('../../src/service/api/auth-service');
+const RecoveryService = require('../../src/service/api/recovery-service');
 const WebResponse = require('../../src/service/api/web-response-service');
 const WebService = require('../../src/service/api/web-service');
 const { expensiveRateLimit } = require('../../src/middleware/rate-limit-middleware');
+const { csrfProtection } = require('../../src/service/token/csrf-token-service');
 
 const verifyToken = WebService.verifyToken;
 
@@ -39,16 +41,16 @@ router.get('/neodyme/api/sessions/count', verifyToken, async (req, res) => {
     }
 });
 
-router.delete('/neodyme/api/sessions/all', verifyToken, expensiveRateLimit(), async (req, res) => {
+router.delete('/neodyme/api/sessions/all', verifyToken, csrfProtection, expensiveRateLimit(), async (req, res) => {
     try {
-        await AuthService.killAllTokensForAccount(req.user.accountId);
+        await RecoveryService.revokeSessions(req.user.accountId);
         return WebResponse.ok(res, { message: 'All sessions terminated successfully. Please log in again.' });
     } catch (error) {
         return WebResponse.serverError(res, 'kill all sessions', error);
     }
 });
 
-router.delete('/neodyme/api/sessions/:sessionId', verifyToken, expensiveRateLimit(), async (req, res) => {
+router.delete('/neodyme/api/sessions/:sessionId', verifyToken, csrfProtection, expensiveRateLimit(), async (req, res) => {
     try {
         const { sessionId } = req.params;
         if (!sessionId) {

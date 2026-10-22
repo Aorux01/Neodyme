@@ -90,7 +90,7 @@ function register(CM) {
             case 'item': {
                 if (args.length < 3) {
                     LoggerService.log('info', `Usage: ${colors.cyan('/give item <username> <templateId>')}`);
-                    LoggerService.log('info', `Example: ${colors.gray('/give item JojoM AthenaCharacter:CID_A_248_Athena_Commando_M_ZombieElastic_E')}`);
+                    LoggerService.log('info', `Example: ${colors.gray('/give item Pseudo001 AthenaCharacter:CID_A_248_Athena_Commando_M_ZombieElastic_E')}`);
                     return;
                 }
 

@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     checkAuth().then(user => {
         if (user) {
-            window.location.href = 'dashboard.html';
+            window.location.href = '/dashboard';
         }
     });
 
@@ -193,11 +193,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
 
             if (response.ok) {
-                showAlert('Account created successfully! Redirecting to login...', 'success');
+                showAlert(data.verificationRequired ? data.message : 'Account created successfully! Redirecting to login...', 'success');
 
                 setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
+                    window.location.href = '/login';
+                }, data.verificationRequired ? 5000 : 2000);
             } else {
                 throw new Error(data.message || 'Registration failed');
             }

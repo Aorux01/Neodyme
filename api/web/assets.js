@@ -1,3 +1,4 @@
+const { gate, gateWrite } = require('../../src/service/api/capability-middleware');
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
@@ -8,11 +9,8 @@ const AuditService = require('../../src/service/api/audit-service');
 const WebResponse = require('../../src/service/api/web-response-service');
 const WebService = require('../../src/service/api/web-service');
 const { csrfProtection } = require('../../src/service/token/csrf-token-service');
-const { requireDeveloper } = require('../../src/service/api/role-middleware-service');
 
 const verifyToken = WebService.verifyToken;
-const dev      = [verifyToken, requireDeveloper];
-const devWrite = [verifyToken, requireDeveloper, csrfProtection];
 
 const PUBLIC_IMAGES_DIR  = path.join(__dirname, '..', '..', 'public', 'images');
 const UPLOADED_DIR_REL   = 'uploaded-images';
@@ -72,7 +70,7 @@ const upload = multer({
 // Browse - list every file actually present under public/images/, grouped by
 // top-level folder. The asset index lists *managed* assets; this endpoint shows
 // what is physically on disk (which is what staff actually pick from).
-router.get('/neodyme/api/dev/assets/local', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/assets/local', ...gate('assets.manage'), async (req, res) => {
     try {
         if (!fs.existsSync(PUBLIC_IMAGES_DIR)) return WebResponse.ok(res, { folders: {} });
 
@@ -107,7 +105,7 @@ router.get('/neodyme/api/dev/assets/local', ...dev, async (req, res) => {
 
 // Browse online - entries from assets-index.json that have a CDN URL and are
 // not present on disk (i.e. served by redirect in "online" mode).
-router.get('/neodyme/api/dev/assets/online', ...dev, async (req, res) => {
+router.get('/neodyme/api/dev/assets/online', ...gate('assets.manage'), async (req, res) => {
     try {
         const index = loadIndex();
         const entries = [];
@@ -132,7 +130,7 @@ router.get('/neodyme/api/dev/assets/online', ...dev, async (req, res) => {
 // Upload a single image. We sniff magic bytes to make sure a .png is really a
 // PNG (and not a renamed script), then write under public/images/uploaded-images/
 // with a timestamped filename, and register it in assets-index.json.
-router.post('/neodyme/api/dev/assets/upload', ...devWrite, (req, res) => {
+router.post('/neodyme/api/dev/assets/upload', ...gateWrite('assets.manage'), (req, res) => {
     upload.single('file')(req, res, async (err) => {
         if (err) {
             if (err.code === 'LIMIT_FILE_SIZE') return WebResponse.badRequest(res, `File too large. Max ${Math.round(MAX_UPLOAD_BYTES / 1024 / 1024)} MB.`);
@@ -186,7 +184,7 @@ router.post('/neodyme/api/dev/assets/upload', ...devWrite, (req, res) => {
 
 // Delete an uploaded image. We only allow deletion under uploaded-images/ to
 // avoid accidental wipes of /assets-installed content.
-router.delete('/neodyme/api/dev/assets/uploaded/:filename', ...devWrite, async (req, res) => {
+router.delete('/neodyme/api/dev/assets/uploaded/:filename', ...gateWrite('assets.manage'), async (req, res) => {
     try {
         const { filename } = req.params;
         if (!/^[\w.\-]+\.(png|jpe?g|webp|gif)$/i.test(filename)) {

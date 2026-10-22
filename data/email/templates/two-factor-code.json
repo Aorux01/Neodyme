@@ -1,0 +1,12 @@
+{
+  "id": "two-factor-code",
+  "system": true,
+  "name": "Two-Factor Email Code",
+  "description": "Sent when a player picks the email option while signing in with two-factor authentication.",
+  "layout": "default",
+  "subject": "Your {{serverName}} sign-in code",
+  "heading": "Your sign-in code",
+  "body": "Use this code to finish signing in as {{displayName}}:<br><br><span style=\"display:inline-block;font-size:28px;font-weight:700;letter-spacing:6px;color:#ffffff;background:#251d3a;padding:12px 20px;border-radius:8px;\">{{code}}</span><br><br>The code expires in {{expiresIn}} and works once.",
+  "text": "Your {{serverName}} sign-in code is {{code}}. It expires in {{expiresIn}}.",
+  "footerNote": "If you did not try to sign in, change your password: someone may know it."
+}

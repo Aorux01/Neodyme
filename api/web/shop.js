@@ -7,7 +7,7 @@ const WebResponse = require('../../src/service/api/web-response-service');
 const WebService = require('../../src/service/api/web-service');
 const { expensiveRateLimit } = require('../../src/middleware/rate-limit-middleware');
 const { csrfProtection } = require('../../src/service/token/csrf-token-service');
-const { requireAdmin } = require('../../src/service/api/role-middleware-service');
+const { requireCap } = require('../../src/service/api/role-middleware-service');
 
 const verifyToken = WebService.verifyToken;
 
@@ -78,7 +78,7 @@ router.get('/neodyme/api/shop/items', async (req, res) => {
     }
 });
 
-router.post('/neodyme/api/shop/rotate', verifyToken, requireAdmin, expensiveRateLimit(), csrfProtection, async (req, res) => {
+router.post('/neodyme/api/shop/rotate', verifyToken, requireCap('shop.rotate'), expensiveRateLimit(), csrfProtection, async (req, res) => {
     try {
         await ShopManager.forceRotation();
         LoggerService.log('info', `Shop manually rotated by ${req.user.displayName}`);

@@ -160,7 +160,7 @@ function populateReview() {
 function selectPackage(total, price, cardEl) {
     if (!currentUser) {
         showAlert('Please sign in to purchase V-Bucks', 'error');
-        setTimeout(() => { window.location.href = 'login.html?redirect=purchase.html'; }, 2000);
+        setTimeout(() => { window.location.href = '/login?redirect=/purchase'; }, 2000);
         return;
     }
 

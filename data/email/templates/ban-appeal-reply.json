@@ -1,0 +1,12 @@
+{
+  "id": "ban-appeal-reply",
+  "system": true,
+  "name": "Ban Appeal Reply",
+  "description": "Sent to a banned player when a moderator answers their appeal.",
+  "layout": "default",
+  "subject": "Answer to your {{serverName}} ban appeal",
+  "heading": "A moderator answered your appeal",
+  "body": "Hello {{displayName}}, here is the answer to your ban appeal:<br><br><span style=\"display:block;background:#251d3a;border-radius:8px;padding:14px 16px;color:#ffffff;\">{{reply}}</span>",
+  "text": "A moderator answered your ban appeal on {{serverName}}.",
+  "footerNote": "You received this email because an appeal was sent for your account on {{serverName}}."
+}

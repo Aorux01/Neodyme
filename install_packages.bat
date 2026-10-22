@@ -2,9 +2,7 @@
 title Neodyme - Installing Packages
 cls
 
-echo ======================================
-echo   Neodyme Server Package Installation
-echo ======================================
+echo Neodyme Server Package Installation
 echo.
 
 :: Check if npm is installed
@@ -27,16 +25,12 @@ npm install
 
 if %errorlevel% equ 0 (
     echo.
-    echo ======================================
-    echo   Installation completed successfully!
-    echo ======================================
+    echo Installation completed successfully!
     echo.
     echo You can now run start.bat to launch the server
 ) else (
     echo.
-    echo ======================================
-    echo   ERROR: Installation failed!
-    echo ======================================
+    echo ERROR: Installation failed!
     echo.
     echo Please check the error messages above
 )

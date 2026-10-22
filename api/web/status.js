@@ -1,57 +1,39 @@
 const express = require('express');
 const router = express.Router();
+const TestRegistry = require('../../src/service/test/test-registry');
+
+TestRegistry.loadBuiltInChecks();
+
+const PUBLIC_SERVICES = [
+    { key: 'server', checkId: 'http', label: 'Game Server' },
+    { key: 'auth', checkId: 'auth', label: 'Authentication' },
+    { key: 'accounts', checkId: 'accounts', label: 'Account System' },
+    { key: 'friends', checkId: 'friends', label: 'Friends' },
+    { key: 'xmpp', checkId: 'xmpp', label: 'Chat (XMPP)' },
+    { key: 'matchmaking', checkId: 'matchmaking', label: 'Matchmaking' },
+    { key: 'shop', checkId: 'shop', label: 'Item Shop' },
+    { key: 'database', checkId: 'database', label: 'Database' }
+];
+
+const PUBLIC_STATUS = { ok: 'operational', degraded: 'degraded', error: 'outage' };
+const CACHE_MS = 10000;
 
 router.get('/neodyme/api/status', (_req, res) => {
     res.json({ online: true, uptime: Math.floor(process.uptime()) });
 });
 
 router.get('/neodyme/api/status/services', async (_req, res) => {
-    const checks = {
-        server:      { status: 'operational', label: 'Game Server' },
-        auth:        { status: 'operational', label: 'Authentication' },
-        accounts:    { status: 'operational', label: 'Account System' },
-        friends:     { status: 'operational', label: 'Friends' },
-        xmpp:        { status: 'outage',      label: 'Chat (XMPP)' },
-        matchmaking: { status: 'outage',      label: 'Matchmaking' },
-        shop:        { status: 'outage',      label: 'Item Shop' },
-        database:    { status: 'outage',      label: 'Database' },
-    };
+    const results = await TestRegistry.runHealth({ maxAgeMs: CACHE_MS });
+    const byId = new Map(results.map(r => [r.id, r]));
 
-    try {
-        const XmppManager = require('../../src/manager/xmpp-manager');
-        checks.xmpp.status = XmppManager.wss ? 'operational' : 'outage';
-    } catch (_) {}
+    const services = {};
+    for (const { key, checkId, label } of PUBLIC_SERVICES) {
+        const result = byId.get(checkId);
+        if (!result || result.status === 'disabled') continue;
+        services[key] = { status: PUBLIC_STATUS[result.status] || 'outage', label };
+    }
 
-    try {
-        const MatchmakerManager = require('../../src/manager/matchmaker-manager');
-        checks.matchmaking.status = MatchmakerManager.clients != null ? 'operational' : 'outage';
-    } catch (_) {}
-
-    try {
-        const DatabaseManager = require('../../src/manager/database-manager');
-        const dbType = DatabaseManager.getDatabaseType();
-        const dbInstance = dbType ? DatabaseManager.getDatabaseInstance() : null;
-        checks.database.label = `Database (${dbType || 'unknown'})`;
-        checks.database.status = dbInstance ? 'operational' : 'outage';
-    } catch (_) {}
-
-    try {
-        const ShopManager = require('../../src/manager/shop-manager');
-        if (!ShopManager.isInitialized) {
-            checks.shop.status = 'outage';
-        } else {
-            try {
-                const shopData = await ShopManager.getShopData();
-                const hasContent = shopData && typeof shopData === 'object'
-                    && Object.keys(shopData).some(k => k !== '//' && k !== 'lastRotation');
-                checks.shop.status = hasContent ? 'operational' : 'degraded';
-            } catch (_) {
-                checks.shop.status = 'degraded';
-            }
-        }
-    } catch (_) {}
-
-    const statuses = Object.values(checks);
+    const statuses = Object.values(services);
     const total = statuses.length;
     const outages = statuses.filter(s => s.status === 'outage').length;
     const degraded = statuses.filter(s => s.status === 'degraded').length;
@@ -61,7 +43,7 @@ router.get('/neodyme/api/status/services', async (_req, res) => {
         success: true,
         overall,
         summary: { total, operational: total - outages - degraded, degraded, outage: outages },
-        services: checks,
+        services,
         checkedAt: new Date().toISOString()
     });
 });

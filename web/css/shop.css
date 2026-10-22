@@ -71,6 +71,24 @@
     border: 1px solid rgba(76, 175, 80, 0.3);
 }
 
+.shop-container > .alert {
+    grid-column: 1 / -1;
+    justify-self: center;
+    align-items: center;
+    gap: 10px;
+    min-width: 280px;
+    margin: -16px 0 0;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: 600;
+    animation: shop-alert-in 0.25s ease;
+}
+
+@keyframes shop-alert-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .shop-filters {
     grid-column: 1 / -1;
     display: flex;

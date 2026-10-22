@@ -20,6 +20,7 @@ const BackupManager = require('./src/manager/backup-manager');
 const EXPService = require('./src/service/api/experience-service');
 const TokenService = require('./src/service/token/token-service');
 const WebTokenService = require('./src/service/token/web-token-service');
+const OneTimeTokenService = require('./src/service/token/one-time-token-service');
 const { CsrfTokenService } = require('./src/service/token/csrf-token-service');
 const CreatorCodeService = require('./src/service/api/creator-code-service');
 const TicketService = require('./src/service/api/ticket-service');
@@ -27,6 +28,7 @@ const AuditService = require('./src/service/api/audit-service');
 const EmailService = require('./src/service/email/email-service');
 const PlaylistRotationService = require('./src/service/playlist-rotation-service');
 const FirstLaunchService = require('./src/service/setup/first-launch-service');
+const ConfigAdvisor = require('./src/service/setup/config-advisor');
 
 const NEODYME_ASCII = `
 ${colors.cyan('███╗   ██╗███████╗ ██████╗ ██████╗ ██╗   ██╗███╗   ███╗███████╗')}
@@ -125,6 +127,16 @@ class Server {
             LoggerService.log('info', 'Initializing Web Token Service...');
             await WebTokenService.initialize();
 
+            LoggerService.log('info', 'Initializing One-Time Token Service...');
+            await OneTimeTokenService.initialize();
+
+            try {
+                const twoFactorUsers = (await DatabaseManager.getAllAccounts()).filter(a => a.tfaEnabled).length;
+                if (twoFactorUsers > 0) {
+                    LoggerService.log('warn', `${twoFactorUsers} account(s) use two-factor authentication. It protects the website only: the game login still uses the password.`);
+                }
+            } catch (_) {}
+
             LoggerService.log('info', 'Initializing CSRF Token Service...');
             await CsrfTokenService.initialize();
 
@@ -199,6 +211,8 @@ class Server {
             } catch (error) {
                 LoggerService.log('warn', `Playlist rotation failed to start: ${error.message} - service disabled`);
             }
+
+            await ConfigAdvisor.run();
 
             LoggerService.log('info', 'Backend version check...');
             await Server.checkVersion();

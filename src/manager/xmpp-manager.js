@@ -1,4 +1,7 @@
 const WebSocket = require('ws');
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
 const XMLBuilder = require('xmlbuilder');
 const XMLParser = require('xml-parser');
 const crypto = require('crypto');
@@ -10,22 +13,48 @@ const MatchmakerManager = require('./matchmaker-manager');
 
 class XMPPManager {
     static wss = null;
+    static httpsServer = null;
     static clients = [];
     static mucs = {};
     static domain = 'prod.ol.epicgames.com';
     static startError = null;
 
+    static isSecure() {
+        return String(ConfigManager.get('xmppProtocol', 'ws')).toLowerCase() === 'wss';
+    }
+
+    static scheme() {
+        return this.isSecure() ? 'wss' : 'ws';
+    }
+
+    static tlsOptions() {
+        const certPath = path.resolve(ConfigManager.get('sslCertPath', 'config/ssl/cert.pem'));
+        const keyPath = path.resolve(ConfigManager.get('sslKeyPath', 'config/ssl/key.pem'));
+        const caPath = ConfigManager.get('sslCaPath', '');
+
+        if (!fs.existsSync(certPath) || !fs.existsSync(keyPath)) {
+            throw new Error(`xmppProtocol=wss needs the SSL certificate (${certPath}) and key (${keyPath}). Provide them or set xmppProtocol=ws.`);
+        }
+
+        return {
+            cert: fs.readFileSync(certPath),
+            key: fs.readFileSync(keyPath),
+            ...(caPath && fs.existsSync(caPath) ? { ca: fs.readFileSync(caPath) } : {})
+        };
+    }
+
     static async start() {
         const port = ConfigManager.get('xmppPort');
         this.domain = ConfigManager.get('xmppDomain');
+        const secure = this.isSecure();
 
         return new Promise((resolve, reject) => {
-            this.wss = new WebSocket.Server({ port }, () => {
-                LoggerService.log('success', `XMPP server started on port ${port}`);
+            const onListening = () => {
+                LoggerService.log('success', `XMPP server started on port ${port} (${this.scheme()})`);
                 resolve();
-            });
+            };
 
-            this.wss.on('error', (err) => {
+            const onError = (err) => {
                 if (err.code === 'EADDRINUSE') {
                     LoggerService.log('error', `XMPP port ${port} is already in use.`);
                     reject(new Error(`Port ${port} already in use`));
@@ -33,8 +62,24 @@ class XMPPManager {
                     LoggerService.log('error', `XMPP server failed to start: ${err.message}`);
                     reject(err);
                 }
-            });
+            };
 
+            if (secure) {
+                try {
+                    this.httpsServer = https.createServer(this.tlsOptions());
+                } catch (err) {
+                    LoggerService.log('error', `XMPP over SSL could not start: ${err.message}`);
+                    return reject(err);
+                }
+
+                this.wss = new WebSocket.Server({ server: this.httpsServer });
+                this.httpsServer.on('error', onError);
+                this.httpsServer.listen(port, onListening);
+            } else {
+                this.wss = new WebSocket.Server({ port }, onListening);
+            }
+
+            this.wss.on('error', onError);
             this.wss.on('connection', (ws, req) => this.handleConnection(ws, req));
         });
     }
@@ -669,6 +714,10 @@ class XMPPManager {
             this.mucs = {};
 
             this.wss.close();
+            if (this.httpsServer) {
+                this.httpsServer.close();
+                this.httpsServer = null;
+            }
             LoggerService.log('info', 'XMPP server stopped');
         }
     }

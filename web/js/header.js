@@ -22,15 +22,19 @@ async function updateHeaderAuth() {
                             </div>
                         </div>
                         <div class="dropdown-divider"></div>
-                        <a href="dashboard.html" class="dropdown-item">
+                        <a href="/dashboard" class="dropdown-item">
                             <i class="fas fa-tachometer-alt"></i>
                             Dashboard
                         </a>
-                        <a href="shop.html" class="dropdown-item">
+                        <a href="/shop" class="dropdown-item">
                             <i class="fas fa-shopping-bag"></i>
                             Item Shop
                         </a>
-                        <a href="purchase.html" class="dropdown-item">
+                        <a href="/security" class="dropdown-item">
+                            <i class="fas fa-shield-alt"></i>
+                            Security
+                        </a>
+                        <a href="/purchase" class="dropdown-item">
                             <i class="fas fa-coins"></i>
                             Get V-Bucks
                         </a>
@@ -46,8 +50,8 @@ async function updateHeaderAuth() {
             addHeaderStyles();
         } else {
             headerActions.innerHTML = `
-                <a href="login.html" class="btn btn-secondary">SIGN IN</a>
-                <a href="register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+                <a href="/login" class="btn btn-secondary">SIGN IN</a>
+                <a href="/register" class="btn btn-primary">CREATE ACCOUNT</a>
             `;
         }
     } catch (error) {
@@ -71,7 +75,7 @@ async function handleLogout(event) {
         // best-effort
     }
     sessionStorage.removeItem('neodyme_user');
-    window.location.href = '../index.html';
+    window.location.href = '/';
 }
 
 function addHeaderStyles() {
@@ -126,7 +130,7 @@ function addHeaderStyles() {
 
         .user-info i {
             font-size: 12px;
-            color: #b0b0b0;
+            color: var(--muted, #a39fb3);
             transition: transform 0.2s ease;
         }
 
@@ -139,10 +143,11 @@ function addHeaderStyles() {
             top: calc(100% + 8px);
             right: 0;
             width: 280px;
-            background: #1e1e1e;
-            border: 1px solid #333;
+            background: var(--surface-2, #1b1726);
+            border: 1px solid var(--border-strong, rgba(255, 255, 255, 0.14));
             border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
@@ -161,7 +166,7 @@ function addHeaderStyles() {
             align-items: center;
             gap: 12px;
             padding: 16px;
-            background: rgba(139, 92, 246, 0.1);
+            background: var(--primary-soft, rgba(139, 92, 246, 0.14));
         }
 
         .dropdown-avatar {
@@ -196,7 +201,7 @@ function addHeaderStyles() {
 
         .dropdown-email {
             font-size: 12px;
-            color: #b0b0b0;
+            color: var(--muted, #a39fb3);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -204,8 +209,8 @@ function addHeaderStyles() {
 
         .dropdown-divider {
             height: 1px;
-            background: #333;
-            margin: 8px 0;
+            background: var(--border, rgba(255, 255, 255, 0.08));
+            margin: 0;
         }
 
         .dropdown-item {
@@ -213,25 +218,26 @@ function addHeaderStyles() {
             align-items: center;
             gap: 12px;
             padding: 12px 16px;
-            color: #e6e6e6;
+            color: var(--text, #f4f2f8);
             text-decoration: none;
             font-size: 14px;
+            border-bottom: none;
             transition: all 0.2s ease;
         }
 
         .dropdown-item:hover {
-            background: rgba(139, 92, 246, 0.1);
-            color: #8b5cf6;
+            background: var(--primary-soft, rgba(139, 92, 246, 0.14));
+            color: var(--primary-400, #a78bfa);
         }
 
         .dropdown-item i {
             width: 20px;
             text-align: center;
-            color: #b0b0b0;
+            color: var(--muted, #a39fb3);
         }
 
         .dropdown-item:hover i {
-            color: #8b5cf6;
+            color: var(--primary-400, #a78bfa);
         }
 
         .dropdown-item.logout {

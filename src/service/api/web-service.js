@@ -87,6 +87,12 @@ class WebService {
                 return WebResponse.unauthorized(res, 'Session expired. Please sign in again.');
             }
 
+            const validAfter = Number(account.sessionsValidAfter || 0);
+            if (validAfter && (verification.payload.iat || 0) <= Math.floor(validAfter / 1000)) {
+                this.clearAuthCookies(res);
+                return WebResponse.unauthorized(res, 'Session expired. Please sign in again.');
+            }
+
             req.user = {
                 accountId: account.accountId,
                 displayName: account.displayName,

@@ -1,3 +1,5 @@
+const TwoFactorService = require('../../src/service/security/two-factor-service');
+const CapabilityService = require('../../src/service/security/capability-service');
 const express = require('express');
 const router = express.Router();
 const DatabaseManager = require('../../src/manager/database-manager');
@@ -32,14 +34,18 @@ router.get('/neodyme/api/user/role', verifyToken, async (req, res) => {
     try {
         const account = await DatabaseManager.getAccount(req.user.accountId);
         const roleLevel = getUserRoleLevel(account);
+        const blocked = TwoFactorService.isStaffBlocked(account, roleLevel);
+        const panels = CapabilityService.panelsFor(account, roleLevel);
 
         return WebResponse.ok(res, {
             role: DatabaseManager.getRoleName(roleLevel),
             roleLevel,
+            twoFactorRequired: blocked,
+            capabilities: blocked ? [] : CapabilityService.allowed(account, roleLevel),
             panels: {
-                moderation: roleLevel >= ROLE_LEVELS.MODERATOR,
-                developer: roleLevel >= ROLE_LEVELS.DEVELOPER,
-                admin: roleLevel >= ROLE_LEVELS.ADMIN
+                moderation: !blocked && panels.moderation,
+                developer: !blocked && panels.developer,
+                admin: !blocked && panels.admin
             }
         });
     } catch (error) {

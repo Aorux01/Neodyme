@@ -7,26 +7,26 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/docs.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/docs.css">
 </head>
 <body>
     <header class="neodyme-header">
         <div class="header-container">
-            <a href="../../index.html" class="neodyme-logo">N</a>
+            <a href="/" class="neodyme-logo">N</a>
             <nav class="neodyme-nav">
                 <ul class="nav-links">
-                    <li><a href="../../index.html">HOME</a></li>
+                    <li><a href="/">HOME</a></li>
                     <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
-                    <li><a href="../updates.html">UPDATES</a></li>
-                    <li><a href="../shop.html" target="_blank">SHOP</a></li>
-                    <li><a href="../status.html">STATUS</a></li>
-                    <li><a href="index.html" class="active">DOCS</a></li>
+                    <li><a href="/updates">UPDATES</a></li>
+                    <li><a href="/shop" target="_blank">SHOP</a></li>
+                    <li><a href="/status">STATUS</a></li>
+                    <li><a href="/docs" class="active">DOCS</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
-                <a href="../login.html" class="btn btn-secondary">SIGN IN</a>
-                <a href="../register.html" class="btn btn-primary">CREATE ACCOUNT</a>
+                <a href="/login" class="btn btn-secondary">SIGN IN</a>
+                <a href="/register" class="btn btn-primary">CREATE ACCOUNT</a>
             </div>
         </div>
     </header>
@@ -35,22 +35,22 @@
             <div class="docs-sidebar-title">Documentation</div>
             <nav class="docs-nav">
                 <div class="docs-nav-section">Getting Started</div>
-                <a href="getting-started.html" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
-                <a href="configuration.html" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
-                <a href="commands.html" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
+                <a href="/docs/getting-started" class="docs-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="/docs/configuration" class="docs-nav-link"><i class="fas fa-sliders-h"></i> Configuration</a>
+                <a href="/docs/commands" class="docs-nav-link"><i class="fas fa-terminal"></i> Commands</a>
                 <div class="docs-nav-section">Features</div>
-                <a href="web-interface.html" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
-                <a href="panel-moderation.html" class="docs-nav-link"><i class="fas fa-gavel"></i> Moderation Panel</a>
-                <a href="panel-developer.html" class="docs-nav-link"><i class="fas fa-code-branch"></i> Developer Panel</a>
-                <a href="panel-admin.html" class="docs-nav-link"><i class="fas fa-user-shield"></i> Admin Panel</a>
-                <a href="database.html" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
-                <a href="security.html" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
-                <a href="game-files.html" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
+                <a href="/docs/web-interface" class="docs-nav-link"><i class="fas fa-globe"></i> Web Interface</a>
+                <a href="/docs/panel-moderation" class="docs-nav-link"><i class="fas fa-gavel"></i> Moderation Panel</a>
+                <a href="/docs/panel-developer" class="docs-nav-link"><i class="fas fa-code-branch"></i> Developer Panel</a>
+                <a href="/docs/panel-admin" class="docs-nav-link"><i class="fas fa-user-shield"></i> Admin Panel</a>
+                <a href="/docs/database" class="docs-nav-link"><i class="fas fa-database"></i> Database</a>
+                <a href="/docs/security" class="docs-nav-link"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="/docs/game-files" class="docs-nav-link"><i class="fas fa-gamepad"></i> Game Files</a>
                 <div class="docs-nav-section">Development</div>
-                <a href="api.html" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
-                <a href="plugins.html" class="docs-nav-link active"><i class="fas fa-plug"></i> Plugins</a>
+                <a href="/docs/api" class="docs-nav-link"><i class="fas fa-code"></i> API Reference</a>
+                <a href="/docs/plugins" class="docs-nav-link active"><i class="fas fa-plug"></i> Plugins</a>
                 <div class="docs-nav-section">About</div>
-                <a href="credits.html" class="docs-nav-link"><i class="fas fa-heart"></i> Credits</a>
+                <a href="/docs/credits" class="docs-nav-link"><i class="fas fa-heart"></i> Credits</a>
             </nav>
         </aside>
         <main class="docs-content">
@@ -328,11 +328,21 @@ module.exports = SchedulerPlugin;</code></pre>
             <pre><code>[warn] Skipping 'plugin-a' (already in install chain, possible dependency cycle)</code></pre>
             <p>This keeps installs deterministic even with badly authored manifests, and lets you safely express bidirectional <em>"these two plugins know about each other"</em> relationships.</p>
 
+            <h2 id="reserved-routes">Reserved Routes</h2>
+            <p>A plugin can add routes to the backend and the game API freely. Its routes must not, however, start with a path used by the website itself: a plugin route that shadows one of these breaks that page for every player.</p>
+            <table>
+                <tr><th>Category</th><th>Reserved prefixes</th></tr>
+                <tr><td>Website pages</td><td><code>/login</code>, <code>/register</code>, <code>/dashboard</code>, <code>/shop</code>, <code>/purchase</code>, <code>/status</code>, <code>/updates</code>, <code>/admin</code>, <code>/docs</code></td></tr>
+                <tr><td>Website files</td><td><code>/html</code>, <code>/css</code>, <code>/js</code>, <code>/images</code>, <code>/favicon.ico</code></td></tr>
+            </table>
+            <p>If your plugin serves pages or files of its own, put them under a dedicated prefix such as <code>/plugins/my-plugin/...</code> rather than at the root.</p>
+
             <h2>Best Practices</h2>
             <ul>
                 <li>Always wrap <code>init()</code> in a try-catch and return <code>false</code> on failure</li>
                 <li>Implement <code>shutdown()</code> if you use intervals, connections, or event listeners</li>
                 <li>Use <code>path.join(__dirname, ...)</code> for relative file paths</li>
+                <li>Never register routes on a website prefix (see <a href="#reserved-routes">Reserved Routes</a>), and serve your own pages under <code>/plugins/&lt;plugin-name&gt;/...</code></li>
                 <li>Set <code>minBackendVersion</code> to the oldest compatible version</li>
                 <li>For store plugins, always include <code>license</code>, <code>repository</code>, and <code>bugs</code> metadata</li>
             </ul>
@@ -349,6 +359,6 @@ module.exports = SchedulerPlugin;</code></pre>
             </table>
         </main>
     </div>
-    <script src="../../js/common.js"></script>
+    <script src="/js/common.js"></script>
 </body>
 </html>

@@ -219,10 +219,22 @@ body {
     color: #ff6b6b;
 }
 
+.alert-danger {
+    background: rgba(244,67,54,0.1);
+    border: 1px solid rgba(244,67,54,0.3);
+    color: #ff6b6b;
+}
+
 .alert-success {
     background: rgba(76,175,80,0.1);
     border: 1px solid rgba(76,175,80,0.3);
     color: #81c784;
+}
+
+.alert-info {
+    background: var(--primary-soft);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    color: var(--primary-400);
 }
 
 /* Transparent so the page's ambient background shows through, separated by a
@@ -377,4 +389,14 @@ body {
     .footer-links {
         grid-template-columns: 1fr;
     }
+}
+
+select {
+    color-scheme: dark;
+}
+
+select option,
+select optgroup {
+    background: var(--surface-2);
+    color: var(--text);
 }
