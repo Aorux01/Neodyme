@@ -2,12 +2,20 @@ const fs = require('fs');
 const path = require('path');
 const colors = require('../../utils/colors');
 
+const ANSI_PATTERN = /\x1b\[[0-9;]*m/g;
+
+function buildSessionFileName() {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    const time = `${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+    return `${date}_${time}.txt`;
+}
+
 class LoggerService {
     static logsDir = path.join(__dirname, '../../../logs');
-    static currentLogFile = null;
-    static currentLogDate = null;
+    static sessionFile = path.join(this.logsDir, buildSessionFileName());
     static maxLineLength = 2000;
-    static writeStream = null;
     static rl = null;
 
     static setReadline(rl) {
@@ -20,16 +28,19 @@ class LoggerService {
         }
     }
 
-    static getLogFileName() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}.log`;
+    static getLogFilePath() {
+        return this.sessionFile;
     }
 
-    static getLogFilePath() {
-        return path.join(this.logsDir, this.getLogFileName());
+    static pruneOldLogs(maxFiles) {
+        try {
+            if (!fs.existsSync(this.logsDir) || !(maxFiles > 0)) return;
+            const files = fs.readdirSync(this.logsDir)
+                .filter(f => /^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.txt$/.test(f))
+                .sort();
+            files.slice(0, Math.max(0, files.length - maxFiles))
+                .forEach(f => fs.unlinkSync(path.join(this.logsDir, f)));
+        } catch (_) {}
     }
 
     static formatTimestamp() {
@@ -59,36 +70,15 @@ class LoggerService {
         try {
             this.ensureLogsDirectory();
 
-            const timestamp = this.formatTimestamp();
             const levelTag = `[${level.toUpperCase()}]`.padEnd(9);
-
-            let logLine = `${timestamp} ${levelTag} ${message}`;
+            let logLine = `${this.formatTimestamp()} ${levelTag} ${message}`;
 
             if (data) {
-                const dataStr = typeof data === 'string' ? data : JSON.stringify(data);
-                logLine += ` ${dataStr}`;
+                logLine += ` ${typeof data === 'string' ? data : JSON.stringify(data)}`;
             }
 
-            // Truncate if too long
-            logLine = this.truncateMessage(logLine);
-            logLine += '\n';
-
-            // Check if we need to create a new log file (new day)
-            const currentDate = this.getLogFileName();
-            if (this.currentLogDate !== currentDate) {
-                if (this.writeStream) {
-                    this.writeStream.end();
-                }
-                this.currentLogDate = currentDate;
-                this.currentLogFile = this.getLogFilePath();
-                this.writeStream = fs.createWriteStream(this.currentLogFile, { flags: 'a' });
-            }
-
-            if (this.writeStream) {
-                this.writeStream.write(logLine);
-            } else {
-                fs.appendFileSync(this.currentLogFile || this.getLogFilePath(), logLine);
-            }
+            logLine = this.truncateMessage(logLine.replace(ANSI_PATTERN, ''));
+            fs.appendFileSync(this.sessionFile, logLine + '\n');
         } catch (error) {
             // Silent fail to avoid infinite loops
         }
@@ -146,24 +136,17 @@ class LoggerService {
         // Write to file (without colors)
         this.writeToFile(level, message, data);
     }
-
-    static cleanup() {
-        if (this.writeStream) {
-            this.writeStream.end();
-            this.writeStream = null;
-        }
-    }
 }
 
-// Cleanup on process exit
-process.on('exit', () => LoggerService.cleanup());
-process.on('SIGINT', () => {
-    LoggerService.cleanup();
-    process.exit();
+process.on('uncaughtException', (err) => {
+    LoggerService.log('error', `Uncaught exception: ${err.message}`, { stack: err.stack });
+    process.exit(1);
 });
-process.on('SIGTERM', () => {
-    LoggerService.cleanup();
-    process.exit();
+process.on('unhandledRejection', (reason) => {
+    const err = reason instanceof Error ? reason : new Error(String(reason));
+    LoggerService.log('error', `Unhandled rejection: ${err.message}`, { stack: err.stack });
 });
+process.on('SIGINT', () => process.exit());
+process.on('SIGTERM', () => process.exit());
 
 module.exports = LoggerService;

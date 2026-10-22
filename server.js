@@ -75,8 +75,6 @@ class Server {
             if (isNewerVersion(latestVersion, currentVersion)) {
                 LoggerService.log('warn', `A new version of Neodyme is available: ${colors.cyan(latestVersion)} (you are using ${colors.cyan(currentVersion)})`);
                 return true;
-            } else {
-
             }
 
             return false;
@@ -96,6 +94,7 @@ class Server {
     
             LoggerService.log('info', 'Loading configuration...');
             await ConfigManager.load();
+            LoggerService.pruneOldLogs(ConfigManager.get('logMaxFiles', 30));
 
             // Run first-launch prompts (assetsMode, etc.) before any service init.
             // Each prompt is a no-op if already configured.

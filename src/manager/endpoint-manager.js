@@ -12,6 +12,7 @@ const {ApiError, sendError, Errors} = require('../service/error/errors-system');
 const RateLimitManager = require('./rate-limit-manager');
 const { globalRateLimit, webRateLimit } = require('../middleware/rate-limit-middleware');
 const { assetMiddleware } = require('../middleware/asset-middleware');
+const { redact } = require('../utils/redact');
 
 class EndpointManager {
     static app = null;
@@ -71,7 +72,7 @@ class EndpointManager {
     static setupMiddleware() {
         try {
             // Trust proxy if enabled (important for rate limiting behind reverse proxy)
-            if (ConfigManager.get('trustProxy', true)) {
+            if (ConfigManager.get('trustProxy', false)) {
                 this.app.set('trust proxy', true);
             }
 
@@ -83,13 +84,24 @@ class EndpointManager {
                 }));
             }
 
-            // CORS
+            // CORS: same-origin and non-browser clients (the game) are always allowed,
+            // other origins must be listed in corsOrigins.
             if (ConfigManager.get('corsEnable', true)) {
-                this.app.use(cors({
-                    origin: true,
-                    credentials: true,
-                    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-                    allowedHeaders: ['Content-Type', 'Authorization', 'X-Epic-Correlation-ID', 'X-Requested-With', 'X-CSRF-Token', 'X-Session-ID']
+                const allowedOrigins = String(ConfigManager.get('corsOrigins', ''))
+                    .split(',').map(o => o.trim()).filter(Boolean);
+
+                this.app.use(cors((req, callback) => {
+                    const origin = req.headers.origin;
+                    let allowed = !origin || allowedOrigins.includes(origin);
+                    if (!allowed) {
+                        try { allowed = new URL(origin).host === req.headers.host; } catch (_) {}
+                    }
+                    callback(null, {
+                        origin: allowed,
+                        credentials: true,
+                        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+                        allowedHeaders: ['Content-Type', 'Authorization', 'X-Epic-Correlation-ID', 'X-Requested-With', 'X-CSRF-Token', 'X-Session-ID']
+                    });
                 }));
             }
 
@@ -120,6 +132,11 @@ class EndpointManager {
                 req.requestId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
                 req.startTime = performance.now();
                 this.requestCount++;
+                if (ConfigManager.get('debug')) {
+                    res.on('finish', () => {
+                        LoggerService.log('debug', `Request ${req.requestId} completed in ${Math.round(performance.now() - req.startTime)}ms`);
+                    });
+                }
                 next();
             });
 
@@ -141,9 +158,9 @@ class EndpointManager {
             
                     if (ConfigManager.get('debugRequests')) {
                         LoggerService.log('debug', `Request: ${req.method} ${req.url}`, {
-                            headers: req.headers,
-                            body: req.body,
-                            query: req.query
+                            headers: redact(req.headers),
+                            body: redact(req.body),
+                            query: redact(req.query)
                         });
                     }
             
@@ -151,8 +168,8 @@ class EndpointManager {
                         const originalSend = res.send;
                         res.send = function(data) {
                             LoggerService.log('debug', `Response: ${res.statusCode}`, {
-                                headers: res.getHeaders(),
-                                body: data
+                                headers: redact(res.getHeaders()),
+                                body: redact(data)
                             });
                             originalSend.call(res, data);
                         };
@@ -290,18 +307,6 @@ class EndpointManager {
                 const error = Errors.Internal.serverError();
                 sendError(res, error);
             }
-        });
-
-        this.app.use((req, res, next) => {
-            res.on('finish', () => {
-                const endTime = performance.now();
-                const duration = Math.round(endTime - req.startTime);
-                
-                if (ConfigManager.get('debug')) {
-                    LoggerService.log('debug', `Request ${req.requestId} completed in ${duration}ms`);
-                }
-            });
-            next();
         });
     }
 }

@@ -257,19 +257,12 @@ router.post('/neodyme/api/admin/shop/rotate-date', ...adminWrite, async (req, re
 router.get('/neodyme/api/admin/console-logs', ...dev, async (req, res) => {
     try {
         const lines = parseInt(req.query.lines, 10) || 200;
-        const logsDir = path.join(__dirname, '../../logs');
-        if (!fs.existsSync(logsDir)) {
-            return WebResponse.ok(res, { logs: [], message: 'No logs directory found.' });
+        const sessionFile = LoggerService.getLogFilePath();
+        if (!fs.existsSync(sessionFile)) {
+            return WebResponse.ok(res, { logs: [], message: 'No log file for this session.' });
         }
 
-        const now = new Date();
-        const fileName = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}.log`;
-        const todayFile = path.join(logsDir, fileName);
-        if (!fs.existsSync(todayFile)) {
-            return WebResponse.ok(res, { logs: [], message: 'No log file for today.' });
-        }
-
-        const allLines = fs.readFileSync(todayFile, 'utf8').split('\n').filter(l => l.trim());
+        const allLines = fs.readFileSync(sessionFile, 'utf8').split('\n').filter(l => l.trim());
         return WebResponse.ok(res, { logs: allLines.slice(-lines), total: allLines.length });
     } catch (error) {
         return WebResponse.serverError(res, 'fetch console logs', error);

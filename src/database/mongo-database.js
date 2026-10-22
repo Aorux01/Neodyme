@@ -23,17 +23,16 @@ class MongoDatabase {
     static dataPath = path.join(__dirname, '../../data');
     static playersPath = path.join(this.dataPath, 'players');
 
-    static initialize() {
+    static async initialize() {
         const dbPath = ConfigManager.get('databasePath');
 
-        mongoose.connect(dbPath)
-            .then(() => {
-                LoggerService.log('info', 'MongoDB connected successfully');
-            })
-            .catch(err => {
-                LoggerService.log('error', `MongoDB connection error: ${err.message}`);
-                throw err;
-            });
+        try {
+            await mongoose.connect(dbPath);
+            LoggerService.log('info', 'MongoDB connected successfully');
+        } catch (err) {
+            LoggerService.log('error', `MongoDB connection error: ${err.message}`);
+            throw err;
+        }
 
         mongoose.connection.on('error', err => {
             LoggerService.log('error', `MongoDB error: ${err.message}`);

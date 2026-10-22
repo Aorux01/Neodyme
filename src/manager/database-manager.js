@@ -8,23 +8,35 @@ class DatabaseManager {
         return ConfigManager.get('databaseType') || 'json';
     }
 
+    static resolvedInstance = null;
+    static resolvedType = null;
+
     static getDatabaseInstance() {
         const dbType = this.getDatabaseType();
+        if (this.resolvedInstance && this.resolvedType === dbType) {
+            return this.resolvedInstance;
+        }
+
         switch (dbType) {
             case 'json':
-                return JsonDatabase;
+                this.resolvedInstance = JsonDatabase;
+                break;
             case 'mongodb':
             case 'mongo':
-                return MongoDatabase;
+                this.resolvedInstance = MongoDatabase;
+                break;
             default:
                 LoggerService.log('error', `Unsupported database type: ${dbType}`);
                 throw new Error(`Unsupported database type: ${dbType}`);
         }
+
+        this.resolvedType = dbType;
+        return this.resolvedInstance;
     }
 
-    static initialize() {
+    static async initialize() {
         const dbInstance = this.getDatabaseInstance();
-        dbInstance.initialize();
+        await dbInstance.initialize();
         LoggerService.log('success', `Database initialized with type: ${this.getDatabaseType()}`);
     }
 
