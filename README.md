@@ -49,6 +49,7 @@ Join the **Discord** Server: https://discord.gg/gWpDVKR4nF
 - ✅ **Plugin system** to easily extend and customize the backend
 - ✅ **Economics endpoints** (EXP, V-Bucks)
 - ✅ **Database system** (JSON, MongoDB)
+- ✅ **2FA setup** (authenticator app, backup codes, staff policy)
 
 ## To-Do List
 
@@ -56,7 +57,6 @@ Join the **Discord** Server: https://discord.gg/gWpDVKR4nF
 - [ ] 📂 Finish and expand the website (leaderboards, 2FA setup, player stats, etc.)
 - 🔄 🧰 **Admin Panel** - core features done (BETA), ongoing: shop editor, live config, events manager
 - [ ] 💾 Implement all remaining storage systems (**SQLite, MySQL, PostgreSQL**)
-- [x] 🔐 **2FA setup** (authenticator app, backup codes, staff policy)
 - [ ] 📘 Complete the **public API**
 - [ ] 🛡️ Implement **Ward** (AntiCheat)
 
