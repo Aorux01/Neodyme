@@ -46,9 +46,11 @@ class Server {
 
     static async checkVersion() {
         try {
-            const response = await fetch('https://raw.githubusercontent.com/Aorux01/Neodyme/refs/heads/main/package.json');
+            const response = await fetch('https://raw.githubusercontent.com/Aorux01/Neodyme/refs/heads/main/package.json', {
+                signal: AbortSignal.timeout(5000)
+            });
             if (!response.ok) {
-                LoggerService.log('error', `Failed to fetch package.json: ${response.status}`);
+                LoggerService.log('warn', `Update check skipped: the version file answered ${response.status}`);
                 return false;
             }
 
@@ -81,7 +83,8 @@ class Server {
 
             return false;
         } catch (error) {
-            LoggerService.log('error', `Error while checking for updates: ${error.message}`);
+            const reason = error.name === 'TimeoutError' ? 'no answer within 5 seconds' : (error.cause && (error.cause.code || error.cause.message)) || error.message;
+            LoggerService.log('warn', `Update check skipped: ${reason}. This does not affect the server.`);
             return false;
         }
     }
@@ -215,7 +218,7 @@ class Server {
             await ConfigAdvisor.run();
 
             LoggerService.log('info', 'Backend version check...');
-            await Server.checkVersion();
+            Server.checkVersion();
     
             LoggerService.log('success', 'Server initialized successfully!');
             console.log(colors.gray('─'.repeat(65)));

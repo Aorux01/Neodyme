@@ -1,299 +1,94 @@
 # Neodyme - Roadmap & Features
 
-> Complete list of implemented and planned features, sorted by priority.
+> Release plan and complete list of implemented and planned features.
 
 ---
 
-## Priority 1 - Critical
+## Release plan
 
-### Authentication & Accounts
-- [x] **Secure login system** - Full OAuth2 with JWT tokens
-- [x] **Multi-account** - Multiple accounts support
-- [x] **Token management** - Access tokens, refresh tokens, exchange codes
-- [x] **Authentication service** - Auth middleware for all protected routes
-- [x] **2FA (Two-Factor Authentication)** - TOTP with any authenticator app, 10 backup codes, email fallback, mandatory option for staff (`/security enable`)
-- [x] **Password reset** - One-time email link, same answer whether or not the account exists, ends every session
-- [x] **Email verification** - Optional (`requireEmailVerification`), with resend cooldown
-- [x] **Email magic-link login** - One-time sign-in link, two-factor still applies
-- [x] **Discord login & account linking** - Linked from the Security page, stored in `account_links`, silently off without `.env` keys
-- [x] **Session control** - Force logout, admin password reset and password change all end game and website sessions
-- [x] **Particular authorizations** - 26 permissions on top of roles, `/caps` command and Admin panel Permissions tab
+Versions are sized to carry a similar amount of work: about 32 effort points each (S = 1, M = 2, L = 3, XL = 4), a little less than 1.2.8, which is around 38. The detailed plan, with origins, dependencies and criteria, is in [VERSION-PLAN.md](VERSION-PLAN.md).
 
-### MCP (Profile Service)
-- [x] **QueryProfile** - Profile retrieval (athena, common_core, campaign, etc.)
-- [x] **EquipBattleRoyaleCustomization** - Cosmetics equipment
-- [x] **SetCosmeticLockerSlot** - Loadout configuration
-- [x] **SetCosmeticLockerBanner** - Locker banners
-- [x] **SetBattleRoyaleBanner** - Battle Royale banners
-- [x] **MarkItemSeen** - Mark items as seen
-- [x] **SetItemFavoriteStatus** - Item favorites
-- [x] **SetItemFavoriteStatusBatch** - Batch favorites
-- [x] **SetItemArchivedStatusBatch** - Batch archiving
-- [x] **RefundMtxPurchase** - Purchase refunds
-- [x] **RemoveGiftBox** - Gift box removal
-- [x] **PurchaseCatalogEntry** - Shop purchases
-- [x] **SetAffiliateName** - Creator code (SAC)
-- [x] **ClientQuestLogin** - Quest login
-- [x] **FortRerollDailyQuest** - Daily quest reroll
-- [x] **UpdateQuestClientObjectives** - Quest objectives update
-- [x] **MarkNewQuestNotificationSent** - New quest notifications
-- [x] **AthenaPinQuest** - Quest pinning
-- [x] **SetPartyAssistQuest** - Party assist quest
-- [x] **ActiveLoadout** - Active loadout
-- [x] **PutModularCosmeticLoadout** - Modular loadouts
-- [x] **SetActiveArchetype** - Active archetype
-- [x] **SetSeasonPassAutoClaim** - Battle Pass auto-claim
-- [x] **CompanionName** - Companion name (Pet)
-- [x] **LockInImmutableItem** - Immutable items
-- [x] **UnlockRewardNode** - Reward unlocking
-- [x] **DedicatedServer** - Dedicated server operations
-- [x] **CopyCosmeticLoadout** - Cosmetic loadout preset copy/apply
-- [x] **DeleteCosmeticLoadout** - Cosmetic loadout preset deletion
-- [x] **RequestRestedStateIncrease** - Rested XP accumulation
+There are two tracks:
 
-### Save the World MCP
-- [x] **AssignHeroToLoadout** - Hero assignment
-- [x] **AssignGadgetToLoadout** - Gadget assignment
-- [x] **AssignTeamPerkToLoadout** - Team perk assignment
-- [x] **AssignWorkerToSquad** - Survivor assignment
-- [x] **AssignWorkerToSquadBatch** - Batch assignment
-- [x] **UnassignAllSquads** - Squad unassignment
-- [x] **SetActiveHeroLoadout** - Active hero loadout
-- [x] **ClearHeroLoadout** - Loadout reset
-- [x] **SetHeroCosmeticVariants** - Cosmetic variants
-- [x] **SetHomebaseName** - Homebase name
-- [x] **SetHomebaseBanner** - Homebase banner
-- [x] **SetPinnedQuests** - Pinned quests
-- [x] **UpgradeItem** - Item upgrade
-- [x] **UpgradeItemBulk** - Bulk upgrade
-- [x] **UpgradeItemRarity** - Rarity upgrade
-- [x] **UpgradeAlteration** - Alteration upgrade
-- [x] **UpgradeSlottedItem** - Slotted item upgrade
-- [x] **PromoteItem** - Item promotion
-- [x] **ConvertItem** - Item conversion
-- [x] **ConvertSlottedItem** - Slotted item conversion
-- [x] **TransmogItem** - Transmog
-- [x] **RefundItem** - Refund
-- [x] **RecycleItemBatch** - Batch recycling
-- [x] **RespecUpgrades** - Upgrade reset
-- [x] **RespecAlteration** - Alteration reset
-- [x] **RespecResearch** - Research reset
-- [x] **StorageTransfer** - Storage transfer
-- [x] **ModifyQuickbar** - Quickbar modification
-- [x] **PurchaseHomebaseNode** - Node purchase
-- [x] **PurchaseOrUpgradeHomebaseNode** - Node purchase/upgrade
-- [x] **PurchaseResearchStatUpgrade** - Research stat upgrade
-- [x] **SlotItemInCollectionBook** - Collection book slot
-- [x] **UnslotItemFromCollectionBook** - Collection book unslot
-- [x] **ResearchItemFromCollectionBook** - Collection book research
-- [x] **ClaimCollectionBookRewards** - Collection book rewards
-- [x] **ActivateConsumable** - Consumable activation
-- [x] **CraftWorldItem** - Item crafting
-- [x] **DestroyWorldItems** - Item destruction
-- [x] **DisassembleWorldItems** - Item disassembly
-- [x] **IncrementNamedCounterStat** - Stat counters
-- [x] **OpenCardPack** - Card pack opening
-- [x] **PopulatePrerolledOffers** - Prerolled offers
-- [x] **ClaimLoginReward** - Login rewards
-- [x] **ClaimQuestReward** - Quest rewards
-- [x] **StartExpedition** - Expedition start
-- [x] **CollectExpedition** - Expedition collection
-- [x] **AbandonExpedition** - Expedition abandon
-- [x] **RefreshExpeditions** - Expedition refresh
+- **Platform** (1.2.9 to 1.3.7): everything that is not Fortnite client compatibility: website, accounts, staff panel, content, storage, API, translations, economy.
+- **Game** (1.4.1 to 1.4.9): Fortnite compatibility routes and systems, added step by step, including tournaments, ranked and arena. 1.4.9 adds the remaining missing endpoints season by season.
 
----
+**No Epic compatibility route is added before 1.4.1.** The server-to-server bridge with game servers (`match/result`, stats, tracker) is Neodyme-specific and belongs to the Platform track.
 
-## Priority 2 - High
+### Released
 
-### XMPP & Communication
-- [x] **XMPP Server** - WebSocket XMPP server, `ws` or `wss` (`xmppProtocol`)
-- [x] **In-game chat** - Private messages and groupchat (MUC) between players
-- [x] **Presence system** - Online/offline/away status, friend-filtered broadcasts
-- [x] **Real-time notifications** - Friend notifications, invites, party events
-- [x] **Vivox voice chat** - JWT token generation (HMAC-SHA256) for party voice channels
+#### 1.2.6 - Dynamic Content & Image Pipeline
+- [x] **First-launch prompt** - Local or remote Fortnite assets, chosen on the first boot
+- [x] **Assets index** - `content/assets-index.json` maps every `/images/<path>` to local or remote
+- [x] **Folder bundles** - Asset folders shipped through the Plugins repository, downloaded on demand
+- [x] **MOTD and news editor** - Multilingual editing of `config/motd.json` (13 languages), with a spotlight item
+- [x] **Shop editor (BETA)** - Visual editor for the shop categories
+- [x] **Admin page extraction** - Staff panels moved to a dedicated `admin.html`
+- [x] **Translations (pass 1)** - 100% coverage of the `config` files in 13 languages
+- [x] **Condensed rate-limit logs** - One line per IP and route instead of spam
 
-### Friends System
-- [x] **Friend request sending** - Via API and XMPP
-- [x] **Accept/Decline** - Request management
-- [x] **Friend removal** - Remove from list
-- [x] **Player blocking** - Block and unblock via API
-- [x] **XMPP notifications** - Real-time alerts for friend actions
-- [x] **Presence updates** - Status sync between friends
+#### 1.2.7 - Random Skins Fixes
+- [x] **Random cosmetics fix** - Players no longer appear with a random outfit, backpack, pickaxe and glider
 
-### Party System
-- [x] **Party creation** - Private party creation
-- [x] **Join party** - Join via ID
-- [x] **Leave party** - Leave party
-- [x] **Metadata updates** - Member and party meta
-- [x] **Party configuration** - Joinability, max size, etc.
-- [x] **Party deletion** - Party dissolution
-- [x] **Auto promotion** - New captain if old one leaves
-- [x] **Party invitations** - Full invite/decline/cancel flow with XMPP
-- [x] **Leadership transfer** - Manual captain promotion with XMPP broadcast
-- [x] **Party pings** - Ping notifications with XMPP
-- [x] **Join intentions** - Join-request flow with friend cross-check
-- [ ] **Member kick** - Kick by captain
+#### 1.2.8 - Auth, Security & Account Recovery
+- [x] **Two-factor authentication** - TOTP, 10 backup codes, email fallback, staff policy, `/security`
+- [x] **Password reset, email verification and sign-in links** - One-time links, same answer for any email
+- [x] **Discord sign-in and account linking** - Stored in `account_links`, off without `.env` keys
+- [x] **Particular authorizations** - `/caps` and the Permissions tab, 26 permissions on top of roles
+- [x] **Staff toolbox** - Force logout, admin password reset, ban appeals, audit log export
+- [x] **XMPP over SSL** - `xmppProtocol=ws|wss`
+- [x] **Whitelist and `/sac`** - `whitelistEnabled`, `/whitelist`, creator code console
+- [x] **Unified self-tests and real status page** - `/test` health and functional checks
+- [x] **Clean website addresses, hardening and logs** - One log file per launch, configuration advisor
 
-### Matchmaking
-- [x] **Ticket creation** - Signed matchmaking tickets
-- [x] **Server assignment** - Game server connection
-- [x] **Matchmaking sessions** - Session management
-- [x] **Matchmaking stats** - Real-time stats
-- [ ] **Queue system** - Waiting room queue
-- [ ] **Skill-based matchmaking** - Level-based matchmaking
+### Upcoming
 
----
+| Version | Theme | Track | Points |
+|---|---|---|---|
+| 1.2.9 | Website Foundation | Platform | 32 |
+| 1.3.0 | Account Complete | Platform | 32 |
+| 1.3.1 | Panel Rebuild | Platform | 32 |
+| 1.3.2 | Content Studio | Platform | 32 |
+| 1.3.3 | Game Bridge & Tracker | Platform | 34 |
+| 1.3.4 | Storage & Reliability | Platform | 32 |
+| 1.3.5 | Public API & Integrations | Platform | 32 |
+| 1.3.6 | Translations & Onboarding | Platform | 32 |
+| 1.3.7 | Economy & Shop | Platform | 32 |
+| 1.4.0 | Platform Release Candidate | Milestone | 32 |
+| 1.4.1 | Matchmaking & Party | Game | 32 |
+| 1.4.2 | Social Parity & Launcher | Game | 32 |
+| 1.4.3 | Stats, Arena & Ranked | Game | 32 |
+| 1.4.4 | Tournaments & Events | Game | 32 |
+| 1.4.5 | Game Modes & Creative | Game | 32 |
+| 1.4.6 | Progression & MCP Parity | Game | 32 |
+| 1.4.7 | Ward AntiCheat | Game | 32 |
+| 1.4.8 | Replay & Notifications | Game | 32 |
+| 1.4.9 | New Fortnite Endpoints | Game | 32 |
+| 1.5.0 | Neodyme Complete | Milestone | 32 |
 
-## Priority 3 - Medium
+#### 1.2.9 - Website Foundation
 
-### Shop & Economy
-- [x] **Dynamic storefront** - Shop with item rotation
-- [x] **Cosmetics purchase** - Via V-Bucks
-- [x] **V-Bucks management** - Add, remove, balance
-- [x] **Experience service (XP)** - XP gain and management
-- [x] **Creator codes (SAC)** - Support-A-Creator
-- [x] **Shop configuration** - `config/shop.json`
-- [x] **Gift eligibility** - Validates offer, friendship, and ownership before gifting
-- [x] **Historical shop rotation** - Date-based cosmetic rotation via fortnite-api.com
-- [x] **Shop image generation** - Server-side SVG with rarity gradients, zero native deps
-- [ ] **Purchase history** - Transaction list
-- [ ] **Gifting system** - Full gift sending between players
-- [ ] **Dynamic bundles** - Promotional packs
-- [ ] **SAC command management** - Add/list/delete creator codes from console
+Focus: Make the website solid and usable everywhere: fixes, mobile navigation, one shared shell and the account area.
 
-### Website
-- [x] **Homepage** - Landing page
-- [x] **Login/Register** - Web authentication
-- [x] **Dashboard** - User panel
-- [x] **Web shop** - Shop display
-- [x] **Purchase page** - Purchase flow
-- [x] **Updates page** - Patch notes
-- [ ] **Leaderboards** - Player rankings
-- [ ] **Player profile** - Profile page with stats
-- [x] **2FA configuration** - Setup from the Security page
-- [ ] **Match history** - Match history
-- [x] **Friends management** - Friends section of the dashboard
-
-### CloudStorage
-- [x] **System storage** - Server files (hotfixes, etc.)
-- [x] **User storage** - Per-account files
-- [x] **Upload/Download** - File management
-- [x] **ClientSettings** - Client settings persisted (JSON filesystem + MongoDB binary)
-
-### Asset Pipeline
-- [x] **Online / Local modes** - Serve `/images/*` via CDN redirect (online) or local files (local)
-- [x] **First-launch prompt** - Ask online/local on initial boot, persisted to `server.properties`
-- [x] **`content/assets-index.json`** - Path-to-CDN mapping, hot-reloaded on change
-- [x] **Asset middleware** - Resolves static / redirect / 404 before `express.static`, with path-traversal protection
-- [x] **`/assets` commands** - status, mode, list, info, diagnose, install, uninstall, clean, verify, reload, refresh
-- [x] **Auto-download on mode switch** - Downloads missing assets from the Plugins repo when switching to local
-- [x] **Integrity validation** - Post-download size check + `/assets verify` (missing, zero-byte, mismatch, orphans)
-
-### Internationalization
-- [x] **13-language support** - ar, en, de, es, es-419, fr, it, ja, ko, pl, pt-BR, ru, tr
-- [x] **Per-client language** - Resolved from each request's `Accept-Language` header
-- [x] **Full content coverage** - 100% across all localized `content/` files (motd, content-pages, catalog, season-passes, world-stw, discovery, radio-stations)
-
----
-
-## Priority 4 - Low
-
-### Admin Panel (BETA)
-- [x] **Admin dashboard** - Server overview
-- [x] **Account management** - Users CRUD
-- [x] **Moderation** - Ban, unban, tickets, player reports
-- [x] **Tokens management** - Active tokens view and revocation
-- [x] **Server statistics** - Real-time CPU, RAM, active players (live monitor)
-- [x] **Logs viewer** - Console logs in Dev panel
-- [x] **Plugin manager** - Browse, install, update, configure plugins
-- [x] **Shop controls** - Manual rotation, date-based rotation, featured items
-- [x] **Security settings** - Rate limiting, CORS, Helmet, Trust Proxy toggles
-- [x] **XMPP monitor** - Real-time connected clients widget
-- [x] **Content Editor** - Typed editors for 17 in-game content sections (MOTD, login message, emergency notices v1/v2, BR/Creative/STW news, lobby, special offer video, subgame select/info, BP about, creative ads/features, athena/survival messages) with i18n toggle per field, 13-locale switcher, list reorder/duplicate/delete, and Reset-from-GitHub
-- [x] **Assets Manager** - Upload (drag-and-drop, magic-byte validation, 5MB max), Browse local (grid by folder, copy URL, delete uploads), Browse online (CDN-only entries from assets-index.json). Uploads land in `public/images/uploaded-images/` with full metadata in `assets-index.json` and `alwaysLocal` enforcement
-- [x] **Permissions tab** - Per-account allow and deny on top of the role, with escalation rules
-- [x] **Audit log export** - Date filter and CSV export
-- [x] **Shop Editor (BETA)** - Hand-pick each slot of `data/shop.json` via a slot grid backed by `config/shop.json`. Searchable cosmetic picker from fortnite-api.com (rarity-coloured), single-slot random reroll, bulk "Randomize all empty", inline price/grant edit, slot clear
-- [ ] **Shop Editor (full)** - Drag-and-drop between slots, full preview with rendering by chapter, prices/rarity/sections matrix
-- [ ] **Game Modes Manager UI** - Frontend on top of `config/playlists.json` (enable, rotation, minBuild)
-- [ ] **Lobby Background Manager** - Pick lobby tile/banner per season via `content/pages/lobby-backgrounds.json` (replaces the per-season switch in `page-service.js`)
-- [ ] **Radio Stations Editor** - Manage `content/pages/radio-stations.json` with Assets integration for logos
-- [ ] **Tournament Information Editor** - Full editor for `content-pages.json[tournamentinformation]` (colours, images, prizes, brackets)
-- [ ] **Live configuration** - Modify server.properties without restart
-- [ ] **Events** - Manage in-game events
-- [ ] **Announcements** - Broadcast system
-
-### Console Commands
-- [x] **Command system** - Base architecture with role-based access
-- [x] **Moderation commands** - Ban, unban, lookup
-- [x] **Server commands** - Restart, status, reload, stop, diagnostic
-- [x] **Data commands** - Migrate JSON↔MongoDB with --dry-run
-- [x] **Test commands** - Full system test suite
-- [x] **Shop commands** - Manual rotation, featured items, date-based rotation
-- [x] **Debug commands** - Logs, profiling, token management
-- [x] **Security commands** - `/security` (staff 2FA policy, forced disable, backup codes, forced reset) and `/caps` (authorizations)
-- [x] **Self-tests** - `/test` with health and functional checks, shared with the Developer panel and the status page
-
-### Database
-- [x] **JSON Database** - Local file storage
-- [x] **MongoDB** - NoSQL database
-- [ ] **SQLite** - Local SQL database
-- [ ] **MySQL** - Network SQL database
-- [ ] **PostgreSQL** - Advanced SQL database
-- [x] **Migration tools** - `/data migrate` JSON↔MongoDB with --dry-run
-- [x] **Automatic backup** - Scheduled backups
-
-### Public API
-- [x] **Base API** - Main endpoints
-- [ ] **API documentation** - Swagger/OpenAPI
-- [ ] **Advanced rate limiting** - Per-endpoint quotas
-- [x] **Condensed rate-limit logs** - Aggregate repeated hits into one line per IP+route (configurable)
-- [ ] **API Keys** - External authentication
-- [ ] **Webhooks** - Outgoing notifications
-- [x] **API versioning** - Version management
-
----
-
-## Priority 5 - Future
-
-### Game Modes
-- [ ] **Creative mode** - Creative mode support
-- [ ] **Game modes manager** - Mode rotation
-- [ ] **LTMs** - Limited Time Modes
-- [ ] **Custom playlists** - Custom playlists
-- [ ] **Player** - Player saves (favorites, history)
-
-### Tournaments & Events
-- [ ] **Events system** - Basic events and tournaments
-- [ ] **Timeline** - Event configuration
-- [ ] **Brackets** - Tournament system
-- [ ] **Automatic rewards** - Prize distribution
-- [ ] **Tournament leaderboards** - Specific rankings
-
-### Leaderboards
-- [ ] **Global leaderboard** - All players
-- [ ] **Regional leaderboard** - By geographic zone
-- [ ] **Mode leaderboard** - Solo, Duo, Squad
-- [ ] **Historical stats** - Progress over time
-- [ ] **Achievements** - Achievement system
-
-### Advanced Features
-- [ ] **Replay system** - Match recording
-- [x] **Report system** - In-game toxicity reports with mod panel integration
-- [x] **Appeal system** - Ban appeals as support tickets, replies emailed
-- [ ] **Newsletter** - Automated emails
-- [ ] **Push notifications** - Mobile notifications
-- [ ] **Animation** - Animations and videos
-- [ ] **EXP, V-BUCKS** - Game server connection
-- [ ] **Ward Service** - Anti cheat (planned for 1.3.0)
-
----
-
-## Legend
-
-- [x] = Implemented and functional
+- [x] **Clean shutdown** - `/stop` closes readline last, the logger never writes to a closed prompt, the uncaught-error handler is hardened, a test covers it
+- [x] **Image URLs on the website** - Epic CDN addresses converted for browser previews (`siteAssetUrl`), copy buttons keep the game address
+- [x] **Audit log fixes** - one export button, working summary chips, metadata for every 1.2.8 action, IP normalisation, dynamic action filter, test entries hidden
+- [x] **Loading states** - `.spinner` and `.loading-state`, `showBanModal`
+- [x] **Profile cleanup** - remove the duplicate "Username" field, show the account id with a copy button
+- [x] **Users tab search and role filter that really work**
+- [x] **Docs repair** - invalid HTML, Founder and Helper roles mismatch, new pages documented
+- [x] **Mobile navigation** - burger menu with a side drawer, scrolling tab strip in the account area, bottom tab bar for signed-in players
+- [x] **Shared navigation** - one list for the header and the mobile drawer on every page
+- [x] **Account area** - `/account/*` pages, `/dashboard` redirects, real overview data (two-factor itself stays on `/security`)
+- [x] **Game versions button and Copy server address** - `gameVersionsUrl` and `serverAddress` in `server.properties`
+- [x] **Security checklist and recent activity** on the account overview
+- [x] **Account data export** - JSON download, password and two-factor code required
+- [x] **Plugin route guard** - `pluginRouteGuard=warn|block|off`
+- [x] **Updates page** - Changelog and Roadmap tabs, working Copy link
+- [x] **Tooling** - `web` test group, real `npm test`, `npm run lint` and `npm run setup`
+- [x] = Done
 - [ ] = To do / In development
 
 ---
 
-*Last updated: v1.2.8*
+*Last updated: v1.2.9, 2026-10-23*

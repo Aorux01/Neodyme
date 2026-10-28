@@ -1,10 +1,31 @@
 const VERSIONS = [
     {
+        version: '1.2.9',
+        title: 'Website Foundation',
+        date: 'October 23, 2026',
+        type: 'feature',
+        latest: true,
+        lts: false,
+        summary: 'A website that works on a phone, a real account area, and the tooling to check it: mobile navigation, shared header, account pages, data export, plugin route guard and a website test group.',
+        features: [
+            { kind: 'new', label: 'Mobile Navigation', text: 'A burger menu with a side drawer on every page, a scrolling tab strip in the account area and, for signed-in players, a bottom tab bar (Home, Friends, Shop, Security, Profile). The header menu now comes from a single list shared by all pages.' },
+            { kind: 'new', label: 'Account Area', text: 'The dashboard became <code>/account</code> with its own addresses: <code>/account/profile</code>, <code>/account/friends</code>, <code>/account/security</code>, <code>/account/settings</code>, <code>/account/support</code> and <code>/account/creator-code</code>. <code>/dashboard</code> redirects there, and the browser back button works between sections.' },
+            { kind: 'improved', label: 'Overview With Real Data', text: 'The overview shows V-Bucks, friends online, two-factor state and last sign-in, a security checklist (two-factor, backup codes, email, Discord) and your recent security activity. The fake statistics and the unused inventory and statistics sections are gone.' },
+            { kind: 'new', label: 'Game Versions And Server Address', text: '<code>gameVersionsUrl</code> adds a "Game versions" button on the dashboard and in the header (hidden when empty), and "Copy server address" copies <code>serverAddress</code>, or an address derived from <code>publicUrl</code>.' },
+            { kind: 'new', label: 'Account Data Export', text: 'Settings has a "Download my data" form: account, settings, friends and blocked players, purchases, linked accounts, sessions, security events, support tickets, creator code, locker, owned cosmetics and game profiles as one zip file. It asks for your password (and a two-factor code when enabled) and never includes password hashes or two-factor secrets.' },
+            { kind: 'security', label: 'Plugin Route Guard', text: '<code>pluginRouteGuard=warn|block|off</code> detects plugin routes placed on website paths when a plugin loads. Warn logs it, block removes the route.' },
+            { kind: 'improved', label: 'Updates Page: Changelog And Roadmap', text: 'The page has a Changelog tab and a Roadmap tab listing the planned versions. The Copy link button of each version works again.' },
+            { kind: 'improved', label: 'Website Test Group', text: 'New <code>web</code> test group (pages, shared shell, scripts, internal links, docs markup, account routes, plugin guard, site info). <code>npm test</code> now runs every functional test without starting the server, <code>npm run lint</code> runs ESLint, and <code>npm run setup</code> prepares a fresh install.' },
+            { kind: 'fixed', label: 'Audit Log, Images And Loading States', text: 'The audit log filters follow the real actions, test entries are hidden by default, IP addresses no longer show the IPv6 prefix, and there is one Export CSV button. Game images show on the website, the ban button of reports works, and loading indicators look right.' },
+            { kind: 'fixed', label: 'Fixes', text: '<code>/stop</code> shuts down cleanly. Profile no longer shows an empty username (it shows your account ID). The Users tab search and role filter work. Documentation no longer lists the Founder and Helper roles and its markup is valid. Lint also exposed and fixed undefined variables in the Save the World theater, the client version parser and the companion name route, configuration values may now contain an equals sign, <code>/ban remove</code> and <code>/ban add</code> now see existing bans on the JSON database (the check never saw them), and the update check at startup no longer slows the launch down when GitHub is unreachable.' }
+        ]
+    },
+    {
         version: '1.2.8',
         title: 'Auth, Security & Account Recovery',
         date: 'October 21, 2026',
         type: 'feature',
-        latest: true,
+        latest: false,
         lts: false,
         summary: 'Modern, self-hosted account management: two-factor authentication, password reset, email verification, sign-in links and Discord sign-in, fine-grained per-account permissions, and a safer staff toolbox (force logout, password reset, ban appeals, audit export). It builds on the BETA email system, the server whitelist and the /sac command, and ships with a unified self-test system, clean website addresses and a round of security hardening. Everything works without any outside account: it is all yours to host.',
         features: [
@@ -388,26 +409,46 @@ const VERSIONS = [
 ];
 
 const TYPE_META = {
-    feature:  { label: 'FEATURE',  cls: 'badge-feature',  icon: 'fa-star' },
-    hotfix:   { label: 'HOTFIXES', cls: 'badge-hotfix',   icon: 'fa-wrench' },
-    security: { label: 'SECURITY', cls: 'badge-security', icon: 'fa-shield-halved' },
-    release:  { label: 'RELEASE',  cls: 'badge-release',  icon: 'fa-rocket' },
-    archive:  { label: 'ARCHIVE',  cls: 'badge-archive',  icon: 'fa-box-archive' },
+    feature:  { label: 'FEATURE',  cls: 'badge-feature' },
+    hotfix:   { label: 'HOTFIXES', cls: 'badge-hotfix' },
+    security: { label: 'SECURITY', cls: 'badge-security' },
+    release:  { label: 'RELEASE',  cls: 'badge-release' },
+    archive:  { label: 'ARCHIVE',  cls: 'badge-archive' },
 };
 
 const FILTERS = ['all', 'feature', 'hotfix', 'security', 'release'];
 
-const state = { active: 0, filter: 'all', query: '' };
+const KINDS = [
+    { id: 'new',      label: 'New',      icon: 'fa-star' },
+    { id: 'improved', label: 'Improved', icon: 'fa-arrow-up' },
+    { id: 'security', label: 'Security', icon: 'fa-shield-halved' },
+    { id: 'fixed',    label: 'Fixed',    icon: 'fa-wrench' }
+];
+
+const state = { filter: 'all', query: '' };
 
 function versionId(v) {
-    return v.version.toLowerCase().replace(/[^a-z0-9.]+/g, '-');
+    return 'v-' + v.version.toLowerCase().replace(/[^a-z0-9.]+/g, '-');
 }
 
-function groupOf(v) {
-    if (v.isPre) return 'Archive';
-    if (v.isRange) return '1.0';
-    const m = v.version.match(/^(\d+)\.(\d+)/);
-    return m ? `${m[1]}.${m[2]}` : 'Other';
+function plain(html) {
+    return String(html).replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+}
+
+function excerpt(html, max = 170) {
+    const text = plain(html);
+    if (text.length <= max) return text;
+    const cut = text.slice(0, max);
+    return cut.slice(0, Math.max(cut.lastIndexOf(' '), 60)) + '...';
+}
+
+function kindOf(feature) {
+    if (feature.kind) return feature.kind;
+    const text = (feature.label + ' ' + plain(feature.text)).toLowerCase();
+    if (/\b(fix|fixes|fixed|bug|crash|regression|broken)\b/.test(feature.label.toLowerCase())) return 'fixed';
+    if (/(security|two-factor|csrf|hardening|encrypt|permission|ban appeal)/.test(feature.label.toLowerCase())) return 'security';
+    if (/\bfixed\b|\bno longer\b/.test(text) && !/\bnew\b/.test(text)) return 'fixed';
+    return 'new';
 }
 
 function matches(v) {
@@ -434,53 +475,19 @@ function renderToolbar() {
             <input type="search" id="version-search" placeholder="Search updates..." autocomplete="off" aria-label="Search updates">
         </div>
         <div class="vfilters" role="group" aria-label="Filter by type">
-            ${FILTERS.map(f => `<button type="button" class="vchip${f === state.filter ? ' vchip-active' : ''}" data-filter="${f}">${f === 'all' ? 'All' : TYPE_META[f].label.charAt(0) + TYPE_META[f].label.slice(1).toLowerCase()}</button>`).join('')}
+            ${FILTERS.map(f => `<button type="button" class="vchip${f === state.filter ? ' vchip-active' : ''}" data-filter="${f}">${f === 'all' ? 'All' : TYPE_META[f].label}</button>`).join('')}
         </div>`;
     document.getElementById('version-search').addEventListener('input', e => {
         state.query = e.target.value;
-        renderList();
+        renderTimeline();
     });
     el.querySelector('.vfilters').addEventListener('click', e => {
         const b = e.target.closest('[data-filter]');
         if (!b) return;
         state.filter = b.dataset.filter;
         el.querySelectorAll('.vchip').forEach(c => c.classList.toggle('vchip-active', c === b));
-        renderList();
+        renderTimeline();
     });
-}
-
-function renderList() {
-    const list = document.getElementById('version-list');
-    let lastGroup = null;
-    let html = '';
-    VERSIONS.forEach((v, i) => {
-        if (!matches(v)) return;
-        const g = groupOf(v);
-        if (g !== lastGroup) {
-            html += `<div class="vgroup">${g}</div>`;
-            lastGroup = g;
-        }
-        const cls = ['vbtn', i === state.active ? 'vbtn-active' : '', v.isRange ? 'vbtn-range' : '', v.isPre ? 'vbtn-pre' : ''].join(' ').trim();
-        html += `
-            <button class="${cls}" data-idx="${i}" data-type="${v.type}">
-                <span class="vbtn-ver">${v.version}</span>
-                <span class="vbtn-badges">${badges(v)}</span>
-                <span class="vbtn-date">${v.date}</span>
-            </button>`;
-    });
-    list.innerHTML = html || '<p class="vempty">No update matches your search.</p>';
-}
-
-function renderPatchStack(v) {
-    const first = parseInt(v.from.split('.')[2], 10);
-    const last = parseInt(v.to.split('.')[2], 10);
-    const patches = [];
-    for (let p = first; p <= last; p++) patches.push(`1.0.${p}`);
-    return `
-        <!--<div class="vd-stack">
-            <div class="vd-stack-head"><i class="fas fa-layer-group"></i> ${patches.length} patch releases grouped together</div>
-            <div class="vd-stack-chips">${patches.map(p => `<span class="vd-stack-chip">${p}</span>`).join('')}</div>
-        </div> -->`;
 }
 
 function renderPre() {
@@ -488,88 +495,149 @@ function renderPre() {
         <div class="vd-pre">
             <div class="vd-pre-icon"><i class="fas fa-hourglass-start"></i></div>
             <h4>Beyond this point lies history.</h4>
-            <p>Versions prior to 1.0.0 were internal beta builds: unstable, undocumented, and never publicly released. They were part of the journey, but not part of the changelog.</p>
+            <p>Versions prior to 1.0.0 were internal beta builds: unstable, undocumented, and never publicly released. They were part of the journey, but not part of the story we tell here.</p>
         </div>`;
 }
 
-function renderNav(idx) {
-    const older = VERSIONS[idx + 1];
-    const newer = VERSIONS[idx - 1];
-    return `
-        <div class="vd-nav">
-            ${older ? `<button class="vd-nav-btn" data-idx="${idx + 1}"><i class="fas fa-arrow-left"></i><span><small>Older</small>${older.version}</span></button>` : '<span></span>'}
-            ${newer ? `<button class="vd-nav-btn vd-nav-next" data-idx="${idx - 1}"><span><small>Newer</small>${newer.version}</span><i class="fas fa-arrow-right"></i></button>` : '<span></span>'}
-        </div>`;
+function renderChanges(v) {
+    const groups = KINDS.map(kind => {
+        const items = v.features.filter(f => kindOf(f) === kind.id);
+        if (items.length === 0) return '';
+        return `
+            <section class="tl-group">
+                <h4 class="tl-group-title tl-${kind.id}"><i class="fas ${kind.icon}"></i> ${kind.label} <span>${items.length}</span></h4>
+                ${items.map(f => `
+                    <div class="tl-change">
+                        <div class="tl-change-label">${f.label}</div>
+                        <p class="tl-change-text">${f.text}</p>
+                    </div>`).join('')}
+            </section>`;
+    }).join('');
+    return groups;
 }
 
-function renderDetail(idx) {
-    const v = VERSIONS[idx];
-    const meta = TYPE_META[v.type] || TYPE_META.release;
-    const detail = document.getElementById('version-detail');
-    const mod = v.isPre ? ' vd-is-pre' : v.isRange ? ' vd-is-range' : v.isOrigin ? ' vd-is-origin' : '';
+function renderCounts(v) {
+    return KINDS
+        .map(kind => [kind, v.features.filter(f => kindOf(f) === kind.id).length])
+        .filter(([, n]) => n > 0)
+        .map(([kind, n]) => `<span class="tl-count tl-${kind.id}"><i class="fas ${kind.icon}"></i> ${n} ${kind.label.toLowerCase()}</span>`)
+        .join('');
+}
+
+function renderItem(v) {
     const count = v.features.length;
-    detail.className = 'updates-detail' + mod;
-    detail.innerHTML = `
-        <div class="vd-header" data-type="${v.type}">
-            <div class="vd-header-top">
-                <div>
-                    <h2 class="vd-version">${v.isPre ? v.version : 'Version ' + v.version}</h2>
-                    <h3 class="vd-title">${v.title}</h3>
-                </div>
-                <div class="vd-badges">${badges(v)}</div>
+    const highlights = v.features.slice(0, 3);
+    const hasMore = count > 3;
+    const mod = v.isPre ? ' tl-is-pre' : v.isRange ? ' tl-is-range' : v.isOrigin ? ' tl-is-origin' : '';
+
+    return `
+        <article class="tl-item${mod}${v.latest ? ' tl-is-latest' : ''}" id="${versionId(v)}">
+            <div class="tl-card">
+                <header class="tl-head">
+                    <h2 class="tl-ver">${v.isPre ? v.version : v.version}</h2>
+                    <div class="tl-badges">${badges(v)}</div>
+                    <span class="tl-date"><i class="fas fa-calendar-alt"></i> ${v.date}</span>
+                    <button class="tl-copy" type="button" data-copy="${versionId(v)}" title="Copy link to this version"><i class="fas fa-link"></i></button>
+                </header>
+                <h3 class="tl-title">${v.title}</h3>
+                <p class="tl-summary">${v.summary}</p>
+                ${v.isPre ? renderPre() : ''}
+                ${v.isRange ? '<p class="tl-note"><i class="fas fa-circle-info"></i> These patches were small and shipped in quick succession, so they are summarised as a single entry.</p>' : ''}
+                ${v.isOrigin ? '<p class="tl-note"><i class="fas fa-seedling"></i> The very first public release of Neodyme.</p>' : ''}
+                ${highlights.length ? `
+                    <ul class="tl-highlights">
+                        ${highlights.map(f => `
+                            <li>
+                                <span class="tl-hl-label">${f.label}</span>
+                                <span class="tl-hl-text">${hasMore ? excerpt(f.text) : plain(f.text)}</span>
+                            </li>`).join('')}
+                    </ul>` : ''}
+                ${count ? `
+                    <div class="tl-foot">
+                        <div class="tl-counts">${renderCounts(v)}</div>
+                        ${hasMore ? `<button class="tl-toggle" type="button" data-toggle="${versionId(v)}" aria-expanded="false">Show all ${count} changes <i class="fas fa-chevron-down"></i></button>` : ''}
+                    </div>` : ''}
+                ${hasMore ? `<div class="tl-all" id="all-${versionId(v)}" hidden>${renderChanges(v)}</div>` : ''}
             </div>
-            <div class="vd-meta">
-                <span><i class="fas fa-calendar-alt"></i> ${v.date}</span>
-                ${count ? `<span><i class="fas ${meta.icon}"></i> ${count} change${count > 1 ? 's' : ''}</span>` : ''}
-                <!-- <button class="vd-copy" type="button" title="Copy link to this version"><i class="fas fa-link"></i> Copy link</button> -->
-            </div>
-            <p class="vd-summary">${v.summary}</p>
-            ${v.isRange ? renderPatchStack(v) : ''}
-        </div>
-        ${count ? `<ul class="vd-features">
-            ${v.features.map(f => `
-                <li class="vd-feature-item">
-                    <span class="vd-feature-label">${f.label}</span>
-                    <span class="vd-feature-text">${f.text}</span>
-                </li>`).join('')}
-        </ul>` : ''}
-        ${v.isRange ? '<p class="vd-note"><i class="fas fa-circle-info"></i> These patches were small and shipped in quick succession, so they are summarised as a single entry.</p>' : ''}
-        ${v.isOrigin ? '<p class="vd-note"><i class="fas fa-seedling"></i> The very first public release of Neodyme.</p>' : ''}
-        ${v.isPre ? renderPre() : ''}
-        ${renderNav(idx)}
-    `;
-    detail.querySelector('.vd-copy').addEventListener('click', e => {
-        const btn = e.currentTarget;
-        const url = location.href.split('#')[0] + '#' + versionId(v);
-        const done = () => {
-            btn.innerHTML = '<i class="fas fa-check"></i> Copied';
-            setTimeout(() => { btn.innerHTML = '<i class="fas fa-link"></i> Copy link'; }, 1500);
-        };
-        if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, () => {});
-    });
+        </article>`;
 }
 
-function selectVersion(idx, { updateHash = true, scroll = false } = {}) {
-    state.active = idx;
-    renderList();
-    renderDetail(idx);
-    if (updateHash) history.replaceState(null, '', '#' + versionId(VERSIONS[idx]));
-    if (scroll && window.innerWidth <= 900) {
-        document.getElementById('version-detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+function renderTimeline() {
+    const root = document.getElementById('timeline');
+    const shown = VERSIONS.filter(matches);
+    root.innerHTML = shown.length
+        ? shown.map(renderItem).join('')
+        : '<p class="vempty">No update matches your search.</p>';
+}
+
+function setOpen(id, open) {
+    const body = document.getElementById('all-' + id);
+    const button = document.querySelector(`[data-toggle="${id}"]`);
+    if (!body || !button) return;
+    body.hidden = !open;
+    button.setAttribute('aria-expanded', String(open));
+    const count = body.closest('.tl-item') ? VERSIONS.find(v => versionId(v) === id).features.length : 0;
+    button.innerHTML = open
+        ? 'Hide changes <i class="fas fa-chevron-up"></i>'
+        : `Show all ${count} changes <i class="fas fa-chevron-down"></i>`;
 }
 
 document.addEventListener('click', e => {
-    const b = e.target.closest('[data-idx]');
-    if (b) selectVersion(parseInt(b.dataset.idx, 10), { scroll: true });
+    const toggle = e.target.closest('[data-toggle]');
+    if (toggle) {
+        setOpen(toggle.dataset.toggle, toggle.getAttribute('aria-expanded') !== 'true');
+        return;
+    }
+
+    const copy = e.target.closest('[data-copy]');
+    if (copy && navigator.clipboard) {
+        const url = location.href.split('#')[0] + '#' + copy.dataset.copy;
+        navigator.clipboard.writeText(url).then(() => {
+            copy.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => { copy.innerHTML = '<i class="fas fa-link"></i>'; }, 1500);
+        }, () => {});
+    }
 });
 
-document.addEventListener('keydown', e => {
-    if (e.target.tagName === 'INPUT' || e.ctrlKey || e.metaKey || e.altKey) return;
-    if (e.key === 'ArrowLeft' && state.active < VERSIONS.length - 1) selectVersion(state.active + 1);
-    if (e.key === 'ArrowRight' && state.active > 0) selectVersion(state.active - 1);
-});
+function renderRoadmap() {
+    const root = document.getElementById('roadmap-view');
+    root.innerHTML = ROADMAP.map(track => `
+        <section class="rm-track">
+            <h2 class="rm-track-title">${track.track}</h2>
+            <p class="rm-track-intro">${track.intro}</p>
+            <div class="rm-grid">
+                ${track.versions.map(v => `
+                    <article class="rm-card">
+                        <div class="rm-version">${v.version}</div>
+                        <h3 class="rm-title">${v.title}</h3>
+                        <ul class="rm-items">${v.items.map(item => `<li>${item}</li>`).join('')}</ul>
+                    </article>`).join('')}
+            </div>
+        </section>`).join('') + '<p class="rm-note">Plans can change. Shipped versions are listed in the Changelog.</p>';
+}
+
+function showTab(name, { updateHash = true } = {}) {
+    const roadmap = name === 'roadmap';
+    document.getElementById('changelog-view').hidden = roadmap;
+    document.getElementById('roadmap-view').hidden = !roadmap;
+    document.querySelectorAll('.updates-tab').forEach(t => t.classList.toggle('updates-tab-active', t.dataset.tab === name));
+    if (roadmap && !document.getElementById('roadmap-view').children.length) renderRoadmap();
+    if (updateHash) history.replaceState(null, '', roadmap ? '#roadmap' : location.pathname);
+}
+
+document.querySelectorAll('.updates-tab').forEach(tab => tab.addEventListener('click', () => showTab(tab.dataset.tab)));
 
 renderToolbar();
-const hashIdx = VERSIONS.findIndex(v => '#' + versionId(v) === location.hash);
-selectVersion(Math.max(0, hashIdx), { updateHash: hashIdx >= 0 });
+renderTimeline();
+
+if (location.hash === '#roadmap') {
+    showTab('roadmap', { updateHash: false });
+} else if (location.hash.startsWith('#v-')) {
+    const id = location.hash.slice(1);
+    const target = document.getElementById(id);
+    if (target) {
+        setOpen(id, true);
+        target.scrollIntoView({ block: 'start' });
+        target.classList.add('tl-flash');
+    }
+}

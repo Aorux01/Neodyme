@@ -58,7 +58,7 @@ router.patch("/api/locker/v4/:deploymentId/account/:accountId/companion-name",
             }
 
             res.status(204).end();
-        } catch (ero) {
+        } catch (error) {
             LoggerService.log('error', `Set companion name error: ${error.message}`);
             sendError(res, Errors.Internal.serverError());;
         }

@@ -111,7 +111,7 @@ async function uploadAssetFile(file) {
         resultEl.className = 'asset-upload-result is-ok';
         resultEl.innerHTML = `
             <div class="upload-success-card">
-                <img src="${escapeAttrAM(data.file.url)}" alt="">
+                <img src="${escapeAttrAM(siteAssetUrl(data.file.url))}" alt="" onerror="markImageBroken(this)">
                 <div>
                     <p><strong>Uploaded</strong> - ${formatBytes(data.file.size)}</p>
                     <p class="muted">${escapeHtmlAM(data.file.path)}</p>
@@ -213,7 +213,7 @@ function renderAssetCard(file) {
     const isUploaded = file.path.startsWith('images/uploaded-images/');
     return `
         <div class="asset-card" data-url="${escapeAttrAM(file.url)}" data-path="${escapeAttrAM(file.path)}">
-            <div class="asset-thumb"><img src="${escapeAttrAM(file.url)}" alt="" loading="lazy" onerror="this.parentElement.classList.add('broken');this.parentElement.title='Image not loading: '+this.src"></div>
+            <div class="asset-thumb"><img src="${escapeAttrAM(siteAssetUrl(file.url))}" alt="" loading="lazy" onerror="markImageBroken(this)"></div>
             <div class="asset-meta">
                 <div class="asset-path" title="${escapeAttrAM(file.path)}">${escapeHtmlAM(file.path.split('/').pop())}</div>
                 <div class="asset-info muted">${formatBytes(file.size)} · ${file.ext || ''}</div>
@@ -228,7 +228,7 @@ function renderAssetCard(file) {
 function renderOnlineCard(entry) {
     return `
         <div class="asset-card" data-url="${escapeAttrAM(entry.cdn)}" data-path="${escapeAttrAM(entry.path)}">
-            <div class="asset-thumb"><img src="${escapeAttrAM(entry.cdn)}" alt="" loading="lazy" onerror="this.parentElement.classList.add('broken');this.parentElement.title='Image not loading: '+this.src"></div>
+            <div class="asset-thumb"><img src="${escapeAttrAM(entry.cdn)}" alt="" loading="lazy" onerror="markImageBroken(this)"></div>
             <div class="asset-meta">
                 <div class="asset-path" title="${escapeAttrAM(entry.path)}">${escapeHtmlAM(entry.path.split('/').pop())}</div>
                 <div class="asset-info muted">${entry.size ? formatBytes(entry.size) : 'remote'} · ${(entry.tags || []).join(', ')}</div>
@@ -343,7 +343,7 @@ async function loadImagePickerGrid(overlay, onPick) {
                     <summary><i class="fas fa-folder"></i> <strong>${escapeHtmlAM(folder)}</strong> <span class="muted">(${files.length})</span></summary>
                     <div class="asset-grid">${files.map(f => `
                         <div class="asset-card asset-card-picker" data-url="${escapeAttrAM(f.url)}" data-name="${escapeAttrAM(f.path.split('/').pop().toLowerCase())}">
-                            <div class="asset-thumb"><img src="${escapeAttrAM(f.url)}" alt="" loading="lazy" onerror="this.parentElement.classList.add('broken');this.parentElement.title='Image not loading: '+this.src"></div>
+                            <div class="asset-thumb"><img src="${escapeAttrAM(siteAssetUrl(f.url))}" alt="" loading="lazy" onerror="markImageBroken(this)"></div>
                             <div class="asset-meta">
                                 <div class="asset-path" title="${escapeAttrAM(f.path)}">${escapeHtmlAM(f.path.split('/').pop())}</div>
                                 <div class="asset-info muted">${formatBytes(f.size)}</div>

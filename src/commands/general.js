@@ -61,7 +61,6 @@ function register(CM) {
 
     CM.register('/stop', async () => {
         LoggerService.log('info', 'Shutting down server...');
-        CM.readline.close();
         await CM.serverStop();
     });
 

@@ -326,7 +326,7 @@ class VersionService {
                 var Build = req.headers["user-agent"].split("Release-")[1].split("-")[0];
 
                 if (Build.split(".").length == 3) {
-                    Value = Build.split(".");
+                    const Value = Build.split(".");
                     Build = Value[0] + "." + Value[1] + Value[2];
                 }
 

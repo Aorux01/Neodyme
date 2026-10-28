@@ -38,7 +38,7 @@ function showAlert(message, type = 'info', elementId = 'alert') {
 function setLoading(button, isLoading) {
     if (isLoading) {
         button.disabled = true;
-        button.innerHTML = '<div class="loading-spinner"></div> Loading...';
+        button.innerHTML = '<div class="spinner"></div> Loading...';
     } else {
         button.disabled = false;
         button.innerHTML = button.getAttribute('data-original-text');
@@ -59,7 +59,7 @@ async function checkAuth() {
         return data.user;
     } catch {
         sessionStorage.removeItem('neodyme_user');
-        if (window.location.pathname.includes('dashboard')) {
+        if (/^\/(dashboard|account)/.test(window.location.pathname)) {
             window.location.href = '/login';
         }
         return null;
@@ -139,6 +139,26 @@ function escapeHtml(text) {
 }
 
 // Lightweight escape for the 3 dangerous chars (console log colorizing, etc.).
+// Game content points at the Epic CDN host, which only resolves from the game
+// (through the host redirection). The website shows those images from this server.
+const GAME_ASSET_HOST = 'fortnite-public-service-prod11.ol.epicgames.com';
+
+function siteAssetUrl(url) {
+    try {
+        const parsed = new URL(url, window.location.origin);
+        if (parsed.hostname === GAME_ASSET_HOST) return window.location.origin + parsed.pathname + parsed.search;
+    } catch {
+        // not a valid address, shown as is
+    }
+    return url;
+}
+
+function markImageBroken(img) {
+    const name = decodeURIComponent((img.src.split('?')[0].split('/').pop()) || 'image');
+    img.parentElement.classList.add('broken');
+    img.parentElement.title = `Could not load ${name} from ${new URL(img.src).host}`;
+}
+
 function escHtml(str) {
     return String(str ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }

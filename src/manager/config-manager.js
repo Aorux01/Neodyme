@@ -19,7 +19,9 @@ class ConfigManager {
             configData.split('\n').forEach(line => {
                 line = line.trim();
                 if (line && !line.startsWith('#')) {
-                    const [key, value] = line.split('=').map(s => s.trim());
+                    const separator = line.indexOf('=');
+                    const key = separator === -1 ? line : line.slice(0, separator).trim();
+                    const value = separator === -1 ? undefined : line.slice(separator + 1).trim();
                     if (key && value !== undefined) {
                         if (value === 'true' || value === 'false') {
                             this.config[key] = value === 'true';

@@ -18,10 +18,6 @@
             <nav class="neodyme-nav">
                 <ul class="nav-links">
                     <li><a href="/">HOME</a></li>
-                    <li><a href="https://github.com/Aorux01/Neodyme" target="_blank">GITHUB</a></li>
-                    <li><a href="/updates">UPDATES</a></li>
-                    <li><a href="/shop">SHOP</a></li>
-                    <li><a href="/docs">DOCS</a></li>
                 </ul>
             </nav>
             
@@ -33,39 +29,31 @@
     <div class="dashboard-container">
         <aside class="dashboard-sidebar">
             <nav class="sidebar-nav">
-                <a href="#" class="nav-link active" onclick="showSection('dashboard')">
+                <a href="/account" class="nav-link active" data-section="dashboard" onclick="return goToSection('dashboard', event)">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="#" class="nav-link" onclick="showSection('profile')">
+                <a href="/account/profile" class="nav-link" data-section="profile" onclick="return goToSection('profile', event)">
                     <i class="fas fa-user"></i>
                     <span>Profile</span>
                 </a>
-                <a href="#" class="nav-link" onclick="showSection('friends')">
+                <a href="/account/friends" class="nav-link" data-section="friends" onclick="return goToSection('friends', event)">
                     <i class="fas fa-users"></i>
                     <span>Friends</span>
                 </a>
-                <a href="#" class="nav-link" onclick="showSection('sessions')">
+                <a href="/account/security" class="nav-link" data-section="sessions" onclick="return goToSection('sessions', event)">
                     <i class="fas fa-shield-alt"></i>
                     <span>Security & Sessions</span>
                 </a>
-                <a href="#" class="nav-link" onclick="showSection('settings')">
+                <a href="/account/settings" class="nav-link" data-section="settings" onclick="return goToSection('settings', event)">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </a>
-                <a href="/shop" class="nav-link">
-                    <i class="fas fa-shopping-bag"></i>
-                    <span>Item Shop</span>
-                </a>
-                <a href="/purchase" class="nav-link">
-                    <i class="fas fa-coins"></i>
-                    <span>Get V-Bucks</span>
-                </a>
-                <a href="#" class="nav-link" onclick="showSection('creator-code')">
+                <a href="/account/creator-code" class="nav-link" data-section="creator-code" onclick="return goToSection('creator-code', event)">
                     <i class="fas fa-ticket-alt"></i>
                     <span>Creator Code</span>
                 </a>
-                <a href="#" class="nav-link" onclick="showSection('support')">
+                <a href="/account/support" class="nav-link" data-section="support" onclick="return goToSection('support', event)">
                     <i class="fas fa-life-ring"></i>
                     <span>Support</span>
                 </a>
@@ -91,78 +79,56 @@
                     <p>Your Neodyme account overview</p>
                 </div>
 
+                <div class="quick-actions">
+                    <a class="btn btn-primary" id="qa-versions" href="#" target="_blank" rel="noopener" style="display: none;">
+                        <i class="fas fa-download"></i> Game versions
+                    </a>
+                    <button class="btn btn-secondary" id="qa-copy-address" type="button" onclick="copyServerAddress(this)">
+                        <i class="fas fa-copy"></i> Copy server address
+                    </button>
+                    <a class="btn btn-secondary" href="/account/friends" onclick="return goToSection('friends', event)">
+                        <i class="fas fa-user-plus"></i> Add friends
+                    </a>
+                    <a class="btn btn-secondary" href="/purchase">
+                        <i class="fas fa-coins"></i> Get V-Bucks
+                    </a>
+                </div>
+
                 <div class="dashboard-grid">
                     <div class="dashboard-card">
-                        <div class="card-icon">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <div class="card-title">Victory Royales</div>
-                        <div class="card-value" id="victory-royales">0</div>
+                        <div class="card-icon"><i class="fas fa-coins"></i></div>
+                        <div class="card-title">V-Bucks</div>
+                        <div class="card-value" id="stat-vbucks">-</div>
                     </div>
-
                     <div class="dashboard-card">
-                        <div class="card-icon">
-                            <i class="fas fa-skull"></i>
-                        </div>
-                        <div class="card-title">Eliminations (K/D)</div>
-                        <div class="card-value" id="total-eliminations">0</div>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="card-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
+                        <div class="card-icon"><i class="fas fa-users"></i></div>
                         <div class="card-title">Friends Online</div>
-                        <div class="card-value" id="friends-online">0</div>
+                        <div class="card-value" id="friends-online">-</div>
                     </div>
-
                     <div class="dashboard-card">
-                        <div class="card-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="card-title">Play Time</div>
-                        <div class="card-value" id="play-time">0h</div>
+                        <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="card-title">Two-Factor</div>
+                        <div class="card-value" id="stat-2fa">-</div>
                     </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-clock"></i></div>
+                        <div class="card-title">Last Sign-in</div>
+                        <div class="card-value card-value-small" id="stat-lastlogin">-</div>
+                    </div>
+                </div>
+
+                <div class="content-header">
+                    <h3>Account security</h3>
+                </div>
+                <div class="checklist" id="security-checklist">
+                    <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Checking...</div>
                 </div>
 
                 <div class="content-header">
                     <h3>Recent Activity</h3>
                 </div>
-
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="fas fa-sign-in-alt"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Logged into Neodyme</div>
-                            <div class="activity-time">Just now</div>
-                        </div>
-                    </div>
-                    <!-- <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="fas fa-gamepad"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Last match played</div>
-                            <div class="activity-time">2 hours ago</div>
-                        </div>
-                    </div> -->
-                </div>
-
-                <div class="content-header">
-                    <h3>Quick Actions</h3>
-                </div>
-
-                <div class="quick-actions">
-                    <button class="btn btn-primary" onclick="window.open('https://github.com/Aorux01/all-fortnite-builds', '_blank')">
-                        <i class="fas fa-play"></i>
-                        Download Game
-                    </button>
-                    <button class="btn btn-secondary" onclick="showSection('friends')">
-                        <i class="fas fa-user-plus"></i>
-                        Add Friends
-                    </button>
+                <div class="activity-list" id="recent-activity">
+                    <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
                 </div>
             </section>
 
@@ -175,11 +141,6 @@
 
                 <form class="profile-form" id="profile-form">
                     <div class="form-group">
-                        <label for="profile-username" class="form-label">Username</label>
-                        <input type="text" id="profile-username" class="form-input" placeholder="Your username">
-                    </div>
-
-                    <div class="form-group">
                         <label for="profile-email" class="form-label">Email Address</label>
                         <input type="email" id="profile-email" class="form-input" placeholder="Your email">
                     </div>
@@ -187,6 +148,16 @@
                     <div class="form-group">
                         <label for="profile-displayname" class="form-label">Display Name</label>
                         <input type="text" id="profile-displayname" class="form-input" placeholder="Your display name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profile-accountid" class="form-label">Account ID</label>
+                        <div class="input-with-button">
+                            <input type="text" id="profile-accountid" class="form-input" readonly>
+                            <button type="button" class="btn btn-secondary" onclick="copyAccountId(this)">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary">
@@ -265,85 +236,6 @@
                 </div>
             </section>
 
-            <!-- Inventory Section -->
-            <section id="inventory-section" class="content-section">
-                <div class="content-header">
-                    <h2>Inventory</h2>
-                    <p>Your items and cosmetics</p>
-                </div>
-
-                <div class="inventory-filters">
-                    <button class="filter-btn active">All Items</button>
-                    <button class="filter-btn">Outfits</button>
-                    <button class="filter-btn">Back Blings</button>
-                    <button class="filter-btn">Pickaxes</button>
-                    <button class="filter-btn">Gliders</button>
-                </div>
-
-                <div class="inventory-grid">
-                    <div class="inventory-item">
-                        <div class="item-icon default-skin"></div>
-                        <div class="item-name">Default Skin</div>
-                        <div class="item-rarity">Common</div>
-                    </div>
-                    <div class="inventory-item">
-                        <div class="item-icon default-pickaxe"></div>
-                        <div class="item-name">Default Pickaxe</div>
-                        <div class="item-rarity">Common</div>
-                    </div>
-                    <div class="inventory-item locked">
-                        <div class="item-icon locked-item"></div>
-                        <div class="item-name">Locked Item</div>
-                        <div class="item-rarity">Rare</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Statistics Section -->
-            <section id="stats-section" class="content-section">
-                <div class="content-header">
-                    <h2>Statistics</h2>
-                    <p>Your gameplay statistics</p>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Battle Royale</h3>
-                        <div class="stat-item">
-                            <span class="stat-label">Matches Played:</span>
-                            <span class="stat-value">0</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Wins:</span>
-                            <span class="stat-value">0</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Win Rate:</span>
-                            <span class="stat-value">0%</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">K/D Ratio:</span>
-                            <span class="stat-value">0.00</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <h3>Season Progress</h3>
-                        <div class="stat-item">
-                            <span class="stat-label">Season Level:</span>
-                            <span class="stat-value">1</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Battle Pass Tier:</span>
-                            <span class="stat-value">1</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 10%"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <!-- Security & Sessions Section -->
             <section id="sessions-section" class="content-section">
                 <div class="content-header">
@@ -352,6 +244,9 @@
                 </div>
 
                 <div class="security-controls">
+                    <a class="btn btn-primary" href="/security">
+                        <i class="fas fa-shield-alt"></i> Two-factor and linked accounts
+                    </a>
                     <button class="btn btn-danger" onclick="terminateAllSessions()">
                         <i class="fas fa-sign-out-alt"></i> Log Out All Devices
                     </button>
@@ -362,7 +257,7 @@
 
                 <div class="sessions-container">
                     <div id="sessions-list" class="sessions-list">
-                        <div class="loading-spinner">
+                        <div class="loading-state">
                             <i class="fas fa-spinner fa-spin"></i> Loading sessions...
                         </div>
                     </div>
@@ -377,7 +272,7 @@
                 </div>
 
                 <div id="creator-code-status">
-                    <div class="loading-spinner">
+                    <div class="loading-state">
                         <i class="fas fa-spinner fa-spin"></i> Loading...
                     </div>
                 </div>
@@ -453,7 +348,7 @@
                 <!-- My Tickets Tab -->
                 <div id="support-my-tickets" class="support-tab-content">
                     <div id="my-tickets-list" class="tickets-list">
-                        <div class="loading-spinner">
+                        <div class="loading-state">
                             <i class="fas fa-spinner fa-spin"></i> Loading your tickets...
                         </div>
                     </div>
@@ -547,6 +442,24 @@
                 </form>
 
                 <div class="content-header">
+                    <h3>Download my data</h3>
+                    <p>A zip file with your account, settings, friends, purchases, linked accounts, sessions, security events, support tickets, creator code, locker, owned cosmetics and game profiles. Passwords and two-factor secrets are never included.</p>
+                </div>
+                <form class="settings-form" id="export-form">
+                    <div class="form-group">
+                        <label for="export-password" class="form-label">Password</label>
+                        <input type="password" id="export-password" class="form-input" autocomplete="current-password" required>
+                    </div>
+                    <div class="form-group" id="export-code-group" style="display: none;">
+                        <label for="export-code" class="form-label">Two-factor code</label>
+                        <input type="text" id="export-code" class="form-input" autocomplete="one-time-code" inputmode="numeric">
+                    </div>
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-download"></i> Download my data
+                    </button>
+                </form>
+
+                <div class="content-header">
                     <h3>Danger Zone</h3>
                 </div>
 
@@ -563,5 +476,6 @@
     <script src="/js/common.js"></script>
     <script src="/js/header.js"></script>
     <script src="/js/dashboard.js"></script>
+    <script src="/js/shell.js"></script>
 </body>
 </html>

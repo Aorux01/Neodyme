@@ -511,7 +511,7 @@ asset-middleware (before express.static)
             <p>Two different version controls exist, and it is worth knowing what each one actually does today:</p>
             <ul>
                 <li><strong>Backend gate</strong> (<code>server.properties</code>): <code>customVersion=true</code> (default) accepts any Fortnite version that contacts the backend; <code>customVersion=false</code> + <code>fnVersion=&lt;X.YY&gt;</code> rejects everything else (and derives the shop era from <code>fnVersion</code>). This is the only check that currently filters by version.</li>
-                <li><strong>Per-server <code>version</code> field</strong> in <code>config/game-servers.json</code>: present on every entry (e.g. <code>"version": "20.00"</code>), but <strong>currently not honoured</strong> by the matchmaker. <code>findAvailableServer</code> only matches on <code>gamemode</code> + <code>status</code>, so a 15.30 client and a 20.00 client both land on the same server if the playlist matches. This is on the roadmap (planned for 1.2.8) - until then, fill the field for documentation only and rely on the backend gate, or run a separate Neodyme instance per build.</li>
+                <li><strong>Per-server <code>version</code> field</strong> in <code>config/game-servers.json</code>: present on every entry (e.g. <code>"version": "20.00"</code>), but <strong>currently not honoured</strong> by the matchmaker. <code>findAvailableServer</code> only matches on <code>gamemode</code> + <code>status</code>, so a 15.30 client and a 20.00 client both land on the same server if the playlist matches. This is on the roadmap (Matchmaking, planned for 1.4.1) - until then, fill the field for documentation only and rely on the backend gate, or run a separate Neodyme instance per build.</li>
             </ul>
 
             <h3>Step 4 - <code>matchmaking_settings</code></h3>
@@ -566,5 +566,6 @@ asset-middleware (before express.static)
 
         </main>
     </div>
+    <script src="/js/shell.js"></script>
 </body>
 </html>

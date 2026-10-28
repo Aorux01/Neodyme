@@ -79,7 +79,7 @@
             <p>The Users tab is a searchable table of every account, paginated. For each user:</p>
             <ul>
                 <li><strong>Display name</strong>, <strong>email</strong>, <strong>accountId</strong>, <strong>created at</strong>, <strong>last login</strong></li>
-                <li>Current <strong>role</strong> (Player / Founder / Helper / Moderator / Developer / Admin / Owner / Server)</li>
+                <li>Current <strong>role</strong> (Player / Moderator / Developer / Admin / Owner / Server)</li>
                 <li>Ban status (banned + reason + duration + expiry, or not banned)</li>
             </ul>
 
@@ -88,8 +88,6 @@
             <p>Role hierarchy from least to most privileged:</p>
             <ol>
                 <li><code>player</code>: default for new sign-ups</li>
-                <li><code>founder</code>: cosmetic-only (founder pack)</li>
-                <li><code>helper</code>: cosmetic + read-only on tickets (no enforcement powers)</li>
                 <li><code>moderator</code>: tickets, reports, bans, creator codes</li>
                 <li><code>developer</code>: full Developer Panel (config, content, assets, shop&hellip;)</li>
                 <li><code>admin</code>: everything moderators have + this panel</li>
@@ -251,5 +249,6 @@
             </table>
         </main>
     </div>
+    <script src="/js/shell.js"></script>
 </body>
 </html>

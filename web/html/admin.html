@@ -97,7 +97,7 @@
                         </button>
                     </div>
                     <div id="mod-players-list" class="users-list">
-                        <div class="loading-spinner">
+                        <div class="loading-state">
                             <i class="fas fa-spinner fa-spin"></i> Loading players...
                         </div>
                     </div>
@@ -124,7 +124,7 @@
                         </button>
                     </div>
                     <div id="mod-tickets-list" class="tickets-list">
-                        <div class="loading-spinner">
+                        <div class="loading-state">
                             <i class="fas fa-spinner fa-spin"></i> Loading tickets...
                         </div>
                     </div>
@@ -161,7 +161,7 @@
                         </div>
                     </div>
                     <div id="mod-reports-list" class="tickets-list">
-                        <div class="loading-spinner">
+                        <div class="loading-state">
                             <i class="fas fa-spinner fa-spin"></i> Loading reports...
                         </div>
                     </div>
@@ -176,7 +176,7 @@
                         </button>
                     </div>
                     <div id="mod-feedback-list" class="tickets-list">
-                        <div class="loading-spinner">
+                        <div class="loading-state">
                             <i class="fas fa-spinner fa-spin"></i> Loading feedback...
                         </div>
                     </div>
@@ -184,7 +184,7 @@
 
                 <div id="mod-pending-codes" class="mod-tab-content" style="display: none;">
                     <div id="pending-requests-list" class="requests-list">
-                        <div class="loading-spinner">
+                        <div class="loading-state">
                             <i class="fas fa-spinner fa-spin"></i> Loading pending requests...
                         </div>
                     </div>
@@ -192,7 +192,7 @@
 
                 <div id="mod-all-codes" class="mod-tab-content" style="display: none;">
                     <div id="all-codes-list" class="codes-list">
-                        <div class="loading-spinner">
+                        <div class="loading-state">
                             <i class="fas fa-spinner fa-spin"></i> Loading codes...
                         </div>
                     </div>
@@ -227,7 +227,7 @@
                 <div id="mod-commands" class="mod-tab-content" style="display: none;">
                     <div id="mod-cmd-result" class="alert" style="display:none;margin-bottom:12px;white-space:pre-wrap;font-family:monospace;font-size:12px;"></div>
                     <div id="mod-commands-list">
-                        <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading commands...</div>
+                        <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading commands...</div>
                     </div>
                 </div>
             </section>
@@ -938,7 +938,7 @@
                             <p style="color:#999;font-size:13px;margin:4px 0 0;">Rules that send emails automatically on events or a schedule. Account events send to the affected account; other triggers send to the rule's selected roles.</p>
                         </div>
                         <div id="email-automation-list" class="users-list">
-                            <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading automations...</div>
+                            <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading automations...</div>
                         </div>
                         <button class="btn btn-secondary" style="margin-top:12px;" onclick="newEmailAutomation()"><i class="fas fa-plus"></i> New rule</button>
                         <div id="email-automation-editor" style="margin-top:16px;"></div>
@@ -1031,7 +1031,7 @@
                         <button class="btn btn-secondary" onclick="loadAdminPlugins('dev-plugins-list')"><i class="fas fa-sync"></i> Refresh</button>
                     </div>
                     <div id="dev-plugins-list">
-                        <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading plugins...</div>
+                        <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading plugins...</div>
                     </div>
                 </div>
 
@@ -1039,7 +1039,7 @@
                 <div id="dev-commands" class="dev-tab-content" style="display: none;">
                     <div id="dev-cmd-result" class="alert" style="display:none;margin-bottom:16px;"></div>
                     <div id="dev-commands-list">
-                        <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading commands...</div>
+                        <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading commands...</div>
                     </div>
                 </div>
 
@@ -1061,7 +1061,7 @@
                     </div>
                     <!-- Service rows -->
                     <div id="system-checks-list" style="margin-bottom:24px;">
-                        <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+                        <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
                     </div>
                     <!-- Functional tests -->
                     <div style="margin-bottom:24px;">
@@ -1165,8 +1165,8 @@
 
                 <div id="admin-users" class="admin-tab-content">
                     <div class="admin-search">
-                        <input type="text" id="admin-user-search" class="form-input" placeholder="Search users by name, email, or ID...">
-                        <select id="admin-user-role-filter" class="form-input" style="width: auto;">
+                        <input type="text" id="admin-user-search" class="form-input" placeholder="Search users by name, email, or ID..." onkeydown="if (event.key === 'Enter') searchAdminUsers()">
+                        <select id="admin-user-role-filter" class="form-input" style="width: auto;" onchange="searchAdminUsers()">
                             <option value="">All Roles</option>
                             <option value="player">Players</option>
                             <option value="moderator">Moderators</option>
@@ -1182,7 +1182,7 @@
                         </button>
                     </div>
                     <div id="admin-users-list" class="users-list">
-                        <div class="loading-spinner">
+                        <div class="loading-state">
                             <i class="fas fa-spinner fa-spin"></i> Loading users...
                         </div>
                     </div>
@@ -1274,44 +1274,29 @@
 
                     <!-- Filters -->
                     <div class="admin-search" style="flex-wrap:wrap;gap:8px;">
-                        <select id="audit-action-filter" class="form-input" style="width:auto;">
-                            <option value="">All Actions</option>
-                            <option value="ban_user">Ban User</option>
-                            <option value="unban_user">Unban User</option>
-                            <option value="change_role">Change Role</option>
-                            <option value="update_config">Update Config</option>
-                            <option value="close_ticket">Close Ticket</option>
-                            <option value="delete_ticket">Delete Ticket</option>
-                            <option value="approve_code">Approve Code</option>
-                            <option value="reject_code">Reject Code</option>
-                            <option value="force_logout">Force Logout</option>
-                            <option value="admin_password_reset">Admin Password Reset</option>
-                            <option value="capabilities.updated">Permissions Changed</option>
-                            <option value="force_shop_rotation">Shop Rotation</option>
-                            <option value="toggle_maintenance">Maintenance</option>
-                        </select>
+                        <select id="audit-action-filter" class="form-input" style="width:auto;"><option value="">All Actions</option></select>
                         <input type="text" id="audit-search" class="form-input" placeholder="Search performer, target..." style="min-width:180px;">
                         <input type="date" id="audit-date-from" class="form-input" style="width:auto;" title="From date">
                         <input type="date" id="audit-date-to" class="form-input" style="width:auto;" title="To date">
+                        <label style="display:inline-flex;align-items:center;gap:6px;color:#aaa;font-size:12px;white-space:nowrap;">
+                            <input type="checkbox" id="audit-show-tests" onchange="auditCurrentPage=1;loadAuditLog()"> Show test entries
+                        </label>
                         <button class="btn btn-primary" onclick="auditCurrentPage=1;loadAuditLog()">
                             <i class="fas fa-search"></i> Search
                         </button>
                         <button class="btn btn-secondary" onclick="auditCurrentPage=1;loadAuditLog()">
                             <i class="fas fa-sync"></i> Refresh
                         </button>
-                        <button class="btn btn-secondary" onclick="exportAuditCsv()">
-                            <i class="fas fa-file-csv"></i> Export CSV
-                        </button>
                         <button class="btn btn-secondary" onclick="clearAuditFilters()">
                             <i class="fas fa-times"></i> Clear
                         </button>
-                        <button class="btn btn-secondary" onclick="exportAuditCsv()" title="Export current view as CSV">
+                        <button class="btn btn-secondary" onclick="exportAuditCsv()" title="Export the entries matching the filters (up to 5000) as CSV">
                             <i class="fas fa-download"></i> Export CSV
                         </button>
                     </div>
 
                     <div id="audit-log-list" class="audit-log-list">
-                        <div class="loading-spinner">
+                        <div class="loading-state">
                             <i class="fas fa-spinner fa-spin"></i> Loading audit log...
                         </div>
                     </div>
@@ -1329,7 +1314,7 @@
                 <!-- Commands Tab -->
                 <div id="admin-commands" class="admin-tab-content" style="display: none;">
                     <div id="admin-commands-list">
-                        <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading commands...</div>
+                        <div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading commands...</div>
                     </div>
                 </div>
 
@@ -1468,7 +1453,7 @@
                     </div>
 
                     <div id="admin-whitelist-list" class="users-list">
-                        <div class="loading-spinner">
+                        <div class="loading-state">
                             <i class="fas fa-spinner fa-spin"></i> Loading whitelist...
                         </div>
                     </div>
@@ -1535,5 +1520,6 @@
             }
         })();
     </script>
+    <script src="/js/shell.js"></script>
 </body>
 </html>

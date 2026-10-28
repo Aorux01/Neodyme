@@ -39,26 +39,22 @@
             <p class="updates-subtitle">Full changelog for every Neodyme release</p>
         </div>
 
-        <div class="updates-layout">
-            <!-- Left: version list -->
-            <aside class="updates-sidebar">
-                <div class="updates-toolbar" id="version-toolbar"></div>
-                <div class="updates-sidebar-inner" id="version-list">
-                    <!-- Populated by JS -->
-                </div>
-            </aside>
-
-            <!-- Right: version detail -->
-            <main class="updates-detail" id="version-detail">
-                <!-- Populated by JS -->
-            </main>
+        <div class="updates-tabs" role="tablist">
+            <button type="button" class="updates-tab updates-tab-active" data-tab="changelog" role="tab"><i class="fas fa-list"></i> Changelog</button>
+            <button type="button" class="updates-tab" data-tab="roadmap" role="tab"><i class="fas fa-route"></i> Roadmap</button>
         </div>
+
+        <div id="changelog-view">
+            <div class="updates-toolbar" id="version-toolbar"></div>
+            <div class="tl" id="timeline"></div>
+        </div>
+
+        <div class="updates-roadmap" id="roadmap-view" hidden></div>
     </div>
 
-    <script>
-    </script>
-
     <script src="/js/common.js"></script>
+    <script src="/js/roadmap-data.js"></script>
     <script src="/js/updates.js"></script>
+    <script src="/js/shell.js"></script>
 </body>
 </html>

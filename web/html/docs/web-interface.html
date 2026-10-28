@@ -83,12 +83,12 @@
                 <tbody>
                     <tr><td><code>/</code></td><td>Home</td></tr>
                     <tr><td><code>/login</code>, <code>/register</code></td><td>Sign in and account creation</td></tr>
-                    <tr><td><code>/dashboard</code></td><td>Player dashboard</td></tr>
+                    <tr><td><code>/account</code></td><td>Player account area: overview, profile, friends, security and sessions, settings, support and creator code (<code>/account/profile</code>, <code>/account/friends</code>, <code>/account/security</code>, <code>/account/settings</code>, <code>/account/support</code>, <code>/account/creator-code</code>). <code>/dashboard</code> redirects to <code>/account</code></td></tr>
                     <tr><td><code>/security</code></td><td>Two-factor authentication, backup codes and your security log</td></tr>
                     <tr><td><code>/appeal</code></td><td>Ban appeal form for banned players, reachable from the sign-in page</td></tr>
                     <tr><td><code>/forgot-password</code>, <code>/reset-password</code>, <code>/verify-email</code></td><td>Password reset and email verification (need SMTP)</td></tr>
                     <tr><td><code>/shop</code>, <code>/purchase</code></td><td>Item shop and V-Bucks</td></tr>
-                    <tr><td><code>/status</code>, <code>/updates</code></td><td>Service status and patch notes</td></tr>
+                    <tr><td><code>/status</code>, <code>/updates</code></td><td>Service status, patch notes and the roadmap (Roadmap tab)</td></tr>
                     <tr><td><code>/admin</code></td><td>Moderation, Developer and Admin panels</td></tr>
                     <tr><td><code>/docs</code>, <code>/docs/&lt;page&gt;</code></td><td>This documentation</td></tr>
                 </tbody>
@@ -212,7 +212,7 @@
             <h3>User Management</h3>
             <ul>
                 <li>View all user accounts</li>
-                <li>Change user roles (Player, Founder, Helper, Moderator, Admin, Owner)</li>
+                <li>Change user roles (Player, Moderator, Developer, Admin, Owner)</li>
                 <li>Ban/unban users from the admin panel</li>
             </ul>
 
@@ -223,7 +223,7 @@
                 <li>Audit log summary (action counts over 24h)</li>
             </ul>
 
-            <h3>Command Panel</span></h3>
+            <h3>Command Panel</h3>
             <p>Execute common server commands with a single click:</p>
             <table>
                 <tr><th>Button</th><th>Command</th></tr>
@@ -272,7 +272,7 @@
                 <li>XMPP clients widget - live list of connected players, their online/away status, and active party rooms</li>
             </ul>
 
-            <h3>Console Logs</span></h3>
+            <h3>Console Logs</h3>
             <ul>
                 <li>Read server log files directly in the browser</li>
                 <li>Filter by log level (INFO, WARN, ERROR, SUCCESS)</li>
@@ -290,5 +290,6 @@
         </main>
     </div>
     <script src="/js/common.js"></script>
+    <script src="/js/shell.js"></script>
 </body>
 </html>

@@ -677,7 +677,7 @@ function renderField(field, value, id, ctx) {
                             placeholder="${escapeAttr(field.placeholder || 'https://...')}">
                         <button type="button" class="btn btn-sm btn-secondary image-url-btn" data-act="upload" title="Upload from your computer"><i class="fas fa-upload"></i></button>
                         <button type="button" class="btn btn-sm btn-secondary image-url-btn" data-act="browse" title="Pick from library"><i class="fas fa-images"></i></button>
-                        <div class="image-thumb">${value ? `<img src="${escapeAttr(value)}" alt="" onerror="this.parentElement.classList.add('broken');this.parentElement.title='Image not loading: '+this.src">` : '<span class="image-thumb-empty">no image</span>'}</div>
+                        <div class="image-thumb">${value ? `<img src="${escapeAttr(siteAssetUrl(value))}" alt="" onerror="markImageBroken(this)">` : '<span class="image-thumb-empty">no image</span>'}</div>
                     </div>
                 </div>`;
         case 'number':
@@ -929,7 +929,7 @@ function refreshImageThumb(el) {
     thumb.classList.remove('broken');
     const v = el.value;
     if (v && /^https?:\/\//i.test(v)) {
-        thumb.innerHTML = `<img src="${escapeAttr(v)}" alt="" onerror="this.parentElement.classList.add('broken');this.parentElement.title='Image not loading: '+this.src">`;
+        thumb.innerHTML = `<img src="${escapeAttr(siteAssetUrl(v))}" alt="" onerror="markImageBroken(this)">`;
         thumb.removeAttribute('title');
     } else {
         thumb.innerHTML = '<span class="image-thumb-empty">no image</span>';

@@ -19,3 +19,7 @@ public/images/uploaded-images/
 
 .vscode/
 *.log
+
+version.md
+web.md
+dev-plugins/

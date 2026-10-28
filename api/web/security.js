@@ -6,6 +6,10 @@ const TwoFactorService = require('../../src/service/security/two-factor-service'
 const DiscordService = require('../../src/service/security/discord-service');
 const { STATE_COOKIE, stateCookieOptions } = require('./discord');
 const AuditService = require('../../src/service/api/audit-service');
+const TicketService = require('../../src/service/api/ticket-service');
+const CreatorCodeService = require('../../src/service/api/creator-code-service');
+const AuthService = require('../../src/service/api/auth-service');
+const { buildZip } = require('../../src/utils/zip-builder');
 const WebTokenService = require('../../src/service/token/web-token-service');
 const WebResponse = require('../../src/service/api/web-response-service');
 const WebService = require('../../src/service/api/web-service');
@@ -225,6 +229,142 @@ router.get('/neodyme/api/security/log', verifyToken, async (req, res) => {
         return WebResponse.ok(res, { events });
     } catch (error) {
         return WebResponse.serverError(res, 'security log', error);
+    }
+});
+
+const EXPORT_ACCOUNT_FIELDS = ['accountId', 'displayName', 'email', 'created', 'createdAt', 'lastLogin', 'emailVerified', 'tfaEnabled', 'role', 'roleLevel'];
+const EXPORT_GAME_PROFILES = ['athena', 'common_core', 'common_public', 'campaign', 'creative', 'collections', 'metadata'];
+
+const attempt = async (job, fallback) => {
+    try {
+        return await job();
+    } catch {
+        return fallback;
+    }
+};
+
+const FAVORITE_PREFIX = 'favorite_';
+
+// Readable views of the athena profile: what is equipped and what is owned.
+function lockerFiles(athena) {
+    if (!athena || typeof athena !== 'object') return [];
+    const items = athena.items || {};
+    const attributes = (athena.stats && athena.stats.attributes) || {};
+
+    const favorites = {};
+    for (const [key, value] of Object.entries(attributes)) {
+        if (key.startsWith(FAVORITE_PREFIX)) favorites[key] = value;
+    }
+
+    const lockers = Object.entries(items)
+        .filter(([, item]) => String(item.templateId).startsWith('CosmeticLocker:'))
+        .map(([id, item]) => ({ id, templateId: item.templateId, attributes: item.attributes || {} }));
+
+    const cosmetics = Object.entries(items)
+        .filter(([, item]) => String(item.templateId).startsWith('Athena') && !String(item.templateId).startsWith('AthenaSeason'))
+        .map(([id, item]) => ({
+            id,
+            templateId: item.templateId,
+            favorite: !!(item.attributes && item.attributes.favorite),
+            seen: !!(item.attributes && item.attributes.item_seen),
+            variants: (item.attributes && item.attributes.variants) || []
+        }));
+
+    return [
+        { name: 'locker.json', data: JSON.stringify({
+            lastAppliedLoadout: attributes.last_applied_loadout || null,
+            loadouts: attributes.loadouts || [],
+            favorites,
+            lockers
+        }, null, 2) },
+        { name: 'cosmetics.json', data: JSON.stringify({ count: cosmetics.length, items: cosmetics }, null, 2) }
+    ];
+}
+
+const README = (account, now) => [
+    'Neodyme account export',
+    `Account: ${account.displayName} (${account.accountId})`,
+    `Created: ${now.toISOString()}`,
+    '',
+    'Every file is plain JSON. Passwords, password hashes, two-factor secrets, backup codes and session tokens are never included.',
+    '',
+    'account.json: profile',
+    'settings.json: website and privacy settings',
+    'friends.json: friends, requests and blocked players',
+    'purchases.json: purchase history',
+    'linked-accounts.json: linked sign-in providers',
+    'security-events.json: security activity on your account',
+    'sessions.json: active sessions',
+    'tickets.json: your support tickets and their messages',
+    'creator-code.json: your creator code and requests',
+    'locker.json: your locker, equipped items and loadouts',
+    'cosmetics.json: every cosmetic you own',
+    'game-profiles/: your full game profiles (items, stats, V-Bucks)',
+    ''
+].join('\r\n');
+
+router.post('/neodyme/api/security/export', ...secured, async (req, res) => {
+    try {
+        const account = await confirmIdentity(req, res, { needCode: false, codeIfEnabled: true });
+        if (!account) return;
+
+        const accountId = account.accountId;
+        const [settings, friends, purchases, links, entries, tickets, creatorCode, creatorRequest, sessions] = await Promise.all([
+            attempt(() => DatabaseManager.getUserSettings(accountId), {}),
+            attempt(() => DatabaseManager.getFriends(accountId), {}),
+            attempt(() => DatabaseManager.getUserPurchaseHistory(accountId), []),
+            attempt(() => DatabaseManager.getAccountLinks(accountId), []),
+            attempt(() => AuditService.getTargetHistory('account', accountId, 1000), []),
+            attempt(() => TicketService.getPlayerTickets(accountId), []),
+            attempt(() => CreatorCodeService.getUserCode(accountId), null),
+            attempt(() => CreatorCodeService.getUserRequest(accountId), null),
+            attempt(() => AuthService.getActiveSessions(accountId), [])
+        ]);
+
+        const profile = {};
+        for (const field of EXPORT_ACCOUNT_FIELDS) {
+            if (account[field] !== undefined) profile[field] = account[field];
+        }
+
+        const json = (value) => JSON.stringify(value, null, 2);
+        const now = new Date();
+        const files = [
+            { name: 'README.txt', data: README(account, now) },
+            { name: 'account.json', data: json(profile) },
+            { name: 'settings.json', data: json(settings) },
+            { name: 'friends.json', data: json({
+                friends: (friends.friends || []).map(f => f.accountId || f),
+                incoming: friends.incoming || [],
+                outgoing: friends.outgoing || [],
+                blocked: friends.blocklist || []
+            }) },
+            { name: 'purchases.json', data: json(purchases || []) },
+            { name: 'linked-accounts.json', data: json((links || []).map(l => ({ provider: l.provider, username: l.username, linkedAt: l.linkedAt }))) },
+            { name: 'security-events.json', data: json(entries
+                .filter(e => String(e.action).startsWith('security.'))
+                .map(e => ({ action: e.action, timestamp: e.timestamp, ip: AuditService.normalizeIp(e.ipAddress) || null }))) },
+            { name: 'sessions.json', data: json((Array.isArray(sessions) ? sessions : []).map(x => ({
+                sessionId: x.sessionId, deviceId: x.deviceId, ip: x.ip, createdAt: x.createdAt, lastActivity: x.lastActivity, expiresAt: x.expiresAt
+            }))) },
+            { name: 'tickets.json', data: json(tickets) },
+            { name: 'creator-code.json', data: json({ code: creatorCode, request: creatorRequest }) }
+        ];
+
+        for (const id of EXPORT_GAME_PROFILES) {
+            const data = await attempt(() => DatabaseManager.getProfile(accountId, id), null);
+            if (!data) continue;
+            files.push({ name: `game-profiles/${id}.json`, data: json(data) });
+            if (id === 'athena') files.push(...lockerFiles(data));
+        }
+
+        await audit('security.data_export', req);
+
+        res.set('Cache-Control', 'no-store');
+        res.set('Content-Type', 'application/zip');
+        res.set('Content-Disposition', `attachment; filename="neodyme-account-${accountId}.zip"`);
+        return res.send(buildZip(files, now));
+    } catch (error) {
+        return WebResponse.serverError(res, 'account export', error);
     }
 });
 

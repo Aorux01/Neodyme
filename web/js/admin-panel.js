@@ -273,7 +273,7 @@ async function loadAdminPlugins(containerId) {
     const id        = containerId || 'admin-plugins-list';
     const container = document.getElementById(id);
     if (!container) return;
-    container.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+    container.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
 
     try {
         const res  = await fetch('/neodyme/api/admin/plugins', { credentials: 'include' });
@@ -1575,7 +1575,7 @@ async function runFunctionalTests() {
 
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running...';
-    listEl.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Running functional tests on throwaway accounts...</div>';
+    listEl.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Running functional tests on throwaway accounts...</div>';
 
     try {
         const res  = await secureFetch('/neodyme/api/dev/system/tests/functional', {
@@ -1761,7 +1761,7 @@ async function loadPermissionUsers() {
     const list = document.getElementById('perm-users');
     if (!list) return;
 
-    list.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+    list.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
     const search = document.getElementById('perm-search').value.trim();
 
     try {
@@ -1797,7 +1797,7 @@ async function openPermissionEditor(accountId) {
     const editor = document.getElementById('perm-editor');
     permUserId = accountId;
     editor.style.display = 'block';
-    editor.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+    editor.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
 
     try {
         const res = await fetch(`${API}/admin/permissions/users/${encodeURIComponent(accountId)}`, { credentials: 'include' });

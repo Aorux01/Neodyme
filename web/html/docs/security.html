@@ -207,8 +207,6 @@ DISCORD_CLIENT_SECRET=...</code></pre>
             <table>
                 <tr><th>Role</th><th>Level</th><th>Permissions</th></tr>
                 <tr><td>Player</td><td>0</td><td>Basic gameplay and web dashboard</td></tr>
-                <tr><td>Founder</td><td>-</td><td>Player + founder badge</td></tr>
-                <tr><td>Helper</td><td>-</td><td>Player + helper badge</td></tr>
                 <tr><td>Moderator</td><td>1</td><td>Player management, bans, tickets, creator codes</td></tr>
                 <tr><td>Developer</td><td>2</td><td>Configuration, logs, plugins, live monitor, dev tools</td></tr>
                 <tr><td>Admin</td><td>3</td><td>All moderator + user roles, audit log, advanced settings</td></tr>
@@ -224,8 +222,6 @@ DISCORD_CLIENT_SECRET=...</code></pre>
 /admin set "PlayerName" moderator
 /admin set "PlayerName" developer
 /admin set "PlayerName" owner
-/admin set "PlayerName" helper
-/admin set "PlayerName" founder
 /admin set "PlayerName" 0        # Remove role (regular player)</code></pre>
 
             <h2>Account Lock</h2>
@@ -246,5 +242,6 @@ DISCORD_CLIENT_SECRET=...</code></pre>
         </main>
     </div>
     <script src="/js/common.js"></script>
+    <script src="/js/shell.js"></script>
 </body>
 </html>

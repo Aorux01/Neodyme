@@ -332,10 +332,11 @@ module.exports = SchedulerPlugin;</code></pre>
             <p>A plugin can add routes to the backend and the game API freely. Its routes must not, however, start with a path used by the website itself: a plugin route that shadows one of these breaks that page for every player.</p>
             <table>
                 <tr><th>Category</th><th>Reserved prefixes</th></tr>
-                <tr><td>Website pages</td><td><code>/login</code>, <code>/register</code>, <code>/dashboard</code>, <code>/shop</code>, <code>/purchase</code>, <code>/status</code>, <code>/updates</code>, <code>/admin</code>, <code>/docs</code></td></tr>
+                <tr><td>Website pages</td><td><code>/login</code>, <code>/register</code>, <code>/dashboard</code>, <code>/account</code> (and everything under it), <code>/shop</code>, <code>/purchase</code>, <code>/status</code>, <code>/updates</code>, <code>/admin</code>, <code>/docs</code></td></tr>
                 <tr><td>Website files</td><td><code>/html</code>, <code>/css</code>, <code>/js</code>, <code>/images</code>, <code>/favicon.ico</code></td></tr>
             </table>
             <p>If your plugin serves pages or files of its own, put them under a dedicated prefix such as <code>/plugins/my-plugin/...</code> rather than at the root.</p>
+            <p>The server checks this when a plugin loads. With <code>pluginRouteGuard=warn</code> (default) a conflicting route is logged and kept, with <code>block</code> it is removed, and with <code>off</code> nothing is checked. See <a href="/docs/configuration#plugin-safety">Plugin Safety</a>.</p>
 
             <h2>Best Practices</h2>
             <ul>
@@ -360,5 +361,6 @@ module.exports = SchedulerPlugin;</code></pre>
         </main>
     </div>
     <script src="/js/common.js"></script>
+    <script src="/js/shell.js"></script>
 </body>
 </html>

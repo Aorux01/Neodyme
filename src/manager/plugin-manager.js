@@ -3,6 +3,7 @@ const path = require('path');
 
 const LoggerService = require('../service/logger/logger-service');
 const ConfigManager = require('./config-manager');
+const PluginRouteGuard = require('../utils/plugin-route-guard');
 
 class PluginManager {
     static backendVersion = null;
@@ -89,7 +90,10 @@ class PluginManager {
                     // Store plugin path for info command
                     plugin._pluginPath = pluginPath;
 
+                    const EndpointManager = require('./endpoint-manager');
+                    const routesBefore = PluginRouteGuard.snapshot(EndpointManager.app);
                     const success = await plugin.init(this);
+                    PluginRouteGuard.check(EndpointManager.app, routesBefore, plugin.name);
                     if (success) {
                         this.plugins.push(plugin);
                         LoggerService.log('success', `Loaded plugin: ${plugin.name} v${plugin.version || '1.0.0'}`);
@@ -151,7 +155,10 @@ class PluginManager {
 
                 plugin._pluginPath = pluginPath;
 
+                const EndpointManager = require('./endpoint-manager');
+                const routesBefore = PluginRouteGuard.snapshot(EndpointManager.app);
                 const success = await plugin.init(this);
+                PluginRouteGuard.check(EndpointManager.app, routesBefore, plugin.name);
                 if (success) {
                     this.plugins.push(plugin);
                     LoggerService.log('success', `Loaded plugin: ${plugin.name} v${plugin.version || '1.0.0'}`);

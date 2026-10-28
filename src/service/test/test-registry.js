@@ -155,6 +155,7 @@ class TestRegistry {
         require('./checks/permissions');
         require('./checks/staff');
         require('./checks/oauth');
+        require('./checks/web');
     }
 }
 

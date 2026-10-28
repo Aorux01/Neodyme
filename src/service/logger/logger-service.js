@@ -20,6 +20,10 @@ class LoggerService {
 
     static setReadline(rl) {
         this.rl = rl;
+        // Once the prompt is closed, logging must fall back to plain output.
+        rl.on('close', () => {
+            if (this.rl === rl) this.rl = null;
+        });
     }
 
     static ensureLogsDirectory() {
@@ -128,7 +132,11 @@ class LoggerService {
             readline.clearLine(process.stdout, 0);
             readline.cursorTo(process.stdout, 0);
             process.stdout.write(logMessage + '\n');
-            this.rl.prompt(true);
+            try {
+                this.rl.prompt(true);
+            } catch (_) {
+                this.rl = null;
+            }
         } else {
             console.log(logMessage);
         }
@@ -139,8 +147,12 @@ class LoggerService {
 }
 
 process.on('uncaughtException', (err) => {
-    LoggerService.log('error', `Uncaught exception: ${err.message}`, { stack: err.stack });
-    process.exit(1);
+    try {
+        LoggerService.writeToFile('error', `Uncaught exception: ${err.message}`, { stack: err.stack });
+        console.error(`Uncaught exception: ${err.stack || err.message}`);
+    } finally {
+        process.exit(1);
+    }
 });
 process.on('unhandledRejection', (reason) => {
     const err = reason instanceof Error ? reason : new Error(String(reason));

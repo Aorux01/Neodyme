@@ -12,7 +12,22 @@ class AuditService {
     }
 
     // Log an action
+    // IPv4 addresses reach Node as ::ffff:a.b.c.d on dual-stack sockets.
+    static normalizeIp(ip) {
+        return typeof ip === 'string' ? ip.replace(/^::ffff:/i, '') : ip;
+    }
+
+    // Throwaway accounts of the functional tests are flagged so the viewer can hide them.
+    static isTestEntry(entry) {
+        return !!(entry.details && entry.details.test);
+    }
+
     static async log(action, performedBy, performedByName, targetType, targetId, details = {}, ipAddress = null) {
+        if (String(performedByName || '').startsWith('__test_')) {
+            details = { ...details, test: true };
+        }
+        ipAddress = this.normalizeIp(ipAddress);
+
         const logEntry = {
             logId: `audit_${Date.now()}_${uuidv4().substring(0, 8)}`,
             action,
@@ -269,6 +284,10 @@ class AuditService {
         const data = await DatabaseManager.getAuditLogs();
         let logs = [...data.logs].reverse(); // Most recent first
 
+        if (!filters.includeTests) {
+            logs = logs.filter(l => !this.isTestEntry(l));
+        }
+
         // Apply filters
         if (filters.action) {
             logs = logs.filter(l => l.action === filters.action);
@@ -321,7 +340,7 @@ class AuditService {
         const data = await DatabaseManager.getAuditLogs();
         const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000);
 
-        const recentLogs = data.logs.filter(l => new Date(l.timestamp) >= cutoff);
+        const recentLogs = data.logs.filter(l => new Date(l.timestamp) >= cutoff && !this.isTestEntry(l));
 
         const actionCounts = {};
         recentLogs.forEach(log => {

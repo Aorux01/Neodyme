@@ -26,6 +26,9 @@ class CommandManager {
 
         this.registerDefaultCommands();
 
+        this.readlineClosed = false;
+        this.readline.on('close', () => { this.readlineClosed = true; });
+
         this.readline.on('line', (input) => {
             const [command, ...args] = input.trim().split(' ');
 
@@ -33,7 +36,7 @@ class CommandManager {
                 this.execute(command, args);
             }
 
-            this.readline.prompt();
+            if (!this.readlineClosed) this.readline.prompt();
         });
 
         LoggerService.log('success', 'Command system ready.');

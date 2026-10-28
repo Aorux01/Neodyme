@@ -63,7 +63,7 @@
             <ol>
                 <li>Download or clone the latest version of Neodyme.</li>
                 <li>Run <code>install_packages.bat</code> to install all npm dependencies (only required once).</li>
-                <li>Launch the server with <code>start.bat</code>.</li>
+                <li>Launch the server with <code>start.bat</code> (or run <code>npm run setup</code> then <code>npm start</code> on any system; <code>npm run setup</code> checks Node.js, installs the dependencies and creates <code>.env</code> when it is missing).</li>
                 <li>Open <code>http://localhost:3551</code> in your browser.</li>
             </ol>
 
@@ -108,8 +108,13 @@ REDIS_URL=redis://localhost:6379</code></pre>
                 <tr><td><code>logs/</code></td><td>Daily log files</td></tr>
                 <tr><td><code>backups/</code></td><td>Automatic database backups</td></tr>
             </table>
-        </main>
+                    <h2 id="testing">Tests and Lint</h2>
+            <p><code>npm test</code> runs every functional self-test (accounts, sign-in, recovery, two-factor, permissions, website) without starting the server, and exits with an error code if one fails. Pass a group name to run only that group, for example <code>npm test web</code>. The same checks are available in the console with <code>/test</code>. They create short-lived test accounts in your data folder and remove them afterwards.</p>
+            <p><code>npm run lint</code> runs ESLint on the project: errors are real bugs (undefined variables), warnings are style.</p>
+
+            </main>
     </div>
     <script src="/js/common.js"></script>
+    <script src="/js/shell.js"></script>
 </body>
 </html>

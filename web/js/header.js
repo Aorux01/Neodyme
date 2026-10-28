@@ -22,7 +22,7 @@ async function updateHeaderAuth() {
                             </div>
                         </div>
                         <div class="dropdown-divider"></div>
-                        <a href="/dashboard" class="dropdown-item">
+                        <a href="/account" class="dropdown-item">
                             <i class="fas fa-tachometer-alt"></i>
                             Dashboard
                         </a>

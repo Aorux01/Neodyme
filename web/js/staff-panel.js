@@ -257,15 +257,21 @@ async function loadAdminUsers() {
         const data = await response.json();
 
         const container = document.getElementById('admin-users-list');
+        const query = (document.getElementById('admin-user-search')?.value || '').trim().toLowerCase();
+        const roleFilter = document.getElementById('admin-user-role-filter')?.value || '';
+        const users = (data.users || []).filter(user =>
+            (!roleFilter || user.role === roleFilter) &&
+            (!query || [user.displayName, user.email, user.accountId].some(v => String(v || '').toLowerCase().includes(query)))
+        );
 
-        if (!data.users || data.users.length === 0) {
+        if (users.length === 0) {
             container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>No users found</p></div>';
             return;
         }
 
         let html = '<table class="data-table"><thead><tr><th>Display Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
 
-        data.users.forEach(user => {
+        users.forEach(user => {
             html += `
                 <tr>
                     <td>${user.displayName}</td>
@@ -322,7 +328,6 @@ async function loadAdminStats() {
 
 
 async function searchAdminUsers() {
-    const query = document.getElementById('admin-user-search').value.trim();
     loadAdminUsers();
 }
 
@@ -1196,7 +1201,35 @@ const AUDIT_META = {
     update_shop_slot:   { icon: 'fa-shopping-cart',     color: '#3b82f6', label: 'Edit Shop Slot' },
     clear_shop_slot:    { icon: 'fa-eraser',            color: '#ef4444', label: 'Clear Shop Slot' },
     randomize_shop_slot:{ icon: 'fa-dice',              color: '#10b981', label: 'Randomize Slot' },
+    force_logout:       { icon: 'fa-sign-out-alt',      color: '#f59e0b', label: 'Force Logout' },
+    admin_password_reset:{ icon: 'fa-key',              color: '#8b5cf6', label: 'Password Reset' },
+    audit_export:       { icon: 'fa-file-csv',          color: '#6b7280', label: 'Audit Export' },
+    'capabilities.updated': { icon: 'fa-user-lock',     color: '#8b5cf6', label: 'Permissions Changed' },
+    'system.functional_tests': { icon: 'fa-vial',       color: '#84cc16', label: 'Functional Tests' },
+    'security.2fa_enabled':  { icon: 'fa-shield-alt',   color: '#10b981', label: 'Two-Factor On' },
+    'security.2fa_disabled': { icon: 'fa-unlock',       color: '#f59e0b', label: 'Two-Factor Off' },
+    'security.2fa_forced_disable': { icon: 'fa-user-lock', color: '#ef4444', label: 'Two-Factor Forced Off' },
+    'security.backup_codes_regenerated': { icon: 'fa-key', color: '#f59e0b', label: 'Backup Codes Renewed' },
+    'security.backup_code_used': { icon: 'fa-key',      color: '#f59e0b', label: 'Backup Code Used' },
+    'security.link_added':   { icon: 'fa-link',         color: '#3b82f6', label: 'Account Linked' },
+    'security.link_removed': { icon: 'fa-unlink',       color: '#ef4444', label: 'Account Unlinked' },
+    'security.force_reset':  { icon: 'fa-redo',         color: '#f59e0b', label: 'Forced Reset' },
 };
+
+// Fills the action filter from the known actions, so a new action never needs a second edit.
+let _auditFilterReady = false;
+function populateAuditActionFilter() {
+    const select = document.getElementById('audit-action-filter');
+    if (!select || _auditFilterReady) return;
+    _auditFilterReady = true;
+
+    const options = Object.entries(AUDIT_META)
+        .sort((a, b) => a[1].label.localeCompare(b[1].label))
+        .map(([action, meta]) => `<option value="${escapeHtml(action)}">${escapeHtml(meta.label)}</option>`);
+    select.innerHTML = `<option value="">All Actions</option>${options.join('')}`;
+}
+
+const stripMappedIp = (ip) => String(ip || '').replace(/^::ffff:/i, '');
 
 
 function auditActionMeta(action) {
@@ -1315,6 +1348,7 @@ function formatAuditDetails(log) {
 
 
 async function loadAuditLog() {
+    populateAuditActionFilter();
     try {
         const action   = document.getElementById('audit-action-filter')?.value || '';
         const search   = document.getElementById('audit-search')?.value        || '';
@@ -1326,6 +1360,7 @@ async function loadAuditLog() {
         if (search)   url += `&search=${encodeURIComponent(search)}`;
         if (dateFrom) url += `&from=${encodeURIComponent(dateFrom)}`;
         if (dateTo)   url += `&to=${encodeURIComponent(dateTo)}`;
+        if (document.getElementById('audit-show-tests')?.checked) url += '&includeTests=true';
 
         const response = await fetch(url, { credentials: 'include' });
         const data     = await response.json();
@@ -1338,19 +1373,22 @@ async function loadAuditLog() {
                 .then(r => r.json())
                 .then(s => {
                     if (!s.success || !s.summary) return;
-                    const items = Object.entries(s.summary).slice(0, 5)
+                    const { totalActions = 0, actionCounts = {} } = s.summary;
+                    const items = Object.entries(actionCounts)
+                        .sort((a, b) => b[1] - a[1])
+                        .slice(0, 5)
                         .map(([action, count]) => {
                             const meta = auditActionMeta(action);
                             return `<span style="display:inline-flex;align-items:center;gap:5px;
                                           background:var(--surface-2, #1b1726);border:1px solid var(--border, rgba(255,255,255,0.08));border-radius:20px;
                                           padding:4px 10px;font-size:11px;color:#aaa;">
                                 <i class="fas ${meta.icon}" style="color:${meta.color};"></i>
-                                <strong style="color:#fff;">${count}</strong> ${meta.label}
+                                <strong style="color:#fff;">${count}</strong> ${escapeHtml(meta.label)}
                             </span>`;
                         }).join('');
-                    summaryBar.innerHTML = items
-                        ? `<span style="color:#555;font-size:11px;align-self:center;white-space:nowrap;">Last 24h:</span>${items}`
-                        : '';
+                    summaryBar.innerHTML = totalActions
+                        ? `<span style="color:#888;font-size:11px;align-self:center;white-space:nowrap;">Last 24h: <strong style="color:#fff;">${totalActions}</strong> action${totalActions === 1 ? '' : 's'}</span>${items}`
+                        : '<span style="color:#888;font-size:11px;">No action in the last 24 hours.</span>';
                 }).catch(() => {});
         }
 
@@ -1376,7 +1414,7 @@ async function loadAuditLog() {
             const ts = new Date(log.timestamp);
             const timeStr  = ts.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             const dateStr  = ts.toLocaleDateString([], { month: 'short', day: '2-digit' });
-            const ipStr    = log.ipAddress ? `<span style="color:#444;font-size:10px;margin-left:6px;" title="IP">${escapeHtml(log.ipAddress)}</span>` : '';
+            const ipStr    = log.ipAddress ? `<span style="color:#444;font-size:10px;margin-left:6px;" title="IP">${escapeHtml(stripMappedIp(log.ipAddress))}</span>` : '';
             const detailId = `audit-detail-${idx}`;
 
             html += `
@@ -1440,36 +1478,12 @@ function clearAuditFilters() {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
+    const tests = document.getElementById('audit-show-tests');
+    if (tests) tests.checked = false;
     auditCurrentPage = 1;
     loadAuditLog();
 }
 
-
-function exportAuditCsv() {
-    if (!_auditLogsCache.length) { alert('No logs to export.'); return; }
-    const headers = ['Timestamp', 'Action', 'PerformedBy', 'TargetType', 'TargetId', 'IP', 'Details'];
-    const rows = _auditLogsCache.map(log => {
-        const d = log.details || {};
-        const details = [d.targetUserName, d.reason, d.configKey, d.note].filter(Boolean).join(' | ');
-        return [
-            new Date(log.timestamp).toISOString(),
-            log.action,
-            log.performedByName || '',
-            log.targetType || '',
-            log.targetId || '',
-            log.ipAddress || '',
-            details
-        ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
-    });
-    const csv  = [headers.join(','), ...rows].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `audit-log-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-}
 
 
 function loadAuditLogPage(delta) {
@@ -1678,7 +1692,7 @@ async function loadModReports() {
     const search = document.getElementById('mod-report-search')?.value || '';
     const container = document.getElementById('mod-reports-list');
     const badge = document.getElementById('mod-reports-badge');
-    container.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading reports...</div>';
+    container.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading reports...</div>';
 
     try {
         const [reportsRes, statsRes] = await Promise.all([
@@ -1814,7 +1828,7 @@ async function loadModFeedback() {
     const search = (document.getElementById('mod-feedback-search')?.value || '').toLowerCase();
     const container = document.getElementById('mod-feedback-list');
     const badge = document.getElementById('mod-feedback-badge');
-    container.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading feedback...</div>';
+    container.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading feedback...</div>';
 
     try {
         const res = await fetch('/neodyme/api/mod/feedback', { credentials: 'include' });
@@ -2011,3 +2025,8 @@ async function exportAuditCsv() {
     }
 }
 
+// Used by the reports list: ban the reported player, then refresh the list.
+async function showBanModal(accountId, displayName) {
+    await banPlayer(accountId, displayName);
+    if (typeof loadModReports === 'function') loadModReports();
+}

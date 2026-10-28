@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentUser = user;
         updateUserInfo();
         loadUserRole(); // reveal the "Staff Panel" link if the user has staff access
+        showSection(sectionFromPath(), { push: false });
     });
 });
 
@@ -29,9 +30,20 @@ function updateUserInfo() {
     set('user-name', 'textContent', displayName);
     set('welcome-name', 'textContent', displayName);
     set('user-avatar', 'textContent', displayName.charAt(0).toUpperCase());
-    set('profile-username', 'value', currentUser.username || '');
+    set('profile-accountid', 'value', currentUser.accountId || '');
     set('profile-email', 'value', currentUser.email || '');
     set('profile-displayname', 'value', currentUser.displayName || '');
+}
+
+function copyAccountId(button) {
+    const value = document.getElementById('profile-accountid').value;
+    if (!value || !navigator.clipboard) return;
+
+    navigator.clipboard.writeText(value).then(() => {
+        const original = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check"></i> Copied';
+        setTimeout(() => { button.innerHTML = original; }, 1500);
+    });
 }
 
 // --- User dropdown ---
@@ -51,7 +63,6 @@ document.addEventListener('click', (event) => {
 
 document.getElementById('profile-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const username = document.getElementById('profile-username').value;
     const email = document.getElementById('profile-email').value;
     const displayName = document.getElementById('profile-displayname').value;
 
@@ -59,7 +70,7 @@ document.getElementById('profile-form')?.addEventListener('submit', async (e) =>
         const response = await secureFetch(`${API}/auth/profile`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, email, displayName })
+            body: JSON.stringify({ email, displayName })
         });
         const data = await response.json();
 
@@ -788,20 +799,208 @@ document.getElementById('new-ticket-form')?.addEventListener('submit', async (e)
 
 // --- Section router (player dashboard) ---
 
-function showSection(sectionName) {
+const SECTION_PATHS = {
+    dashboard: '/account',
+    profile: '/account/profile',
+    friends: '/account/friends',
+    sessions: '/account/security',
+    settings: '/account/settings',
+    'creator-code': '/account/creator-code',
+    support: '/account/support'
+};
+
+function sectionFromPath() {
+    const path = window.location.pathname.replace(/\/+$/, '');
+    const match = Object.entries(SECTION_PATHS).find(([, p]) => p === path);
+    return match ? match[0] : 'dashboard';
+}
+
+function goToSection(name, event) {
+    if (event && (event.ctrlKey || event.metaKey || event.shiftKey || event.button === 1)) return true;
+    showSection(name);
+    return false;
+}
+
+window.addEventListener('popstate', () => showSection(sectionFromPath(), { push: false }));
+
+function showSection(sectionName, { push = true } = {}) {
     document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.querySelectorAll('.dashboard-sidebar .nav-link').forEach(l => l.classList.remove('active'));
 
     const target = document.getElementById(sectionName + '-section');
     if (target) target.classList.add('active');
-    const navLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+    const navLink = document.querySelector(`.dashboard-sidebar [data-section="${sectionName}"]`);
     if (navLink) navLink.classList.add('active');
 
     document.getElementById('user-dropdown')?.classList.remove('show');
     currentSection = sectionName;
 
-    if (sectionName === 'friends') loadFriends();
+    const path = SECTION_PATHS[sectionName];
+    if (push && path && window.location.pathname !== path) history.pushState({}, '', path);
+    document.dispatchEvent(new CustomEvent('account-section', { detail: sectionName }));
+    window.scrollTo({ top: 0 });
+
+    if (sectionName === 'dashboard') loadOverview();
+    else if (sectionName === 'friends') loadFriends();
     else if (sectionName === 'sessions') loadActiveSessions();
     else if (sectionName === 'creator-code') loadCreatorCodeStatus();
     else if (sectionName === 'support') loadMyTickets();
+    else if (sectionName === 'settings') prepareExportForm();
 }
+
+// --- Overview ---
+
+const SECURITY_EVENT_LABELS = {
+    'security.2fa_enabled': ['fa-shield-alt', 'Two-factor authentication enabled'],
+    'security.2fa_disabled': ['fa-unlock', 'Two-factor authentication disabled'],
+    'security.2fa_forced_disable': ['fa-user-lock', 'Two-factor authentication reset by staff'],
+    'security.backup_codes_regenerated': ['fa-key', 'Backup codes renewed'],
+    'security.backup_code_used': ['fa-key', 'A backup code was used'],
+    'security.link_added': ['fa-link', 'Account linked'],
+    'security.link_removed': ['fa-unlink', 'Account unlinked'],
+    'security.force_reset': ['fa-redo', 'Password reset required by staff'],
+    'security.data_export': ['fa-download', 'Account data downloaded']
+};
+
+let _siteInfo = null;
+
+async function getSiteInfo() {
+    if (_siteInfo) return _siteInfo;
+    try {
+        const response = await fetch(`${API}/site`);
+        _siteInfo = await response.json();
+    } catch {
+        _siteInfo = {};
+    }
+    return _siteInfo;
+}
+
+async function copyServerAddress(button) {
+    const info = await getSiteInfo();
+    if (!info.serverAddress || !navigator.clipboard) return;
+    await navigator.clipboard.writeText(info.serverAddress);
+    const original = button.innerHTML;
+    button.innerHTML = `<i class="fas fa-check"></i> ${escapeHtml(info.serverAddress)}`;
+    setTimeout(() => { button.innerHTML = original; }, 2000);
+}
+
+async function getJson(path) {
+    try {
+        const response = await fetch(`${API}${path}`, { credentials: 'include' });
+        if (!response.ok) return null;
+        return await response.json();
+    } catch {
+        return null;
+    }
+}
+
+async function loadOverview() {
+    const info = await getSiteInfo();
+    const versions = document.getElementById('qa-versions');
+    if (versions && info.gameVersionsUrl) {
+        versions.href = info.gameVersionsUrl;
+        versions.style.display = '';
+    }
+
+    const [vbucks, security, links, log, friends] = await Promise.all([
+        getJson('/user/vbucks'), getJson('/security/status'), getJson('/security/links'),
+        getJson('/security/log'), getJson('/user/friends')
+    ]);
+
+    const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+    set('stat-vbucks', vbucks ? Number(vbucks.balance).toLocaleString() : '-');
+    set('stat-2fa', security ? (security.enabled ? 'On' : 'Off') : '-');
+    set('stat-lastlogin', currentUser && currentUser.lastLogin ? formatDate(currentUser.lastLogin) : 'Now');
+    set('friends-online', friends ? String((friends.friends || []).filter(f => f.online).length) : '-');
+
+    renderSecurityChecklist(security, links);
+    renderRecentActivity(log);
+}
+
+function renderSecurityChecklist(security, links) {
+    const container = document.getElementById('security-checklist');
+    if (!container) return;
+    if (!security) {
+        container.innerHTML = '<div class="empty-state"><p>Security information is unavailable.</p></div>';
+        return;
+    }
+
+    const items = [
+        { ok: security.enabled, text: 'Two-factor authentication', fix: 'Turn it on', href: '/security' },
+        { ok: !security.enabled || security.backupCodesRemaining > 0, text: 'Backup codes available', fix: 'Generate new codes', href: '/security', skip: !security.enabled },
+        { ok: !!(currentUser && currentUser.email), text: 'Email address on the account', fix: 'Add one', href: '/account/profile' }
+    ];
+    if (links && links.providers && links.providers.discord) {
+        items.push({ ok: (links.links || []).some(l => l.provider === 'discord'), text: 'Discord account linked', fix: 'Link it', href: '/security' });
+    }
+
+    container.innerHTML = items.filter(i => !i.skip).map(item => `
+        <div class="checklist-item ${item.ok ? 'is-ok' : 'is-todo'}">
+            <i class="fas ${item.ok ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+            <span>${escapeHtml(item.text)}</span>
+            ${item.ok ? '' : `<a href="${item.href}">${escapeHtml(item.fix)}</a>`}
+        </div>`).join('');
+}
+
+function renderRecentActivity(log) {
+    const container = document.getElementById('recent-activity');
+    if (!container) return;
+
+    const events = (log && log.events ? log.events : []).slice(0, 5);
+    if (events.length === 0) {
+        container.innerHTML = '<div class="activity-item"><div class="activity-icon"><i class="fas fa-sign-in-alt"></i></div><div class="activity-content"><div class="activity-title">Signed in to Neodyme</div><div class="activity-time">This session</div></div></div>';
+        return;
+    }
+
+    container.innerHTML = events.map(event => {
+        const [icon, label] = SECURITY_EVENT_LABELS[event.action] || ['fa-info-circle', event.action];
+        return `<div class="activity-item">
+            <div class="activity-icon"><i class="fas ${icon}"></i></div>
+            <div class="activity-content">
+                <div class="activity-title">${escapeHtml(label)}</div>
+                <div class="activity-time">${escapeHtml(formatDate(event.timestamp))}</div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// --- Data export ---
+
+async function prepareExportForm() {
+    const security = await getJson('/security/status');
+    const group = document.getElementById('export-code-group');
+    if (group) group.style.display = security && security.enabled ? '' : 'none';
+}
+
+document.getElementById('export-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const password = document.getElementById('export-password').value;
+    const code = document.getElementById('export-code').value.trim();
+
+    try {
+        const response = await secureFetch(`${API}/security/export`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password, code: code || undefined })
+        });
+        if (!response.ok) {
+            const result = await response.json().catch(() => ({}));
+            showAlert(apiError(result, 'Could not export your data'), 'error');
+            return;
+        }
+
+        const blob = await response.blob();
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `neodyme-account-${currentUser.accountId}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(link.href);
+        document.getElementById('export-form').reset();
+        showAlert('Your data was downloaded.', 'success');
+    } catch (error) {
+        console.error('Export error:', error);
+        showAlert('An error occurred while exporting your data', 'error');
+    }
+});

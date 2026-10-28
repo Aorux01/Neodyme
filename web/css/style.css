@@ -40,6 +40,10 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--bg);
@@ -329,7 +333,8 @@ body {
     .social-links a:hover { transform: none; }
 }
 
-.loading-spinner {
+/* The ring alone, used inside buttons. */
+.spinner {
     display: inline-block;
     width: 16px;
     height: 16px;
@@ -337,6 +342,19 @@ body {
     border-radius: 50%;
     border-top-color: #ffffff;
     animation: spin 1s ease-in-out infinite;
+}
+
+/* Icon and text shown in place of content that is loading. */
+.loading-state {
+    text-align: center;
+    padding: 40px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+}
+
+.loading-state i {
+    margin-right: 8px;
+    font-size: 20px;
 }
 
 @keyframes spin {
@@ -373,6 +391,133 @@ body {
     }
 }
 
+.nav-burger {
+    display: none;
+    margin-left: 12px;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.nav-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1090;
+}
+
+.nav-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(320px, 86vw);
+    background: var(--surface);
+    border-left: 1px solid var(--border-strong);
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform 0.25s ease, visibility 0.25s;
+}
+
+.nav-drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-drawer-title {
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.nav-drawer-close {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.nav-drawer-links {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+}
+
+.nav-drawer-links a {
+    padding: 13px 20px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+}
+
+.nav-drawer-links a.active {
+    color: var(--primary);
+    border-left-color: var(--primary);
+    background: var(--primary-soft);
+}
+
+.nav-drawer-section {
+    padding: 14px 20px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+}
+
+.nav-drawer-docs .docs-nav-section {
+    padding: 10px 20px 2px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.nav-drawer-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 20px;
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+}
+
+.nav-drawer-actions .btn {
+    text-align: center;
+}
+
+body.nav-open {
+    overflow: hidden;
+}
+
+body.nav-open .nav-backdrop {
+    display: block;
+}
+
+body.nav-open .nav-drawer {
+    transform: translateX(0);
+    visibility: visible;
+}
+
 @media (max-width: 768px) {
     .neodyme-header {
         padding: 8px 0;
@@ -385,7 +530,34 @@ body {
     .nav-links {
         display: none;
     }
-    
+
+    .nav-burger {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .neodyme-nav {
+        flex: 1;
+    }
+
+    .neodyme-logo {
+        margin-right: 12px;
+    }
+
+    .header-actions {
+        gap: 8px;
+    }
+
+    .header-actions .btn {
+        display: none;
+    }
+
+    .header-actions .user-name,
+    .header-actions .user-info .fa-chevron-down {
+        display: none;
+    }
+
     .footer-links {
         grid-template-columns: 1fr;
     }
@@ -399,4 +571,49 @@ select option,
 select optgroup {
     background: var(--surface-2);
     color: var(--text);
+}
+
+.account-tabbar {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .account-tabbar {
+        display: flex;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1000;
+        background: rgba(21, 18, 29, 0.96);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-top: 1px solid var(--border-strong);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .account-tabbar a {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 9px 4px 8px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .account-tabbar a i {
+        font-size: 18px;
+    }
+
+    .account-tabbar a.active {
+        color: var(--primary);
+    }
+
+    body.has-tabbar {
+        padding-bottom: calc(64px + env(safe-area-inset-bottom));
+    }
 }

@@ -79,7 +79,7 @@
                 <tr><td><code>/reload shop</code></td><td>Re-initialize shop rotation</td></tr>
             </table>
 
-            <h2>/data - Database Migration</span></h2>
+            <h2>/data - Database Migration</h2>
             <table>
                 <tr><th>Command</th><th>Description</th></tr>
                 <tr><td><code>/data migrate json mongodb</code></td><td>Migrate all data from JSON files to MongoDB</td></tr>
@@ -96,7 +96,7 @@
 # Run with auto-confirm
 /data migrate json mongodb --confirm</code></pre>
 
-            <h2>/test - Test Suite</span></h2>
+            <h2>/test - Test Suite</h2>
             <p>Checks come in two kinds. <strong>Health</strong> checks are read-only and also feed the public status page and the Developer panel. <strong>Functional</strong> checks run real scenarios (sign in, tokens, bans, password reset, two-factor...) on throwaway accounts that are removed afterwards. They never run on their own.</p>
             <table>
                 <tr><th>Command</th><th>Description</th></tr>
@@ -107,7 +107,7 @@
             </table>
             <p>Functional tests can also be started from the Developer panel, in the System tab. Plugins can add their own checks with <code>TestRegistry.register()</code>.</p>
 
-            <h2>/diagnostic</span></h2>
+            <h2>/diagnostic</h2>
             <p>Prints a full server diagnostic report: OS, CPU, RAM, uptime, database type, active services, token counts, and loaded plugins.</p>
             <pre><code>/diagnostic</code></pre>
 
@@ -226,14 +226,14 @@
                 <tr><td><code>/tokens user &lt;username&gt;</code></td><td>Show token details for a user</td></tr>
             </table>
 
-            <h2>/maintenance</span></h2>
+            <h2>/maintenance</h2>
             <table>
                 <tr><th>Command</th><th>Description</th></tr>
                 <tr><td><code>/maintenance on</code></td><td>Enable maintenance mode - blocks new player logins</td></tr>
                 <tr><td><code>/maintenance off</code></td><td>Disable maintenance mode</td></tr>
             </table>
 
-            <h2>/broadcast</span></h2>
+            <h2>/broadcast</h2>
             <table>
                 <tr><th>Command</th><th>Description</th></tr>
                 <tr><td><code>/broadcast &lt;message&gt;</code></td><td>Send a message to all connected players</td></tr>
@@ -309,5 +309,6 @@
         </main>
     </div>
     <script src="/js/common.js"></script>
+    <script src="/js/shell.js"></script>
 </body>
 </html>

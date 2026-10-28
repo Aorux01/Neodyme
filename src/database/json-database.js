@@ -197,14 +197,14 @@ class JsonDatabase {
         return {};
     }
 
-    static AccountIsBanned(accountId) {
-        const account = this.getAccount(accountId);
+    static async AccountIsBanned(accountId) {
+        const account = await this.getAccount(accountId);
         if (!account) return false;
 
         if (!account.ban || !account.ban.banned) return false;
 
         if (account.ban.banExpires && new Date(account.ban.banExpires) <= new Date()) {
-            this.unbanAccount(accountId);
+            await this.unbanAccount(accountId);
             return false;
         }
 

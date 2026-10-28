@@ -235,6 +235,7 @@ const auditFilters = (query) => ({
     performedBy: query.performedBy,
     targetType: query.targetType,
     search: query.search,
+    includeTests: query.includeTests === 'true',
     startDate: DAY.test(query.from || '') ? new Date(`${query.from}T00:00:00.000Z`) : undefined,
     endDate: DAY.test(query.to || '') ? new Date(`${query.to}T23:59:59.999Z`) : undefined
 });
@@ -251,7 +252,7 @@ router.get('/neodyme/api/admin/audit-log/export', ...gate('audit.view'), async (
         const header = ['timestamp', 'action', 'performedBy', 'performedByName', 'targetType', 'targetId', 'ipAddress', 'details'];
         const rows = result.logs.map(log => [
             log.timestamp, log.action, log.performedBy, log.performedByName,
-            log.targetType, log.targetId, log.ipAddress, JSON.stringify(log.details || {})
+            log.targetType, log.targetId, AuditService.normalizeIp(log.ipAddress), JSON.stringify(log.details || {})
         ].map(csvCell).join(','));
 
         await AuditService.log('audit_export', req.user.accountId, req.user.displayName, 'audit', 'log',

@@ -6,6 +6,10 @@ const PAGES = [
     'login', 'register', 'dashboard', 'shop', 'purchase', 'status', 'updates', 'admin',
     'forgot-password', 'reset-password', 'verify-email', 'security', 'appeal'
 ];
+const ACCOUNT_PAGES = ['profile', 'friends', 'security', 'settings', 'support', 'creator-code'];
+const RESERVED_PREFIXES = [
+    ...PAGES, 'docs', 'account', 'html', 'css', 'js', 'images', 'favicon.ico'
+].map(name => `/${name}`);
 const DOC_NAME = /^[a-z0-9-]+$/;
 
 function pageRoutes(webDir) {
@@ -23,9 +27,17 @@ function pageRoutes(webDir) {
         return `${target}${query}`;
     };
 
-    for (const name of PAGES) {
+    router.get('/dashboard', (req, res) => res.redirect(302, redirectTo(req, '/account')));
+
+    for (const name of PAGES.filter(page => page !== 'dashboard')) {
         router.get(`/${name}`, send(path.join(htmlDir, `${name}.html`)));
     }
+
+    router.get('/account', send(path.join(htmlDir, 'dashboard.html')));
+    router.get('/account/:section', (req, res, next) => {
+        if (!ACCOUNT_PAGES.includes(req.params.section)) return next();
+        send(path.join(htmlDir, 'dashboard.html'))(req, res, next);
+    });
 
     router.get('/docs', send(path.join(docsDir, 'index.html')));
     router.get('/docs/:page', (req, res, next) => {
@@ -48,4 +60,4 @@ function pageRoutes(webDir) {
     return router;
 }
 
-module.exports = { pageRoutes, PAGES };
+module.exports = { pageRoutes, PAGES, ACCOUNT_PAGES, RESERVED_PREFIXES };

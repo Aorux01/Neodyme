@@ -1,5 +1,6 @@
 const ConfigManager = require("../../manager/config-manager");
 const validator = require('validator');
+const crypto = require('crypto');
 
 async function sleep(ms) {
     await new Promise((resolve, reject) => {
@@ -8,7 +9,7 @@ async function sleep(ms) {
 }
 
 function getTheater(req) {
-    const versionInfo = GetVersionInfo(req);
+    const versionInfo = require('./version-service').getVersionInfo(req);
 
     var theater = JSON.stringify(require("../../../content/campaign/world-stw.json"));
     var Season = "Season" + versionInfo.season;
@@ -88,7 +89,7 @@ function MakeSurvivorAttributes(templateId) {
     }
 
     if (!SurvivorAttributes.hasOwnProperty("portrait")) {
-        portraitFactor = SurvivorAttributes.personality;
+        let portraitFactor = SurvivorAttributes.personality;
         if (SurvivorAttributes.hasOwnProperty("managerSynergy")) {
             portraitFactor = SurvivorAttributes.managerSynergy;
         }
@@ -183,7 +184,7 @@ function generateRandomString(length = 16) {
 }
 
 function MakeID() {
-    return uuid.v4();
+    return require('uuid').v4();
 }
 
 function getDisplayNameWithRole(account) {

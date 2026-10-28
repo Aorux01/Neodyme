@@ -5,7 +5,7 @@
 <h1 align="center">Neodyme - Fortnite Backend</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.8-blue.svg" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.2.9-blue.svg" alt="Version">
   <img src="https://img.shields.io/badge/API-1.8-blueviolet.svg" alt="API Version">
   <img src="https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white" alt="Node.js">
   <img src="https://img.shields.io/badge/database-JSON%20%7C%20MongoDB-47A248?logo=mongodb&logoColor=white" alt="Database">
@@ -21,7 +21,7 @@ Neodyme is a fully-featured **Node.js** backend for Fortnite (s1-32), designed t
 
 ### ⚠️ Still under development, may contain bugs ⚠️
 
-**Latest version: 1.2.8**
+**Latest version: 1.2.9**
 
 **Latest API version: 1.8**
 
@@ -37,35 +37,49 @@ Join the **Discord** Server: https://discord.gg/gWpDVKR4nF
 - ✅ **Fully implemented MCP (profile service)**
 - ✅ **Complete friends system:** friend requests, acceptance, removal
 - ✅ **Token system and full XMPP support** (chat, presence, private parties)
-- ✅ **Working matchmaking system**
+- ✅ **Basic matchmaking** (queue states and skill-based matching are planned)
 - ✅ **Complete store/economy backend** (V-Bucks, cosmetics)
 - ✅ **Cloudstorage system**
 - ✅ **Customizable configuration** via `server.properties` and the `config/` directory
 - ✅ **Automatic dependency installation**
-- ✅ **Customizable events and tournament system**
+- ✅ **Customizable event content and tournament information** (full tournament system is planned)
 - ✅ **Self-hosted backend with no proprietary dependencies**
 - ✅ **Detailed logs and monitoring**
 - ✅ **Custom command system** (Console Server, see the documentation)
 - ✅ **Plugin system** to easily extend and customize the backend
 - ✅ **Economics endpoints** (EXP, V-Bucks)
 - ✅ **Database system** (JSON, MongoDB)
+- ✅ **2FA setup** (authenticator app, backup codes, staff policy)
 
-## To-Do List
+## Roadmap
 
-### 📌 Major Upcoming Features
-- [ ] 📂 Finish and expand the website (leaderboards, 2FA setup, player stats, etc.)
-- 🔄 🧰 **Admin Panel** - core features done (BETA), ongoing: shop editor, live config, events manager
-- [ ] 💾 Implement all remaining storage systems (**SQLite, MySQL, PostgreSQL**)
-- [x] 🔐 **2FA setup** (authenticator app, backup codes, staff policy)
-- [ ] 📘 Complete the **public API**
-- [ ] 🛡️ Implement **Ward** (AntiCheat)
+Versions are planned to carry a similar amount of work. The Platform track (website, accounts, panel, content, storage, API) comes first, then the Game track adds Fortnite compatibility step by step, including tournaments, ranked and arena. No Epic compatibility route is added before 1.4.1.
 
-### 📌 Secondary Features:
-- [ ] 🎮 Add **Creative mode system**
-- [ ] 🎯 Add **Game Modes manager** (available modes rotation, queues, etc.)
-- [ ] 🏁 Implement **queue system** for matchmaking / waitingroom
-- [ ] 🏆 Implement **leaderboard system**
-- [ ] 👢 **Member kick** from party (captain only)
+| Version | Theme | Track |
+|---|---|---|
+| 1.2.8 (current) | Auth, Security & Account Recovery | Released |
+| 1.2.9 | Website Foundation | Platform |
+| 1.3.0 | Account Complete | Platform |
+| 1.3.1 | Panel Rebuild | Platform |
+| 1.3.2 | Content Studio | Platform |
+| 1.3.3 | Game Bridge & Tracker | Platform |
+| 1.3.4 | Storage & Reliability | Platform |
+| 1.3.5 | Public API & Integrations | Platform |
+| 1.3.6 | Translations & Onboarding | Platform |
+| 1.3.7 | Economy & Shop | Platform |
+| 1.4.0 | Platform Release Candidate | Milestone |
+| 1.4.1 | Matchmaking & Party | Game |
+| 1.4.2 | Social Parity & Launcher | Game |
+| 1.4.3 | Stats, Arena & Ranked | Game |
+| 1.4.4 | Tournaments & Events | Game |
+| 1.4.5 | Game Modes & Creative | Game |
+| 1.4.6 | Progression & MCP Parity | Game |
+| 1.4.7 | Ward AntiCheat | Game |
+| 1.4.8 | Replay & Notifications | Game |
+| 1.4.9 | New Fortnite Endpoints | Game |
+| 1.5.0 | Neodyme Complete | Milestone |
+
+Next up, **1.2.9 - Website Foundation**: mobile navigation, one shared website shell, the new account area, and the fixes found in the website audit.
 
 **[See more - Full Roadmap & Features](ROADMAP.md)**
 

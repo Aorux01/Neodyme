@@ -255,6 +255,8 @@
             <table class="config-table">
                 <tr><th>Key</th><th>Default</th><th>Description</th></tr>
                 <tr><td><code>publicUrl</code></td><td><em>(empty)</em></td><td>Public address used in emailed links, for example <code>https://neodyme.example.com</code>. When empty, links point to <code>http(s)://localhost:&lt;port&gt;</code>, which only works on the server itself.</td></tr>
+                <tr><td><code>serverAddress</code></td><td><em>(empty)</em></td><td>Address players type in the game or launcher, shown on the account dashboard with a "Copy server address" button. When empty, it is derived from <code>publicUrl</code>, or from the address of the page being visited.</td></tr>
+                <tr><td><code>gameVersionsUrl</code></td><td><em>(empty)</em></td><td>Link to a page listing the game versions players can download (a repository, a drive, a site). When set (<code>http</code> or <code>https</code> only), a "Game versions" button appears on the dashboard and in the site header. Leave empty to hide it.</td></tr>
                 <tr><td><code>requireEmailVerification</code></td><td><code>false</code></td><td>New accounts must confirm their email address before signing in on the website. Existing accounts are treated as verified.</td></tr>
                 <tr><td><code>passwordResetEnabled</code></td><td><code>true</code></td><td>Let players reset a forgotten password from <code>/forgot-password</code>.</td></tr>
                 <tr><td><code>magicLinkEnabled</code></td><td><code>true</code></td><td>Let players sign in with a one-time link sent to their email.</td></tr>
@@ -428,9 +430,16 @@
                 <tr><td>SQLite backend</td><td><span class="badge badge-no">Not yet</span></td><td>Planned.</td></tr>
                 <tr><td>MySQL / PostgreSQL</td><td><span class="badge badge-no">Not yet</span></td><td>Planned.</td></tr>
             </table>
-        </main>
+                    <h2 id="plugin-safety">Plugin Safety</h2>
+            <table class="config-table">
+                <tr><th>Key</th><th>Default</th><th>Description</th></tr>
+                <tr><td><code>pluginRouteGuard</code></td><td><code>warn</code></td><td>What to do when a plugin registers a route on a path used by the website (<code>/login</code>, <code>/account</code>, <code>/shop</code>, <code>/css</code>...). <code>warn</code> logs a warning and keeps the route, <code>block</code> removes the route and logs an error, <code>off</code> disables the check.</td></tr>
+            </table>
+
+            </main>
     </div>
 
     <script src="/js/common.js"></script>
+    <script src="/js/shell.js"></script>
 </body>
 </html>
