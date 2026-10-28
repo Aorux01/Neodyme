@@ -78,7 +78,7 @@ Versions are planned to carry a similar amount of work. The Platform track (webs
 | 1.4.9 | New Fortnite Endpoints | Game |
 | 1.5.0 | Neodyme Complete | Milestone |
 
-Next up, **1.2.9 - Website Foundation**: mobile navigation, one shared website shell, the new account area, and the fixes found in the website audit.
+Next up, **1.3.0 - Account Complete**: mobile navigation, one shared website shell, the new account area, and the fixes found in the website audit.
 
 **[See more - Full Roadmap & Features](ROADMAP.md)**
 
