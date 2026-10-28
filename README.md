@@ -57,8 +57,7 @@ Versions are planned to carry a similar amount of work. The Platform track (webs
 
 | Version | Theme | Track |
 |---|---|---|
-| 1.2.8 (current) | Auth, Security & Account Recovery | Released |
-| 1.2.9 | Website Foundation | Platform |
+| 1.2.9 (current) | Website Foundation | Platform |
 | 1.3.0 | Account Complete | Platform |
 | 1.3.1 | Panel Rebuild | Platform |
 | 1.3.2 | Content Studio | Platform |
